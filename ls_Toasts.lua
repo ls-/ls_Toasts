@@ -30,6 +30,7 @@ local DEFAULTS = {
 	point = {"TOPLEFT", "UIParent", "TOPLEFT", 24, -12},
 	max_active_toasts = 12,
 	sfx_enabled = true,
+	fadeout_delay = 2.8,
 	dnd = {
 		achievement = false,
 		archaeology = false,
@@ -608,8 +609,9 @@ local function CreateBaseToastButton()
 	anim1:SetOrder(1)
 	anim1:SetFromAlpha(1)
 	anim1:SetToAlpha(0)
-	anim1:SetStartDelay(2.8)
+	anim1:SetStartDelay(CFG.fadeout_delay)
 	anim1:SetDuration(1.2)
+	animOut.Anim1 = anim1
 
 	return toast
 end
@@ -1968,6 +1970,14 @@ local function OptionsPanelRefresh(panel)
 	end
 end
 
+local function AnchorFrame_Toggle()
+	if anchorFrame:IsMouseEnabled() then
+		Anchor_Disable()
+	else
+		Anchor_Enable()
+	end
+end
+
 local function ToggleToasts(value, state)
 	if value == "achievement_enabled" then
 		if state then
@@ -2011,6 +2021,36 @@ local function ToggleToasts(value, state)
 		else
 			DisableWorldToasts()
 		end
+	end
+end
+
+local function UpdateFadeOutDelay(delay)
+	for k, toast in pairs(abilityToasts) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
+	end
+
+	for k, toast in pairs(achievementToasts) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
+	end
+
+	for k, toast in pairs(followerToasts) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
+	end
+
+	for k, toast in pairs(itemToasts) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
+	end
+
+	for k, toast in pairs(miscToasts) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
+	end
+
+	for k, toast in pairs(missonToasts) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
+	end
+
+	for k, toast in pairs(scenarioToasts) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 end
 
@@ -2119,14 +2159,18 @@ end
 
 local function Slider_OnValueChanged(self, value, userInput)
 	if userInput then
-		self:SetValue(value)
+		value = tonumber(strformat("%.1f", value))
+
+		if value ~= GetConfigValue(self.watchedValue) then
+			self:SetValue(value)
+		end
 	end
 end
 
-local function CreateConfigSlider(parent, name, text, minValue, maxValue)
+local function CreateConfigSlider(parent, name, text, stepValue, minValue, maxValue)
 	local object = _G.CreateFrame("Slider", "$parent"..name, parent, "OptionsSliderTemplate")
 	object:SetMinMaxValues(minValue, maxValue)
-	object:SetValueStep(1)
+	object:SetValueStep(stepValue)
 	object:SetObeyStepOnDrag(true)
 	object.SetDisplayValue = object.SetValue -- default
 	object.SetValue = Slider_SetValue
@@ -2234,11 +2278,15 @@ end
 
 ------
 
-local function AnchorFrame_Toggle()
-	if anchorFrame:IsMouseEnabled() then
-		Anchor_Disable()
-	else
-		Anchor_Enable()
+local function DelaySlider_OnValueChanged(self, value, userInput)
+	if userInput then
+		value = tonumber(strformat("%.1f", value))
+
+		if value ~= GetConfigValue(self.watchedValue) then
+			self:SetValue(value)
+
+			UpdateFadeOutDelay(value)
+		end
 	end
 end
 
@@ -2274,13 +2322,18 @@ local function CreateConfigPanel()
 	local divider = CreateConfigDivider(panel, "Appearance")
 	divider:SetPoint("TOP", soundToggle, "BOTTOM", 0, -8)
 
-	local numSlider = CreateConfigSlider(panel, "NumSlider", "Number of Toasts" , 1, 20)
+	local numSlider = CreateConfigSlider(panel, "NumSlider", "Number of Toasts", 1, 1, 20)
 	numSlider:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 16, -24)
 	numSlider.watchedValue = "max_active_toasts"
 
 	local growthDropdown = CreateConfigDropDown(panel, "DirectionDropDown", "Growth Direction", GrowthDirectionDropDownMenu_Initialize)
 	growthDropdown:SetPoint("TOPLEFT", numSlider, "BOTTOMLEFT", -13, -32)
 	growthDropdown.watchedValue = "growth_direction"
+
+	local delaySlider = CreateConfigSlider(panel, "FadeOutSlider", "Fade Out Delay", 0.4, 0.8, 6.0)
+	delaySlider:SetPoint("LEFT", numSlider, "RIGHT", 32, 0)
+	delaySlider:SetScript("OnValueChanged", DelaySlider_OnValueChanged)
+	delaySlider.watchedValue = "fadeout_delay"
 
 	divider = CreateConfigDivider(panel, "Toasts")
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -8)
