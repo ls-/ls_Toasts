@@ -1772,7 +1772,7 @@ local function SpawnTestGarrisonToast()
 
 	-- garrison mission
 	local missions = _G.C_Garrison.GetAvailableMissions(1)
-	local id = missions and missions[1].missionID
+	local id = missions and (missions[1] and missions[1].missionID or nil) or nil
 
 	if id then
 		dispatcher:GARRISON_MISSION_FINISHED(1, id)
@@ -1780,7 +1780,7 @@ local function SpawnTestGarrisonToast()
 
 	-- shipyard mission
 	missions = _G.C_Garrison.GetAvailableMissions(2)
-	id = missions and missions[1].missionID
+	id = missions and (missions[1] and missions[1].missionID or nil) or nil
 
 	if id then
 		dispatcher:GARRISON_MISSION_FINISHED(2, id)
@@ -1788,7 +1788,7 @@ local function SpawnTestGarrisonToast()
 
 	-- order hall mission
 	missions = _G.C_Garrison.GetAvailableMissions(4)
-	id = missions and missions[1].missionID
+	id = missions and (missions[1] and missions[1].missionID or nil) or nil
 
 	if id then
 		dispatcher:GARRISON_MISSION_FINISHED(4, id)
