@@ -1,7 +1,7 @@
 -- Lua
 local _G = _G
 local tonumber, unpack, pairs, select, type, next = tonumber, unpack, pairs, select, type, next
-local tremove, tinsert = table.remove, table.insert
+local tremove, tinsert, twipe = table.remove, table.insert, table.wipe
 local strformat, strsplit = string.format, string.split
 local mfloor = math.floor
 
@@ -1927,6 +1927,44 @@ end
 -- IN-GAME CONFIG --
 --------------------
 
+local function CopyTable(src, dest)
+	if type(dest) ~= "table" then
+		dest = {}
+	end
+
+	for k, v in pairs(src) do
+		if type(v) == "table" then
+			dest[k] = CopyTable(v, dest[k])
+		elseif type(v) ~= type(dest[k]) then
+			dest[k] = v
+		end
+	end
+
+	return dest
+end
+
+local function DiffTable(src , dest)
+	if type(dest) ~= "table" then
+		return {}
+	end
+
+	if type(src) ~= "table" then
+		return dest
+	end
+
+	for k, v in pairs(dest) do
+		if type(v) == "table" then
+			if not next(DiffTable(src[k], v)) then
+				dest[k] = nil
+			end
+		elseif v == src[k] then
+			dest[k] = nil
+		end
+	end
+
+	return dest
+end
+
 local function SetConfigValue(valuePath, value)
 	local temp = {strsplit(".", valuePath)}
 	local t = CFG
@@ -2292,6 +2330,18 @@ end
 
 ------
 
+local function SaveDefaultTemplate()
+	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
+		twipe(_G.LS_TOASTS_CFG_GLOBAL["Default"])
+	else
+		_G.LS_TOASTS_CFG_GLOBAL["Default"] = {}
+	end
+
+	CopyTable(CFG, _G.LS_TOASTS_CFG_GLOBAL["Default"])
+end
+
+------
+
 local function CreateConfigPanel()
 	local panel = _G.CreateFrame("Frame", "LSToastsConfigPanel", _G.InterfaceOptionsFramePanelContainer)
 	panel.name = "|cff1a9fc0ls:|r Toasts"
@@ -2311,7 +2361,7 @@ local function CreateConfigPanel()
 	subtext:SetJustifyV("TOP")
 	subtext:SetNonSpaceWrap(true)
 	subtext:SetMaxLines(3)
-	subtext:SetText("Thome thettings, duh...")
+	subtext:SetText("Thome thettings, duh... |cffffd200They are saved per character.|r")
 
 	local acnhorButton = CreateConfigButton(panel, "AnchorToggle", "Anchor Frame", AnchorFrame_Toggle)
 	acnhorButton:SetPoint("TOPLEFT", subtext, "BOTTOMLEFT", 0, -8)
@@ -2373,6 +2423,22 @@ local function CreateConfigPanel()
 		CreateToastConfigLine(toastSettings, layout[i])
 	end
 
+	divider = CreateConfigDivider(panel, "Settings Transfer")
+	divider:SetPoint("TOP", toastSettings, "BOTTOM", 0, -10)
+
+	subtext = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+	subtext:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -8)
+	subtext:SetPoint("RIGHT", -16, 0)
+	subtext:SetHeight(44)
+	subtext:SetJustifyH("LEFT")
+	subtext:SetJustifyV("TOP")
+	subtext:SetNonSpaceWrap(true)
+	subtext:SetMaxLines(4)
+	subtext:SetText("|cffff2020Experimental!|r To save current settings as a default preset click the button below. This feature may be quite handy, if you use more or less same layout on many characters. This way you'll need to tweak fewer things. |cffffd200Please note that there can be only 1 preset. Hitting this button on a different character will overwrite existing template.|r")
+
+	local saveDefaults = CreateConfigButton(panel, "SaveDefaultsButton", "Save Settings", SaveDefaultTemplate)
+	saveDefaults:SetPoint("TOPLEFT", subtext, "BOTTOMLEFT", 0, -8)
+
 	panel.okay = function() end
 	panel.cancel = function() end
 	panel.refresh = OptionsPanelRefresh
@@ -2388,23 +2454,15 @@ end
 function dispatcher:ADDON_LOADED(arg)
 	if arg ~= "ls_Toasts" then return end
 
-	local function CopyTable(src, dest)
-		if type(dest) ~= "table" then
-			dest = {}
-		end
-
-		for k, v in pairs(src) do
-			if type(v) == "table" then
-				dest[k] = CopyTable(v, dest[k])
-			elseif type(v) ~= type(dest[k]) then
-				dest[k] = v
-			end
-		end
-
-		return dest
+	if not _G.LS_TOASTS_CFG_GLOBAL then
+		_G.LS_TOASTS_CFG_GLOBAL = {}
 	end
 
-	CFG = CopyTable(DEFAULTS, _G.LS_TOASTS_CFG)
+	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
+		CFG = CopyTable(_G.LS_TOASTS_CFG_GLOBAL["Default"], _G.LS_TOASTS_CFG)
+	else
+		CFG = CopyTable(DEFAULTS, _G.LS_TOASTS_CFG)
+	end
 
 	dispatcher:RegisterEvent("PLAYER_LOGIN")
 	dispatcher:RegisterEvent("PLAYER_LOGOUT")
@@ -2425,29 +2483,11 @@ function dispatcher:PLAYER_LOGIN()
 end
 
 function dispatcher:PLAYER_LOGOUT()
-	local function DiffTable(src , dest)
-		if type(dest) ~= "table" then
-			return {}
-		end
-
-		if type(src) ~= "table" then
-			return dest
-		end
-
-		for k, v in pairs(dest) do
-			if type(v) == "table" then
-				if not next(DiffTable(src[k], v)) then
-					dest[k] = nil
-				end
-			elseif v == src[k] then
-				dest[k] = nil
-			end
-		end
-
-		return dest
+	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
+		_G.LS_TOASTS_CFG = DiffTable(_G.LS_TOASTS_CFG_GLOBAL["Default"], CFG)
+	else
+		_G.LS_TOASTS_CFG = DiffTable(DEFAULTS, CFG)
 	end
-
-	_G.LS_TOASTS_CFG = DiffTable(DEFAULTS, CFG)
 end
 
 dispatcher:RegisterEvent("ADDON_LOADED")
