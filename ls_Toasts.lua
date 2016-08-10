@@ -2309,6 +2309,7 @@ local function CreateConfigPanel()
 	subtext:SetHeight(32)
 	subtext:SetJustifyH("LEFT")
 	subtext:SetJustifyV("TOP")
+	subtext:SetNonSpaceWrap(true)
 	subtext:SetMaxLines(3)
 	subtext:SetText("Thome thettings, duh...")
 
@@ -2320,7 +2321,7 @@ local function CreateConfigPanel()
 	soundToggle.watchedValue = "sfx_enabled"
 
 	local divider = CreateConfigDivider(panel, "Appearance")
-	divider:SetPoint("TOP", soundToggle, "BOTTOM", 0, -8)
+	divider:SetPoint("TOP", soundToggle, "BOTTOM", 0, -10)
 
 	local numSlider = CreateConfigSlider(panel, "NumSlider", "Number of Toasts", 1, 1, 20)
 	numSlider:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 16, -24)
@@ -2336,7 +2337,7 @@ local function CreateConfigPanel()
 	delaySlider.watchedValue = "fadeout_delay"
 
 	divider = CreateConfigDivider(panel, "Toasts")
-	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -8)
+	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
 
 	local toastSettings = _G.CreateFrame("Frame", "$parentToastSettings", panel)
 	toastSettings:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -32)
