@@ -2071,7 +2071,7 @@ end
 
 local function CheckButton_OnEnter(self)
 	_G.GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-	_G.GameTooltip:AddLine(self.tooltipText)
+	_G.GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, true)
 	_G.GameTooltip:Show()
 end
 
@@ -2240,7 +2240,7 @@ local function CreateToastConfigLine(parent, cfg)
 
 	RegisterControlForRefresh(parent:GetParent(), enabledCB)
 
-	local dndCB = CreateConfigCheckButton(parent, cfg.name.."DNDToggle", nil, "Do not show in combat")
+	local dndCB = CreateConfigCheckButton(parent, cfg.name.."DNDToggle", nil, "Toasts in DND mode won't be displayed in combat, but will be queued up in the system instead. Once you leave combat, they'll start popping up.")
 	dndCB:SetPoint("LEFT", enabledCB, "RIGHT", 32, 0)
 	dndCB.watchedValue = cfg.dnd
 
