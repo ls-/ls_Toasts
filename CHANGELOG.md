@@ -1,3 +1,8 @@
+## Version 1.04
+
+- NEW! Added scaling for toasts;
+- Fixed an issue in fade out delay code.
+
 ## Version 1.03
 
 - NEW! Added an option to save settings as a default preset that will be used for all characters;
