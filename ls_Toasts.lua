@@ -2063,31 +2063,39 @@ local function ToggleToasts(value, state)
 end
 
 local function UpdateFadeOutDelay(delay)
-	for k, toast in pairs(abilityToasts) do
+	for _, toast in pairs(queuedToasts) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 
-	for k, toast in pairs(achievementToasts) do
+	for _, toast in pairs(activeToasts) do
+		RecycleToast(toast)
+	end
+
+	for _, toast in pairs(abilityToasts) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 
-	for k, toast in pairs(followerToasts) do
+	for _, toast in pairs(achievementToasts) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 
-	for k, toast in pairs(itemToasts) do
+	for _, toast in pairs(followerToasts) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 
-	for k, toast in pairs(miscToasts) do
+	for _, toast in pairs(itemToasts) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 
-	for k, toast in pairs(missonToasts) do
+	for _, toast in pairs(miscToasts) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 
-	for k, toast in pairs(scenarioToasts) do
+	for _, toast in pairs(missonToasts) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
+	end
+
+	for _, toast in pairs(scenarioToasts) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 end
