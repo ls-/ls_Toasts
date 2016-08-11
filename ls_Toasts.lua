@@ -2069,8 +2069,8 @@ local function UpdateFadeOutDelay(delay)
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 
-	for _, toast in pairs(activeToasts) do
-		RecycleToast(toast)
+	for i = 1, #activeToasts do
+		RecycleToast(activeToasts[1])
 	end
 
 	for _, toast in pairs(abilityToasts) do
@@ -2109,8 +2109,8 @@ local function UpdateScale(scale)
 
 	anchorFrame:SetScale(CFG.scale)
 
-	for _, toast in pairs(activeToasts) do
-		RecycleToast(toast)
+	for i = 1, #activeToasts do
+		RecycleToast(activeToasts[1])
 	end
 
 	for _, toast in pairs(abilityToasts) do
