@@ -31,6 +31,7 @@ local DEFAULTS = {
 	max_active_toasts = 12,
 	sfx_enabled = true,
 	fadeout_delay = 2.8,
+	scale = 1,
 	dnd = {
 		achievement = false,
 		archaeology = false,
@@ -499,6 +500,7 @@ local function CreateBaseToastButton()
 	toast:SetScript("OnEnter", ToastButton_OnEnter)
 	toast:SetScript("OnLeave", ToastButton_OnLeave)
 	toast:SetSize(234, 58)
+	toast:SetScale(CFG.scale)
 	toast:SetFrameStrata("DIALOG")
 
 	local bg = toast:CreateTexture(nil, "BACKGROUND", nil, 0)
@@ -2100,6 +2102,46 @@ local function UpdateFadeOutDelay(delay)
 	end
 end
 
+local function UpdateScale(scale)
+	for _, toast in pairs(queuedToasts) do
+		toast:SetScale(scale)
+	end
+
+	anchorFrame:SetScale(CFG.scale)
+
+	for _, toast in pairs(activeToasts) do
+		RecycleToast(toast)
+	end
+
+	for _, toast in pairs(abilityToasts) do
+		toast:SetScale(scale)
+	end
+
+	for _, toast in pairs(achievementToasts) do
+		toast:SetScale(scale)
+	end
+
+	for _, toast in pairs(followerToasts) do
+		toast:SetScale(scale)
+	end
+
+	for _, toast in pairs(itemToasts) do
+		toast:SetScale(scale)
+	end
+
+	for _, toast in pairs(miscToasts) do
+		toast:SetScale(scale)
+	end
+
+	for _, toast in pairs(missonToasts) do
+		toast:SetScale(scale)
+	end
+
+	for _, toast in pairs(scenarioToasts) do
+		toast:SetScale(scale)
+	end
+end
+
 ------
 
 local function CheckButton_SetValue(self, value)
@@ -2338,6 +2380,20 @@ end
 
 ------
 
+local function ScaleSlider_OnValueChanged(self, value, userInput)
+	if userInput then
+		value = tonumber(strformat("%.1f", value))
+
+		if value ~= GetConfigValue(self.watchedValue) then
+			self:SetValue(value)
+
+			UpdateScale(value)
+		end
+	end
+end
+
+------
+
 local function SaveDefaultTemplate()
 	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
 		twipe(_G.LS_TOASTS_CFG_GLOBAL["Default"])
@@ -2386,9 +2442,14 @@ local function CreateConfigPanel()
 	numSlider.watchedValue = "max_active_toasts"
 
 	local delaySlider = CreateConfigSlider(panel, "FadeOutSlider", "Fade Out Delay", 0.4, 0.8, 6.0)
-	delaySlider:SetPoint("LEFT", numSlider, "RIGHT", 32, 0)
+	delaySlider:SetPoint("LEFT", numSlider, "RIGHT", 69, 0)
 	delaySlider:SetScript("OnValueChanged", DelaySlider_OnValueChanged)
 	delaySlider.watchedValue = "fadeout_delay"
+
+	local scaleSlider = CreateConfigSlider(panel, "ScaleSlider", "Scale", 0.1, 0.75, 2)
+	scaleSlider:SetPoint("LEFT", delaySlider, "RIGHT", 69, 0)
+	scaleSlider:SetScript("OnValueChanged", ScaleSlider_OnValueChanged)
+	scaleSlider.watchedValue = "scale"
 
 	local growthDropdown = CreateConfigDropDown(panel, "DirectionDropDown", "Growth Direction", GrowthDirectionDropDownMenu_Initialize)
 	growthDropdown:SetPoint("TOPLEFT", numSlider, "BOTTOMLEFT", -13, -32)
@@ -2467,6 +2528,8 @@ function dispatcher:ADDON_LOADED(arg)
 	end
 
 	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
+		CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL["Default"])
+
 		CFG = CopyTable(_G.LS_TOASTS_CFG_GLOBAL["Default"], _G.LS_TOASTS_CFG)
 	else
 		CFG = CopyTable(DEFAULTS, _G.LS_TOASTS_CFG)
@@ -2479,6 +2542,7 @@ end
 
 function dispatcher:PLAYER_LOGIN()
 	anchorFrame:SetPoint(unpack(CFG.point))
+	anchorFrame:SetScale(CFG.scale)
 
 	EnableAchievementToasts()
 	EnableArchaeologyToasts()
