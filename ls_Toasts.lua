@@ -2385,14 +2385,14 @@ local function CreateConfigPanel()
 	numSlider:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 16, -24)
 	numSlider.watchedValue = "max_active_toasts"
 
-	local growthDropdown = CreateConfigDropDown(panel, "DirectionDropDown", "Growth Direction", GrowthDirectionDropDownMenu_Initialize)
-	growthDropdown:SetPoint("TOPLEFT", numSlider, "BOTTOMLEFT", -13, -32)
-	growthDropdown.watchedValue = "growth_direction"
-
 	local delaySlider = CreateConfigSlider(panel, "FadeOutSlider", "Fade Out Delay", 0.4, 0.8, 6.0)
 	delaySlider:SetPoint("LEFT", numSlider, "RIGHT", 32, 0)
 	delaySlider:SetScript("OnValueChanged", DelaySlider_OnValueChanged)
 	delaySlider.watchedValue = "fadeout_delay"
+
+	local growthDropdown = CreateConfigDropDown(panel, "DirectionDropDown", "Growth Direction", GrowthDirectionDropDownMenu_Initialize)
+	growthDropdown:SetPoint("TOPLEFT", numSlider, "BOTTOMLEFT", -13, -32)
+	growthDropdown.watchedValue = "growth_direction"
 
 	divider = CreateConfigDivider(panel, "Toasts")
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
