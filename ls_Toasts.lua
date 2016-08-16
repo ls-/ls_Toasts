@@ -1165,9 +1165,9 @@ end
 
 function dispatcher:GARRISON_TALENT_COMPLETE(...)
 	local garrisonType = ...
-    local talentID = _G.C_Garrison.GetCompleteTalent(garrisonType)
-    local talent = _G.C_Garrison.GetTalent(talentID)
-    local toast = GetToast("misc")
+	local talentID = _G.C_Garrison.GetCompleteTalent(garrisonType)
+	local talent = _G.C_Garrison.GetTalent(talentID)
+	local toast = GetToast("misc")
 
 	toast.Title:SetText(_G.GARRISON_TALENT_ORDER_ADVANCEMENT)
 	toast.Text:SetText(talent.name)
