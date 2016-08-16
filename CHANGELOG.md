@@ -1,3 +1,7 @@
+## Version 1.05
+
+- Fixed anchor frame movement, when it's scaled down.
+
 ## Version 1.04
 
 - NEW! Added scaling for toasts;
