@@ -2107,7 +2107,7 @@ local function UpdateScale(scale)
 		toast:SetScale(scale)
 	end
 
-	anchorFrame:SetScale(CFG.scale)
+	anchorFrame:SetSize(234 * scale, 58 * scale)
 
 	for i = 1, #activeToasts do
 		RecycleToast(activeToasts[1])
@@ -2446,7 +2446,7 @@ local function CreateConfigPanel()
 	delaySlider:SetScript("OnValueChanged", DelaySlider_OnValueChanged)
 	delaySlider.watchedValue = "fadeout_delay"
 
-	local scaleSlider = CreateConfigSlider(panel, "ScaleSlider", "Scale", 0.1, 0.75, 2)
+	local scaleSlider = CreateConfigSlider(panel, "ScaleSlider", "Scale", 0.1, 0.8, 2)
 	scaleSlider:SetPoint("LEFT", delaySlider, "RIGHT", 69, 0)
 	scaleSlider:SetScript("OnValueChanged", ScaleSlider_OnValueChanged)
 	scaleSlider.watchedValue = "scale"
@@ -2542,7 +2542,7 @@ end
 
 function dispatcher:PLAYER_LOGIN()
 	anchorFrame:SetPoint(unpack(CFG.point))
-	anchorFrame:SetScale(CFG.scale)
+	anchorFrame:SetSize(234 * CFG.scale, 58 * CFG.scale)
 
 	EnableAchievementToasts()
 	EnableArchaeologyToasts()
