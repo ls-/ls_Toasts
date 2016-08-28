@@ -1075,6 +1075,7 @@ local function GarrisonMissionToast_SetUp(missionID, isShipyard, isAdded)
 	end
 
 	toast.Text:SetText(missionInfo.name)
+	toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 	toast.Level:SetText(level)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.Icon:SetAtlas(missionInfo.typeAtlas, false)
@@ -1136,6 +1137,7 @@ function dispatcher:GARRISON_FOLLOWER_ADDED(...)
 	end
 
 	toast.Text:SetText(name)
+	toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.id = followerID
 
@@ -1359,6 +1361,7 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 
 			toast.Title:SetText(title)
 			toast.Text:SetText(name)
+			toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 			toast.Count:SetText(quantity > 1 and quantity or "")
 			toast.Border:SetVertexColor(color.r, color.g, color.b)
 			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
@@ -1422,6 +1425,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 
 		toast.Title:SetText(_G.LEGENDARY_ITEM_LOOT_LABEL)
 		toast.Text:SetText(name)
+		toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legendary")
 		toast.Border:SetVertexColor(color.r, color.g, color.b)
 		toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
@@ -1445,6 +1449,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 
 		toast.Title:SetText(color.hex..strformat(_G.LOOTUPGRADEFRAME_TITLE, _G["ITEM_QUALITY"..quality.."_DESC"]).."|r")
 		toast.Text:SetText(name)
+		toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 		toast.Count:SetText(quantity > 1 and quantity or "")
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
 		toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -1476,6 +1481,7 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 
 	toast.Title:SetText(_G.BLIZZARD_STORE_PURCHASE_COMPLETE)
 	toast.Text:SetText(name)
+	toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
@@ -1684,6 +1690,7 @@ local function WorldQuestToast_SetUp(questID)
 
 	toast.Title:SetText(_G.WORLD_QUEST_COMPLETE)
 	toast.Text:SetText(taskName)
+	toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-worldquest")
 	toast.Icon:SetTexture(icon)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
