@@ -67,47 +67,32 @@ dispatcher:SetScript("OnEvent", EventHandler)
 
 local function CalculatePosition(self)
 	local selfCenterX, selfCenterY = self:GetCenter()
-	local screenWidth = mfloor(_G.UIParent:GetRight() + 0.5)
-	local screenHeight = mfloor(_G.UIParent:GetTop() + 0.5)
-	local p, rP, x, y
+	local screenWidth = _G.UIParent:GetRight()
+	local screenHeight = _G.UIParent:GetTop()
+	local screenCenterX, screenCenterY = _G.UIParent:GetCenter()
+	local screenLeft = screenWidth / 3
+	local screenRight = screenWidth *  2 / 3
+	local p, x, y
 
-	if selfCenterX and selfCenterY then
-		selfCenterX, selfCenterY = mfloor(selfCenterX + 0.5), mfloor(selfCenterY + 0.5)
-
-		if selfCenterX >= screenWidth / 2 then
-			-- RIGHT
-			x = mfloor(self:GetRight() + 0.5) - screenWidth
-
-			if selfCenterY >= screenHeight / 2 then
-				-- TOP
-				p  = "TOPRIGHT"
-				rP  = "TOPRIGHT"
-				y = mfloor(self:GetTop() + 0.5) - screenHeight
-			else
-				-- BOTTOM
-				p  = "BOTTOMRIGHT"
-				rP  = "BOTTOMRIGHT"
-				y = mfloor(self:GetBottom() + 0.5)
-			end
-		else
-			-- LEFT
-			x = mfloor(self:GetLeft() + 0.5)
-
-			if selfCenterY >= screenHeight / 2 then
-				-- TOP
-				p  = "TOPLEFT"
-				rP  = "TOPLEFT"
-				y = mfloor(self:GetTop() + 0.5) - screenHeight
-			else
-				-- BOTTOM
-				p  = "BOTTOMLEFT"
-				rP  = "BOTTOMLEFT"
-				y = mfloor(self:GetBottom() + 0.5)
-			end
-		end
+	if selfCenterY >= screenCenterY then
+		p = "TOP"
+		y = self:GetTop() - screenHeight
+	else
+		p = "BOTTOM"
+		y = self:GetBottom()
 	end
 
-	return p, rP, x, y
+	if selfCenterX >= screenRight then
+		p = p.."RIGHT"
+		x = self:GetRight() - screenWidth
+	elseif selfCenterX <= screenLeft then
+		p = p.."LEFT"
+		x = self:GetLeft()
+	else
+		x = selfCenterX - screenCenterX
+	end
+
+	return p, p, mfloor(x + 0.5), mfloor(y + 0.5)
 end
 
 local function Anchor_OnDragStart(self)
