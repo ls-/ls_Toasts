@@ -2595,6 +2595,8 @@ local function CreateConfigPanel()
 	panel.default = function() end
 
 	_G.InterfaceOptions_AddCategory(panel)
+
+	return panel
 end
 
 -------------
@@ -2634,7 +2636,16 @@ function dispatcher:PLAYER_LOGIN()
 	EnableWorldToasts()
 	EnableTransmogToasts()
 
-	CreateConfigPanel()
+	local panel = CreateConfigPanel()
+
+	_G.SLASH_LSTOASTS1 = "/lstoasts"
+	_G.SlashCmdList["LSTOASTS"] = function()
+		if not panel:IsShown() then
+			_G.InterfaceOptionsFrame_OpenToCategory(panel)
+		else
+			_G.InterfaceOptionsFrameOkay_OnClick(_G.InterfaceOptionsFrame)
+		end
+	end
 end
 
 function dispatcher:PLAYER_LOGOUT()
