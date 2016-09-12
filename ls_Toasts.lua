@@ -939,7 +939,7 @@ dispatcher:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 local function AchievementToast_SetUp(achievementID, flag, isCriteria)
 	local toast = GetToast("achievement")
-	local _, name, points, _, _, _, _, _, _, icon, _, isGuildAch = _G.GetAchievementInfo(achievementID)
+	local _, name, points, _, _, _, _, _, _, icon = _G.GetAchievementInfo(achievementID)
 
 	if isCriteria then
 		toast.Title:SetText(_G.ACHIEVEMENT_PROGRESSED)
@@ -1084,7 +1084,7 @@ function dispatcher:GARRISON_BUILDING_ACTIVATABLE(...)
 end
 
 function dispatcher:GARRISON_FOLLOWER_ADDED(...)
-	local followerID, name, class, level, quality, isUpgraded, texPrefix, followerType = ...
+	local followerID, name, _, level, quality, isUpgraded, texPrefix, followerType = ...
 	local followerInfo = _G.C_Garrison.GetFollowerInfo(followerID)
 	local followerStrings = _G.GarrisonFollowerOptions[followerType].strings
 	local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
@@ -1194,7 +1194,7 @@ end
 
 local function LFGToast_SetUp(isScenario)
 	local toast = GetToast("scenario")
-	local name, typeID, subtypeID, textureFilename, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numRewards = _G.GetLFGCompletionReward()
+	local name, _, subtypeID, textureFilename, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numRewards = _G.GetLFGCompletionReward()
 	-- local name, typeID, subtypeID, textureFilename, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numRewards =
 		-- "The Vortex Pinnacle", 1, 2, "THEVORTEXPINNACLE", 308000, 0, 0, 0, 0, 0
 	local money = moneyBase + moneyVar * numStrangers
@@ -1394,7 +1394,7 @@ function dispatcher:LOOT_ITEM_ROLL_WON(...)
 end
 
 function dispatcher:SHOW_LOOT_TOAST(...)
-	local typeID, itemLink, quantity, specID, sex, isPersonal, lootSource, lessAwesome, isUpgraded = ...
+	local typeID, itemLink, quantity, _, _, isPersonal, _, lessAwesome, isUpgraded = ...
 
 	LootWonToast_Setup(itemLink, quantity, nil, nil, nil, typeID == "item", typeID == "currency", typeID == "money", lessAwesome, isUpgraded, isPersonal)
 end
@@ -1422,7 +1422,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 end
 
 function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
-	local itemLink, quantity, specID, sex, baseQuality, isPersonal, lessAwesome = ...
+	local itemLink, quantity = ...
 
 	if itemLink then
 		local toast = GetToast("item")
@@ -1450,13 +1450,13 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 end
 
 function dispatcher:SHOW_PVP_FACTION_LOOT_TOAST(...)
-	local typeID, itemLink, quantity, specID, sex, isPersonal, lessAwesome = ...
+	local typeID, itemLink, quantity, _, _, isPersonal, lessAwesome = ...
 
 	LootWonToast_Setup(itemLink, quantity, nil, nil, true, typeID == "item", typeID == "currency", typeID == "money", lessAwesome, nil, isPersonal)
 end
 
 function dispatcher:STORE_PRODUCT_DELIVERED(...)
-	local type, icon, name, payloadID = ...
+	local _, icon, name, payloadID = ...
 	local _, _, quality =  _G.GetItemInfo(payloadID)
 	local color = _G.ITEM_QUALITY_COLORS[quality or 4]
 	local toast = GetToast("item")
@@ -1511,7 +1511,7 @@ end
 
 function dispatcher:NEW_RECIPE_LEARNED(...)
 	local recipeID = ...
-	local tradeSkillID, skillLineName = _G.C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
+	local tradeSkillID = _G.C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
 
 	if tradeSkillID then
 		local recipeName = _G.GetSpellInfo(recipeID)
@@ -1616,8 +1616,8 @@ local function WorldQuestToast_SetUp(questID)
 	end
 
 	local toast = GetToast("scenario")
-	local isInArea, isOnMap, numObjectives, taskName, displayAsObjective = _G.GetTaskInfo(questID)
-	local tagID, tagName, worldQuestType, rarity, isElite, tradeskillLineIndex = _G.GetQuestTagInfo(questID)
+	local _, _, _, taskName = _G.GetTaskInfo(questID)
+	local _, _, worldQuestType, rarity, _, tradeskillLineIndex = _G.GetQuestTagInfo(questID)
 	local color = _G.WORLD_QUEST_QUALITY_COLORS[rarity]
 	local money = _G.GetQuestLogRewardMoney(questID)
 	local xp = _G.GetQuestLogRewardXP(questID)
@@ -1818,7 +1818,7 @@ local function SpawnTestWorldEventToast()
 	local mapAreaID = _G.GetCurrentMapAreaID();
 	local taskInfo = _G.C_TaskQuest.GetQuestsForPlayerByMapID(mapAreaID)
 
-	for i, info in pairs(taskInfo) do
+	for _, info in pairs(taskInfo) do
 		local questID = info.questId
 
 		if _G.QuestMapFrame_IsQuestWorldQuest(questID) and _G.HaveQuestData(questID) then
@@ -1826,7 +1826,7 @@ local function SpawnTestWorldEventToast()
 
 			if numRewards > 0 then
 				for i = 1, numRewards do
-					local itemName, itemTexture, quantity, quality, isUsable, itemID = _G.GetQuestLogRewardInfo(i, questID)
+					local _, _, _, _, _, itemID = _G.GetQuestLogRewardInfo(i, questID)
 
 					if itemID then
 						local _, itemLink = _G.GetItemInfo(itemID)
@@ -2147,7 +2147,7 @@ local function CheckButton_OnEnter(self)
 	_G.GameTooltip:Show()
 end
 
-local function CheckButton_OnLeave(self)
+local function CheckButton_OnLeave()
 	_G.GameTooltip:Hide()
 end
 
@@ -2330,7 +2330,7 @@ local function GrowthDirectionDropDownMenu_OnClick(self)
 	self.owner:SetValue(self.value)
 end
 
-local function GrowthDirectionDropDownMenu_Initialize(self, ...)
+local function GrowthDirectionDropDownMenu_Initialize(self)
 	local info = _G.UIDropDownMenu_CreateInfo()
 
 	info.text = "Up"
@@ -2519,9 +2519,9 @@ function dispatcher:ADDON_LOADED(arg)
 		CFG = CopyTable(DEFAULTS, _G.LS_TOASTS_CFG)
 	end
 
-	dispatcher:RegisterEvent("PLAYER_LOGIN")
-	dispatcher:RegisterEvent("PLAYER_LOGOUT")
-	dispatcher:UnregisterEvent("ADDON_LOADED")
+	self:RegisterEvent("PLAYER_LOGIN")
+	self:RegisterEvent("PLAYER_LOGOUT")
+	self:UnregisterEvent("ADDON_LOADED")
 end
 
 function dispatcher:PLAYER_LOGIN()
