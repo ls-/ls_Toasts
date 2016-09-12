@@ -398,7 +398,9 @@ local function ToastButton_OnClick(self, button)
 					_G.Garrison_LoadUI()
 				end
 
-				_G.ShowGarrisonLandingPage(_G.GarrisonFollowerOptions[_G.C_Garrison.GetFollowerInfo(self.id).followerTypeID].garrisonType)
+				if _G.GarrisonLandingPage then
+					_G.ShowGarrisonLandingPage(_G.GarrisonFollowerOptions[_G.C_Garrison.GetFollowerInfo(self.id).followerTypeID].garrisonType)
+				end
 			end
 		end
 	end
