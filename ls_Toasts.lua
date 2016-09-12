@@ -270,13 +270,13 @@ end
 
 local function GetToastToUpdate(id, toastType)
 	for _, toast in pairs(activeToasts) do
-		if id == toast.id and toastType == toast.type then
+		if (id == toast.id or id == toast.link) and toastType == toast.type then
 			return toast, false
 		end
 	end
 
 	for _, toast in pairs(queuedToasts) do
-		if id == toast.id and toastType == toast.type then
+		if (id == toast.id or id == toast.link) and toastType == toast.type then
 			return toast, true
 		end
 	end
