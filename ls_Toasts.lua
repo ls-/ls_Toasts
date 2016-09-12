@@ -2566,7 +2566,7 @@ local function CreateConfigPanel()
 		[5] = {name = "Loot", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -101}, enabled = "loot_enabled", dnd = "dnd.loot", testFunc = SpawnTestLootToast},
 		[6] = {name = "Recipe", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -125}, enabled = "recipe_enabled", dnd = "dnd.recipe", testFunc = SpawnTestRecipeToast},
 		[7] = {name = "World Quest", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -149}, enabled = "world_enabled", dnd = "dnd.world", testFunc = SpawnTestWorldEventToast},
-		[8] = {name = "Transmog", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -173}, enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
+		[8] = {name = "Transmogrification", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -173}, enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
 	}
 
 	for i = 1, 8 do
