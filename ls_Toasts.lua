@@ -1,5 +1,6 @@
 -- Lua
 local _G = _G
+local string = _G.string
 local tonumber, unpack, pairs, select, type, next = tonumber, unpack, pairs, select, type, next
 local tremove, tinsert, twipe = table.remove, table.insert, table.wipe
 local strformat, strsplit = string.format, string.split
@@ -40,6 +41,7 @@ local DEFAULTS = {
 		instance = false, -- dungeon completion
 		loot = false, -- includes blizz store items
 		world = false, -- world quest, invasion completion
+		transmog = false,
 	},
 	achievement_enabled = true,
 	archaeology_enabled = true,
@@ -48,6 +50,7 @@ local DEFAULTS = {
 	loot_enabled = true,
 	recipe_enabled = true,
 	world_enabled = true,
+	transmog_enabled = true,
 }
 
 ----------------
@@ -400,6 +403,18 @@ local function ToastButton_OnClick(self, button)
 
 				if _G.GarrisonLandingPage then
 					_G.ShowGarrisonLandingPage(_G.GarrisonFollowerOptions[_G.C_Garrison.GetFollowerInfo(self.id).followerTypeID].garrisonType)
+				end
+			elseif self.type == "misc" then
+				if self.link then
+					if string.sub(self.link, 1, 18) == "transmogappearance" then
+						if not _G.CollectionsJournal then
+							_G.CollectionsJournal_LoadUI()
+						end
+
+						if _G.CollectionsJournal then
+							_G.WardrobeCollectionFrame_OpenTransmogLink(self.link)
+						end
+					end
 				end
 			end
 		end
@@ -1732,6 +1747,71 @@ local function DisableWorldToasts()
 	dispatcher:UnregisterEvent("QUEST_LOOT_RECEIVED")
 end
 
+--------------
+-- TRANSMOG --
+--------------
+
+local LEARN_TRANSMOG_PATTERN = string.gsub(_G.ERR_LEARN_TRANSMOG_S , "%%s", "(.+)")
+local REVOKE_TRANSMOG_PATTERN = string.gsub(_G.ERR_REVOKE_TRANSMOG_S, "%%s", "(.+)")
+
+function dispatcher:CHAT_MSG_SYSTEM(message)
+	local transmogLink = string.match(message, LEARN_TRANSMOG_PATTERN)
+	local isKnown = true
+
+	if not transmogLink then
+		transmogLink = string.match(message, REVOKE_TRANSMOG_PATTERN)
+		isKnown = false
+
+		if not transmogLink then
+			return
+		end
+	end
+
+	local sourceID, name = string.match(transmogLink, "transmogappearance:(%d+)|h%[(.+)%]")
+
+	if sourceID then
+		local toast = GetToastToUpdate(sourceID, "misc")
+		local isUpdated = true
+
+		if not toast then
+			toast = GetToast("misc")
+			isUpdated = false
+		end
+
+		local _, _, _, icon, _, _ =_G.C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+
+		if isKnown then
+			toast.Title:SetText("Appearance Added")
+		else
+			toast.Title:SetText("Appearance Removed")
+		end
+
+		toast.Text:SetText(name)
+		-- toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-")
+		toast.Border:SetVertexColor(1, 128 / 255, 1)
+		toast.IconBorder:SetVertexColor(1, 128 / 255, 1)
+		toast.Icon:SetTexture(icon)
+		toast.id = sourceID
+		toast.link = string.match(transmogLink, "|H(.+)|h.+|h")
+
+		if not isUpdated then
+			SpawnToast(toast, CFG.dnd.transmog)
+		end
+	end
+end
+
+local function EnableTransmogToasts()
+	_G.AlertFrame:UnregisterEvent("CHAT_MSG_SYSTEM")
+
+	if CFG.transmog_enabled then
+		dispatcher:RegisterEvent("CHAT_MSG_SYSTEM")
+	end
+end
+
+local function DisableTransmogToasts()
+	dispatcher:UnregisterEvent("CHAT_MSG_SYSTEM")
+end
+
 -----------
 -- TESTS --
 -----------
@@ -1882,6 +1962,16 @@ local function SpawnTestLootToast()
 
 	-- store
 	dispatcher:STORE_PRODUCT_DELIVERED(1, 915544, "Pouch of Enduring Wisdom", 105911)
+end
+
+local function SpawnTestTransmogToast()
+	local appearance = _G.C_TransmogCollection.GetCategoryAppearances(1) and _G.C_TransmogCollection.GetCategoryAppearances(1)[1]
+	local source = _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID) and _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID)[1]
+	local _, _, _, _, _, _, transmogLink = _G.C_TransmogCollection.GetAppearanceSourceInfo(source.sourceID)
+
+	if transmogLink then
+		dispatcher:CHAT_MSG_SYSTEM(string.format(_G.ERR_LEARN_TRANSMOG_S, transmogLink))
+	end
 end
 
 -----------
@@ -2044,6 +2134,12 @@ local function ToggleToasts(value, state)
 			EnableWorldToasts()
 		else
 			DisableWorldToasts()
+		end
+	elseif value == "transmog_enabled" then
+		if state then
+			EnableTransmogToasts()
+		else
+			DisableTransmogToasts()
 		end
 	end
 end
@@ -2444,7 +2540,7 @@ local function CreateConfigPanel()
 
 	local toastSettings = _G.CreateFrame("Frame", "$parentToastSettings", panel)
 	toastSettings:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -32)
-	toastSettings:SetSize(441, 167)
+	toastSettings:SetSize(441, 191)
 
 	local bg = toastSettings:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints()
@@ -2470,9 +2566,10 @@ local function CreateConfigPanel()
 		[5] = {name = "Loot", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -101}, enabled = "loot_enabled", dnd = "dnd.loot", testFunc = SpawnTestLootToast},
 		[6] = {name = "Recipe", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -125}, enabled = "recipe_enabled", dnd = "dnd.recipe", testFunc = SpawnTestRecipeToast},
 		[7] = {name = "World Quest", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -149}, enabled = "world_enabled", dnd = "dnd.world", testFunc = SpawnTestWorldEventToast},
+		[8] = {name = "Transmog", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -173}, enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
 	}
 
-	for i = 1, 7 do
+	for i = 1, 8 do
 		CreateToastConfigLine(toastSettings, layout[i])
 	end
 
@@ -2535,6 +2632,8 @@ function dispatcher:PLAYER_LOGIN()
 	EnableLootToasts()
 	EnableRecipeToasts()
 	EnableWorldToasts()
+	EnableTransmogToasts()
+
 	CreateConfigPanel()
 end
 
