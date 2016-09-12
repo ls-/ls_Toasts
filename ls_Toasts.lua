@@ -1805,10 +1805,6 @@ local function SpawnTestArchaeologyToast()
 	dispatcher:ARTIFACT_DIGSITE_COMPLETE(408)
 end
 
-local function SpawnTestStoreToast()
-	dispatcher:STORE_PRODUCT_DELIVERED(1, 915544, "Pouch of Enduring Wisdom", 105911)
-end
-
 local function SpawnTestWorldEventToast()
 	-- invasion in Azshara
 	local _, link = _G.GetItemInfo(139049)
@@ -1883,6 +1879,9 @@ local function SpawnTestLootToast()
 	if link then
 		dispatcher:SHOW_LOOT_TOAST_UPGRADE(link, 1)
 	end
+
+	-- store
+	dispatcher:STORE_PRODUCT_DELIVERED(1, 915544, "Pouch of Enduring Wisdom", 105911)
 end
 
 -----------
@@ -1901,8 +1900,6 @@ end
 -- 	SpawnTestRecipeToast()
 
 -- 	SpawnTestArchaeologyToast()
-
--- 	SpawnTestStoreToast()
 
 -- 	SpawnTestLootToast()
 
