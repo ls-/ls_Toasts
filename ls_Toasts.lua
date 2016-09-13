@@ -2628,7 +2628,7 @@ local function CreateConfigPanel()
 	subtext:SetJustifyV("TOP")
 	subtext:SetNonSpaceWrap(true)
 	subtext:SetMaxLines(4)
-	subtext:SetText("|cffff2020Experimental!|r To save current settings as a default preset click the button below. This feature may be quite handy, if you use more or less same layout on many characters. This way you'll need to tweak fewer things. |cffffd200Please note that there can be only 1 preset. Hitting this button on a different character will overwrite existing template.|r")
+	subtext:SetText("To save current settings as a default preset click the button below. This feature may be quite handy, if you use more or less same layout on many characters. This way you'll need to tweak fewer things. |cffffd200Please note that there can be only 1 preset. Hitting this button on a different character will overwrite existing template.|r")
 
 	local saveDefaults = CreateConfigButton(panel, "SaveDefaultsButton", "Save Settings", SaveDefaultTemplate)
 	saveDefaults:SetPoint("TOPLEFT", subtext, "BOTTOMLEFT", 0, -8)
