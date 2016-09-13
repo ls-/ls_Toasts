@@ -9,7 +9,7 @@ Replacement for default alert system. Better toasts, cheers!
 
 ## Features
 - One design for all toasts. Special alert frames have unique backgrounds;
-- In-game config at Esc > Interface > AddOns > ls: Toasts. From there you can disable sounds, move alert frames, etc;
+- In-game config at Esc > Interface > AddOns > ls: Toasts, or use **/lstoasts** command. From there you can disable sounds, move alert frames, etc;
 - DND mode. You can enable DND mode for different toast groups. Toasts in DND mode won't be displayed in combat, but will be queued up in the system. Once you leave combat, they'll start popping up. Available from in-game config;
 
 ## Usage
