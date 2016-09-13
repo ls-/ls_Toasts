@@ -1787,7 +1787,7 @@ function dispatcher:CHAT_MSG_SYSTEM(message)
 		end
 
 		toast.Text:SetText(name)
-		-- toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-")
+		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-transmog")
 		toast.Border:SetVertexColor(1, 128 / 255, 1)
 		toast.IconBorder:SetVertexColor(1, 128 / 255, 1)
 		toast.Icon:SetTexture(icon)
