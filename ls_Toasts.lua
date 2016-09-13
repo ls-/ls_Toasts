@@ -251,6 +251,72 @@ local function RefreshToasts()
 	end
 end
 
+local function ResetToast(toast)
+	toast.id = nil
+	toast.dnd = nil
+	toast.link = nil
+	toast.soundFile = nil
+	toast.usedRewards = nil
+	toast:ClearAllPoints()
+	toast:Hide()
+	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-default")
+	toast.Icon:SetPoint("TOPLEFT", 7, -7)
+	toast.Icon:SetSize(44, 44)
+	toast.Title:SetText("")
+	toast.Text:SetText("")
+	toast.Text:SetTextColor(1, 1, 1)
+	toast.TextBG:SetVertexColor(0, 0, 0)
+	toast.AnimIn:Stop()
+	toast.AnimOut:Stop()
+
+	if toast.IconBorder then
+		toast.IconBorder:Show()
+		toast.IconBorder:SetVertexColor(1, 1, 1)
+	end
+
+	if toast.Count then
+		toast.Count:SetText("")
+	end
+
+	if toast.Dragon then
+		toast.Dragon:Hide()
+	end
+
+	if toast.Level then
+		toast.Level:SetText("")
+	end
+
+	if toast.Points then
+		toast.Points:SetText("")
+	end
+
+	if toast.Rank then
+		toast.Rank:SetText("")
+	end
+
+	if toast.IconText then
+		toast.IconText:SetText("")
+	end
+
+	if toast.Bonus then
+		toast.Bonus:Hide()
+	end
+
+	if toast.Heroic then
+		toast.Heroic:Hide()
+	end
+
+	if toast.Arrows then
+		toast.Arrows.Anim:Stop()
+	end
+
+	if toast.Reward1 then
+		for i = 1, 5 do
+			toast["Reward"..i]:Hide()
+		end
+	end
+end
+
 local function RecycleToast(toast)
 	for i, activeToast in pairs(activeToasts) do
 		if toast == activeToast then
@@ -272,7 +338,7 @@ local function RecycleToast(toast)
 				tinsert(miscToasts, toast)
 			end
 
-			toast:Hide()
+			ResetToast(toast)
 		end
 	end
 
@@ -330,70 +396,6 @@ local function ToastButton_OnShow(self)
 
 	self.AnimIn:Play()
 	self.AnimOut:Play()
-end
-
-local function ToastButton_OnHide(self)
-	self.id = nil
-	self.dnd = nil
-	self.link = nil
-	self.soundFile = nil
-	self.usedRewards = nil
-	self:ClearAllPoints()
-	self.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-default")
-	self.Icon:SetPoint("TOPLEFT", 7, -7)
-	self.Icon:SetSize(44, 44)
-	self.Title:SetText("")
-	self.Text:SetText("")
-	self.TextBG:SetVertexColor(0, 0, 0)
-	self.AnimIn:Stop()
-	self.AnimOut:Stop()
-
-	if self.IconBorder then
-		self.IconBorder:Show()
-		self.IconBorder:SetVertexColor(1, 1, 1)
-	end
-
-	if self.Count then
-		self.Count:SetText("")
-	end
-
-	if self.Dragon then
-		self.Dragon:Hide()
-	end
-
-	if self.Level then
-		self.Level:SetText("")
-	end
-
-	if self.Points then
-		self.Points:SetText("")
-	end
-
-	if self.Rank then
-		self.Rank:SetText("")
-	end
-
-	if self.IconText then
-		self.IconText:SetText("")
-	end
-
-	if self.Bonus then
-		self.Bonus:Hide()
-	end
-
-	if self.Heroic then
-		self.Heroic:Hide()
-	end
-
-	if self.Arrows then
-		self.Arrows.Anim:Stop()
-	end
-
-	if self.Reward1 then
-		for i = 1, 5 do
-			self["Reward"..i]:Hide()
-		end
-	end
 end
 
 local function ToastButton_OnClick(self, button)
@@ -505,7 +507,6 @@ local function CreateBaseToastButton()
 	toast:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	toast:Hide()
 	toast:SetScript("OnShow", ToastButton_OnShow)
-	toast:SetScript("OnHide", ToastButton_OnHide)
 	toast:SetScript("OnClick", ToastButton_OnClick)
 	toast:SetScript("OnEnter", ToastButton_OnEnter)
 	toast:SetScript("OnLeave", ToastButton_OnLeave)
