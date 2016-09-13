@@ -75,7 +75,7 @@ local function CalculatePosition(self)
 	local screenHeight = _G.UIParent:GetTop()
 	local screenCenterX, screenCenterY = _G.UIParent:GetCenter()
 	local screenLeft = screenWidth / 3
-	local screenRight = screenWidth *  2 / 3
+	local screenRight = screenWidth * 2 / 3
 	local p, x, y
 
 	if selfCenterY >= screenCenterY then
@@ -1494,7 +1494,7 @@ end
 
 function dispatcher:STORE_PRODUCT_DELIVERED(...)
 	local _, icon, name, payloadID = ...
-	local _, _, quality =  _G.GetItemInfo(payloadID)
+	local _, _, quality = _G.GetItemInfo(payloadID)
 	local color = _G.ITEM_QUALITY_COLORS[quality or 4]
 	local toast = GetToast("item")
 
