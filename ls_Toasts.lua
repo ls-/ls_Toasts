@@ -2554,10 +2554,6 @@ local function CreateConfigPanel()
 	soundToggle:SetPoint("LEFT", acnhorButton, "RIGHT", 32, 0)
 	soundToggle.watchedValue = "sfx_enabled"
 
-	local colorToggle = CreateConfigCheckButton(panel, "ColorText", "Colour Item Names", "Colours item names by quality.")
-	colorToggle:SetPoint("LEFT", soundToggle, "RIGHT", 96, 0)
-	colorToggle.watchedValue = "colored_names_enabled"
-
 	local divider = CreateConfigDivider(panel, "Appearance")
 	divider:SetPoint("TOP", soundToggle, "BOTTOM", 0, -10)
 
@@ -2578,6 +2574,10 @@ local function CreateConfigPanel()
 	local growthDropdown = CreateConfigDropDown(panel, "DirectionDropDown", "Growth Direction", GrowthDirectionDropDownMenu_Initialize)
 	growthDropdown:SetPoint("TOPLEFT", numSlider, "BOTTOMLEFT", -13, -32)
 	growthDropdown.watchedValue = "growth_direction"
+
+	local colorToggle = CreateConfigCheckButton(panel, "ColorText", "Colour Item Names", "Colours item names by quality.")
+	colorToggle:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", -3, -32)
+	colorToggle.watchedValue = "colored_names_enabled"
 
 	divider = CreateConfigDivider(panel, "Toasts")
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
