@@ -197,8 +197,12 @@ local function SpawnToast(toast, isDND)
 	if #activeToasts > 0 then
 		if CFG.growth_direction == "DOWN" then
 			toast:SetPoint("TOP", activeToasts[#activeToasts], "BOTTOM", 0, -4)
-		else
+		elseif CFG.growth_direction == "UP" then
 			toast:SetPoint("BOTTOM", activeToasts[#activeToasts], "TOP", 0, 4)
+		elseif CFG.growth_direction == "LEFT" then
+			toast:SetPoint("RIGHT", activeToasts[#activeToasts], "LEFT", -8, 0)
+		elseif CFG.growth_direction == "RIGHT" then
+			toast:SetPoint("LEFT", activeToasts[#activeToasts], "RIGHT", 8, 0)
 		end
 	else
 		toast:SetPoint("TOPLEFT", anchorFrame, "TOPLEFT", 0, 0)
@@ -222,8 +226,12 @@ local function RefreshToasts()
 		else
 			if CFG.growth_direction == "DOWN" then
 				activeToast:SetPoint("TOP", activeToasts[i - 1], "BOTTOM", 0, -4)
-			else
+			elseif CFG.growth_direction == "UP" then
 				activeToast:SetPoint("BOTTOM", activeToasts[i - 1], "TOP", 0, 4)
+			elseif CFG.growth_direction == "LEFT" then
+				activeToast:SetPoint("RIGHT", activeToasts[i - 1], "LEFT", -8, 0)
+			elseif CFG.growth_direction == "RIGHT" then
+				activeToast:SetPoint("LEFT", activeToasts[i - 1], "RIGHT", 8, 0)
 			end
 		end
 	end
@@ -2439,6 +2447,20 @@ local function GrowthDirectionDropDownMenu_Initialize(self)
 	info.text = "Down"
 	info.func = GrowthDirectionDropDownMenu_OnClick
 	info.value = "DOWN"
+	info.owner = self
+	info.checked = nil
+	_G.UIDropDownMenu_AddButton(info)
+
+	info.text = "Left"
+	info.func = GrowthDirectionDropDownMenu_OnClick
+	info.value = "LEFT"
+	info.owner = self
+	info.checked = nil
+	_G.UIDropDownMenu_AddButton(info)
+
+	info.text = "Right"
+	info.func = GrowthDirectionDropDownMenu_OnClick
+	info.value = "RIGHT"
 	info.owner = self
 	info.checked = nil
 	_G.UIDropDownMenu_AddButton(info)
