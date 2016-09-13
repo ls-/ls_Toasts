@@ -33,6 +33,7 @@ local DEFAULTS = {
 	sfx_enabled = true,
 	fadeout_delay = 2.8,
 	scale = 1,
+	colored_names_enabled = false,
 	dnd = {
 		achievement = false,
 		archaeology = false,
@@ -1086,6 +1087,9 @@ local function GarrisonMissionToast_SetUp(missionID, isShipyard, isAdded)
 	end
 
 	toast.Text:SetText(missionInfo.name)
+	if textcolor_enable == true then
+	  toast.Text:SetTextColor(color.r, color.g, color.b, 1)
+	end
 	toast.Level:SetText(level)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.Icon:SetAtlas(missionInfo.typeAtlas, false)
@@ -1144,6 +1148,10 @@ function dispatcher:GARRISON_FOLLOWER_ADDED(...)
 		toast.Arrows.requested = true
 	else
 		toast.Title:SetText(followerStrings.FOLLOWER_ADDED_TOAST)
+	end
+
+	if CFG.colored_names_enabled then
+		toast.Text:SetTextColor(color.r, color.g, color.b)
 	end
 
 	toast.Text:SetText(name)
@@ -1368,6 +1376,10 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 
 			local color = _G.ITEM_QUALITY_COLORS[quality or 1]
 
+			if CFG.colored_names_enabled then
+				toast.Text:SetTextColor(color.r, color.g, color.b)
+			end
+
 			toast.Title:SetText(title)
 			toast.Text:SetText(name)
 			toast.Count:SetText(quantity > 1 and quantity or "")
@@ -1431,6 +1443,10 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 		local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
 		local color = _G.ITEM_QUALITY_COLORS[quality or 1]
 
+		if CFG.colored_names_enabled then
+			toast.Text:SetTextColor(color.r, color.g, color.b)
+		end
+
 		toast.Title:SetText(_G.LEGENDARY_ITEM_LOOT_LABEL)
 		toast.Text:SetText(name)
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legendary")
@@ -1453,6 +1469,10 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 		local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
 		local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality or 2]
 		local color = _G.ITEM_QUALITY_COLORS[quality or 1]
+
+		if CFG.colored_names_enabled then
+			toast.Text:SetTextColor(color.r, color.g, color.b)
+		end
 
 		toast.Title:SetText(color.hex..strformat(_G.LOOTUPGRADEFRAME_TITLE, _G["ITEM_QUALITY"..quality.."_DESC"]).."|r")
 		toast.Text:SetText(name)
@@ -1484,6 +1504,10 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 	local _, _, quality =  _G.GetItemInfo(payloadID)
 	local color = _G.ITEM_QUALITY_COLORS[quality or 4]
 	local toast = GetToast("item")
+
+	if CFG.colored_names_enabled then
+		toast.Text:SetTextColor(color.r, color.g, color.b)
+	end
 
 	toast.Title:SetText(_G.BLIZZARD_STORE_PURCHASE_COMPLETE)
 	toast.Text:SetText(name)
@@ -1691,6 +1715,10 @@ local function WorldQuestToast_SetUp(questID)
 		icon = _G.C_TradeSkillUI.GetTradeSkillTexture(select(7, _G.GetProfessionInfo(tradeskillLineIndex)))
 	elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_DUNGEON then
 		icon = "Interface\\Icons\\INV_Misc_Bone_Skull_02"
+	end
+
+	if CFG.colored_names_enabled then
+		toast.Text:SetTextColor(color.r, color.g, color.b)
 	end
 
 	toast.Title:SetText(_G.WORLD_QUEST_COMPLETE)
@@ -2536,6 +2564,10 @@ local function CreateConfigPanel()
 	local soundToggle = CreateConfigCheckButton(panel, "SFXToggle", _G.ENABLE_SOUND)
 	soundToggle:SetPoint("LEFT", acnhorButton, "RIGHT", 32, 0)
 	soundToggle.watchedValue = "sfx_enabled"
+
+	local colorToggle = CreateConfigCheckButton(panel, "ColorText", "Colour Item Names", "Colours item names by quality.")
+	colorToggle:SetPoint("LEFT", soundToggle, "RIGHT", 96, 0)
+	colorToggle.watchedValue = "colored_names_enabled"
 
 	local divider = CreateConfigDivider(panel, "Appearance")
 	divider:SetPoint("TOP", soundToggle, "BOTTOM", 0, -10)
