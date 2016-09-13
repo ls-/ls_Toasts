@@ -1,3 +1,12 @@
+## Version 1.06
+
+- NEW! Added transmog toast!
+- NEW! Added an option to colour item, follower names by quality, and world quest, mission titles by rarity. Original code by WetU@GitHub;
+- NEW! Added options for horizontal growth directions;
+- NEW! Added /lstoasts slash command;
+- Fixed missing toast sounds;
+- Misc bug fixes and tweaks.
+
 ## Version 1.05
 
 - Fixed anchor frame movement, when it's scaled down.
