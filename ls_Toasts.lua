@@ -1085,6 +1085,10 @@ local function GarrisonMissionToast_SetUp(missionID, isShipyard, isAdded)
 		toast.Title:SetText(_G.GARRISON_MISSION_COMPLETE)
 	end
 
+	if CFG.colored_names_enabled then
+		toast.Text:SetTextColor(color.r, color.g, color.b)
+	end
+
 	toast.Text:SetText(missionInfo.name)
 	toast.Level:SetText(level)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -1144,6 +1148,10 @@ function dispatcher:GARRISON_FOLLOWER_ADDED(...)
 		toast.Arrows.requested = true
 	else
 		toast.Title:SetText(followerStrings.FOLLOWER_ADDED_TOAST)
+	end
+
+	if CFG.colored_names_enabled then
+		toast.Text:SetTextColor(color.r, color.g, color.b)
 	end
 
 	toast.Text:SetText(name)
@@ -1707,6 +1715,10 @@ local function WorldQuestToast_SetUp(questID)
 		icon = _G.C_TradeSkillUI.GetTradeSkillTexture(select(7, _G.GetProfessionInfo(tradeskillLineIndex)))
 	elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_DUNGEON then
 		icon = "Interface\\Icons\\INV_Misc_Bone_Skull_02"
+	end
+
+	if CFG.colored_names_enabled then
+		toast.Text:SetTextColor(color.r, color.g, color.b)
 	end
 
 	toast.Title:SetText(_G.WORLD_QUEST_COMPLETE)
@@ -2574,7 +2586,7 @@ local function CreateConfigPanel()
 	growthDropdown:SetPoint("TOPLEFT", numSlider, "BOTTOMLEFT", -13, -32)
 	growthDropdown.watchedValue = "growth_direction"
 
-	local colorToggle = CreateConfigCheckButton(panel, "ColorText", "Colour Item Names", "Colours item names by quality.")
+	local colorToggle = CreateConfigCheckButton(panel, "NameColorToggle", "Colour Names", "Colours item, follower names by quality, and world quest, mission titles by rarity.")
 	colorToggle:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", -3, -32)
 	colorToggle.watchedValue = "colored_names_enabled"
 
