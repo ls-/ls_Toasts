@@ -1,10 +1,9 @@
 -- Lua
 local _G = _G
 local string = _G.string
+local math = _G.math
+local table = _G.table
 local tonumber, unpack, pairs, select, type, next = tonumber, unpack, pairs, select, type, next
-local tremove, tinsert, twipe = table.remove, table.insert, table.wipe
-local strformat, strsplit = string.format, string.split
-local mfloor = math.floor
 
 -- Mine
 local INLINE_NEED = "|TInterface\\Buttons\\UI-GroupLoot-Dice-Up:0:0:0:0:32:32:0:32:0:31|t"
@@ -96,7 +95,7 @@ local function CalculatePosition(self)
 		x = selfCenterX - screenCenterX
 	end
 
-	return p, p, mfloor(x + 0.5), mfloor(y + 0.5)
+	return p, p, math.floor(x + 0.5), math.floor(y + 0.5)
 end
 
 local function Anchor_OnDragStart(self)
@@ -173,7 +172,7 @@ local function HasNonDNDToast()
 	for i, queuedToast in pairs(queuedToasts) do
 		if not queuedToast.dnd then
 			-- XXX: I don't want to ruin non-DND toasts' order, k?
-			tinsert(queuedToasts, 1, tremove(queuedToasts, i))
+			table.insert(queuedToasts, 1, table.remove(queuedToasts, i))
 
 			return true
 		end
@@ -190,7 +189,7 @@ local function SpawnToast(toast, isDND)
 			toast.dnd = true
 		end
 
-		tinsert(queuedToasts, toast)
+		table.insert(queuedToasts, toast)
 
 		return false
 	end
@@ -209,7 +208,7 @@ local function SpawnToast(toast, isDND)
 		toast:SetPoint("TOPLEFT", anchorFrame, "TOPLEFT", 0, 0)
 	end
 
-	tinsert(activeToasts, toast)
+	table.insert(activeToasts, toast)
 
 	toast:Show()
 
@@ -237,11 +236,11 @@ local function RefreshToasts()
 		end
 	end
 
-	local queuedToast = tremove(queuedToasts, 1)
+	local queuedToast = table.remove(queuedToasts, 1)
 
 	if queuedToast then
 		if _G.InCombatLockdown() and queuedToast.dnd then
-			tinsert(queuedToasts, queuedToast)
+			table.insert(queuedToasts, queuedToast)
 
 			if HasNonDNDToast() then
 				RefreshToasts()
@@ -321,22 +320,22 @@ end
 local function RecycleToast(toast)
 	for i, activeToast in pairs(activeToasts) do
 		if toast == activeToast then
-			tremove(activeToasts, i)
+			table.remove(activeToasts, i)
 
 			if toast.type == "item" then
-				tinsert(itemToasts, toast)
+				table.insert(itemToasts, toast)
 			elseif toast.type == "mission" then
-				tinsert(missonToasts, toast)
+				table.insert(missonToasts, toast)
 			elseif toast.type == "follower" then
-				tinsert(followerToasts, toast)
+				table.insert(followerToasts, toast)
 			elseif toast.type == "achievement" then
-				tinsert(achievementToasts, toast)
+				table.insert(achievementToasts, toast)
 			elseif toast.type == "ability" then
-				tinsert(abilityToasts, toast)
+				table.insert(abilityToasts, toast)
 			elseif toast.type == "scenario" then
-				tinsert(scenarioToasts, toast)
+				table.insert(scenarioToasts, toast)
 			elseif toast.type == "misc" then
-				tinsert(miscToasts, toast)
+				table.insert(miscToasts, toast)
 			end
 
 			ResetToast(toast)
@@ -442,7 +441,7 @@ local function ToastButton_OnEnter(self)
 			local link = _G.C_Garrison.GetFollowerLink(self.id)
 
 			if link then
-				local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = strsplit(":", link)
+				local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = string.split(":", link)
 				local followerType = _G.C_Garrison.GetFollowerTypeByID(tonumber(garrisonFollowerID))
 				_G.GarrisonFollowerTooltip_Show(tonumber(garrisonFollowerID), false, tonumber(quality), tonumber(level), 0, 0, tonumber(itemLevel), tonumber(spec1), tonumber(ability1), tonumber(ability2), tonumber(ability3), tonumber(ability4), tonumber(trait1), tonumber(trait2), tonumber(trait3), tonumber(trait4))
 
@@ -714,7 +713,7 @@ local function Reward_OnEnter(self)
 		_G.GameTooltip:SetLFGCompletionReward(self.rewardID)
 	elseif self.xp then
 		_G.GameTooltip:AddLine(_G.YOU_RECEIVED)
-		_G.GameTooltip:AddLine(strformat(_G.BONUS_OBJECTIVE_EXPERIENCE_FORMAT, self.xp), 1, 1, 1)
+		_G.GameTooltip:AddLine(string.format(_G.BONUS_OBJECTIVE_EXPERIENCE_FORMAT, self.xp), 1, 1, 1)
 	elseif self.money then
 		_G.GameTooltip:AddLine(_G.YOU_RECEIVED)
 		_G.GameTooltip:AddLine(_G.GetMoneyString(self.money), 1, 1, 1)
@@ -766,7 +765,7 @@ local function GetToast(toastType)
 	local toast
 
 	if toastType == "item" then
-		toast = tremove(itemToasts, 1)
+		toast = table.remove(itemToasts, 1)
 
 		if not toast then
 			toast = CreateBaseToastButton()
@@ -798,7 +797,7 @@ local function GetToast(toastType)
 			toast.type = "item"
 		end
 	elseif toastType == "mission" then
-		toast = tremove(missonToasts, 1)
+		toast = table.remove(missonToasts, 1)
 
 		if not toast then
 			toast = CreateBaseToastButton()
@@ -811,7 +810,7 @@ local function GetToast(toastType)
 			toast.type = "mission"
 		end
 	elseif toastType == "follower" then
-		toast = tremove(followerToasts, 1)
+		toast = table.remove(followerToasts, 1)
 
 		if not toast then
 			toast = CreateBaseToastButton()
@@ -828,7 +827,7 @@ local function GetToast(toastType)
 			toast.type = "follower"
 		end
 	elseif toastType == "achievement" then
-		toast = tremove(achievementToasts, 1)
+		toast = table.remove(achievementToasts, 1)
 
 		if not toast then
 			toast = CreateBaseToastButton()
@@ -848,7 +847,7 @@ local function GetToast(toastType)
 			toast.type = "achievement"
 		end
 	elseif toastType == "ability" then
-		toast = tremove(abilityToasts, 1)
+		toast = table.remove(abilityToasts, 1)
 
 		if not toast then
 			toast = CreateBaseToastButton()
@@ -868,7 +867,7 @@ local function GetToast(toastType)
 			toast.type = "ability"
 		end
 	elseif toastType == "scenario" then
-		toast = tremove(scenarioToasts, 1)
+		toast = table.remove(scenarioToasts, 1)
 
 		if not toast then
 			toast = CreateBaseToastButton()
@@ -907,7 +906,7 @@ local function GetToast(toastType)
 			toast.type = "scenario"
 		end
 	elseif toastType == "misc" then
-		toast = tremove(miscToasts, 1)
+		toast = table.remove(miscToasts, 1)
 
 		if not toast then
 			toast = CreateBaseToastButton()
@@ -1467,7 +1466,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 			toast.Text:SetTextColor(color.r, color.g, color.b)
 		end
 
-		toast.Title:SetText(color.hex..strformat(_G.LOOTUPGRADEFRAME_TITLE, _G["ITEM_QUALITY"..quality.."_DESC"]).."|r")
+		toast.Title:SetText(color.hex..string.format(_G.LOOTUPGRADEFRAME_TITLE, _G["ITEM_QUALITY"..quality.."_DESC"]).."|r")
 		toast.Text:SetText(name)
 		toast.Count:SetText(quantity > 1 and quantity or "")
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
@@ -2068,7 +2067,7 @@ local function DiffTable(src , dest)
 end
 
 local function SetConfigValue(valuePath, value)
-	local temp = {strsplit(".", valuePath)}
+	local temp = {string.split(".", valuePath)}
 	local t = CFG
 
 	if #temp > 0 then
@@ -2081,7 +2080,7 @@ local function SetConfigValue(valuePath, value)
 end
 
 local function GetConfigValue(valuePath)
-	local temp = {strsplit(".", valuePath)}
+	local temp = {string.split(".", valuePath)}
 	local t = CFG
 
 	if #temp > 0 then
@@ -2099,7 +2098,7 @@ local function RegisterControlForRefresh(parent, control)
 	end
 
 	parent.controls = parent.controls or {}
-	tinsert(parent.controls, control)
+	table.insert(parent.controls, control)
 end
 
 local function OptionsPanelRefresh(panel)
@@ -2353,7 +2352,7 @@ end
 
 local function Slider_OnValueChanged(self, value, userInput)
 	if userInput then
-		value = tonumber(strformat("%.1f", value))
+		value = tonumber(string.format("%.1f", value))
 
 		if value ~= GetConfigValue(self.watchedValue) then
 			self:SetValue(value)
@@ -2488,7 +2487,7 @@ end
 
 local function DelaySlider_OnValueChanged(self, value, userInput)
 	if userInput then
-		value = tonumber(strformat("%.1f", value))
+		value = tonumber(string.format("%.1f", value))
 
 		if value ~= GetConfigValue(self.watchedValue) then
 			self:SetValue(value)
@@ -2502,7 +2501,7 @@ end
 
 local function ScaleSlider_OnValueChanged(self, value, userInput)
 	if userInput then
-		value = tonumber(strformat("%.1f", value))
+		value = tonumber(string.format("%.1f", value))
 
 		if value ~= GetConfigValue(self.watchedValue) then
 			self:SetValue(value)
@@ -2516,7 +2515,7 @@ end
 
 local function SaveDefaultTemplate()
 	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
-		twipe(_G.LS_TOASTS_CFG_GLOBAL["Default"])
+		table.wipe(_G.LS_TOASTS_CFG_GLOBAL["Default"])
 	else
 		_G.LS_TOASTS_CFG_GLOBAL["Default"] = {}
 	end
