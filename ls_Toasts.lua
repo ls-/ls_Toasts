@@ -1830,6 +1830,7 @@ function dispatcher:CHAT_MSG_SYSTEM(message)
 		toast.Border:SetVertexColor(1, 128 / 255, 1)
 		toast.IconBorder:SetVertexColor(1, 128 / 255, 1)
 		toast.Icon:SetTexture(icon)
+		toast.soundFile = "UI_DigsiteCompletion_Toast"
 		toast.id = sourceID
 		toast.link = string.match(transmogLink, "|H(.+)|h.+|h")
 
