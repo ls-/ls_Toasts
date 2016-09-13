@@ -1043,7 +1043,6 @@ function dispatcher:ARTIFACT_DIGSITE_COMPLETE(...)
 	toast.Icon:SetPoint("TOPLEFT", 7, -3)
 	toast.Icon:SetSize(76, 76)
 	toast.Icon:SetTexture(raceTexture)
-
 	toast.soundFile = "UI_DigsiteCompletion_Toast"
 
 	SpawnToast(toast, CFG.dnd.archaeology)
@@ -1156,6 +1155,7 @@ function dispatcher:GARRISON_FOLLOWER_ADDED(...)
 
 	toast.Text:SetText(name)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
+	toast.soundFile = "UI_Garrison_Toast_FollowerGained"
 	toast.id = followerID
 
 	SpawnToast(toast, CFG.dnd.garrison)
@@ -1455,6 +1455,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 		toast.Count:SetText("")
 		toast.Icon:SetTexture(icon)
 		toast.Dragon:Show()
+		toast.soundFile = "UI_LegendaryLoot_Toast"
 		toast.link = itemLink
 
 		SpawnToast(toast, CFG.dnd.loot)
@@ -1481,6 +1482,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 		toast.Border:SetVertexColor(color.r, color.g, color.b)
 		toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 		toast.Icon:SetTexture(icon)
+		toast.soundFile = 51561
 		toast.link = itemLink
 
 		for i = 1, 5 do
@@ -1515,6 +1517,7 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 	toast.Icon:SetTexture(icon)
+	toast.soundFile = "UI_igStore_PurchaseDelivered_Toast_01"
 	toast.id = payloadID
 
 	SpawnToast(toast, CFG.dnd.loot)
@@ -1728,9 +1731,8 @@ local function WorldQuestToast_SetUp(questID)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 	toast.usedRewards = usedRewards
-	toast.id = questID
-
 	toast.soundFile = "UI_WorldQuest_Complete"
+	toast.id = questID
 
 	SpawnToast(toast, CFG.dnd.world)
 end
