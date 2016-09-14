@@ -2500,34 +2500,75 @@ end
 
 ------
 
+local function SettingsButton_OnEnter(self)
+	self.Icon:SetAlpha(1)
+end
+
+local function SettingsButton_OnLeave(self)
+	self.Icon:SetAlpha(0.5)
+end
+
+local function SettingsButton_OnClick(self)
+	_G.ToggleDropDownMenu(nil, nil, self.DropDown, self, -2, 2, nil, nil, 10)
+end
+
 local function CheckButton_OnClickHook(self)
 	ToggleToasts(self.watchedValue, self:GetChecked())
 end
 
-local function CreateToastConfigLine(parent, cfg)
-	local name = parent:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-	name:SetPoint(unpack(cfg.point))
-	name:SetWidth(234)
-	name:SetJustifyH("LEFT")
+local function CreateToastConfigLine(parent, cfg, anchor)
+	local holder = _G.CreateFrame("Frame", "$parent"..cfg.name.."Line", parent)
+	holder:SetHeight(33)
+	holder:SetPoint("TOP", anchor, "BOTTOM", 0, -2)
+	holder:SetPoint("LEFT", parent, "LEFT", 16, 0)
+	holder:SetPoint("RIGHT", parent, "RIGHT", -16, 0)
+
+	local texture = holder:CreateTexture(nil, "BACKGROUND", nil, -8)
+	texture:SetAllPoints()
+	texture:SetColorTexture(0.3, 0.3, 0.3, 0.3)
+
+	local name = holder:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	name:SetPoint("TOPLEFT", holder, "TOPLEFT", 6, 0)
+	name:SetHeight(33)
+	name:SetJustifyV("MIDDLE")
 	name:SetText(cfg.name)
 
-	local enabledCB = CreateConfigCheckButton(parent, cfg.name.."Toggle")
-	enabledCB:SetPoint("LEFT", name, "RIGHT", 44, 0)
+	if cfg.dropdown then
+		local settings = _G.CreateFrame("Button", "$parent"..cfg.name.."SettingsButton", holder)
+		settings:SetSize(22, 22)
+		settings:SetPoint("LEFT", name, "RIGHT", 0, 0)
+		settings:SetScript("OnEnter", SettingsButton_OnEnter)
+		settings:SetScript("OnLeave", SettingsButton_OnLeave)
+		settings:SetScript("OnClick", SettingsButton_OnClick)
+		settings.DropDown = cfg.dropdown
+
+		local icon = settings:CreateTexture(nil, "ARTWORK")
+		icon:SetTexture("Interface\\WorldMap\\GEAR_64GREY")
+		icon:SetAlpha(0.5)
+		icon:SetPoint("TOPLEFT", 1, -1)
+		icon:SetPoint("BOTTOMRIGHT", -1, 1)
+		settings.Icon = icon
+	end
+
+	local enabledCB = CreateConfigCheckButton(parent, cfg.name.."Toggle", nil, cfg.enable_tooltip)
+	enabledCB:SetPoint("TOPLEFT", holder, "TOPLEFT", 320, -4)
 	enabledCB:HookScript("OnClick", CheckButton_OnClickHook)
 	enabledCB.watchedValue = cfg.enabled
 
-	RegisterControlForRefresh(parent:GetParent(), enabledCB)
+	RegisterControlForRefresh(parent, enabledCB)
 
 	local dndCB = CreateConfigCheckButton(parent, cfg.name.."DNDToggle", nil, "Toasts in DND mode won't be displayed in combat, but will be queued up in the system instead. Once you leave combat, they'll start popping up.")
-	dndCB:SetPoint("LEFT", enabledCB, "RIGHT", 32, 0)
+	dndCB:SetPoint("LEFT", enabledCB, "RIGHT", 96, 0)
 	dndCB.watchedValue = cfg.dnd
 
-	RegisterControlForRefresh(parent:GetParent(), dndCB)
+	RegisterControlForRefresh(parent, dndCB)
 
 	if cfg.testFunc then
 		local testB = CreateConfigButton(parent, cfg.name.."TestButton", "Test", cfg.testFunc)
-		testB:SetPoint("LEFT", dndCB, "RIGHT", 32, 0)
+		testB:SetPoint("TOPRIGHT", holder, "TOPRIGHT", -6, -5)
 	end
+
+	return holder
 end
 
 ------
@@ -2608,9 +2649,49 @@ local function SaveDefaultTemplate()
 	CopyTable(CFG, _G.LS_TOASTS_CFG_GLOBAL["Default"])
 end
 
+local function WipeDefaultTemplate()
+	table.wipe(_G.LS_TOASTS_CFG_GLOBAL)
+end
+
+------
+
+local function DropDown_Close()
+	_G.CloseDropDownMenus()
+end
+
+local function LootDropDown_SetLootThreshold(_, quality)
+	CFG.loot_common_quality_threshold = quality
+end
+
+local function LootDropDown_Initialize()
+	local info = _G.UIDropDownMenu_CreateInfo()
+
+	info.text = _G.LOOT_THRESHOLD
+	info.isTitle = 1
+	info.notCheckable = true
+	_G.UIDropDownMenu_AddButton(info)
+	table.wipe(info)
+
+	for i = 1, 7 do
+		info.text = _G.ITEM_QUALITY_COLORS[i].hex.._G["ITEM_QUALITY"..i.."_DESC"].."|r"
+		info.checked = i == CFG.loot_common_quality_threshold
+		info.arg1 = i
+		info.func = LootDropDown_SetLootThreshold
+		_G.UIDropDownMenu_AddButton(info)
+		table.wipe(info)
+	end
+
+	info.text = _G.CLOSE
+	info.func = DropDown_Close
+	info.notCheckable = 1
+	_G.UIDropDownMenu_AddButton(info)
+end
+
 ------
 
 local function CreateConfigPanel()
+	-- General Panel
+
 	local panel = _G.CreateFrame("Frame", "LSToastsConfigPanel", _G.InterfaceOptionsFramePanelContainer)
 	panel.name = "|cff1a9fc0ls:|r Toasts"
 	panel:Hide()
@@ -2663,46 +2744,8 @@ local function CreateConfigPanel()
 	colorToggle:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", -3, -32)
 	colorToggle.watchedValue = "colored_names_enabled"
 
-	divider = CreateConfigDivider(panel, "Toasts")
-	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
-
-	local toastSettings = _G.CreateFrame("Frame", "$parentToastSettings", panel)
-	toastSettings:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -32)
-	toastSettings:SetSize(441, 191)
-
-	local bg = toastSettings:CreateTexture(nil, "BACKGROUND")
-	bg:SetAllPoints()
-	bg:SetColorTexture(0.3, 0.3, 0.3, 0.3)
-
-	title = toastSettings:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetPoint("BOTTOMLEFT", toastSettings, "TOPLEFT", 0, 4)
-	title:SetText("Type")
-
-	title = toastSettings:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetPoint("BOTTOMLEFT", toastSettings, "TOPLEFT", 272, 4)
-	title:SetText("Enable")
-
-	title = toastSettings:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetPoint("BOTTOMLEFT", toastSettings, "TOPLEFT", 336, 4)
-	title:SetText("DND")
-
-	local layout = {
-		[1] = {name = "Achievement", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -5}, enabled = "achievement_enabled", dnd = "dnd.achievement", testFunc = SpawnTestAchievementToast},
-		[2] = {name = "Archaeology", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -29}, enabled = "archaeology_enabled", dnd = "dnd.archaeology", testFunc = SpawnTestArchaeologyToast},
-		[3] = {name = "Garrison", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -53}, enabled = "garrison_enabled", dnd = "dnd.garrison", testFunc = SpawnTestGarrisonToast},
-		[4] = {name = "Dungeon", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -77}, enabled = "instance_enabled", dnd = "dnd.instance"},
-		[5] = {name = "Loot", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -101}, enabled = "loot_enabled", dnd = "dnd.loot", testFunc = SpawnTestLootToast},
-		[6] = {name = "Recipe", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -125}, enabled = "recipe_enabled", dnd = "dnd.recipe", testFunc = SpawnTestRecipeToast},
-		[7] = {name = "World Quest", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -149}, enabled = "world_enabled", dnd = "dnd.world", testFunc = SpawnTestWorldEventToast},
-		[8] = {name = "Transmogrification", point = {"TOPLEFT", toastSettings, "TOPLEFT", 2, -173}, enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
-	}
-
-	for i = 1, 8 do
-		CreateToastConfigLine(toastSettings, layout[i])
-	end
-
 	divider = CreateConfigDivider(panel, "Settings Transfer")
-	divider:SetPoint("TOP", toastSettings, "BOTTOM", 0, -10)
+	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
 
 	subtext = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	subtext:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -8)
@@ -2714,8 +2757,11 @@ local function CreateConfigPanel()
 	subtext:SetMaxLines(4)
 	subtext:SetText("To save current settings as a default preset click the button below. This feature may be quite handy, if you use more or less same layout on many characters. This way you'll need to tweak fewer things. |cffffd200Please note that there can be only 1 preset. Hitting this button on a different character will overwrite existing template.|r")
 
-	local saveDefaults = CreateConfigButton(panel, "SaveDefaultsButton", "Save Settings", SaveDefaultTemplate)
+	local saveDefaults = CreateConfigButton(panel, "SaveDefaultsButton", "Save Preset", SaveDefaultTemplate)
 	saveDefaults:SetPoint("TOPLEFT", subtext, "BOTTOMLEFT", 0, -8)
+
+	local wipeDefaults = CreateConfigButton(panel, "WipeDefaultsButton", "Wipe Preset", WipeDefaultTemplate)
+	wipeDefaults:SetPoint("LEFT", saveDefaults, "RIGHT", 4, 0)
 
 	panel.okay = function() end
 	panel.cancel = function() end
@@ -2724,7 +2770,76 @@ local function CreateConfigPanel()
 
 	_G.InterfaceOptions_AddCategory(panel)
 
-	return panel
+	-- Toast Types Panel
+
+	panel = _G.CreateFrame("Frame", "LSToastsTypesConfigPanel", _G.InterfaceOptionsFramePanelContainer)
+	panel.name = "Toast Types"
+	panel.parent = "|cff1a9fc0ls:|r Toasts"
+	panel:Hide()
+
+	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	title:SetPoint("TOPLEFT", 16, -16)
+	title:SetJustifyH("LEFT")
+	title:SetJustifyV("TOP")
+	title:SetText("Toast Types")
+
+	subtext = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+	subtext:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
+	subtext:SetPoint("RIGHT", -16, 0)
+	subtext:SetHeight(32)
+	subtext:SetJustifyH("LEFT")
+	subtext:SetJustifyV("TOP")
+	subtext:SetNonSpaceWrap(true)
+	subtext:SetMaxLines(3)
+	subtext:SetText("Moar thettings...")
+
+	local lootDropDown = _G.CreateFrame("Frame", "$parentLootCommonDropDown", panel, "UIDropDownMenuTemplate")
+	lootDropDown.displayMode = "MENU"
+	lootDropDown.point = "TOPLEFT"
+	lootDropDown.relativePoint = "BOTTOMRIGHT"
+	_G.UIDropDownMenu_Initialize(lootDropDown, LootDropDown_Initialize)
+
+	local layout = {
+		[1] = {name = "Achievement", enabled = "achievement_enabled", dnd = "dnd.achievement", testFunc = SpawnTestAchievementToast},
+		[2] = {name = "Archaeology", enabled = "archaeology_enabled", dnd = "dnd.archaeology", testFunc = SpawnTestArchaeologyToast},
+		[3] = {name = "Garrison", enabled = "garrison_enabled", dnd = "dnd.garrison", testFunc = SpawnTestGarrisonToast},
+		[4] = {name = "Dungeon", enabled = "instance_enabled", dnd = "dnd.instance"},
+		[5] = {name = "Loot (Special)", enabled = "loot_special_enabled", enable_tooltip = "Toasts triggered by special loot events, e.g. won rolls, legendary drops, personal loot, etc.", dnd = "dnd.loot_special", testFunc = SpawnTestLootToast},
+		[6] = {name = "Loot (Common)", enabled = "loot_common_enabled", enable_tooltip = "Toasts triggered by chat events, e.g. greens, blues, some epics, everything that isn't handled by special loot toasts.", dnd = "dnd.loot_common", dropdown = lootDropDown},
+		[7] = {name = "Recipe", enabled = "recipe_enabled", dnd = "dnd.recipe", testFunc = SpawnTestRecipeToast},
+		[8] = {name = "World Quest", enabled = "world_enabled", dnd = "dnd.world", testFunc = SpawnTestWorldEventToast},
+		[9] = {name = "Transmogrification", enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
+	}
+
+	local anchor = CreateToastConfigLine(panel, layout[1], subtext)
+	anchor:SetPoint("TOP", subtext, "BOTTOM", 0, -18)
+
+	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	title:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 6, 4)
+	title:SetText("Type")
+
+	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	title:SetWidth(64)
+	title:SetJustifyH("CENTER")
+	title:SetPoint("BOTTOM", anchor, "TOPLEFT", 333, 4)
+	title:SetText(_G.ENABLE)
+
+	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	title:SetWidth(64)
+	title:SetJustifyH("CENTER")
+	title:SetPoint("BOTTOM", anchor, "TOPLEFT", 455, 4)
+	title:SetText("DND")
+
+	for i = 2, 9 do
+		anchor = CreateToastConfigLine(panel, layout[i], anchor)
+	end
+
+	panel.okay = function() end
+	panel.cancel = function() end
+	panel.refresh = OptionsPanelRefresh
+	panel.default = function() end
+
+	_G.InterfaceOptions_AddCategory(panel)
 end
 
 -------------
@@ -2780,12 +2895,12 @@ function dispatcher:PLAYER_LOGIN()
 	EnableWorldToasts()
 	EnableTransmogToasts()
 
-	local panel = CreateConfigPanel()
+	CreateConfigPanel()
 
 	_G.SLASH_LSTOASTS1 = "/lstoasts"
 	_G.SlashCmdList["LSTOASTS"] = function()
-		if not panel:IsShown() then
-			_G.InterfaceOptionsFrame_OpenToCategory(panel)
+		if not _G.LSToastsConfigPanel:IsShown() then
+			_G.InterfaceOptionsFrame_OpenToCategory(_G.LSToastsConfigPanel)
 		else
 			_G.InterfaceOptionsFrameOkay_OnClick(_G.InterfaceOptionsFrame)
 		end
