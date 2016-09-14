@@ -39,7 +39,8 @@ local DEFAULTS = {
 		recipe = false,
 		garrison = true,
 		instance = false, -- dungeon completion
-		loot = false, -- includes blizz store items
+		loot_special = false, -- includes blizz store items
+		loot_common = false,
 		world = false, -- world quest, invasion completion
 		transmog = false,
 	},
@@ -47,7 +48,9 @@ local DEFAULTS = {
 	archaeology_enabled = true,
 	garrison_enabled = true,
 	instance_enabled = true,
-	loot_enabled = true,
+	loot_special_enabled = true,
+	loot_common_enabled = false,
+	loot_common_quality_threshold = 1,
 	recipe_enabled = true,
 	world_enabled = true,
 	transmog_enabled = true,
@@ -254,6 +257,7 @@ end
 local function ResetToast(toast)
 	toast.id = nil
 	toast.dnd = nil
+	toast.chat = nil
 	toast.link = nil
 	toast.soundFile = nil
 	toast.usedRewards = nil
@@ -347,13 +351,13 @@ end
 
 local function GetToastToUpdate(id, toastType)
 	for _, toast in pairs(activeToasts) do
-		if (id == toast.id or id == toast.link) and toastType == toast.type then
+		if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
 			return toast, false
 		end
 	end
 
 	for _, toast in pairs(queuedToasts) do
-		if (id == toast.id or id == toast.link) and toastType == toast.type then
+		if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
 			return toast, true
 		end
 	end
@@ -1300,7 +1304,7 @@ local function LFGToast_SetUp(isScenario)
 	SpawnToast(toast, CFG.dnd.instance)
 end
 
-function dispatcher:LFG_COMPLETION_REWARD(...)
+function dispatcher:LFG_COMPLETION_REWARD()
 	if _G.C_Scenario.IsInScenario() and not _G.C_Scenario.TreatScenarioAsDungeon() then
 
 		if select(10, _G.C_Scenario.GetInfo()) ~= _G.LE_SCENARIO_TYPE_LEGION_INVASION then
@@ -1333,6 +1337,7 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 	if isCurrency or isItem then
 		if itemLink then
 			toast = GetToast("item")
+			itemLink = string.match(itemLink, "|H(.+)|h.+|h")
 			local title = _G.YOU_WON_LABEL
 			local name, icon, quality, _
 
@@ -1407,7 +1412,7 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 		toast.soundFile = 31578
 	end
 
-	SpawnToast(toast, CFG.dnd.loot)
+	SpawnToast(toast, CFG.dnd.loot_special)
 end
 
 local function BonusRollFrame_FinishedFading_Disabled(self)
@@ -1440,6 +1445,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 
 	if itemLink then
 		local toast = GetToast("item")
+		itemLink = string.match(itemLink, "|H(.+)|h.+|h")
 		local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
 		local color = _G.ITEM_QUALITY_COLORS[quality or 1]
 
@@ -1458,7 +1464,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 		toast.soundFile = "UI_LegendaryLoot_Toast"
 		toast.link = itemLink
 
-		SpawnToast(toast, CFG.dnd.loot)
+		SpawnToast(toast, CFG.dnd.loot_special)
 	end
 end
 
@@ -1467,6 +1473,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 
 	if itemLink then
 		local toast = GetToast("item")
+		itemLink = string.match(itemLink, "|H(.+)|h.+|h")
 		local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
 		local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality or 2]
 		local color = _G.ITEM_QUALITY_COLORS[quality or 1]
@@ -1491,7 +1498,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 
 		toast.Arrows.requested = true
 
-		SpawnToast(toast, CFG.dnd.loot)
+		SpawnToast(toast, CFG.dnd.loot_special)
 	end
 end
 
@@ -1520,10 +1527,59 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 	toast.soundFile = "UI_igStore_PurchaseDelivered_Toast_01"
 	toast.id = payloadID
 
-	SpawnToast(toast, CFG.dnd.loot)
+	SpawnToast(toast, CFG.dnd.loot_special)
 end
 
-local function EnableLootToasts()
+local LOOT_ITEM_PATTERN = (_G.LOOT_ITEM_SELF):gsub("%%s", "(.+)")
+local LOOT_ITEM_PUSHED_PATTERN = (_G.LOOT_ITEM_PUSHED_SELF):gsub("%%s", "(.+)")
+local LOOT_ITEM_MULTIPLE_PATTERN = (_G.LOOT_ITEM_SELF_MULTIPLE):gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
+local LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = (_G.LOOT_ITEM_PUSHED_SELF_MULTIPLE):gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
+
+function dispatcher:CHAT_MSG_LOOT(message)
+	local itemLink, quantity = message:match(LOOT_ITEM_MULTIPLE_PATTERN)
+
+	if not itemLink then
+		itemLink, quantity = message:match(LOOT_ITEM_PUSHED_MULTIPLE_PATTERN)
+		if not itemLink then
+			quantity, itemLink = 1, message:match(LOOT_ITEM_PATTERN)
+			if not itemLink then
+				quantity, itemLink = 1, message:match(LOOT_ITEM_PUSHED_PATTERN)
+				if not itemLink then
+					return
+				end
+			end
+		end
+	end
+
+	itemLink = string.match(itemLink, "|H(.+)|h.+|h")
+	quantity = tonumber(quantity)
+
+	if not GetToastToUpdate(itemLink, "item") then
+		local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
+
+		if quality >= CFG.loot_common_quality_threshold then
+			local toast = GetToast("item")
+			local color = _G.ITEM_QUALITY_COLORS[quality or 4]
+
+			if CFG.colored_names_enabled then
+				toast.Text:SetTextColor(color.r, color.g, color.b)
+			end
+
+			toast.Title:SetText(_G.YOU_RECEIVED_LABEL)
+			toast.Text:SetText(name)
+			toast.Count:SetText(quantity > 1 and quantity or "")
+			toast.Border:SetVertexColor(color.r, color.g, color.b)
+			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+			toast.Icon:SetTexture(icon)
+			toast.link = itemLink
+			toast.chat = true
+
+			SpawnToast(toast, CFG.dnd.loot_common)
+		end
+	end
+end
+
+local function EnableSpecialLootToasts()
 	_G.AlertFrame:UnregisterEvent("LOOT_ITEM_ROLL_WON")
 	_G.AlertFrame:UnregisterEvent("SHOW_LOOT_TOAST")
 	_G.AlertFrame:UnregisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
@@ -1531,7 +1587,7 @@ local function EnableLootToasts()
 	_G.AlertFrame:UnregisterEvent("SHOW_PVP_FACTION_LOOT_TOAST")
 	_G.AlertFrame:UnregisterEvent("STORE_PRODUCT_DELIVERED")
 
-	if CFG.loot_enabled then
+	if CFG.loot_special_enabled then
 		dispatcher:RegisterEvent("LOOT_ITEM_ROLL_WON")
 		dispatcher:RegisterEvent("SHOW_LOOT_TOAST")
 		dispatcher:RegisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
@@ -1545,7 +1601,7 @@ local function EnableLootToasts()
 	end
 end
 
-local function DisableLootToasts()
+local function DisableSpecialLootToasts()
 	dispatcher:UnregisterEvent("LOOT_ITEM_ROLL_WON")
 	dispatcher:UnregisterEvent("SHOW_LOOT_TOAST")
 	dispatcher:UnregisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
@@ -1554,6 +1610,16 @@ local function DisableLootToasts()
 	dispatcher:UnregisterEvent("STORE_PRODUCT_DELIVERED")
 
 	_G.BonusRollFrame.FinishRollAnim:SetScript("OnFinished", BonusRollFrame_FinishedFading_Disabled)
+end
+
+local function EnableCommonLootToasts()
+	if CFG.loot_common_enabled then
+		dispatcher:RegisterEvent("CHAT_MSG_LOOT")
+	end
+end
+
+local function DisableCommonLootToasts()
+	dispatcher:UnregisterEvent("CHAT_MSG_LOOT")
 end
 
 ------------
@@ -1841,8 +1907,6 @@ function dispatcher:CHAT_MSG_SYSTEM(message)
 end
 
 local function EnableTransmogToasts()
-	_G.AlertFrame:UnregisterEvent("CHAT_MSG_SYSTEM")
-
 	if CFG.transmog_enabled then
 		dispatcher:RegisterEvent("CHAT_MSG_SYSTEM")
 	end
@@ -2157,11 +2221,17 @@ local function ToggleToasts(value, state)
 		else
 			DisableInstanceToasts()
 		end
-	elseif value == "loot_enabled" then
+	elseif value == "loot_common_enabled" then
 		if state then
-			EnableLootToasts()
+			EnableCommonLootToasts()
 		else
-			DisableLootToasts()
+			DisableCommonLootToasts()
+		end
+	elseif value == "loot_special_enabled" then
+		if state then
+			EnableSpecialLootToasts()
+		else
+			DisableSpecialLootToasts()
 		end
 	elseif value == "recipe_enabled" then
 		if state then
@@ -2676,6 +2746,21 @@ function dispatcher:ADDON_LOADED(arg)
 		CFG = CopyTable(DEFAULTS, _G.LS_TOASTS_CFG)
 	end
 
+	if CFG.dnd.loot ~= nil then
+		CFG.dnd.loot_special = CFG.dnd.loot
+		CFG.dnd.loot = nil
+	end
+
+	if CFG.loot_enabled ~= nil then
+		CFG.loot_special_enabled = CFG.loot_enabled
+		CFG.loot_enabled = nil
+	end
+
+	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
+		_G.LS_TOASTS_CFG_GLOBAL["Default"].dnd.loot = nil
+		_G.LS_TOASTS_CFG_GLOBAL["Default"].loot_enabled = nil
+	end
+
 	self:RegisterEvent("PLAYER_LOGIN")
 	self:RegisterEvent("PLAYER_LOGOUT")
 	self:UnregisterEvent("ADDON_LOADED")
@@ -2689,7 +2774,8 @@ function dispatcher:PLAYER_LOGIN()
 	EnableArchaeologyToasts()
 	EnableGarrisonToasts()
 	EnableInstanceToasts()
-	EnableLootToasts()
+	EnableSpecialLootToasts()
+	EnableCommonLootToasts()
 	EnableRecipeToasts()
 	EnableWorldToasts()
 	EnableTransmogToasts()
