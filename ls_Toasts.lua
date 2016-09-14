@@ -949,7 +949,7 @@ dispatcher:RegisterEvent("PLAYER_REGEN_DISABLED")
 
 function dispatcher:PLAYER_REGEN_ENABLED()
 	if IsDNDEnabled() and #queuedToasts > 0 then
-		for i = 1, CFG.max_active_toasts - #activeToasts do
+		for _ = 1, CFG.max_active_toasts - #activeToasts do
 			RefreshToasts()
 		end
 	end
@@ -2185,12 +2185,12 @@ local function ToggleToasts(value, state)
 end
 
 local function UpdateFadeOutDelay(delay)
-	for _, toast in pairs(queuedToasts) do
+	for _, toast in pairs(activeToasts) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 
-	for i = 1, #activeToasts do
-		RecycleToast(activeToasts[1])
+	for _, toast in pairs(queuedToasts) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 
 	for _, toast in pairs(abilityToasts) do
@@ -2223,14 +2223,14 @@ local function UpdateFadeOutDelay(delay)
 end
 
 local function UpdateScale(scale)
-	for _, toast in pairs(queuedToasts) do
+	anchorFrame:SetSize(234 * scale, 58 * scale)
+
+	for _, toast in pairs(activeToasts) do
 		toast:SetScale(scale)
 	end
 
-	anchorFrame:SetSize(234 * scale, 58 * scale)
-
-	for i = 1, #activeToasts do
-		RecycleToast(activeToasts[1])
+	for _, toast in pairs(queuedToasts) do
+		toast:SetScale(scale)
 	end
 
 	for _, toast in pairs(abilityToasts) do
