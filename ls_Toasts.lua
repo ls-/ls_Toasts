@@ -1072,7 +1072,7 @@ end
 -- GARRISON --
 --------------
 
-local function GarrisonMissionToast_SetUp(missionID, isShipyard, isAdded)
+local function GarrisonMissionToast_SetUp(missionID, isAdded)
 	local toast = GetToast("mission")
 	local missionInfo = _G.C_Garrison.GetBasicMissionInfo(missionID)
 	local color = missionInfo.isRare and _G.ITEM_QUALITY_COLORS[3] or _G.ITEM_QUALITY_COLORS[1]
@@ -1170,16 +1170,16 @@ function dispatcher:GARRISON_MISSION_FINISHED(...)
 	end
 
 	if validInstance then
-		local followerTypeID, missionID = ...
+		local _, missionID = ...
 
-		GarrisonMissionToast_SetUp(missionID, followerTypeID == _G.LE_FOLLOWER_TYPE_SHIPYARD_6_2)
+		GarrisonMissionToast_SetUp(missionID)
 	end
 end
 
 function dispatcher:GARRISON_RANDOM_MISSION_ADDED(...)
-	local followerTypeID, missionID = ...
+	local _, missionID = ...
 
-	GarrisonMissionToast_SetUp(missionID, followerTypeID == _G.LE_FOLLOWER_TYPE_SHIPYARD_6_2, true)
+	GarrisonMissionToast_SetUp(missionID, true)
 end
 
 function dispatcher:GARRISON_TALENT_COMPLETE(...)
