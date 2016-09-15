@@ -155,6 +155,23 @@ local function Anchor_Disable()
 	anchorFrame.Text:Hide()
 end
 
+-----------
+-- UTILS --
+-----------
+
+local function FixItemLink(itemLink)
+	itemLink = string.match(itemLink, "|H(.+)|h.+|h")
+	local linkTable = {string.split(":", itemLink)}
+
+	if linkTable[12] ~= "" then
+		linkTable[12] = ""
+
+		table.remove(linkTable, 15 + (tonumber(linkTable[14]) or 0))
+	end
+
+	return table.concat(linkTable, ":")
+end
+
 ----------
 -- MAIN --
 ----------
@@ -1337,7 +1354,7 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 	if isCurrency or isItem then
 		if itemLink then
 			toast = GetToast("item")
-			itemLink = string.match(itemLink, "|H(.+)|h.+|h")
+			itemLink = FixItemLink(itemLink)
 			local title = _G.YOU_WON_LABEL
 			local name, icon, quality, _
 
@@ -1445,7 +1462,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 
 	if itemLink then
 		local toast = GetToast("item")
-		itemLink = string.match(itemLink, "|H(.+)|h.+|h")
+		itemLink = FixItemLink(itemLink)
 		local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
 		local color = _G.ITEM_QUALITY_COLORS[quality or 1]
 
@@ -1473,7 +1490,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 
 	if itemLink then
 		local toast = GetToast("item")
-		itemLink = string.match(itemLink, "|H(.+)|h.+|h")
+		itemLink = FixItemLink(itemLink)
 		local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
 		local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality or 2]
 		local color = _G.ITEM_QUALITY_COLORS[quality or 1]
@@ -1535,23 +1552,8 @@ local LOOT_ITEM_PUSHED_PATTERN = (_G.LOOT_ITEM_PUSHED_SELF):gsub("%%s", "(.+)")
 local LOOT_ITEM_MULTIPLE_PATTERN = (_G.LOOT_ITEM_SELF_MULTIPLE):gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
 local LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = (_G.LOOT_ITEM_PUSHED_SELF_MULTIPLE):gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
 
-function dispatcher:CHAT_MSG_LOOT(message)
-	local itemLink, quantity = message:match(LOOT_ITEM_MULTIPLE_PATTERN)
-
-	if not itemLink then
-		itemLink, quantity = message:match(LOOT_ITEM_PUSHED_MULTIPLE_PATTERN)
-		if not itemLink then
-			quantity, itemLink = 1, message:match(LOOT_ITEM_PATTERN)
-			if not itemLink then
-				quantity, itemLink = 1, message:match(LOOT_ITEM_PUSHED_PATTERN)
-				if not itemLink then
-					return
-				end
-			end
-		end
-	end
-
-	itemLink = string.match(itemLink, "|H(.+)|h.+|h")
+local function LootCommonToast_Setup(itemLink, quantity)
+	itemLink = FixItemLink(itemLink)
 	quantity = tonumber(quantity)
 
 	if not GetToastToUpdate(itemLink, "item") then
@@ -1577,6 +1579,25 @@ function dispatcher:CHAT_MSG_LOOT(message)
 			SpawnToast(toast, CFG.dnd.loot_common)
 		end
 	end
+end
+
+function dispatcher:CHAT_MSG_LOOT(message)
+	local itemLink, quantity = message:match(LOOT_ITEM_MULTIPLE_PATTERN)
+
+	if not itemLink then
+		itemLink, quantity = message:match(LOOT_ITEM_PUSHED_MULTIPLE_PATTERN)
+		if not itemLink then
+			quantity, itemLink = 1, message:match(LOOT_ITEM_PATTERN)
+			if not itemLink then
+				quantity, itemLink = 1, message:match(LOOT_ITEM_PUSHED_PATTERN)
+				if not itemLink then
+					return
+				end
+			end
+		end
+	end
+
+	_G.C_Timer.After(0.125, function() LootCommonToast_Setup(itemLink, quantity) end)
 end
 
 local function EnableSpecialLootToasts()
