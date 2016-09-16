@@ -2,8 +2,15 @@
 ## Author: lightspark
 ## Version: 1.06
 ## Title: |cff1a9fc0ls:|r Toasts
+## Title-koKR: |cff1a9fc0ls:|r Toasts
 ## Notes: Better toasts, cheers!
+## Notes-koKR: 더 나은 알림창, 건배!
 ## SavedVariables: LS_TOASTS_CFG_GLOBAL
 ## SavedVariablesPerCharacter: LS_TOASTS_CFG
+
+embed.xml
+
+Localization\enUS.lua
+Localization\koKR.lua
 
 ls_Toasts.lua
