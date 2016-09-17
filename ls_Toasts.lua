@@ -1,3 +1,5 @@
+local addonName = ...
+
 -- Lua
 local _G = _G
 local string = _G.string
@@ -2789,7 +2791,7 @@ local function CreateConfigPanel()
 	panel.refresh = OptionsPanelRefresh
 	panel.default = function() end
 
-	_G.InterfaceOptions_AddCategory(panel)
+	_G.InterfaceOptions_AddCategory(panel, true)
 
 	-- Toast Types Panel
 
@@ -2855,12 +2857,9 @@ local function CreateConfigPanel()
 		anchor = CreateToastConfigLine(panel, layout[i], anchor)
 	end
 
-	panel.okay = function() end
-	panel.cancel = function() end
 	panel.refresh = OptionsPanelRefresh
-	panel.default = function() end
 
-	_G.InterfaceOptions_AddCategory(panel)
+	_G.InterfaceOptions_AddCategory(panel, true)
 end
 
 -------------
@@ -2868,7 +2867,7 @@ end
 -------------
 
 function dispatcher:ADDON_LOADED(arg)
-	if arg ~= "ls_Toasts" then return end
+	if arg ~= addonName then return end
 
 	if not _G.LS_TOASTS_CFG_GLOBAL then
 		_G.LS_TOASTS_CFG_GLOBAL = {}
