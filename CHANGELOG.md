@@ -1,3 +1,7 @@
+## Version 1.08
+
+- Fixed "SetPortraitToTexture" error.
+
 ## Version 1.07
 
 - NEW! Added common loot toasts;
