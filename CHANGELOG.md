@@ -1,3 +1,9 @@
+## Version 1.07
+
+- NEW! Added common loot toasts;
+- Reworked in-game config a bit;
+- Misc bug fixes and tweaks.
+
 ## Version 1.06
 
 - NEW! Added transmog toast;
