@@ -403,8 +403,12 @@ local function UpdateToast(id, toastType, itemLink)
 
 		if reward then
 			local _, _, _, _, texture = _G.GetItemInfoInstant(itemLink)
+			local isOK = pcall(_G.SetPortraitToTexture, reward.Icon, texture)
 
-			_G.SetPortraitToTexture(reward.Icon, texture)
+			if not isOK then
+				_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\INV_Box_02")
+			end
+
 			reward.item = itemLink
 			reward:Show()
 		end
@@ -1295,8 +1299,12 @@ local function LFGToast_SetUp(isScenario)
 
 		if reward then
 			local icon = _G.GetLFGCompletionRewardItem(i)
+			local isOK = pcall(_G.SetPortraitToTexture, reward.Icon, icon)
 
-			_G.SetPortraitToTexture(reward.Icon, icon)
+			if not isOK then
+				_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\INV_Box_02")
+			end
+
 			reward.rewardID = i
 			reward:Show()
 
@@ -1802,8 +1810,12 @@ local function WorldQuestToast_SetUp(questID)
 
 		if reward then
 			local _, texture = _G.GetQuestLogRewardCurrencyInfo(i, questID)
+			local isOK = pcall(_G.SetPortraitToTexture, reward.Icon, texture)
 
-			_G.SetPortraitToTexture(reward.Icon, texture)
+			if not isOK then
+				_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\INV_Box_02")
+			end
+
 			reward.currency = i
 			reward:Show()
 		end
