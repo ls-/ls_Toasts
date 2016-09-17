@@ -174,6 +174,16 @@ local function FixItemLink(itemLink)
 	return table.concat(linkTable, ":")
 end
 
+local function DumpToasts()
+	if #activeToasts > 0 then
+		print("|cffffd200=== TOAST DUMP ===|r")
+	end
+
+	for _, toast in pairs(activeToasts) do
+		print("|cff00ccff"..toast.type.." toast info:|r", "\nid:", toast.id, "\nlink:", toast.link, "\nchat event:", toast.chat)
+	end
+end
+
 ----------
 -- MAIN --
 ----------
@@ -2918,11 +2928,15 @@ function dispatcher:PLAYER_LOGIN()
 	CreateConfigPanel()
 
 	_G.SLASH_LSTOASTS1 = "/lstoasts"
-	_G.SlashCmdList["LSTOASTS"] = function()
-		if not _G.LSToastsConfigPanel:IsShown() then
-			_G.InterfaceOptionsFrame_OpenToCategory(_G.LSToastsConfigPanel)
-		else
-			_G.InterfaceOptionsFrameOkay_OnClick(_G.InterfaceOptionsFrame)
+	_G.SlashCmdList["LSTOASTS"] = function(msg)
+		if msg == "" then
+			if not _G.LSToastsConfigPanel:IsShown() then
+				_G.InterfaceOptionsFrame_OpenToCategory(_G.LSToastsConfigPanel)
+			else
+				_G.InterfaceOptionsFrameOkay_OnClick(_G.InterfaceOptionsFrame)
+			end
+		elseif msg == "dump" then
+			DumpToasts()
 		end
 	end
 end
