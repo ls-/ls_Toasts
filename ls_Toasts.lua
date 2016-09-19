@@ -1378,13 +1378,7 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 			toast = GetToast("item")
 			itemLink = FixItemLink(itemLink)
 			local title = _G.YOU_WON_LABEL
-			local name, icon, quality, _
-
-			-- if isCurrency then
-				-- name, _, icon, _, _, _, _, quality = _G.GetCurrencyInfo(itemLink)
-			-- else
-				name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
-			-- end
+			local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
 
 			if isPersonal or lessAwesome then
 				title = _G.YOU_RECEIVED_LABEL
@@ -1451,7 +1445,9 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 		toast.soundFile = 31578
 	end
 
-	SpawnToast(toast, CFG.dnd.loot_special)
+	if toast then
+		SpawnToast(toast, CFG.dnd.loot_special)
+	end
 end
 
 local function BonusRollFrame_FinishedFading_Disabled(self)
