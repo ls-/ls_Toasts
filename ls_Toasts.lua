@@ -2931,7 +2931,7 @@ local function CreateConfigPanel()
 	title:SetPoint("BOTTOM", anchor, "TOPLEFT", 455, 4)
 	title:SetText("DND")
 
-	for i = 2, 9 do
+	for i = 2, #layout do
 		anchor = CreateToastConfigLine(panel, layout[i], anchor)
 	end
 
