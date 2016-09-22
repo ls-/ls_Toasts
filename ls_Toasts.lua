@@ -39,7 +39,8 @@ local DEFAULTS = {
 		achievement = false,
 		archaeology = false,
 		recipe = false,
-		garrison = true,
+		garrison_6_0 = true,
+		garrison_7_0 = true,
 		instance = false, -- dungeon completion
 		loot_special = false, -- includes blizz store items
 		loot_common = false,
@@ -49,7 +50,8 @@ local DEFAULTS = {
 	},
 	achievement_enabled = true,
 	archaeology_enabled = true,
-	garrison_enabled = true,
+	garrison_6_0_enabled = true,
+	garrison_7_0_enabled = true,
 	instance_enabled = true,
 	loot_special_enabled = true,
 	loot_common_enabled = false,
@@ -1111,7 +1113,15 @@ end
 -- GARRISON --
 --------------
 
-local function GarrisonMissionToast_SetUp(missionID, isAdded)
+local function GetGarrisonTypeByFollowerType(followerType)
+	if followerType == _G.LE_FOLLOWER_TYPE_GARRISON_7_0 then
+		return _G.LE_GARRISON_TYPE_7_0
+	elseif followerType == _G.LE_FOLLOWER_TYPE_GARRISON_6_0 or followerType == _G.LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
+		return _G.LE_GARRISON_TYPE_6_0
+	end
+end
+
+local function GarrisonMissionToast_SetUp(followerType, garrisonType, missionID, isAdded)
 	local toast = GetToast("mission")
 	local missionInfo = _G.C_Garrison.GetBasicMissionInfo(missionID)
 	local color = missionInfo.isRare and _G.ITEM_QUALITY_COLORS[3] or _G.ITEM_QUALITY_COLORS[1]
@@ -1134,28 +1144,48 @@ local function GarrisonMissionToast_SetUp(missionID, isAdded)
 	toast.soundFile = "UI_Garrison_Toast_MissionComplete"
 	toast.id = missionID
 
-	SpawnToast(toast, CFG.dnd.garrison)
+	SpawnToast(toast, garrisonType == _G.LE_GARRISON_TYPE_7_0 and CFG.dnd.garrison_7_0 or CFG.dnd.garrison_6_0)
 end
 
-function dispatcher:GARRISON_BUILDING_ACTIVATABLE(...)
-	local buildingName = ...
-	local toast = GetToast("misc")
+function dispatcher:GARRISON_MISSION_FINISHED(...)
+	local followerType, missionID = ...
+	local garrisonType = GetGarrisonTypeByFollowerType(followerType)
 
-	toast.Title:SetText(_G.GARRISON_UPDATE)
-	toast.Text:SetText(buildingName)
-	toast.Icon:SetTexture("Interface\\Icons\\Garrison_Build")
-	toast.soundFile = "UI_Garrison_Toast_BuildingComplete"
+	if (garrisonType == _G.LE_GARRISON_TYPE_7_0 and not CFG.garrison_7_0_enabled) or
+		(garrisonType == _G.LE_GARRISON_TYPE_6_0 and not CFG.garrison_6_0_enabled) then
+		return
+	end
 
-	SpawnToast(toast, CFG.dnd.garrison)
+	local _, instanceType = _G.GetInstanceInfo()
+	local validInstance = false
+
+	if instanceType == "none" or _G.C_Garrison.IsOnGarrisonMap() then
+		validInstance = true
+	end
+
+	if validInstance then
+		GarrisonMissionToast_SetUp(followerType, garrisonType, missionID)
+	end
 end
 
-function dispatcher:GARRISON_FOLLOWER_ADDED(...)
-	local followerID, name, _, level, quality, isUpgraded, texPrefix, followerType = ...
+function dispatcher:GARRISON_RANDOM_MISSION_ADDED(...)
+	local followerType, missionID = ...
+	local garrisonType = GetGarrisonTypeByFollowerType(followerType)
+
+	if (garrisonType == _G.LE_GARRISON_TYPE_7_0 and not CFG.garrison_7_0_enabled) or
+		(garrisonType == _G.LE_GARRISON_TYPE_6_0 and not CFG.garrison_6_0_enabled) then
+		return
+	end
+
+	GarrisonMissionToast_SetUp(followerType, garrisonType, missionID, true)
+end
+
+local function GarrisonFollowerToast_SetUp(followerType, garrisonType, followerID, name, texPrefix, level, quality, isUpgraded)
+	local toast = GetToast("follower")
 	local followerInfo = _G.C_Garrison.GetFollowerInfo(followerID)
 	local followerStrings = _G.GarrisonFollowerOptions[followerType].strings
 	local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
 	local color = _G.ITEM_QUALITY_COLORS[quality]
-	local toast = GetToast("follower")
 
 	if followerType == _G.LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
 		toast.Icon:SetSize(84, 44)
@@ -1170,9 +1200,9 @@ function dispatcher:GARRISON_FOLLOWER_ADDED(...)
 			portrait = "Interface\\Garrison\\Portraits\\FollowerPortrait_NoPortrait"
 		end
 
-		toast.Level:SetText(level)
 		toast.Icon:SetSize(44, 44)
 		toast.Icon:SetTexture(portrait)
+		toast.Level:SetText(level)
 	end
 
 	if isUpgraded then
@@ -1197,28 +1227,31 @@ function dispatcher:GARRISON_FOLLOWER_ADDED(...)
 	toast.soundFile = "UI_Garrison_Toast_FollowerGained"
 	toast.id = followerID
 
-	SpawnToast(toast, CFG.dnd.garrison)
+	SpawnToast(toast, garrisonType == _G.LE_GARRISON_TYPE_7_0 and CFG.dnd.garrison_7_0 or CFG.dnd.garrison_6_0)
 end
 
-function dispatcher:GARRISON_MISSION_FINISHED(...)
-	local validInstance = false
-	local _, instanceType = _G.GetInstanceInfo()
+function dispatcher:GARRISON_FOLLOWER_ADDED(...)
+	local followerID, name, _, level, quality, isUpgraded, texPrefix, followerType = ...
+	local garrisonType = GetGarrisonTypeByFollowerType(followerType)
 
-	if instanceType == "none" or _G.C_Garrison.IsOnGarrisonMap() then
-		validInstance = true
+	if (garrisonType == _G.LE_GARRISON_TYPE_7_0 and not CFG.garrison_7_0_enabled) or
+		(garrisonType == _G.LE_GARRISON_TYPE_6_0 and not CFG.garrison_6_0_enabled) then
+		return
 	end
 
-	if validInstance then
-		local _, missionID = ...
-
-		GarrisonMissionToast_SetUp(missionID)
-	end
+	GarrisonFollowerToast_SetUp(followerType, garrisonType, followerID, name, texPrefix, level, quality, isUpgraded)
 end
 
-function dispatcher:GARRISON_RANDOM_MISSION_ADDED(...)
-	local _, missionID = ...
+function dispatcher:GARRISON_BUILDING_ACTIVATABLE(...)
+	local buildingName = ...
+	local toast = GetToast("misc")
 
-	GarrisonMissionToast_SetUp(missionID, true)
+	toast.Title:SetText(_G.GARRISON_UPDATE)
+	toast.Text:SetText(buildingName)
+	toast.Icon:SetTexture("Interface\\Icons\\Garrison_Build")
+	toast.soundFile = "UI_Garrison_Toast_BuildingComplete"
+
+	SpawnToast(toast, CFG.dnd.garrison_6_0)
 end
 
 function dispatcher:GARRISON_TALENT_COMPLETE(...)
@@ -1232,7 +1265,7 @@ function dispatcher:GARRISON_TALENT_COMPLETE(...)
 	toast.Icon:SetTexture(talent.icon)
 	toast.soundFile = "UI_OrderHall_Talent_Ready_Toast"
 
-	SpawnToast(toast, CFG.dnd.garrison)
+	SpawnToast(toast, CFG.dnd.garrison_7_0)
 end
 
 local function EnableGarrisonToasts()
@@ -1242,21 +1275,35 @@ local function EnableGarrisonToasts()
 	_G.AlertFrame:UnregisterEvent("GARRISON_RANDOM_MISSION_ADDED")
 	_G.AlertFrame:UnregisterEvent("GARRISON_TALENT_COMPLETE")
 
-	if CFG.garrison_enabled then
-		dispatcher:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE")
+	if CFG.garrison_6_0_enabled or CFG.garrison_7_0_enabled then
 		dispatcher:RegisterEvent("GARRISON_FOLLOWER_ADDED")
 		dispatcher:RegisterEvent("GARRISON_MISSION_FINISHED")
 		dispatcher:RegisterEvent("GARRISON_RANDOM_MISSION_ADDED")
-		dispatcher:RegisterEvent("GARRISON_TALENT_COMPLETE")
+
+		if CFG.garrison_6_0_enabled then
+			dispatcher:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE")
+		end
+
+		if CFG.garrison_7_0_enabled then
+			dispatcher:RegisterEvent("GARRISON_TALENT_COMPLETE")
+		end
 	end
 end
 
 local function DisableGarrisonToasts()
-	dispatcher:UnregisterEvent("GARRISON_BUILDING_ACTIVATABLE")
-	dispatcher:UnregisterEvent("GARRISON_FOLLOWER_ADDED")
-	dispatcher:UnregisterEvent("GARRISON_MISSION_FINISHED")
-	dispatcher:UnregisterEvent("GARRISON_RANDOM_MISSION_ADDED")
-	dispatcher:UnregisterEvent("GARRISON_TALENT_COMPLETE")
+	if not CFG.garrison_6_0_enabled and not CFG.garrison_7_0_enabled then
+		dispatcher:UnregisterEvent("GARRISON_FOLLOWER_ADDED")
+		dispatcher:UnregisterEvent("GARRISON_MISSION_FINISHED")
+		dispatcher:UnregisterEvent("GARRISON_RANDOM_MISSION_ADDED")
+	end
+
+	if not CFG.garrison_6_0_enabled then
+		dispatcher:UnregisterEvent("GARRISON_BUILDING_ACTIVATABLE")
+	end
+
+	if not CFG.garrison_7_0_enabled then
+		dispatcher:UnregisterEvent("GARRISON_TALENT_COMPLETE")
+	end
 end
 
 --------------
@@ -2014,55 +2061,57 @@ end
 
 local function SpawnTestGarrisonToast()
 	-- follower
-	local followers = _G.C_Garrison.GetFollowers(1)
+	local followers = _G.C_Garrison.GetFollowers(_G.LE_FOLLOWER_TYPE_GARRISON_6_0)
 	local follower = followers and followers[1]
 
 	if follower then
-		dispatcher:GARRISON_FOLLOWER_ADDED(follower.followerID, follower.name, follower.className, follower.level, follower.quality, false, nil, follower.followerTypeID)
+		GarrisonFollowerToast_SetUp(follower.followerTypeID, _G.LE_GARRISON_TYPE_6_0, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
 	end
 
 	-- ship
-	followers = _G.C_Garrison.GetFollowers(2)
+	followers = _G.C_Garrison.GetFollowers(_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2)
 	follower = followers and followers[1]
 
 	if follower then
-		dispatcher:GARRISON_FOLLOWER_ADDED(follower.followerID, follower.name, follower.className, follower.level, follower.quality, false, follower.texPrefix, follower.followerTypeID)
-	end
-
-	-- champion
-	followers = _G.C_Garrison.GetFollowers(4)
-	follower = followers and followers[1]
-
-	if follower then
-		dispatcher:GARRISON_FOLLOWER_ADDED(follower.followerID, follower.name, follower.className, follower.level, follower.quality, false, nil, follower.followerTypeID)
+		GarrisonFollowerToast_SetUp(follower.followerTypeID, _G.LE_GARRISON_TYPE_6_0, follower.followerID, follower.name, follower.texPrefix, follower.level, follower.quality, false)
 	end
 
 	-- garrison mission
-	local missions = _G.C_Garrison.GetAvailableMissions(1)
+	local missions = _G.C_Garrison.GetAvailableMissions(_G.LE_FOLLOWER_TYPE_GARRISON_6_0)
 	local id = missions and (missions[1] and missions[1].missionID or nil) or nil
 
 	if id then
-		dispatcher:GARRISON_MISSION_FINISHED(1, id)
+		GarrisonMissionToast_SetUp(_G.LE_FOLLOWER_TYPE_GARRISON_6_0, _G.LE_GARRISON_TYPE_6_0, id)
 	end
 
 	-- shipyard mission
-	missions = _G.C_Garrison.GetAvailableMissions(2)
+	missions = _G.C_Garrison.GetAvailableMissions(_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2)
 	id = missions and (missions[1] and missions[1].missionID or nil) or nil
 
 	if id then
-		dispatcher:GARRISON_MISSION_FINISHED(2, id)
-	end
-
-	-- order hall mission
-	missions = _G.C_Garrison.GetAvailableMissions(4)
-	id = missions and (missions[1] and missions[1].missionID or nil) or nil
-
-	if id then
-		dispatcher:GARRISON_MISSION_FINISHED(4, id)
+		GarrisonMissionToast_SetUp(_G.LE_FOLLOWER_TYPE_SHIPYARD_6_2, _G.LE_GARRISON_TYPE_6_0, id)
 	end
 
 	-- garrison building
 	dispatcher:GARRISON_BUILDING_ACTIVATABLE("Storehouse")
+end
+
+local function SpawnTestClassHallToast()
+	-- champion
+	local followers = _G.C_Garrison.GetFollowers(_G.LE_FOLLOWER_TYPE_GARRISON_7_0)
+	local follower = followers and followers[1]
+
+	if follower then
+		GarrisonFollowerToast_SetUp(follower.followerTypeID, _G.LE_GARRISON_TYPE_7_0, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
+	end
+
+	-- order hall mission
+	local missions = _G.C_Garrison.GetAvailableMissions(_G.LE_FOLLOWER_TYPE_GARRISON_7_0)
+	local id = missions and (missions[1] and missions[1].missionID or nil) or nil
+
+	if id then
+		GarrisonMissionToast_SetUp(_G.LE_FOLLOWER_TYPE_GARRISON_7_0, _G.LE_GARRISON_TYPE_7_0, id)
+	end
 end
 
 local function SpawnTestAchievementToast()
@@ -2303,7 +2352,7 @@ local function ToggleToasts(value, state)
 		else
 			DisableArchaeologyToasts()
 		end
-	elseif value == "garrison_enabled" then
+	elseif value == "garrison_6_0_enabled" or value == "garrison_7_0_enabled" then
 		if state then
 			EnableGarrisonToasts()
 		else
@@ -2902,14 +2951,15 @@ local function CreateConfigPanel()
 	local layout = {
 		[1] = {name = "Achievement", enabled = "achievement_enabled", dnd = "dnd.achievement", testFunc = SpawnTestAchievementToast},
 		[2] = {name = "Archaeology", enabled = "archaeology_enabled", dnd = "dnd.archaeology", testFunc = SpawnTestArchaeologyToast},
-		[3] = {name = "Garrison", enabled = "garrison_enabled", dnd = "dnd.garrison", testFunc = SpawnTestGarrisonToast},
-		[4] = {name = "Dungeon", enabled = "instance_enabled", dnd = "dnd.instance"},
-		[5] = {name = "Loot (Special)", enabled = "loot_special_enabled", enable_tooltip = "Toasts triggered by special loot events, e.g. won rolls, legendary drops, personal loot, etc.", dnd = "dnd.loot_special", testFunc = SpawnTestLootToast},
-		[6] = {name = "Loot (Common)", enabled = "loot_common_enabled", enable_tooltip = "Toasts triggered by chat events, e.g. greens, blues, some epics, everything that isn't handled by special loot toasts.", dnd = "dnd.loot_common", dropdown = lootDropDown},
-		[7] = {name = "Loot (Currency)", enabled = "loot_currency_enabled", dnd = "dnd.loot_currency", testFunc = SpawnTestCurrencyToast},
-		[8] = {name = "Recipe", enabled = "recipe_enabled", dnd = "dnd.recipe", testFunc = SpawnTestRecipeToast},
-		[9] = {name = "World Quest", enabled = "world_enabled", dnd = "dnd.world", testFunc = SpawnTestWorldEventToast},
-		[10] = {name = "Transmogrification", enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
+		[3] = {name = "Garrison", enabled = "garrison_6_0_enabled", dnd = "dnd.garrison_6_0", testFunc = SpawnTestGarrisonToast},
+		[4] = {name = "Class Hall", enabled = "garrison_7_0_enabled", dnd = "dnd.garrison_7_0", testFunc = SpawnTestClassHallToast},
+		[5] = {name = "Dungeon", enabled = "instance_enabled", dnd = "dnd.instance"},
+		[6] = {name = "Loot (Special)", enabled = "loot_special_enabled", enable_tooltip = "Toasts triggered by special loot events, e.g. won rolls, legendary drops, personal loot, etc.", dnd = "dnd.loot_special", testFunc = SpawnTestLootToast},
+		[7] = {name = "Loot (Common)", enabled = "loot_common_enabled", enable_tooltip = "Toasts triggered by chat events, e.g. greens, blues, some epics, everything that isn't handled by special loot toasts.", dnd = "dnd.loot_common", dropdown = lootDropDown},
+		[8] = {name = "Loot (Currency)", enabled = "loot_currency_enabled", dnd = "dnd.loot_currency", testFunc = SpawnTestCurrencyToast},
+		[9] = {name = "Recipe", enabled = "recipe_enabled", dnd = "dnd.recipe", testFunc = SpawnTestRecipeToast},
+		[10] = {name = "World Quest", enabled = "world_enabled", dnd = "dnd.world", testFunc = SpawnTestWorldEventToast},
+		[11] = {name = "Transmogrification", enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
 	}
 
 	local anchor = CreateToastConfigLine(panel, layout[1], subtext)
@@ -2969,9 +3019,21 @@ function dispatcher:ADDON_LOADED(arg)
 		CFG.loot_enabled = nil
 	end
 
+	if CFG.dnd.garrison ~= nil then
+		CFG.dnd.garrison_6_0 = CFG.dnd.garrison
+		CFG.dnd.garrison = nil
+	end
+
+	if CFG.garrison_enabled ~= nil then
+		CFG.garrison_6_0_enabled = CFG.garrison_enabled
+		CFG.garrison_enabled = nil
+	end
+
 	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
 		_G.LS_TOASTS_CFG_GLOBAL["Default"].dnd.loot = nil
 		_G.LS_TOASTS_CFG_GLOBAL["Default"].loot_enabled = nil
+		_G.LS_TOASTS_CFG_GLOBAL["Default"].dnd.garrison = nil
+		_G.LS_TOASTS_CFG_GLOBAL["Default"].garrison_enabled = nil
 	end
 
 	self:RegisterEvent("PLAYER_LOGIN")
