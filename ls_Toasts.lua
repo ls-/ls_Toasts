@@ -292,6 +292,7 @@ local function ResetToast(toast)
 	toast.dnd = nil
 	toast.chat = nil
 	toast.link = nil
+	toast.itemCount = nil
 	toast.soundFile = nil
 	toast.usedRewards = nil
 	toast:ClearAllPoints()
@@ -392,6 +393,16 @@ local function GetToastToUpdate(id, toastType)
 	for _, toast in pairs(queuedToasts) do
 		if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
 			return toast, true
+		end
+	end
+
+	return
+end
+
+local function GetQueuedToastToUpdate(id, toastType)
+	for _, toast in pairs(queuedToasts) do
+		if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
+			return toast
 		end
 	end
 
@@ -1726,25 +1737,40 @@ function dispatcher:CHAT_MSG_CURRENCY(message)
 		end
 	end
 
-	local toast = GetToast("item")
-	local name, _, icon, _, _, _, _, quality = _G.GetCurrencyInfo(itemLink)
-	local color = _G.ITEM_QUALITY_COLORS[quality or 1]
+	itemLink = string.match(itemLink, "|H(.+)|h.+|h")
 	quantity = tonumber(quantity) or 0
 
-	if CFG.colored_names_enabled then
-		toast.Text:SetTextColor(color.r, color.g, color.b)
+	local toast = GetQueuedToastToUpdate(itemLink, "item")
+	local isUpdated = true
+
+	if not toast then
+		toast = GetToast("item")
+		isUpdated = false
 	end
 
-	toast.Title:SetText(_G.YOU_RECEIVED_LABEL)
-	toast.Text:SetText(name)
-	toast.Count:SetText(quantity > 1 and quantity or "")
-	toast.Border:SetVertexColor(color.r, color.g, color.b)
-	toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-	toast.Icon:SetTexture(icon)
-	toast.soundFile = 31578
-	toast.link = itemLink
+	if not isUpdated then
+		local name, _, icon, _, _, _, _, quality = _G.GetCurrencyInfo(itemLink)
+		local color = _G.ITEM_QUALITY_COLORS[quality or 1]
 
-	SpawnToast(toast, CFG.dnd.loot_currency)
+		if CFG.colored_names_enabled then
+			toast.Text:SetTextColor(color.r, color.g, color.b)
+		end
+
+		toast.Title:SetText(_G.YOU_RECEIVED_LABEL)
+		toast.Text:SetText(name)
+		toast.Count:SetText(quantity > 1 and quantity or "")
+		toast.Border:SetVertexColor(color.r, color.g, color.b)
+		toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+		toast.Icon:SetTexture(icon)
+		toast.soundFile = 31578
+		toast.itemCount = quantity
+		toast.link = itemLink
+
+		SpawnToast(toast, CFG.dnd.loot_currency)
+	else
+		toast.itemCount = toast.itemCount + quantity
+		toast.Count:SetText(toast.itemCount)
+	end
 end
 
 local function EnableCurrencyLootToasts()
