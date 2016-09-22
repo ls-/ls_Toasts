@@ -39,7 +39,7 @@ local DEFAULTS = {
 		achievement = false,
 		archaeology = false,
 		recipe = false,
-		garrison_6_0 = true,
+		garrison_6_0 = false,
 		garrison_7_0 = true,
 		instance = false, -- dungeon completion
 		loot_special = false, -- includes blizz store items
@@ -50,7 +50,7 @@ local DEFAULTS = {
 	},
 	achievement_enabled = true,
 	archaeology_enabled = true,
-	garrison_6_0_enabled = true,
+	garrison_6_0_enabled = false,
 	garrison_7_0_enabled = true,
 	instance_enabled = true,
 	loot_special_enabled = true,
