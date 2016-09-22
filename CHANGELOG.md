@@ -1,3 +1,9 @@
+## Version 1.09
+
+- Split "Garrison" toast group into two new groups: "Garrison" and "Class Hall";
+- Moved currency toasts to a new category, "Loot (Currency)";
+- Misc bug fixes and tweaks.
+
 ## Version 1.08
 
 - Fixed "SetPortraitToTexture" error.
