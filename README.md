@@ -21,10 +21,10 @@ Replacement for default alert system. Better toasts, cheers!
 If you found a bug or want to share an idea on how to improve my addon, either report to [Issue Tracker](https://github.com/ls-/ls_Toasts/issues) on my GitHub page, or post a comment on [WoWInterfrace](http://www.wowinterface.com/downloads/info24123.html#comments) or [Curse](http://mods.curse.com/addons/wow/ls-toasts#comments).
 
 ## FAQ
-**Q:** Will you add group/master loot frames to your addon?
+**Q:** Will you add group/master loot frames to your addon?<br/>
 **A:** Yeah, but a bit later, first I need to figure out how these loot roll systems work.
 
-**Q:** Will you add ElvUI/flat/modern skin?
+**Q:** Will you add ElvUI/flat/modern skin?<br/>
 **A:** No.
 
 ## License
