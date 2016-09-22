@@ -24,5 +24,8 @@ If you found a bug or want to share an idea on how to improve my addon, either r
 **Q:** Will you add group/master loot frames to your addon?
 **A:** Yeah, but a bit later, first I need to figure out how these loot roll systems work.
 
+**Q:** Will you add ElvUI/flat/modern skin?
+**A:** No.
+
 ## License
 Please see [LICENSE](https://github.com/ls-/ls_Toasts/blob/master/LICENSE.txt) file.
