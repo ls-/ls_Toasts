@@ -2145,64 +2145,65 @@ end
 -- TRANSMOG --
 --------------
 
-local LEARN_TRANSMOG_PATTERN = string.gsub(_G.ERR_LEARN_TRANSMOG_S , "%%s", "(.+)")
-local REVOKE_TRANSMOG_PATTERN = string.gsub(_G.ERR_REVOKE_TRANSMOG_S, "%%s", "(.+)")
+local function IsAppearanceKnown(sourceID)
+	local data = _G.C_TransmogCollection.GetSourceInfo(sourceID)
+	local sources = _G.C_TransmogCollection.GetAppearanceSources(data.appearanceID)
 
-function dispatcher:CHAT_MSG_SYSTEM(message)
-	local transmogLink = string.match(message, LEARN_TRANSMOG_PATTERN)
-	local isKnown = true
-
-	if not transmogLink then
-		transmogLink = string.match(message, REVOKE_TRANSMOG_PATTERN)
-		isKnown = false
-
-		if not transmogLink then
-			return
+	for i = 1, #sources do
+		if sources[i].isCollected and sourceID ~= sources[i].sourceID then
+			return true
 		end
 	end
 
-	local sourceID, name = string.match(transmogLink, "transmogappearance:(%d+)|h%[(.+)%]")
+	return false
+end
 
-	if sourceID then
-		local toast = GetToastToUpdate(sourceID, "misc")
-		local isUpdated = true
+local function TransmogToast_SetUp(sourceID, isAdded)
+	local toast = GetToast("misc")
+	local _, _, _, icon, _, _, transmogLink = _G.C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+	local name
+	transmogLink, name = string.match(transmogLink, "|H(.+)|h%[(.+)%]|h")
 
-		if not toast then
-			toast = GetToast("misc")
-			isUpdated = false
-		end
+	if isAdded then
+		toast.Title:SetText("Appearance Added")
+	else
+		toast.Title:SetText("Appearance Removed")
+	end
 
-		local _, _, _, icon, _, _ =_G.C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+	toast.Text:SetText(name)
+	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-transmog")
+	toast.Border:SetVertexColor(1, 128 / 255, 1)
+	toast.IconBorder:SetVertexColor(1, 128 / 255, 1)
+	toast.Icon:SetTexture(icon)
+	toast.soundFile = "UI_DigsiteCompletion_Toast"
+	toast.id = sourceID
+	toast.link = transmogLink
 
-		if isKnown then
-			toast.Title:SetText("Appearance Added")
-		else
-			toast.Title:SetText("Appearance Removed")
-		end
+	SpawnToast(toast, CFG.dnd.transmog)
+end
 
-		toast.Text:SetText(name)
-		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-transmog")
-		toast.Border:SetVertexColor(1, 128 / 255, 1)
-		toast.IconBorder:SetVertexColor(1, 128 / 255, 1)
-		toast.Icon:SetTexture(icon)
-		toast.soundFile = "UI_DigsiteCompletion_Toast"
-		toast.id = sourceID
-		toast.link = string.match(transmogLink, "|H(.+)|h.+|h")
+function dispatcher:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
+	if not IsAppearanceKnown(sourceID) then
+		TransmogToast_SetUp(sourceID, true)
+	end
+end
 
-		if not isUpdated then
-			SpawnToast(toast, CFG.dnd.transmog)
-		end
+function dispatcher:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
+	if not IsAppearanceKnown(sourceID) then
+		TransmogToast_SetUp(sourceID)
 	end
 end
 
 local function EnableTransmogToasts()
 	if CFG.transmog_enabled then
-		dispatcher:RegisterEvent("CHAT_MSG_SYSTEM")
+		dispatcher:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED")
+		dispatcher:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED")
 	end
 end
 
 local function DisableTransmogToasts()
-	dispatcher:UnregisterEvent("CHAT_MSG_SYSTEM")
+	dispatcher:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED")
+	dispatcher:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED")
 end
 
 -----------
@@ -2367,7 +2368,8 @@ local function SpawnTestTransmogToast()
 	local _, _, _, _, _, _, transmogLink = _G.C_TransmogCollection.GetAppearanceSourceInfo(source.sourceID)
 
 	if transmogLink then
-		dispatcher:CHAT_MSG_SYSTEM(string.format(_G.ERR_LEARN_TRANSMOG_S, transmogLink))
+		TransmogToast_SetUp(source.sourceID, true)
+		TransmogToast_SetUp(source.sourceID)
 	end
 end
 
