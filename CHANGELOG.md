@@ -1,8 +1,8 @@
 ## Version 1.10
 
-- Added workaround for CompactRaidFrame* taint.
+- Added workaround for few taints.
 
-NOTE: **IMPORTANT!** Now there's no ls: Toasts entry in Interface > AddOns section, but you'll create one on the first use of **/lstoasts** command. After that you'll be able to access config panel the old way. However, I strongly recommend to /reload UI after you're done setting up the addon. Even if you opened and closed config panel without changing anything, /reload UI. By doing so, you'll remove config entry from the system and prevent possible taints. Blame Blizzard, not me.
+NOTE: **IMPORTANT!** Now there's no ls: Toasts entry in Interface > AddOns section, but you can create one by using **/lstoasts** command. After that you'll be able to access config panel the old way. However, I strongly recommend to /reload UI after you're done setting up the addon. Even if you opened and closed config panel without changing anything, /reload UI. By doing so, you'll remove config entry from the system and prevent possible taints. Blame Blizzard, not me.
 
 ## Version 1.09
 
