@@ -2938,10 +2938,7 @@ local function CreateConfigPanel()
 	local wipeDefaults = CreateConfigButton(panel, "WipeDefaultsButton", "Wipe Preset", WipeDefaultTemplate)
 	wipeDefaults:SetPoint("LEFT", saveDefaults, "RIGHT", 4, 0)
 
-	panel.okay = function() end
-	panel.cancel = function() end
 	panel.refresh = OptionsPanelRefresh
-	panel.default = function() end
 
 	_G.InterfaceOptions_AddCategory(panel, true)
 
