@@ -19,7 +19,7 @@ Replacement for default alert system. Better toasts, cheers!
 
 **Note #1:** By default, there's no ls: Toasts entry in Interface > AddOns section. You'll create one on the first use of **/lstoasts** command. It's a workaround for notorious CompactRaidFrame* taint which is caused by existence of in-game config. It's a really old Blizz bug, and I don't think it'll ever be fixed.
 
-I strongly recommend to **/reload** UI after you're done setting up the addon. Even if you opened and closed this panel without changing anything, **/reload** UI. By doing so, you'll remove config entry and prevent possible taints.
+I strongly recommend to **/reload** UI after you're done setting up the addon. Even if you opened and closed config panel without changing anything, **/reload** UI. By doing so, you'll remove config entry from the system and prevent possible taints.
 
 ## Feedback And Feature Requests
 If you found a bug or want to share an idea on how to improve my addon, either report to [Issue Tracker](https://github.com/ls-/ls_Toasts/issues) on my GitHub page, or post a comment on [WoWInterfrace](http://www.wowinterface.com/downloads/info24123.html#comments) or [Curse](http://mods.curse.com/addons/wow/ls-toasts#comments).
