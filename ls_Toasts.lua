@@ -3082,11 +3082,14 @@ function dispatcher:PLAYER_LOGIN()
 	EnableWorldToasts()
 	EnableTransmogToasts()
 
-	CreateConfigPanel()
-
 	_G.SLASH_LSTOASTS1 = "/lstoasts"
 	_G.SlashCmdList["LSTOASTS"] = function(msg)
 		if msg == "" then
+			if not _G.LSToastsConfigPanel then
+				CreateConfigPanel()
+				_G.InterfaceOptionsFrame_OpenToCategory(_G.LSToastsConfigPanel)
+			end
+
 			if not _G.LSToastsConfigPanel:IsShown() then
 				_G.InterfaceOptionsFrame_OpenToCategory(_G.LSToastsConfigPanel)
 			else
