@@ -169,6 +169,10 @@ local function FixItemLink(itemLink)
 	itemLink = string.match(itemLink, "|H(.+)|h.+|h")
 	local linkTable = {string.split(":", itemLink)}
 
+	if linkTable[1] ~= "item" then
+		return itemLink
+	end
+
 	if linkTable[12] ~= "" then
 		linkTable[12] = ""
 
@@ -512,9 +516,16 @@ local function ToastButton_OnEnter(self)
 		end
 	elseif self.link then
 		if self.type == "item" then
-			_G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", -2, 2)
-			_G.GameTooltip:SetHyperlink(self.link)
-			_G.GameTooltip:Show()
+			if string.find(self.link, "battlepet:") then
+				local _, speciesID, level, breedQuality, maxHealth, power, speed = string.split(":", self.link)
+				_G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", -2, 2)
+				_G.GameTooltip:Show()
+				_G.BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed))
+			else
+				_G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", -2, 2)
+				_G.GameTooltip:SetHyperlink(self.link)
+				_G.GameTooltip:Show()
+			end
 		end
 	end
 
@@ -525,6 +536,7 @@ local function ToastButton_OnLeave(self)
 	_G.GameTooltip:Hide()
 	_G.GarrisonFollowerTooltip:Hide()
 	_G.GarrisonShipyardFollowerTooltip:Hide()
+	_G.BattlePetTooltip:Hide()
 
 	self.AnimOut:Play()
 end
@@ -1665,7 +1677,15 @@ local function LootCommonToast_Setup(itemLink, quantity)
 	itemLink = FixItemLink(itemLink)
 
 	if not GetToastToUpdate(itemLink, "item") then
-		local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
+		local name, quality, icon, _
+
+		if string.find(itemLink, "battlepet:") then
+			local _, speciesID, _, breedQuality = string.split(":", itemLink)
+			name, icon = _G.C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+			quality = tonumber(breedQuality)
+		else
+			name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
+		end
 
 		if quality >= CFG.loot_common_quality_threshold then
 			local toast = GetToast("item")
