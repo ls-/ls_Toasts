@@ -2186,7 +2186,7 @@ local function SpawnTestWorldEventToast()
 	end
 
 	-- world quests, have to be in zone to get info
-	local mapAreaID = _G.GetCurrentMapAreaID();
+	local mapAreaID = _G.GetCurrentMapAreaID()
 	local taskInfo = _G.C_TaskQuest.GetQuestsForPlayerByMapID(mapAreaID)
 
 	for _, info in pairs(taskInfo) do
