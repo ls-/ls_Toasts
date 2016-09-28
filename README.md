@@ -22,7 +22,7 @@ Replacement for default alert system. Better toasts, cheers!
 I strongly recommend to **/reload** UI after you're done setting up the addon. Even if you opened and closed config panel without changing anything, **/reload** UI. By doing so, you'll remove config entry from the system and prevent possible taints.
 
 ## How to Reskin
-If you're UI developer, you may want to reskin my toasts. To do so, you'll need to override special dummy function:
+If you're UI developer, you may want to reskin my toasts. To do so, you'll need to override special dummy function by adding something like this to your addon code:
 
 ```Lua
 local toast_F = unpack(ls_Toasts)
