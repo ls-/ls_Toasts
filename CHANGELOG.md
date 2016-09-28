@@ -1,3 +1,8 @@
+## Version 1.12
+
+- Added currency toast stacking. Instead of creating new toasts for each currency gain, existing one will be updated;
+- Added skinning support. This feature is for addon devs. For more info, read [here](https://github.com/ls-/ls_Toasts#how-to-reskin).
+
 ## Version 1.11
 
 - Fixed handling of caged battle pets.
