@@ -2253,7 +2253,7 @@ local function SpawnTestCurrencyToast()
 	local link, _ = _G.GetCurrencyLink(824)
 
 	if link then
-		dispatcher:CHAT_MSG_CURRENCY(string.format(_G.CURRENCY_GAINED_MULTIPLE, link, 500))
+		dispatcher:CHAT_MSG_CURRENCY(string.format(_G.CURRENCY_GAINED_MULTIPLE, link, math.random(300, 600)))
 	end
 end
 
