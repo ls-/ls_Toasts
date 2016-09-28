@@ -238,7 +238,7 @@ local function ProcessAnimatedText()
 		end
 
 		if newValue == targetValue then
-			text.value = nil
+			text._value = nil
 			textsToAnimate[text] = nil
 		end
 
