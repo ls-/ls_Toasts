@@ -1,6 +1,6 @@
 ## Interface: 70000
 ## Author: lightspark
-## Version: 1.11
+## Version: 1.12
 ## Title: |cff1a9fc0ls:|r Toasts
 ## Notes: Better toasts, cheers!
 ## SavedVariables: LS_TOASTS_CFG_GLOBAL
