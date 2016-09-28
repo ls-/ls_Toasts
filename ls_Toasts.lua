@@ -1,4 +1,4 @@
-local addonName = ...
+local addonName, addonTable = ...
 
 -- Lua
 local _G = _G
@@ -70,6 +70,28 @@ local DEFAULTS = {
 	world_enabled = true,
 	transmog_enabled = true,
 }
+
+------------
+-- EXPORT --
+------------
+
+local F = {} -- F for Functions
+addonTable[1] = F
+
+_G[addonName] = addonTable
+
+-- XXX: This function can be overridden by other addons
+-- XXX: See definition of GetToast function for toasts' structures
+
+function F:SkinToast() end
+
+-- Arguments:
+-- 	toast
+-- 	toastType	- types: "item", "mission", "follower", "achievement", "ability", "scenario", "misc"
+
+-- Import:
+-- 	local toast_F = unpack(ls_Toasts)
+-- 	function toast_F:SkinToast(toast, toastType) --[[body]] end
 
 ----------------
 -- DISPATCHER --
@@ -289,6 +311,8 @@ local function SpawnToast(toast, isDND)
 	end
 
 	table.insert(activeToasts, toast)
+
+	F:SkinToast(toast, toast.type)
 
 	toast:Show()
 
