@@ -21,15 +21,27 @@ Replacement for default alert system. Better toasts, cheers!
 
 I strongly recommend to **/reload** UI after you're done setting up the addon. Even if you opened and closed config panel without changing anything, **/reload** UI. By doing so, you'll remove config entry from the system and prevent possible taints.
 
-## Feedback And Feature Requests
+## How to Reskin
+If you're UI developer, you may want to reskin my toasts. To do so, you'll need to import and override special dummy function:
+
+```Lua
+local toast_F = unpack(ls_Toasts)
+
+function toast_F:SkinToast(toast, toastType)
+	-- do something here
+end
+```
+
+This function is called after colours, textures and texts are set, but before toast is shown. Toast and its type are passed as arguments.
+
+For toasts' structures, see definitions of `CreateBaseToastButton` and `GetToast` functions.
+
+## Feedback and Feature Requests
 If you found a bug or want to share an idea on how to improve my addon, either report to [Issue Tracker](https://github.com/ls-/ls_Toasts/issues) on my GitHub page, or post a comment on [WoWInterfrace](http://www.wowinterface.com/downloads/info24123.html#comments) or [Curse](http://mods.curse.com/addons/wow/ls-toasts#comments).
 
 ## FAQ
-**Q:** Will you add group/master loot frames to your addon?<br/>
-**A:** Yeah, but a bit later, first I need to figure out how these loot roll systems work.
-
-**Q:** Will you add ElvUI/flat/modern skin?<br/>
-**A:** No.
+**Q:** Will you add group/master loot roll frames to your addon?<br/>
+**A:** Maybe later, I'm not sure yet.
 
 ## License
 Please see [LICENSE](https://github.com/ls-/ls_Toasts/blob/master/LICENSE.txt) file.
