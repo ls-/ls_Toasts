@@ -5,7 +5,15 @@ local _G = _G
 local string = _G.string
 local math = _G.math
 local table = _G.table
-local tonumber, unpack, pairs, select, type, next = tonumber, unpack, pairs, select, type, next
+local next = _G.next
+local pairs = _G.pairs
+local select = _G.select
+local tonumber = _G.tonumber
+local type = _G.type
+local unpack = _G.unpack
+
+-- Blizz
+local Lerp = _G.Lerp
 
 -- Mine
 local INLINE_NEED = "|TInterface\\Buttons\\UI-GroupLoot-Dice-Up:0:0:0:0:32:32:0:32:0:31|t"
@@ -20,6 +28,7 @@ local scenarioToasts = {}
 local miscToasts = {}
 local activeToasts = {}
 local queuedToasts = {}
+local textsToAnimate = {}
 local toastCounter = 0
 
 ------------
@@ -191,6 +200,37 @@ local function DumpToasts()
 		print("|cff00ccff"..toast.type.." toast info:|r", "\nid:", toast.id, "\nlink:", toast.link, "\nchat event:", toast.chat)
 	end
 end
+
+--------------------
+-- TEXT ANIMATION --
+--------------------
+
+local function ProcessAnimatedText()
+	for text, targetValue in pairs(textsToAnimate) do
+		local newValue
+
+		if text._value >= targetValue then
+			newValue = math.floor(Lerp(text._value, targetValue, 0.25))
+		else
+			newValue = math.ceil(Lerp(text._value, targetValue, 0.25))
+		end
+
+		if newValue == targetValue then
+			text.value = nil
+			textsToAnimate[text] = nil
+		end
+
+		text:SetText(newValue)
+		text._value = newValue
+	end
+end
+
+local function SetAnimatedText(self, value)
+	self._value = tonumber(self:GetText()) or 1
+	textsToAnimate[self] = value
+end
+
+_G.C_Timer.NewTicker(0.05, ProcessAnimatedText)
 
 ----------
 -- MAIN --
@@ -397,16 +437,6 @@ local function GetToastToUpdate(id, toastType)
 	for _, toast in pairs(queuedToasts) do
 		if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
 			return toast, true
-		end
-	end
-
-	return
-end
-
-local function GetQueuedToastToUpdate(id, toastType)
-	for _, toast in pairs(queuedToasts) do
-		if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
-			return toast
 		end
 	end
 
@@ -848,7 +878,32 @@ local function GetToast(toastType)
 			local count = toast:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
 			count:SetPoint("BOTTOMRIGHT", toast.Icon, "BOTTOMRIGHT", 0, 2)
 			count:SetJustifyH("RIGHT")
+			count.SetAnimatedText = SetAnimatedText
 			toast.Count = count
+
+			local countUpdate = toast:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
+			countUpdate:SetPoint("BOTTOMRIGHT", toast.Count, "TOPRIGHT", 0, 2)
+			countUpdate:SetJustifyH("RIGHT")
+			countUpdate:SetAlpha(0)
+			toast.CountUpdate = countUpdate
+
+			local ag = toast:CreateAnimationGroup()
+			toast.CountUpdateAnim = ag
+
+			local anim1 = ag:CreateAnimation("Alpha")
+			anim1:SetChildKey("CountUpdate")
+			anim1:SetOrder(1)
+			anim1:SetFromAlpha(0)
+			anim1:SetToAlpha(1)
+			anim1:SetDuration(0.2)
+
+			local anim2 = ag:CreateAnimation("Alpha")
+			anim2:SetChildKey("CountUpdate")
+			anim2:SetOrder(2)
+			anim2:SetFromAlpha(1)
+			anim2:SetToAlpha(0)
+			anim2:SetStartDelay(0.4)
+			anim2:SetDuration(0.8)
 
 			local dragon = toast:CreateTexture(nil, "OVERLAY", nil, 0)
 			dragon:SetPoint("TOPLEFT", -23, 13)
@@ -1760,7 +1815,7 @@ function dispatcher:CHAT_MSG_CURRENCY(message)
 	itemLink = string.match(itemLink, "|H(.+)|h.+|h")
 	quantity = tonumber(quantity) or 0
 
-	local toast = GetQueuedToastToUpdate(itemLink, "item")
+	local toast, isQueued = GetToastToUpdate(itemLink, "item")
 	local isUpdated = true
 
 	if not toast then
@@ -1788,8 +1843,20 @@ function dispatcher:CHAT_MSG_CURRENCY(message)
 
 		SpawnToast(toast, CFG.dnd.loot_currency)
 	else
-		toast.itemCount = toast.itemCount + quantity
-		toast.Count:SetText(toast.itemCount)
+		if isQueued then
+			toast.itemCount = toast.itemCount + quantity
+			toast.Count:SetText(toast.itemCount)
+		else
+			toast.itemCount = toast.itemCount + quantity
+			toast.Count:SetAnimatedText(toast.itemCount)
+
+			toast.CountUpdate:SetText("+"..quantity)
+			toast.CountUpdateAnim:Stop()
+			toast.CountUpdateAnim:Play()
+
+			toast.AnimOut:Stop()
+			toast.AnimOut:Play()
+		end
 	end
 end
 
