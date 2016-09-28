@@ -81,11 +81,11 @@ addonTable[1] = F
 _G[addonName] = addonTable
 
 -- XXX: This function can be overridden by other addons
--- XXX: See definition of GetToast function for toasts' structures
+-- XXX: For toasts' structures, see definitions of CreateBaseToastButton and GetToast functions
 
 function F:SkinToast() end
 
--- Arguments:
+-- Parameters:
 -- 	toast
 -- 	toastType	- types: "item", "mission", "follower", "achievement", "ability", "scenario", "misc"
 
