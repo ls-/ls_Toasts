@@ -585,7 +585,7 @@ local function ToastButton_OnEnter(self)
 
 	self.AnimOut:Stop()
 
-	dispatcher:RegisterEvent('MODIFIER_STATE_CHANGED')
+	dispatcher:RegisterEvent("MODIFIER_STATE_CHANGED")
 end
 
 local function ToastButton_OnLeave(self)
@@ -596,16 +596,15 @@ local function ToastButton_OnLeave(self)
 
 	self.AnimOut:Play()
 
-	dispatcher:UnregisterEvent('MODIFIER_STATE_CHANGED')
+	dispatcher:UnregisterEvent("MODIFIER_STATE_CHANGED")
 end
 
 function dispatcher:MODIFIER_STATE_CHANGED()
-	if(IsModifiedClick('COMPAREITEMS') or GetCVarBool('alwaysCompareItems')) then
-		GameTooltip_ShowCompareItem()
+	if _G.IsModifiedClick("COMPAREITEMS") or _G.GetCVarBool("alwaysCompareItems") then
+		_G.GameTooltip_ShowCompareItem()
 	else
-		for _, tooltip in next, GameTooltip.shoppingTooltips do
-			tooltip:Hide()
-		end
+		_G.ShoppingTooltip1:Hide()
+		_G.ShoppingTooltip2:Hide()
 	end
 end
 
