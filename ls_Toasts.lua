@@ -584,6 +584,8 @@ local function ToastButton_OnEnter(self)
 	end
 
 	self.AnimOut:Stop()
+
+	dispatcher:RegisterEvent('MODIFIER_STATE_CHANGED')
 end
 
 local function ToastButton_OnLeave(self)
@@ -593,6 +595,18 @@ local function ToastButton_OnLeave(self)
 	_G.BattlePetTooltip:Hide()
 
 	self.AnimOut:Play()
+
+	dispatcher:UnregisterEvent('MODIFIER_STATE_CHANGED')
+end
+
+function dispatcher:MODIFIER_STATE_CHANGED()
+	if(IsModifiedClick('COMPAREITEMS') or GetCVarBool('alwaysCompareItems')) then
+		GameTooltip_ShowCompareItem()
+	else
+		for _, tooltip in next, GameTooltip.shoppingTooltips do
+			tooltip:Hide()
+		end
+	end
 end
 
 local function ToastButtonAnimIn_OnStop(self)
