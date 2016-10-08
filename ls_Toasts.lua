@@ -55,7 +55,6 @@ local EQUIP_SLOTS = {
 	["INVTYPE_RANGEDRIGHT"] = {_G.INVSLOT_RANGED},
 	["INVTYPE_RELIC"] = {_G.INVSLOT_RANGED},
 	["INVTYPE_THROWN"] = {_G.INVSLOT_RANGED},
-	[""] = {},
 }
 
 ------------
@@ -256,7 +255,7 @@ local function IsItemAnUpgrade(itemLink)
 
 	local _, _, _, _, _, _, _, _, itemEquipLoc = _G.GetItemInfo(itemLink)
 	local itemLevel = _G.GetDetailedItemLevelInfo(itemLink)
-	local slot1, slot2 = unpack(EQUIP_SLOTS[itemEquipLoc])
+	local slot1, slot2 = unpack(EQUIP_SLOTS[itemEquipLoc] or {})
 
 	if slot1 then
 		local itemLinkInSlot1 = _G.GetInventoryItemLink("player", slot1)
