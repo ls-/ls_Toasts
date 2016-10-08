@@ -2105,7 +2105,7 @@ end
 function dispatcher:QUEST_TURNED_IN(...)
 	local questID = ...
 
-	if _G.QuestMapFrame_IsQuestWorldQuest(questID) then
+	if _G.QuestUtils_IsQuestWorldQuest(questID) then
 		WorldQuestToast_SetUp(questID)
 	end
 end
@@ -2114,7 +2114,7 @@ function dispatcher:QUEST_LOOT_RECEIVED(...)
 	local questID, itemLink = ...
 
 	--- XXX: QUEST_LOOT_RECEIVED may fire before QUEST_TURNED_IN
-	if _G.QuestMapFrame_IsQuestWorldQuest(questID) then
+	if _G.QuestUtils_IsQuestWorldQuest(questID) then
 		if not GetToastToUpdate(questID, "scenario") then
 			WorldQuestToast_SetUp(questID)
 		end
@@ -2296,7 +2296,7 @@ local function SpawnTestWorldEventToast()
 	for _, info in pairs(taskInfo) do
 		local questID = info.questId
 
-		if _G.QuestMapFrame_IsQuestWorldQuest(questID) and _G.HaveQuestData(questID) then
+		if _G.QuestUtils_IsQuestWorldQuest(questID) and _G.HaveQuestData(questID) then
 			local numRewards = _G.GetNumQuestLogRewards(questID)
 
 			if numRewards > 0 then
