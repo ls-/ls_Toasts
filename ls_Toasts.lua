@@ -2,11 +2,13 @@ local addonName, addonTable = ...
 
 -- Lua
 local _G = _G
-local string = _G.string
 local math = _G.math
+local string = _G.string
 local table = _G.table
 local next = _G.next
 local pairs = _G.pairs
+local pcall = _G.pcall
+local print = _G.print
 local select = _G.select
 local tonumber = _G.tonumber
 local type = _G.type
@@ -19,15 +21,15 @@ local Lerp = _G.Lerp
 local INLINE_NEED = "|TInterface\\Buttons\\UI-GroupLoot-Dice-Up:0:0:0:0:32:32:0:32:0:31|t"
 local INLINE_GREED = "|TInterface\\Buttons\\UI-GroupLoot-Coin-Up:0:0:0:0:32:32:0:32:0:31|t"
 local INLINE_DE = "|TInterface\\Buttons\\UI-GroupLoot-DE-Up:0:0:0:0:32:32:0:32:0:31|t"
-local itemToasts = {}
-local missonToasts = {}
-local followerToasts = {}
-local achievementToasts = {}
 local abilityToasts = {}
-local scenarioToasts = {}
-local miscToasts = {}
+local achievementToasts = {}
 local activeToasts = {}
+local followerToasts = {}
+local itemToasts = {}
+local miscToasts = {}
+local missonToasts = {}
 local queuedToasts = {}
+local scenarioToasts = {}
 local textsToAnimate = {}
 local toastCounter = 0
 
