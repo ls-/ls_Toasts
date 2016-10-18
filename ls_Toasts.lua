@@ -13,6 +13,7 @@ local select = _G.select
 local tonumber = _G.tonumber
 local type = _G.type
 local unpack = _G.unpack
+local hooksecurefunc = _G.hooksecurefunc
 
 -- Blizz
 local Lerp = _G.Lerp
@@ -1166,9 +1167,6 @@ function dispatcher:CRITERIA_EARNED(...)
 end
 
 local function EnableAchievementToasts()
-	_G.AlertFrame:UnregisterEvent("ACHIEVEMENT_EARNED")
-	_G.AlertFrame:UnregisterEvent("CRITERIA_EARNED")
-
 	if CFG.achievement_enabled then
 		if not _G.AchievementFrame then
 			_G.AchievementFrame_LoadUI()
@@ -1386,12 +1384,6 @@ function dispatcher:GARRISON_TALENT_COMPLETE(...)
 end
 
 local function EnableGarrisonToasts()
-	_G.AlertFrame:UnregisterEvent("GARRISON_BUILDING_ACTIVATABLE")
-	_G.AlertFrame:UnregisterEvent("GARRISON_FOLLOWER_ADDED")
-	_G.AlertFrame:UnregisterEvent("GARRISON_MISSION_FINISHED")
-	_G.AlertFrame:UnregisterEvent("GARRISON_RANDOM_MISSION_ADDED")
-	_G.AlertFrame:UnregisterEvent("GARRISON_TALENT_COMPLETE")
-
 	if CFG.garrison_6_0_enabled or CFG.garrison_7_0_enabled then
 		dispatcher:RegisterEvent("GARRISON_FOLLOWER_ADDED")
 		dispatcher:RegisterEvent("GARRISON_MISSION_FINISHED")
@@ -1519,8 +1511,6 @@ function dispatcher:LFG_COMPLETION_REWARD()
 end
 
 local function EnableInstanceToasts()
-	_G.AlertFrame:UnregisterEvent("LFG_COMPLETION_REWARD")
-
 	if CFG.instance_enabled then
 		dispatcher:RegisterEvent("LFG_COMPLETION_REWARD")
 	end
@@ -1730,13 +1720,6 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 end
 
 local function EnableSpecialLootToasts()
-	_G.AlertFrame:UnregisterEvent("LOOT_ITEM_ROLL_WON")
-	_G.AlertFrame:UnregisterEvent("SHOW_LOOT_TOAST")
-	_G.AlertFrame:UnregisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
-	_G.AlertFrame:UnregisterEvent("SHOW_LOOT_TOAST_UPGRADE")
-	_G.AlertFrame:UnregisterEvent("SHOW_PVP_FACTION_LOOT_TOAST")
-	_G.AlertFrame:UnregisterEvent("STORE_PRODUCT_DELIVERED")
-
 	if CFG.loot_special_enabled then
 		dispatcher:RegisterEvent("LOOT_ITEM_ROLL_WON")
 		dispatcher:RegisterEvent("SHOW_LOOT_TOAST")
@@ -1947,8 +1930,6 @@ function dispatcher:NEW_RECIPE_LEARNED(...)
 end
 
 local function EnableRecipeToasts()
-	_G.AlertFrame:UnregisterEvent("NEW_RECIPE_LEARNED")
-
 	if CFG.recipe_enabled then
 		dispatcher:RegisterEvent("NEW_RECIPE_LEARNED")
 	end
@@ -2126,10 +2107,6 @@ function dispatcher:QUEST_LOOT_RECEIVED(...)
 end
 
 local function EnableWorldToasts()
-	_G.AlertFrame:UnregisterEvent("SCENARIO_COMPLETED")
-	_G.AlertFrame:UnregisterEvent("QUEST_LOOT_RECEIVED")
-	_G.AlertFrame:UnregisterEvent("QUEST_TURNED_IN")
-
 	if CFG.world_enabled then
 		dispatcher:RegisterEvent("SCENARIO_COMPLETED")
 		dispatcher:RegisterEvent("QUEST_TURNED_IN")
@@ -3204,6 +3181,11 @@ function dispatcher:PLAYER_LOGIN()
 	EnableRecipeToasts()
 	EnableWorldToasts()
 	EnableTransmogToasts()
+
+	_G.AlertFrame:UnregisterAllEvents()
+	hooksecurefunc(_G.AlertFrame, "RegisterEvent", function(self, event)
+		self:UnregisterEvent(event)
+	end)
 
 	_G.SLASH_LSTOASTS1 = "/lstoasts"
 	_G.SlashCmdList["LSTOASTS"] = function(msg)
