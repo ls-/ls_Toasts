@@ -1,3 +1,7 @@
+## Version 1.13
+
+- Added hook to prevent default notifications from being shown.
+
 ## Version 1.12
 
 - Added currency toast stacking. Instead of creating new toasts for each currency gain, existing one will be updated;
