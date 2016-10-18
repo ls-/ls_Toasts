@@ -1,6 +1,7 @@
 ## Version 1.13
 
-- Added hook to prevent default notifications from being shown.
+- Added hook to prevent default notifications from being shown;
+- Added comparison tooltip to item toasts. Hold "Shift" key to show it. Original code by p3lim@GitHub.
 
 ## Version 1.12
 
