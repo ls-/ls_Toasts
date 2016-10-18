@@ -5,6 +5,7 @@ local _G = _G
 local math = _G.math
 local string = _G.string
 local table = _G.table
+local hooksecurefunc = _G.hooksecurefunc
 local next = _G.next
 local pairs = _G.pairs
 local pcall = _G.pcall
@@ -13,7 +14,6 @@ local select = _G.select
 local tonumber = _G.tonumber
 local type = _G.type
 local unpack = _G.unpack
-local hooksecurefunc = _G.hooksecurefunc
 
 -- Blizz
 local Lerp = _G.Lerp
