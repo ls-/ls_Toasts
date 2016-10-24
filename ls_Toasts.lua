@@ -34,6 +34,32 @@ local scenarioToasts = {}
 local textsToAnimate = {}
 local toastCounter = 0
 
+local EQUIP_SLOTS = {
+	["INVTYPE_HEAD"] = {_G.INVSLOT_HEAD},
+	["INVTYPE_NECK"] = {_G.INVSLOT_NECK},
+	["INVTYPE_SHOULDER"] = {_G.INVSLOT_SHOULDER},
+	["INVTYPE_CHEST"] = {_G.INVSLOT_CHEST},
+	["INVTYPE_ROBE"] = {_G.INVSLOT_CHEST},
+	["INVTYPE_WAIST"] = {_G.INVSLOT_WAIST},
+	["INVTYPE_LEGS"] = {_G.INVSLOT_LEGS},
+	["INVTYPE_FEET"] = {_G.INVSLOT_FEET},
+	["INVTYPE_WRIST"] = {_G.INVSLOT_WRIST},
+	["INVTYPE_HAND"] = {_G.INVSLOT_HAND},
+	["INVTYPE_FINGER"] = {_G.INVSLOT_FINGER1, _G.INVSLOT_FINGER2},
+	["INVTYPE_TRINKET"] = {_G.INVSLOT_TRINKET1, _G.INVSLOT_TRINKET1},
+	["INVTYPE_CLOAK"] = {_G.INVSLOT_BACK},
+	["INVTYPE_WEAPON"] = {_G.INVSLOT_MAINHAND, _G.INVSLOT_OFFHAND},
+	["INVTYPE_2HWEAPON"] = {_G.INVSLOT_MAINHAND},
+	["INVTYPE_WEAPONMAINHAND"] = {_G.INVSLOT_MAINHAND},
+	["INVTYPE_HOLDABLE"] = {_G.INVSLOT_OFFHAND},
+	["INVTYPE_SHIELD"] = {_G.INVSLOT_OFFHAND},
+	["INVTYPE_WEAPONOFFHAND"] = {_G.INVSLOT_OFFHAND},
+	["INVTYPE_RANGED"] = {_G.INVSLOT_RANGED},
+	["INVTYPE_RANGEDRIGHT"] = {_G.INVSLOT_RANGED},
+	["INVTYPE_RELIC"] = {_G.INVSLOT_RANGED},
+	["INVTYPE_THROWN"] = {_G.INVSLOT_RANGED},
+}
+
 ------------
 -- CONFIG --
 ------------
@@ -226,6 +252,55 @@ local function DumpToasts()
 	end
 end
 
+-- XXX: Remove it, when it's implemented by Blizzard
+local function IsItemAnUpgrade(itemLink)
+	if not _G.IsUsableItem(itemLink) then return false end
+
+	local _, _, _, _, _, _, _, _, itemEquipLoc = _G.GetItemInfo(itemLink)
+	local itemLevel = _G.GetDetailedItemLevelInfo(itemLink)
+	local slot1, slot2 = unpack(EQUIP_SLOTS[itemEquipLoc] or {})
+
+	if slot1 then
+		local itemLinkInSlot1 = _G.GetInventoryItemLink("player", slot1)
+
+		if itemLinkInSlot1 then
+			local itemLevelInSlot1 = _G.GetDetailedItemLevelInfo(itemLinkInSlot1)
+
+			if itemLevel > itemLevelInSlot1 then
+				return true
+			end
+		else
+			-- XXX: Make sure that slot is empty
+			if not _G.GetInventoryItemID("player", slot1) then
+				return true
+			end
+		end
+	end
+
+	if slot2 then
+		local isSlot2Equippable = itemEquipLoc ~= "INVTYPE_WEAPON" and true or _G.CanDualWield()
+
+		if isSlot2Equippable then
+			local itemLinkInSlot2 = _G.GetInventoryItemLink("player", slot2)
+
+			if itemLinkInSlot2 then
+				local itemLevelInSlot2 = _G.GetDetailedItemLevelInfo(itemLinkInSlot2)
+
+				if itemLevel > itemLevelInSlot2 then
+					return true
+				end
+			else
+				-- XXX: Make sure that slot is empty
+				if not _G.GetInventoryItemID("player", slot2) then
+					return true
+				end
+			end
+		end
+	end
+
+	return false
+end
+
 --------------------
 -- TEXT ANIMATION --
 --------------------
@@ -389,6 +464,10 @@ local function ResetToast(toast)
 
 	if toast.Dragon then
 		toast.Dragon:Hide()
+	end
+
+	if toast.UpgradeIcon then
+		toast.UpgradeIcon:Hide()
 	end
 
 	if toast.Level then
@@ -926,6 +1005,12 @@ local function GetToast(toastType)
 			countUpdate:SetJustifyH("RIGHT")
 			countUpdate:SetAlpha(0)
 			toast.CountUpdate = countUpdate
+
+			local upgradeIcon = toast:CreateTexture(nil, "ARTWORK", nil, 3)
+			upgradeIcon:SetAtlas("bags-greenarrow", true)
+			upgradeIcon:SetPoint("TOPLEFT", 4, -4)
+			upgradeIcon:Hide()
+			toast.UpgradeIcon = upgradeIcon
 
 			local ag = toast:CreateAnimationGroup()
 			toast.CountUpdateAnim = ag
@@ -1578,6 +1663,7 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 			toast.Border:SetVertexColor(color.r, color.g, color.b)
 			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 			toast.Icon:SetTexture(icon)
+			toast.UpgradeIcon:SetShown(IsItemAnUpgrade(itemLink))
 			toast.link = itemLink
 
 			if lessAwesome then
@@ -1649,6 +1735,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 		toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 		toast.Count:SetText("")
 		toast.Icon:SetTexture(icon)
+		toast.UpgradeIcon:SetShown(IsItemAnUpgrade(itemLink))
 		toast.Dragon:Show()
 		toast.soundFile = "UI_LegendaryLoot_Toast"
 		toast.link = itemLink
@@ -1678,6 +1765,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 		toast.Border:SetVertexColor(color.r, color.g, color.b)
 		toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 		toast.Icon:SetTexture(icon)
+		toast.UpgradeIcon:SetShown(IsItemAnUpgrade(itemLink))
 		toast.soundFile = 51561
 		toast.link = itemLink
 
@@ -1713,6 +1801,7 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 	toast.Icon:SetTexture(icon)
+	toast.UpgradeIcon:SetShown(IsItemAnUpgrade(itemLink))
 	toast.soundFile = "UI_igStore_PurchaseDelivered_Toast_01"
 	toast.id = payloadID
 
