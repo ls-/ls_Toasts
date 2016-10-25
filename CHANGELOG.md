@@ -1,3 +1,9 @@
+## Version 1.14
+
+- Added 7.1 support;
+- Reworked transmog toasts. Now they show additions and removals of green, blue and epic appearances;
+- Added ilvl upgrade indicator to item toasts.
+
 ## Version 1.13
 
 - Added hook to prevent default notifications from being shown;
