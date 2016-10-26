@@ -2221,16 +2221,23 @@ local function IsAppearanceKnown(sourceID)
 				return true
 			end
 		end
+	else
+		return nil
 	end
 
 	return false
 end
 
 local function TransmogToast_SetUp(sourceID, isAdded)
-	local toast = GetToast("misc")
 	local _, _, _, icon, _, _, transmogLink = _G.C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
 	local name
 	transmogLink, name = string.match(transmogLink, "|H(.+)|h%[(.+)%]|h")
+
+	if not transmogLink then
+		return _G.C_Timer.After(0.25, function() TransmogToast_SetUp(sourceID, isAdded) end)
+	end
+
+	local toast = GetToast("misc")
 
 	if isAdded then
 		toast.Title:SetText("Appearance Added")
@@ -2251,14 +2258,22 @@ local function TransmogToast_SetUp(sourceID, isAdded)
 end
 
 function dispatcher:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
-	if not IsAppearanceKnown(sourceID) then
+	local isKnown = IsAppearanceKnown(sourceID)
+
+	if isKnown == false then
 		TransmogToast_SetUp(sourceID, true)
+	elseif isKnown == nil then
+		_G.C_Timer.After(0.25, function() dispatcher:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID) end)
 	end
 end
 
 function dispatcher:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
-	if not IsAppearanceKnown(sourceID) then
+	local isKnown = IsAppearanceKnown(sourceID)
+
+	if isKnown == false then
 		TransmogToast_SetUp(sourceID)
+	elseif isKnown == nil then
+		_G.C_Timer.After(0.25, function() dispatcher:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID) end)
 	end
 end
 
@@ -2433,12 +2448,9 @@ end
 local function SpawnTestTransmogToast()
 	local appearance = _G.C_TransmogCollection.GetCategoryAppearances(1) and _G.C_TransmogCollection.GetCategoryAppearances(1)[1]
 	local source = _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID) and _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID)[1]
-	local _, _, _, _, _, _, transmogLink = _G.C_TransmogCollection.GetAppearanceSourceInfo(source.sourceID)
 
-	if transmogLink then
-		TransmogToast_SetUp(source.sourceID, true)
-		TransmogToast_SetUp(source.sourceID)
-	end
+	TransmogToast_SetUp(source.sourceID, true)
+	TransmogToast_SetUp(source.sourceID)
 end
 
 -----------
