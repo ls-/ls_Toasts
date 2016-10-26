@@ -1801,7 +1801,6 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 	toast.Icon:SetTexture(icon)
-	toast.UpgradeIcon:SetShown(IsItemAnUpgrade(itemLink))
 	toast.soundFile = "UI_igStore_PurchaseDelivered_Toast_01"
 	toast.id = payloadID
 
