@@ -2217,9 +2217,11 @@ local function IsAppearanceKnown(sourceID)
 	local data = _G.C_TransmogCollection.GetSourceInfo(sourceID)
 	local sources = _G.C_TransmogCollection.GetAppearanceSources(data.appearanceID)
 
-	for i = 1, #sources do
-		if sources[i].isCollected and sourceID ~= sources[i].sourceID then
-			return true
+	if sources then
+		for i = 1, #sources do
+			if sources[i].isCollected and sourceID ~= sources[i].sourceID then
+				return true
+			end
 		end
 	end
 
