@@ -41,7 +41,7 @@ You can also access addon's config. It's **the config** that is used by ls: Toas
 ```Lua
 local toast_C = ls_Toasts[2]
 
--- changes growth direction to "UP"
+-- change growth direction to "UP"
 toast_C.growth_direction = "UP"
 ```
 
