@@ -45,7 +45,7 @@ local toast_C = ls_Toasts[2]
 toast_C.growth_direction = "UP"
 ```
 
-These changes will be saved to addon's variables.
+You need to perform these changes during `ADDON_LOADED` event. They will be saved to ls: Toasts' variables.
 
 For config's content see `DEFAULTS` table.
 
