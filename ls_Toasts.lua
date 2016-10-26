@@ -110,8 +110,8 @@ addonTable[2] = CFG
 
 _G[addonName] = addonTable
 
--- XXX: This function can be overridden by other addons
--- XXX: For toasts' structures, see definitions of CreateBaseToastButton and GetToast functions
+-- This function can be overridden by other addons
+-- For toasts' structures, see definitions of CreateBaseToastButton and GetToast functions
 
 function F:SkinToast() end
 
