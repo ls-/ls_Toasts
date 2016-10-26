@@ -1,3 +1,8 @@
+## Version 1.16
+
+- Fixed issue that caused transmog toasts not to show proper info;
+- Exposed config to other addons. This feature is for addon devs. For more info, read [here](https://github.com/ls-/ls_Toasts#how-to-mod).
+
 ## Version 1.15
 
 - Fixed issue in transmog toast code.
