@@ -1,3 +1,7 @@
+## Version 1.15
+
+- Fixed issue in transmog toast code.
+
 ## Version 1.14
 
 - Added 7.1 support;
