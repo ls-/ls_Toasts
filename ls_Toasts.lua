@@ -64,7 +64,7 @@ local EQUIP_SLOTS = {
 -- CONFIG --
 ------------
 
-local CFG
+local CFG = {}
 local DEFAULTS = {
 	growth_direction = "DOWN",
 	point = {"TOPLEFT", "UIParent", "TOPLEFT", 24, -12},
@@ -106,6 +106,7 @@ local DEFAULTS = {
 
 local F = {} -- F for Functions
 addonTable[1] = F
+addonTable[2] = CFG
 
 _G[addonName] = addonTable
 
@@ -3222,9 +3223,9 @@ function dispatcher:ADDON_LOADED(arg)
 	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
 		CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL["Default"])
 
-		CFG = CopyTable(_G.LS_TOASTS_CFG_GLOBAL["Default"], _G.LS_TOASTS_CFG)
+		CopyTable(CopyTable(_G.LS_TOASTS_CFG_GLOBAL["Default"], _G.LS_TOASTS_CFG), CFG)
 	else
-		CFG = CopyTable(DEFAULTS, _G.LS_TOASTS_CFG)
+		CopyTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG), CFG)
 	end
 
 	if CFG.dnd.loot ~= nil then
