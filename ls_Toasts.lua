@@ -253,7 +253,7 @@ local function DumpToasts()
 	end
 end
 
--- XXX: Remove it, when it's implemented by Blizzard
+-- TODO: Remove it, when it's implemented by Blizzard
 local function IsItemAnUpgrade(itemLink)
 	if not _G.IsUsableItem(itemLink) then return false end
 
@@ -271,7 +271,7 @@ local function IsItemAnUpgrade(itemLink)
 				return true
 			end
 		else
-			-- XXX: Make sure that slot is empty
+			-- Make sure that slot is empty
 			if not _G.GetInventoryItemID("player", slot1) then
 				return true
 			end
@@ -291,7 +291,7 @@ local function IsItemAnUpgrade(itemLink)
 					return true
 				end
 			else
-				-- XXX: Make sure that slot is empty
+				-- Make sure that slot is empty
 				if not _G.GetInventoryItemID("player", slot2) then
 					return true
 				end
@@ -352,7 +352,7 @@ end
 local function HasNonDNDToast()
 	for i, queuedToast in pairs(queuedToasts) do
 		if not queuedToast.dnd then
-			-- XXX: I don't want to ruin non-DND toasts' order, k?
+			-- I don't want to ruin non-DND toasts' order, k?
 			table.insert(queuedToasts, 1, table.remove(queuedToasts, i))
 
 			return true
@@ -2033,7 +2033,6 @@ end
 -----------
 
 local function InvasionToast_SetUp(questID)
-	-- XXX: To avoid possible spam
 	if GetToastToUpdate(questID, "scenario") then
 		return
 	end
@@ -2084,7 +2083,6 @@ local function InvasionToast_SetUp(questID)
 end
 
 local function WorldQuestToast_SetUp(questID)
-	-- XXX: To avoid possible spam
 	if GetToastToUpdate(questID, "scenario") then
 		return
 	end
@@ -2185,7 +2183,7 @@ end
 function dispatcher:QUEST_LOOT_RECEIVED(...)
 	local questID, itemLink = ...
 
-	--- XXX: QUEST_LOOT_RECEIVED may fire before QUEST_TURNED_IN
+	--- QUEST_LOOT_RECEIVED may fire before QUEST_TURNED_IN
 	if _G.QuestUtils_IsQuestWorldQuest(questID) then
 		if not GetToastToUpdate(questID, "scenario") then
 			WorldQuestToast_SetUp(questID)
