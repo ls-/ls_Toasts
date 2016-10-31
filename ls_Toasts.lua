@@ -597,6 +597,10 @@ local function ToastButton_OnClick(self, button)
 	elseif button == "LeftButton" then
 		if self.id then
 			if self.type == "achievement" then
+				if not _G.AchievementFrame then
+					_G.AchievementFrame_LoadUI()
+				end
+
 				_G.ShowUIPanel(_G.AchievementFrame)
 				_G.AchievementFrame_SelectAchievement(self.id)
 			elseif self.type == "follower" then
@@ -1254,10 +1258,6 @@ end
 
 local function EnableAchievementToasts()
 	if CFG.achievement_enabled then
-		if not _G.AchievementFrame then
-			_G.AchievementFrame_LoadUI()
-		end
-
 		dispatcher:RegisterEvent("ACHIEVEMENT_EARNED")
 		dispatcher:RegisterEvent("CRITERIA_EARNED")
 	end
@@ -1296,10 +1296,18 @@ end
 
 local function EnableArchaeologyToasts()
 	if not _G.ArchaeologyFrame then
-		_G.UIParentLoadAddOn("Blizzard_ArchaeologyUI")
-	end
+		local hooked = false
 
-	_G.ArcheologyDigsiteProgressBar.AnimOutAndTriggerToast:SetScript("OnFinished", ArcheologyProgressBarAnimOut_OnFinished)
+		hooksecurefunc("ArchaeologyFrame_LoadUI", function()
+			if not hooked then
+				_G.ArcheologyDigsiteProgressBar.AnimOutAndTriggerToast:SetScript("OnFinished", ArcheologyProgressBarAnimOut_OnFinished)
+
+				hooked = true
+			end
+		end)
+	else
+		_G.ArcheologyDigsiteProgressBar.AnimOutAndTriggerToast:SetScript("OnFinished", ArcheologyProgressBarAnimOut_OnFinished)
+	end
 
 	if CFG.archaeology_enabled then
 		dispatcher:RegisterEvent("ARTIFACT_DIGSITE_COMPLETE")
