@@ -933,16 +933,14 @@ local function Reward_OnEnter(self)
 
 	_G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
 
-	if self.rewardID then
-		_G.GameTooltip:SetLFGCompletionReward(self.rewardID)
+	if self.item then
+		_G.GameTooltip:SetHyperlink(self.item)
 	elseif self.xp then
 		_G.GameTooltip:AddLine(_G.YOU_RECEIVED)
 		_G.GameTooltip:AddLine(string.format(_G.BONUS_OBJECTIVE_EXPERIENCE_FORMAT, self.xp), 1, 1, 1)
 	elseif self.money then
 		_G.GameTooltip:AddLine(_G.YOU_RECEIVED)
 		_G.GameTooltip:AddLine(_G.GetMoneyString(self.money), 1, 1, 1)
-	elseif self.item then
-		_G.GameTooltip:SetHyperlink(self.item)
 	elseif self.currency then
 		_G.GameTooltip:SetQuestLogCurrency("reward", self.currency, self:GetParent().id)
 	end
@@ -956,7 +954,6 @@ local function Reward_OnLeave(self)
 end
 
 local function Reward_OnHide(self)
-	self.rewardID = nil
 	self.currency = nil
 	self.money = nil
 	self.item = nil
@@ -1563,7 +1560,7 @@ local function LFGToast_SetUp(isScenario)
 				_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\INV_Box_02")
 			end
 
-			reward.rewardID = i
+			reward.item = _G.GetLFGCompletionRewardItemLink(i)
 			reward:Show()
 
 			usedRewards = i
