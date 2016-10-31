@@ -1,4 +1,5 @@
 local addonName, addonTable = ...
+local L = addonTable.L
 
 -- Lua
 local _G = _G
@@ -207,7 +208,7 @@ do
 	text:SetAllPoints()
 	text:SetJustifyH("CENTER")
 	text:SetJustifyV("MIDDLE")
-	text:SetText("Toast Anchor")
+	text:SetText(L["ANCHOR_TITLE"])
 	text:Hide()
 	anchorFrame.Text = text
 end
@@ -757,7 +758,6 @@ local function CreateBaseToastButton()
 	title:SetWidth(170)
 	title:SetJustifyH("CENTER")
 	title:SetWordWrap(false)
-	title:SetText("Toast Title")
 	toast.Title = title
 
 	local text = toast:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
@@ -2250,9 +2250,9 @@ local function TransmogToast_SetUp(sourceID, isAdded)
 	local toast = GetToast("misc")
 
 	if isAdded then
-		toast.Title:SetText("Appearance Added")
+		toast.Title:SetText(L["TRANSMOG_ADDED"])
 	else
-		toast.Title:SetText("Appearance Removed")
+		toast.Title:SetText(L["TRANSMOG_REMOVED"])
 	end
 
 	toast.Text:SetText(name)
@@ -2948,14 +2948,14 @@ local function CreateToastConfigLine(parent, cfg, anchor)
 
 	RegisterControlForRefresh(parent, enabledCB)
 
-	local dndCB = CreateConfigCheckButton(parent, cfg.name.."DNDToggle", nil, "Toasts in DND mode won't be displayed in combat, but will be queued up in the system instead. Once you leave combat, they'll start popping up.")
+	local dndCB = CreateConfigCheckButton(parent, cfg.name.."DNDToggle", nil, L["DND_TOOLTIP"])
 	dndCB:SetPoint("LEFT", enabledCB, "RIGHT", 96, 0)
 	dndCB.watchedValue = cfg.dnd
 
 	RegisterControlForRefresh(parent, dndCB)
 
 	if cfg.testFunc then
-		local testB = CreateConfigButton(parent, cfg.name.."TestButton", "Test", cfg.testFunc)
+		local testB = CreateConfigButton(parent, cfg.name.."TestButton", L["TEST"], cfg.testFunc)
 		testB:SetPoint("TOPRIGHT", holder, "TOPRIGHT", -6, -5)
 	end
 
@@ -2971,28 +2971,28 @@ end
 local function GrowthDirectionDropDownMenu_Initialize(self)
 	local info = _G.UIDropDownMenu_CreateInfo()
 
-	info.text = "Up"
+	info.text = L["GROWTH_DIR_UP"]
 	info.func = GrowthDirectionDropDownMenu_OnClick
 	info.value = "UP"
 	info.owner = self
 	info.checked = nil
 	_G.UIDropDownMenu_AddButton(info)
 
-	info.text = "Down"
+	info.text = L["GROWTH_DIR_DOWN"]
 	info.func = GrowthDirectionDropDownMenu_OnClick
 	info.value = "DOWN"
 	info.owner = self
 	info.checked = nil
 	_G.UIDropDownMenu_AddButton(info)
 
-	info.text = "Left"
+	info.text = L["GROWTH_DIR_LEFT"]
 	info.func = GrowthDirectionDropDownMenu_OnClick
 	info.value = "LEFT"
 	info.owner = self
 	info.checked = nil
 	_G.UIDropDownMenu_AddButton(info)
 
-	info.text = "Right"
+	info.text = L["GROWTH_DIR_RIGHT"]
 	info.func = GrowthDirectionDropDownMenu_OnClick
 	info.value = "RIGHT"
 	info.owner = self
@@ -3091,7 +3091,7 @@ local function CreateConfigPanel()
 	title:SetPoint("TOPLEFT", 16, -16)
 	title:SetJustifyH("LEFT")
 	title:SetJustifyV("TOP")
-	title:SetText(_G.GENERAL_LABEL)
+	title:SetText(L["SETTINGS_GENERAL_LABEL"])
 
 	local subtext = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	subtext:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
@@ -3101,41 +3101,41 @@ local function CreateConfigPanel()
 	subtext:SetJustifyV("TOP")
 	subtext:SetNonSpaceWrap(true)
 	subtext:SetMaxLines(4)
-	subtext:SetText("Thome thettings, duh... |cffffd200They are saved per character.|r\nI strongly recommend to |cffe52626/reload|r UI after you're done setting up the addon. Even if you opened and closed this panel without changing anything, |cffe52626/reload|r UI. |cffffd200By doing so, you'll remove this config entry from the system and prevent possible taints.|r")
+	subtext:SetText(L["SETTINGS_GENERAL_DESC"])
 
-	local acnhorButton = CreateConfigButton(panel, "AnchorToggle", "Anchor Frame", AnchorFrame_Toggle)
+	local acnhorButton = CreateConfigButton(panel, "AnchorToggle", L["ANCHOR_FRAME"], AnchorFrame_Toggle)
 	acnhorButton:SetPoint("TOPLEFT", subtext, "BOTTOMLEFT", 0, -8)
 
-	local soundToggle = CreateConfigCheckButton(panel, "SFXToggle", _G.ENABLE_SOUND)
+	local soundToggle = CreateConfigCheckButton(panel, "SFXToggle", L["ENABLE_SOUND"])
 	soundToggle:SetPoint("LEFT", acnhorButton, "RIGHT", 32, 0)
 	soundToggle.watchedValue = "sfx_enabled"
 
-	local divider = CreateConfigDivider(panel, "Appearance")
+	local divider = CreateConfigDivider(panel, L["APPEARANCE_TITLE"])
 	divider:SetPoint("TOP", soundToggle, "BOTTOM", 0, -10)
 
-	local numSlider = CreateConfigSlider(panel, "NumSlider", "Number of Toasts", 1, 1, 20)
+	local numSlider = CreateConfigSlider(panel, "NumSlider", L["TOAST_NUM"], 1, 1, 20)
 	numSlider:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 16, -24)
 	numSlider.watchedValue = "max_active_toasts"
 
-	local delaySlider = CreateConfigSlider(panel, "FadeOutSlider", "Fade Out Delay", 0.4, 0.8, 6.0)
+	local delaySlider = CreateConfigSlider(panel, "FadeOutSlider", L["FADE_OUT_DELAY"], 0.4, 0.8, 6.0)
 	delaySlider:SetPoint("LEFT", numSlider, "RIGHT", 69, 0)
 	delaySlider:SetScript("OnValueChanged", DelaySlider_OnValueChanged)
 	delaySlider.watchedValue = "fadeout_delay"
 
-	local scaleSlider = CreateConfigSlider(panel, "ScaleSlider", "Scale", 0.1, 0.8, 2)
+	local scaleSlider = CreateConfigSlider(panel, "ScaleSlider", L["SCALE"], 0.1, 0.8, 2)
 	scaleSlider:SetPoint("LEFT", delaySlider, "RIGHT", 69, 0)
 	scaleSlider:SetScript("OnValueChanged", ScaleSlider_OnValueChanged)
 	scaleSlider.watchedValue = "scale"
 
-	local growthDropdown = CreateConfigDropDown(panel, "DirectionDropDown", "Growth Direction", GrowthDirectionDropDownMenu_Initialize)
+	local growthDropdown = CreateConfigDropDown(panel, "DirectionDropDown", L["GROWTH_DIR"], GrowthDirectionDropDownMenu_Initialize)
 	growthDropdown:SetPoint("TOPLEFT", numSlider, "BOTTOMLEFT", -13, -32)
 	growthDropdown.watchedValue = "growth_direction"
 
-	local colorToggle = CreateConfigCheckButton(panel, "NameColorToggle", "Colour Names", "Colours item, follower names by quality, and world quest, mission titles by rarity.")
+	local colorToggle = CreateConfigCheckButton(panel, "NameColorToggle", L["COLOURS"], L["COLOURS_TOOLTIP"])
 	colorToggle:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", -3, -32)
 	colorToggle.watchedValue = "colored_names_enabled"
 
-	divider = CreateConfigDivider(panel, "Settings Transfer")
+	divider = CreateConfigDivider(panel, L["PROFILE_TITLE"])
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
 
 	subtext = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
@@ -3146,12 +3146,12 @@ local function CreateConfigPanel()
 	subtext:SetJustifyV("TOP")
 	subtext:SetNonSpaceWrap(true)
 	subtext:SetMaxLines(4)
-	subtext:SetText("To save current settings as a default preset click the button below. This feature may be quite handy, if you use more or less same layout on many characters. This way you'll need to tweak fewer things. |cffffd200Please note that there can be only 1 preset. Hitting this button on a different character will overwrite existing template.|r")
+	subtext:SetText(L["PROFILE_DESC"] )
 
-	local saveDefaults = CreateConfigButton(panel, "SaveDefaultsButton", "Save Preset", SaveDefaultTemplate)
+	local saveDefaults = CreateConfigButton(panel, "SaveDefaultsButton", L["PROFILE_SAVE"], SaveDefaultTemplate)
 	saveDefaults:SetPoint("TOPLEFT", subtext, "BOTTOMLEFT", 0, -8)
 
-	local wipeDefaults = CreateConfigButton(panel, "WipeDefaultsButton", "Wipe Preset", WipeDefaultTemplate)
+	local wipeDefaults = CreateConfigButton(panel, "WipeDefaultsButton", L["PROFILE_WIPE"], WipeDefaultTemplate)
 	wipeDefaults:SetPoint("LEFT", saveDefaults, "RIGHT", 4, 0)
 
 	panel.refresh = OptionsPanelRefresh
@@ -3159,9 +3159,8 @@ local function CreateConfigPanel()
 	_G.InterfaceOptions_AddCategory(panel, true)
 
 	-- Toast Types Panel
-
 	panel = _G.CreateFrame("Frame", "LSToastsTypesConfigPanel", _G.InterfaceOptionsFramePanelContainer)
-	panel.name = "Toast Types"
+	panel.name = L["SETTINGS_TYPE_LABEL"]
 	panel.parent = "|cff1a9fc0ls:|r Toasts"
 	panel:Hide()
 
@@ -3169,7 +3168,7 @@ local function CreateConfigPanel()
 	title:SetPoint("TOPLEFT", 16, -16)
 	title:SetJustifyH("LEFT")
 	title:SetJustifyV("TOP")
-	title:SetText("Toast Types")
+	title:SetText(L["SETTINGS_TYPE_LABEL"])
 
 	subtext = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	subtext:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
@@ -3179,7 +3178,7 @@ local function CreateConfigPanel()
 	subtext:SetJustifyV("TOP")
 	subtext:SetNonSpaceWrap(true)
 	subtext:SetMaxLines(3)
-	subtext:SetText("Moar thettings...")
+	subtext:SetText(L["SETTINGS_TYPE_DESC"])
 
 	local lootDropDown = _G.CreateFrame("Frame", "$parentLootCommonDropDown", panel, "UIDropDownMenuTemplate")
 	lootDropDown.displayMode = "MENU"
@@ -3188,17 +3187,17 @@ local function CreateConfigPanel()
 	_G.UIDropDownMenu_Initialize(lootDropDown, LootDropDown_Initialize)
 
 	local layout = {
-		[1] = {name = "Achievement", enabled = "achievement_enabled", dnd = "dnd.achievement", testFunc = SpawnTestAchievementToast},
-		[2] = {name = "Archaeology", enabled = "archaeology_enabled", dnd = "dnd.archaeology", testFunc = SpawnTestArchaeologyToast},
-		[3] = {name = "Garrison", enabled = "garrison_6_0_enabled", dnd = "dnd.garrison_6_0", testFunc = SpawnTestGarrisonToast},
-		[4] = {name = "Class Hall", enabled = "garrison_7_0_enabled", dnd = "dnd.garrison_7_0", testFunc = SpawnTestClassHallToast},
-		[5] = {name = "Dungeon", enabled = "instance_enabled", dnd = "dnd.instance"},
-		[6] = {name = "Loot (Special)", enabled = "loot_special_enabled", enable_tooltip = "Toasts triggered by special loot events, e.g. won rolls, legendary drops, personal loot, etc.", dnd = "dnd.loot_special", testFunc = SpawnTestLootToast},
-		[7] = {name = "Loot (Common)", enabled = "loot_common_enabled", enable_tooltip = "Toasts triggered by chat events, e.g. greens, blues, some epics, everything that isn't handled by special loot toasts.", dnd = "dnd.loot_common", dropdown = lootDropDown},
-		[8] = {name = "Loot (Currency)", enabled = "loot_currency_enabled", dnd = "dnd.loot_currency", testFunc = SpawnTestCurrencyToast},
-		[9] = {name = "Recipe", enabled = "recipe_enabled", dnd = "dnd.recipe", testFunc = SpawnTestRecipeToast},
-		[10] = {name = "World Quest", enabled = "world_enabled", dnd = "dnd.world", testFunc = SpawnTestWorldEventToast},
-		[11] = {name = "Transmogrification", enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
+		[1] = {name = L["TYPE_ACHIEVEMENT"], enabled = "achievement_enabled", dnd = "dnd.achievement", testFunc = SpawnTestAchievementToast},
+		[2] = {name = L["TYPE_ARCHAEOLOGY"], enabled = "archaeology_enabled", dnd = "dnd.archaeology", testFunc = SpawnTestArchaeologyToast},
+		[3] = {name = L["TYPE_GARRISON"], enabled = "garrison_6_0_enabled", dnd = "dnd.garrison_6_0", testFunc = SpawnTestGarrisonToast},
+		[4] = {name = L["TYPE_CLASS_HALL"], enabled = "garrison_7_0_enabled", dnd = "dnd.garrison_7_0", testFunc = SpawnTestClassHallToast},
+		[5] = {name = L["TYPE_DUNGEON"], enabled = "instance_enabled", dnd = "dnd.instance"},
+		[6] = {name = L["TYPE_LOOT_SPECIAL"], enabled = "loot_special_enabled", enable_tooltip = L["TYPE_LOOT_SPECIAL_TOOLTIP"], dnd = "dnd.loot_special", testFunc = SpawnTestLootToast},
+		[7] = {name = L["TYPE_LOOT_COMMON"], enabled = "loot_common_enabled", enable_tooltip = L["TYPE_LOOT_COMMON_TOOLTIP"], dnd = "dnd.loot_common", dropdown = lootDropDown},
+		[8] = {name = L["TYPE_LOOT_CURRENCY"], enabled = "loot_currency_enabled", dnd = "dnd.loot_currency", testFunc = SpawnTestCurrencyToast},
+		[9] = {name = L["TYPE_RECIPE"], enabled = "recipe_enabled", dnd = "dnd.recipe", testFunc = SpawnTestRecipeToast},
+		[10] = {name = L["TYPE_WORLD QUEST"], enabled = "world_enabled", dnd = "dnd.world", testFunc = SpawnTestWorldEventToast},
+		[11] = {name = L["TYPE_TRANSMOG"], enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
 	}
 
 	local anchor = CreateToastConfigLine(panel, layout[1], subtext)
@@ -3206,19 +3205,19 @@ local function CreateConfigPanel()
 
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 6, 4)
-	title:SetText("Type")
+	title:SetText(L["TYPE"])
 
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetWidth(64)
 	title:SetJustifyH("CENTER")
 	title:SetPoint("BOTTOM", anchor, "TOPLEFT", 333, 4)
-	title:SetText(_G.ENABLE)
+	title:SetText(L["ENABLE"])
 
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetWidth(64)
 	title:SetJustifyH("CENTER")
 	title:SetPoint("BOTTOM", anchor, "TOPLEFT", 455, 4)
-	title:SetText("DND")
+	title:SetText(L["DND"])
 
 	for i = 2, #layout do
 		anchor = CreateToastConfigLine(panel, layout[i], anchor)
