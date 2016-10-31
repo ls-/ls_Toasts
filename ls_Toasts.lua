@@ -638,9 +638,13 @@ local function ToastButton_OnEnter(self)
 			_G.GameTooltip:SetItemByID(self.id)
 			_G.GameTooltip:Show()
 		elseif self.type == "follower" then
-			local link = _G.C_Garrison.GetFollowerLink(self.id)
+			local isOK, link = pcall(_G.C_Garrison.GetFollowerLink, self.id)
 
-			if link then
+			if not isOK then
+				isOK, link = pcall(_G.C_Garrison.GetFollowerLinkByID, self.id)
+			end
+
+			if isOK and link then
 				local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = string.split(":", link)
 				local followerType = _G.C_Garrison.GetFollowerTypeByID(tonumber(garrisonFollowerID))
 				_G.GarrisonFollowerTooltip_Show(tonumber(garrisonFollowerID), false, tonumber(quality), tonumber(level), 0, 0, tonumber(itemLevel), tonumber(spec1), tonumber(ability1), tonumber(ability2), tonumber(ability3), tonumber(ability4), tonumber(trait1), tonumber(trait2), tonumber(trait3), tonumber(trait4))
@@ -1797,8 +1801,8 @@ function dispatcher:SHOW_PVP_FACTION_LOOT_TOAST(...)
 end
 
 function dispatcher:STORE_PRODUCT_DELIVERED(...)
-	local _, icon, name, payloadID = ...
-	local _, _, quality = _G.GetItemInfo(payloadID)
+	local _, icon, _, payloadID = ...
+	local name, _, quality = _G.GetItemInfo(payloadID)
 	local color = _G.ITEM_QUALITY_COLORS[quality or 4]
 	local toast = GetToast("item")
 
@@ -2375,40 +2379,14 @@ local function SpawnTestArchaeologyToast()
 end
 
 local function SpawnTestWorldEventToast()
-	-- invasion in Azshara
-	local _, link = _G.GetItemInfo(139049)
+	-- Work Order: Ancient Rejuvenation Potions
+	local _, link = _G.GetItemInfo(124124)
 
 	if link then
-		InvasionToast_SetUp(43301)
-		UpdateToast(43301, "scenario", link)
-	end
-
-	-- world quests, have to be in zone to get info
-	local mapAreaID = _G.GetCurrentMapAreaID()
-	local taskInfo = _G.C_TaskQuest.GetQuestsForPlayerByMapID(mapAreaID)
-
-	for _, info in pairs(taskInfo) do
-		local questID = info.questId
-
-		if _G.QuestUtils_IsQuestWorldQuest(questID) and _G.HaveQuestData(questID) then
-			local numRewards = _G.GetNumQuestLogRewards(questID)
-
-			if numRewards > 0 then
-				for i = 1, numRewards do
-					local _, _, _, _, _, itemID = _G.GetQuestLogRewardInfo(i, questID)
-
-					if itemID then
-						local _, itemLink = _G.GetItemInfo(itemID)
-
-						if itemLink then
-							dispatcher:QUEST_LOOT_RECEIVED(questID, itemLink)
-
-							return
-						end
-					end
-				end
-			end
-		end
+		WorldQuestToast_SetUp(41662)
+		UpdateToast(41662, "scenario", link)
+	else
+		_G.C_Timer.After(0.25, SpawnTestWorldEventToast)
 	end
 end
 
