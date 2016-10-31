@@ -1801,8 +1801,8 @@ function dispatcher:SHOW_PVP_FACTION_LOOT_TOAST(...)
 end
 
 function dispatcher:STORE_PRODUCT_DELIVERED(...)
-	local _, icon, name, payloadID = ...
-	local _, _, quality = _G.GetItemInfo(payloadID)
+	local _, icon, _, payloadID = ...
+	local name, _, quality = _G.GetItemInfo(payloadID)
 	local color = _G.ITEM_QUALITY_COLORS[quality or 4]
 	local toast = GetToast("item")
 
