@@ -36,7 +36,6 @@ L["YOU_WON"] = _G.YOU_WON_LABEL
 -- Config General
 L["SETTINGS_GENERAL_LABEL"] = _G.GENERAL_LABEL
 L["SETTINGS_GENERAL_DESC"] = "Thome thettings, duh... |cffffd200They are saved per character.|r\nI strongly recommend to |cffe52626/reload|r UI after you're done setting up the addon. Even if you opened and closed this panel without changing anything, |cffe52626/reload|r UI. |cffffd200By doing so, you'll remove this config entry from the system and prevent possible taints.|r"
-
 L["ANCHOR_FRAME"] = "Anchor Frame"
 L["APPEARANCE_TITLE"] = "Appearance"
 L["COLOURS"] = "Colour Names"
