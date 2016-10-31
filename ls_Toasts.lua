@@ -932,10 +932,10 @@ local function Reward_OnEnter(self)
 	if self.rewardID then
 		_G.GameTooltip:SetLFGCompletionReward(self.rewardID)
 	elseif self.xp then
-		_G.GameTooltip:AddLine(_G.YOU_RECEIVED)
-		_G.GameTooltip:AddLine(string.format(_G.BONUS_OBJECTIVE_EXPERIENCE_FORMAT, self.xp), 1, 1, 1)
+		_G.GameTooltip:AddLine(L["YOU_RECEIVED"])
+		_G.GameTooltip:AddLine(string.format(L["XP_FORMAT"], self.xp), 1, 1, 1)
 	elseif self.money then
-		_G.GameTooltip:AddLine(_G.YOU_RECEIVED)
+		_G.GameTooltip:AddLine(L["YOU_RECEIVED"])
 		_G.GameTooltip:AddLine(_G.GetMoneyString(self.money), 1, 1, 1)
 	elseif self.item then
 		_G.GameTooltip:SetHyperlink(self.item)
@@ -1217,14 +1217,14 @@ local function AchievementToast_SetUp(achievementID, flag, isCriteria)
 	local _, name, points, _, _, _, _, _, _, icon = _G.GetAchievementInfo(achievementID)
 
 	if isCriteria then
-		toast.Title:SetText(_G.ACHIEVEMENT_PROGRESSED)
+		toast.Title:SetText(L["ACHIEVEMENT_PROGRESSED"])
 		toast.Text:SetText(flag)
 
 		toast.Border:SetVertexColor(1, 1, 1)
 		toast.IconBorder:SetVertexColor(1, 1, 1)
 		toast.Points:SetText("")
 	else
-		toast.Title:SetText(_G.ACHIEVEMENT_UNLOCKED)
+		toast.Title:SetText(L["ACHIEVEMENT_UNLOCKED"])
 		toast.Text:SetText(name)
 
 		-- alreadyEarned
@@ -1280,7 +1280,7 @@ function dispatcher:ARTIFACT_DIGSITE_COMPLETE(...)
 	local toast = GetToast("misc")
 
 	toast.Border:SetVertexColor(0.9, 0.4, 0.1)
-	toast.Title:SetText(_G.ARCHAEOLOGY_DIGSITE_COMPLETE_TOAST_FRAME_TITLE)
+	toast.Title:SetText(L["DIGSITE_COMPLETED"])
 	toast.Text:SetText(raceName)
 	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-archaeology")
 	toast.IconBorder:Hide()
@@ -1339,9 +1339,9 @@ local function GarrisonMissionToast_SetUp(followerType, garrisonType, missionID,
 	local level = missionInfo.iLevel == 0 and missionInfo.level or missionInfo.iLevel
 
 	if isAdded then
-		toast.Title:SetText(_G.GARRISON_MISSION_ADDED_TOAST1)
+		toast.Title:SetText(L["GARRISON_MISSION_ADDED"])
 	else
-		toast.Title:SetText(_G.GARRISON_MISSION_COMPLETE)
+		toast.Title:SetText(L["GARRISON_MISSION_COMPLETED"])
 	end
 
 	if CFG.colored_names_enabled then
@@ -1457,7 +1457,7 @@ function dispatcher:GARRISON_BUILDING_ACTIVATABLE(...)
 	local buildingName = ...
 	local toast = GetToast("misc")
 
-	toast.Title:SetText(_G.GARRISON_UPDATE)
+	toast.Title:SetText(L["GARRISON_NEW_BUILDING"])
 	toast.Text:SetText(buildingName)
 	toast.Icon:SetTexture("Interface\\Icons\\Garrison_Build")
 	toast.soundFile = "UI_Garrison_Toast_BuildingComplete"
@@ -1471,7 +1471,7 @@ function dispatcher:GARRISON_TALENT_COMPLETE(...)
 	local talent = _G.C_Garrison.GetTalent(talentID)
 	local toast = GetToast("misc")
 
-	toast.Title:SetText(_G.GARRISON_TALENT_ORDER_ADVANCEMENT)
+	toast.Title:SetText(L["GARRISON_NEW_TALENT"])
 	toast.Text:SetText(talent.name)
 	toast.Icon:SetTexture(talent.icon)
 	toast.soundFile = "UI_OrderHall_Talent_Ready_Toast"
@@ -1522,7 +1522,7 @@ local function LFGToast_SetUp(isScenario)
 		-- "The Vortex Pinnacle", 1, 2, "THEVORTEXPINNACLE", 308000, 0, 0, 0, 0, 0
 	local money = moneyBase + moneyVar * numStrangers
 	local xp = experienceBase + experienceVar * numStrangers
-	local title = _G.DUNGEON_COMPLETED
+	local title = L["DUNGEON_COMPLETED"]
 	local usedRewards = 0
 
 	if money > 0 then
@@ -1573,7 +1573,7 @@ local function LFGToast_SetUp(isScenario)
 			toast.Bonus:Show()
 		end
 
-		title = _G.SCENARIO_COMPLETED
+		title = L["SCENARIO_COMPLETED"]
 	end
 
 	if subtypeID == _G.LFG_SUBTYPEID_HEROIC then
@@ -1627,15 +1627,15 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 		if itemLink then
 			toast = GetToast("item")
 			itemLink = FixItemLink(itemLink)
-			local title = _G.YOU_WON_LABEL
+			local title = L["YOU_WON"]
 			local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
 
 			if isPersonal or lessAwesome then
-				title = _G.YOU_RECEIVED_LABEL
+				title = L["YOU_RECEIVED"]
 			end
 
 			if isUpgraded then
-				title = _G.ITEM_UPGRADED_LABEL
+				title = L["ITEM_UPGRADED"]
 				local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality or 2]
 
 				for i = 1, 5 do
@@ -1690,7 +1690,7 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 
 		toast.Border:SetVertexColor(0.9, 0.75, 0.26)
 		toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
-		toast.Title:SetText(_G.YOU_WON_LABEL)
+		toast.Title:SetText(L["YOU_WON"])
 		toast.Text:SetText(_G.GetMoneyString(quantity))
 		toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
 		toast.soundFile = 31578
@@ -1739,7 +1739,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 			toast.Text:SetTextColor(color.r, color.g, color.b)
 		end
 
-		toast.Title:SetText(_G.LEGENDARY_ITEM_LOOT_LABEL)
+		toast.Title:SetText(L["ITEM_LEGENDARY"])
 		toast.Text:SetText(name)
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legendary")
 		toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -1769,7 +1769,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 			toast.Text:SetTextColor(color.r, color.g, color.b)
 		end
 
-		toast.Title:SetText(color.hex..string.format(_G.LOOTUPGRADEFRAME_TITLE, _G["ITEM_QUALITY"..quality.."_DESC"]).."|r")
+		toast.Title:SetFormattedText(L["ITEM_UPGRADED_FORMAT"], color.hex, _G["ITEM_QUALITY"..quality.."_DESC"])
 		toast.Text:SetText(name)
 		toast.Count:SetText(quantity > 1 and quantity or "")
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
@@ -1806,7 +1806,7 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 		toast.Text:SetTextColor(color.r, color.g, color.b)
 	end
 
-	toast.Title:SetText(_G.BLIZZARD_STORE_PURCHASE_COMPLETE)
+	toast.Title:SetText(L["BLIZZARD_STORE_PURCHASE_DELIVERED"])
 	toast.Text:SetText(name)
 	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -1871,7 +1871,7 @@ local function LootCommonToast_Setup(itemLink, quantity)
 				toast.Text:SetTextColor(color.r, color.g, color.b)
 			end
 
-			toast.Title:SetText(_G.YOU_RECEIVED_LABEL)
+			toast.Title:SetText(L["YOU_RECEIVED"])
 			toast.Text:SetText(name)
 			toast.Count:SetText(quantity > 1 and quantity or "")
 			toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -1952,7 +1952,7 @@ function dispatcher:CHAT_MSG_CURRENCY(message)
 			toast.Text:SetTextColor(color.r, color.g, color.b)
 		end
 
-		toast.Title:SetText(_G.YOU_RECEIVED_LABEL)
+		toast.Title:SetText(L["YOU_RECEIVED"])
 		toast.Text:SetText(name)
 		toast.Count:SetText(quantity > 1 and quantity or "")
 		toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -2015,7 +2015,7 @@ function dispatcher:NEW_RECIPE_LEARNED(...)
 				rankTexture = "|TInterface\\LootFrame\\toast-star-3:12:36:0:0:64:32:0:64:0:21|t"
 			end
 
-			toast.Title:SetText(rank and rank > 1 and _G.UPGRADED_RECIPE_LEARNED_TITLE or _G.NEW_RECIPE_LEARNED_TITLE)
+			toast.Title:SetText(rank and rank > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
 			toast.Text:SetText(recipeName)
 			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-recipe")
 			toast.Rank:SetText(rankTexture)
@@ -2079,7 +2079,7 @@ local function InvasionToast_SetUp(questID)
 		toast.Bonus:Show()
 	end
 
-	toast.Title:SetText(_G.SCENARIO_INVASION_COMPLETE)
+	toast.Title:SetText(L["SCENARIO_INVASION_COMPLETED"])
 	toast.Text:SetText(areaName or scenarioName)
 	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legion")
 	toast.Icon:SetTexture("Interface\\Icons\\Ability_Warlock_DemonicPower")
@@ -2159,7 +2159,7 @@ local function WorldQuestToast_SetUp(questID)
 		toast.Text:SetTextColor(color.r, color.g, color.b)
 	end
 
-	toast.Title:SetText(_G.WORLD_QUEST_COMPLETE)
+	toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])
 	toast.Text:SetText(taskName)
 	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-worldquest")
 	toast.Icon:SetTexture(icon)
