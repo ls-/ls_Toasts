@@ -26,6 +26,7 @@ $includedFiles = @(
 	".\LICENSE.txt",
 	".\ls_Toasts.lua",
 	".\ls_Toasts.toc",
+    ".\locales\",
 	".\media\"
 )
 
