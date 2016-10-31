@@ -1,3 +1,7 @@
+## Version 1.17
+
+- Fixed compatibility issues with ElvUI.
+
 ## Version 1.16
 
 - Fixed issue that caused transmog toasts not to show proper info;
