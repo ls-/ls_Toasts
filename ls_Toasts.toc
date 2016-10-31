@@ -6,4 +6,5 @@
 ## SavedVariables: LS_TOASTS_CFG_GLOBAL
 ## SavedVariablesPerCharacter: LS_TOASTS_CFG
 
+locales\_locales.xml
 ls_Toasts.lua
