@@ -2375,40 +2375,14 @@ local function SpawnTestArchaeologyToast()
 end
 
 local function SpawnTestWorldEventToast()
-	-- invasion in Azshara
-	local _, link = _G.GetItemInfo(139049)
+	-- Work Order: Ancient Rejuvenation Potions
+	local _, link = _G.GetItemInfo(124124)
 
 	if link then
-		InvasionToast_SetUp(43301)
-		UpdateToast(43301, "scenario", link)
-	end
-
-	-- world quests, have to be in zone to get info
-	local mapAreaID = _G.GetCurrentMapAreaID()
-	local taskInfo = _G.C_TaskQuest.GetQuestsForPlayerByMapID(mapAreaID)
-
-	for _, info in pairs(taskInfo) do
-		local questID = info.questId
-
-		if _G.QuestUtils_IsQuestWorldQuest(questID) and _G.HaveQuestData(questID) then
-			local numRewards = _G.GetNumQuestLogRewards(questID)
-
-			if numRewards > 0 then
-				for i = 1, numRewards do
-					local _, _, _, _, _, itemID = _G.GetQuestLogRewardInfo(i, questID)
-
-					if itemID then
-						local _, itemLink = _G.GetItemInfo(itemID)
-
-						if itemLink then
-							dispatcher:QUEST_LOOT_RECEIVED(questID, itemLink)
-
-							return
-						end
-					end
-				end
-			end
-		end
+		WorldQuestToast_SetUp(41662)
+		UpdateToast(41662, "scenario", link)
+	else
+		_G.C_Timer.After(0.25, SpawnTestWorldEventToast)
 	end
 end
 
