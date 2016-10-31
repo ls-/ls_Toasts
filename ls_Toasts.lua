@@ -101,14 +101,16 @@ local DEFAULTS = {
 }
 
 ------------
--- EXPORT --
+-- PUBLIC --
 ------------
 
 local F = {} -- F for Functions
-addonTable[1] = F
-addonTable[2] = CFG
+local PUBLIC = {
+	[1] = F,
+	[2] = CFG
+}
 
-_G[addonName] = addonTable
+_G[addonName] = PUBLIC
 
 -- This function can be overridden by other addons
 -- For toasts' structures, see definitions of CreateBaseToastButton and GetToast functions
