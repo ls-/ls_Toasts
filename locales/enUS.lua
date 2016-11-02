@@ -1,4 +1,6 @@
-﻿local _, addonTable = ...
+﻿-- Contributors:
+
+local _, addonTable = ...
 
 -- Lua
 local _G = _G
