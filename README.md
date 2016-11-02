@@ -52,6 +52,9 @@ For config's content see `DEFAULTS` table.
 ## Feedback and Feature Requests
 If you found a bug or want to share an idea on how to improve my addon, either report to [Issue Tracker](https://github.com/ls-/ls_Toasts/issues) on my GitHub page, or post a comment on [WoWInterfrace](http://www.wowinterface.com/downloads/info24123.html#comments) or [Curse](http://mods.curse.com/addons/wow/ls-toasts#comments).
 
+## Localisation
+Feel free to add and/or review translations on [CurseForge](https://wow.curseforge.com/addons/ls-toasts/localization/), alternatively you can create a PR on [project's GitHub page](https://github.com/ls-/ls_Toasts/pulls).
+
 ## FAQ
 **Q:** Will you add group/master loot roll frames to your addon?<br/>
 **A:** Maybe later, I'm not sure yet.
