@@ -2101,7 +2101,7 @@ local function WorldQuestToast_SetUp(questID)
 	local toast = GetToast("scenario")
 	local _, _, _, taskName = _G.GetTaskInfo(questID)
 	local _, _, worldQuestType, rarity, _, tradeskillLineIndex = _G.GetQuestTagInfo(questID)
-	local color = _G.WORLD_QUEST_QUALITY_COLORS[rarity]
+	local color = _G.WORLD_QUEST_QUALITY_COLORS[rarity] or _G.WORLD_QUEST_QUALITY_COLORS[1]
 	local money = _G.GetQuestLogRewardMoney(questID)
 	local xp = _G.GetQuestLogRewardXP(questID)
 	local usedRewards = 0
