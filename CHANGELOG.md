@@ -1,3 +1,9 @@
+## Version 1.18
+
+- Added localisation support. Korean translation by WetU@GitHub;
+- Fixed issue in reward button code;
+- Fixed issue in follower/champion tooltip code.
+
 ## Version 1.17
 
 - Fixed compatibility issues with ElvUI.
