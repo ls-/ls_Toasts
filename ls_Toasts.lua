@@ -61,6 +61,28 @@ local EQUIP_SLOTS = {
 	["INVTYPE_THROWN"] = {_G.INVSLOT_RANGED},
 }
 
+local BLACKLISTED_EVENTS = {
+	ACHIEVEMENT_EARNED = true,
+	CRITERIA_EARNED = true,
+	GARRISON_BUILDING_ACTIVATABLE = true,
+	GARRISON_FOLLOWER_ADDED = true,
+	GARRISON_MISSION_FINISHED = true,
+	GARRISON_RANDOM_MISSION_ADDED = true,
+	GARRISON_TALENT_COMPLETE = true,
+	LFG_COMPLETION_REWARD = true,
+	LOOT_ITEM_ROLL_WON = true,
+	NEW_RECIPE_LEARNED = true,
+	QUEST_LOOT_RECEIVED = true,
+	QUEST_TURNED_IN = true,
+	SCENARIO_COMPLETED = true,
+	SHOW_LOOT_TOAST = true,
+	SHOW_LOOT_TOAST_LEGENDARY_LOOTED = true,
+	SHOW_LOOT_TOAST_UPGRADE = true,
+	SHOW_PVP_FACTION_LOOT_TOAST = true,
+	-- SHOW_RATED_PVP_REWARD_TOAST = true,
+	STORE_PRODUCT_DELIVERED = true,
+}
+
 ------------
 -- CONFIG --
 ------------
@@ -3269,9 +3291,14 @@ function dispatcher:PLAYER_LOGIN()
 	EnableWorldToasts()
 	EnableTransmogToasts()
 
-	_G.AlertFrame:UnregisterAllEvents()
+	for event in pairs(BLACKLISTED_EVENTS) do
+		_G.AlertFrame:UnregisterEvent(event)
+	end
+
 	hooksecurefunc(_G.AlertFrame, "RegisterEvent", function(self, event)
-		self:UnregisterEvent(event)
+		if event and BLACKLISTED_EVENTS[event] then
+			self:UnregisterEvent(event)
+		end
 	end)
 
 	_G.SLASH_LSTOASTS1 = "/lstoasts"
