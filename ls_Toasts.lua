@@ -79,7 +79,7 @@ local BLACKLISTED_EVENTS = {
 	SHOW_LOOT_TOAST_LEGENDARY_LOOTED = true,
 	SHOW_LOOT_TOAST_UPGRADE = true,
 	SHOW_PVP_FACTION_LOOT_TOAST = true,
-	-- SHOW_RATED_PVP_REWARD_TOAST = true,
+	SHOW_RATED_PVP_REWARD_TOAST = true,
 	STORE_PRODUCT_DELIVERED = true,
 }
 
@@ -1819,6 +1819,12 @@ function dispatcher:SHOW_PVP_FACTION_LOOT_TOAST(...)
 	LootWonToast_Setup(itemLink, quantity, nil, nil, true, typeID == "item", typeID == "money", lessAwesome, nil, isPersonal)
 end
 
+function dispatcher:SHOW_RATED_PVP_REWARD_TOAST(...)
+	local typeID, itemLink, quantity, _, _, isPersonal, lessAwesome = ...
+
+	LootWonToast_Setup(itemLink, quantity, nil, nil, true, typeID == "item", typeID == "money", lessAwesome, nil, isPersonal)
+end
+
 function dispatcher:STORE_PRODUCT_DELIVERED(...)
 	local _, icon, _, payloadID = ...
 	local name, _, quality = _G.GetItemInfo(payloadID)
@@ -1848,6 +1854,7 @@ local function EnableSpecialLootToasts()
 		dispatcher:RegisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
 		dispatcher:RegisterEvent("SHOW_LOOT_TOAST_UPGRADE")
 		dispatcher:RegisterEvent("SHOW_PVP_FACTION_LOOT_TOAST")
+		dispatcher:RegisterEvent("SHOW_RATED_PVP_REWARD_TOAST")
 		dispatcher:RegisterEvent("STORE_PRODUCT_DELIVERED")
 
 		_G.BonusRollFrame.FinishRollAnim:SetScript("OnFinished", BonusRollFrame_FinishedFading_Enabled)
@@ -1862,6 +1869,7 @@ local function DisableSpecialLootToasts()
 	dispatcher:UnregisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
 	dispatcher:UnregisterEvent("SHOW_LOOT_TOAST_UPGRADE")
 	dispatcher:UnregisterEvent("SHOW_PVP_FACTION_LOOT_TOAST")
+	dispatcher:UnregisterEvent("SHOW_RATED_PVP_REWARD_TOAST")
 	dispatcher:UnregisterEvent("STORE_PRODUCT_DELIVERED")
 
 	_G.BonusRollFrame.FinishRollAnim:SetScript("OnFinished", BonusRollFrame_FinishedFading_Disabled)
