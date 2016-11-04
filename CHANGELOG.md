@@ -1,3 +1,7 @@
+## Version 1.19
+
+- Improved compatibility with other addons that use default alert system to show custom toasts.
+
 ## Version 1.18
 
 - Added localisation support. Korean translation by WetU@GitHub;
