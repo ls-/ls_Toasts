@@ -228,7 +228,7 @@ do
 	text:SetAllPoints()
 	text:SetJustifyH("CENTER")
 	text:SetJustifyV("MIDDLE")
-	text:SetText(L["ANCHOR_TITLE"])
+	text:SetText(L["ANCHOR"])
 	text:Hide()
 	anchorFrame.Text = text
 end
