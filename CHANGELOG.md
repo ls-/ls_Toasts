@@ -1,3 +1,11 @@
+## Version 1.20
+
+- NEW! Added rated PvP reward toast;
+- Added partial German translation. Translated by pas06@Curse;
+- Added Traditional Chinese translation. Translated by BNSSNB@Curse;
+- Updated Korean translation. Translated by yuk6196@Curse;
+- Fixed issues in anchor frame code.
+
 ## Version 1.19
 
 - Improved compatibility with other addons that use default alert system to show custom toasts.
