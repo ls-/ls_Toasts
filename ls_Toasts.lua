@@ -3085,7 +3085,6 @@ end
 
 local function CreateConfigPanel()
 	-- General Panel
-
 	local panel = _G.CreateFrame("Frame", "LSToastsConfigPanel", _G.InterfaceOptionsFramePanelContainer)
 	panel.name = "|cff1a9fc0ls:|r Toasts"
 	panel:Hide()
