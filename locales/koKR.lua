@@ -1,4 +1,4 @@
--- Contributors: WetU@GitHub
+-- Contributors: WetU@GitHub, yuk6196@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -26,7 +26,7 @@ L["GROWTH_DIR_LEFT"] = "왼쪽으로"
 L["GROWTH_DIR_RIGHT"] = "오른쪽으로"
 L["GROWTH_DIR_UP"] = "위로"
 L["PROFILE_DESC"] = "아래 버튼을 클릭하면 현재 설정을 기본 설정으로 저장합니다. 여러 캐릭터가 거의 비슷한 배치를 사용할 때 이 기능은 꽤 편리합니다. 이 방법은 당신이 최소한의 설정만 할 수 있게 해줍니다. |cffffd200오직 1개의 기본 설정만 만들 수 있다는 걸 기억하세요. 다른 캐릭터에서 이 버튼을 누르면 저장된 기본 설정을 덮어 쓰게됩니다.|r"
-L["PROFILE_SAVE"] = "설정 저장"
+L["PROFILE_SAVE"] = "기본 설정 저장"
 L["PROFILE_TITLE"] = "설정 전송"
 L["PROFILE_WIPE"] = "기본 설정 초기화"
 L["SCALE"] = "크기 비율"
