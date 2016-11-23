@@ -210,10 +210,8 @@ local function Anchor_OnDragStop(self)
 end
 
 local anchorFrame = _G.CreateFrame("Frame", "LSToastAnchor", _G.UIParent)
-anchorFrame:SetSize(234, 58)
 anchorFrame:SetClampedToScreen(true)
 anchorFrame:SetClampRectInsets(-24, 12, 12, -12)
-anchorFrame:SetMovable(true)
 anchorFrame:SetToplevel(true)
 anchorFrame:RegisterForDrag("LeftButton")
 anchorFrame:SetScript("OnDragStart", Anchor_OnDragStart)
@@ -3285,8 +3283,10 @@ function dispatcher:ADDON_LOADED(arg)
 end
 
 function dispatcher:PLAYER_LOGIN()
-	anchorFrame:SetPoint(unpack(CFG.point))
+	anchorFrame:SetMovable(true)
+	anchorFrame:ClearAllPoints() -- NOTE: just do it
 	anchorFrame:SetSize(234 * CFG.scale, 58 * CFG.scale)
+	anchorFrame:SetPoint(unpack(CFG.point))
 
 	EnableAchievementToasts()
 	EnableArchaeologyToasts()
