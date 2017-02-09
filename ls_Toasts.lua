@@ -1370,6 +1370,7 @@ local function GarrisonMissionToast_SetUp(followerType, garrisonType, missionID,
 	end
 
 	toast.Text:SetText(missionInfo.name)
+	toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 	toast.Level:SetText(level)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.Icon:SetAtlas(missionInfo.typeAtlas, false)
@@ -1455,6 +1456,7 @@ local function GarrisonFollowerToast_SetUp(followerType, garrisonType, followerI
 	end
 
 	toast.Text:SetText(name)
+	toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.soundFile = "UI_Garrison_Toast_FollowerGained"
 	toast.id = followerID
@@ -1691,6 +1693,7 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 
 			toast.Title:SetText(title)
 			toast.Text:SetText(name)
+			toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 			toast.Count:SetText(quantity > 1 and quantity or "")
 			toast.Border:SetVertexColor(color.r, color.g, color.b)
 			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
@@ -1762,6 +1765,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 
 		toast.Title:SetText(L["ITEM_LEGENDARY"])
 		toast.Text:SetText(name)
+		toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legendary")
 		toast.Border:SetVertexColor(color.r, color.g, color.b)
 		toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
@@ -1792,6 +1796,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 
 		toast.Title:SetFormattedText(L["ITEM_UPGRADED_FORMAT"], color.hex, _G["ITEM_QUALITY"..quality.."_DESC"])
 		toast.Text:SetText(name)
+		toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 		toast.Count:SetText(quantity > 1 and quantity or "")
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
 		toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -1835,6 +1840,7 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 
 	toast.Title:SetText(L["BLIZZARD_STORE_PURCHASE_DELIVERED"])
 	toast.Text:SetText(name)
+	toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
 	toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
@@ -2190,6 +2196,7 @@ local function WorldQuestToast_SetUp(questID)
 
 	toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])
 	toast.Text:SetText(taskName)
+	toast.Text:SetTextColor(color.r, color.g, color.b, 1)
 	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-worldquest")
 	toast.Icon:SetTexture(icon)
 	toast.Border:SetVertexColor(color.r, color.g, color.b)
