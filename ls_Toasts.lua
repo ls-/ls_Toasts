@@ -89,6 +89,7 @@ local BLACKLISTED_EVENTS = {
 
 local CFG = {}
 local DEFAULTS = {
+	version = "",
 	growth_direction = "DOWN",
 	point = {"TOPLEFT", "UIParent", "TOPLEFT", 24, -12},
 	max_active_toasts = 12,
@@ -96,31 +97,53 @@ local DEFAULTS = {
 	fadeout_delay = 2.8,
 	scale = 1,
 	colored_names_enabled = false,
-	dnd = {
-		achievement = false,
-		archaeology = false,
-		recipe = false,
-		garrison_6_0 = false,
-		garrison_7_0 = true,
-		instance = false, -- dungeon completion
-		loot_special = false, -- includes blizz store items
-		loot_common = false,
-		loot_currency = false,
-		world = false, -- world quest, invasion completion
-		transmog = false,
-	},
-	achievement_enabled = true,
-	archaeology_enabled = true,
-	garrison_6_0_enabled = false,
-	garrison_7_0_enabled = true,
-	instance_enabled = true,
-	loot_special_enabled = true,
-	loot_common_enabled = false,
-	loot_common_quality_threshold = 1,
-	loot_currency_enabled = true,
-	recipe_enabled = true,
-	world_enabled = true,
-	transmog_enabled = true,
+	type = {
+		achievement = {
+			enabled = true,
+			dnd = false,
+		},
+		archaeology = {
+			enabled = true,
+			dnd = false,
+		},
+		recipe = {
+			enabled = true,
+			dnd = false,
+		},
+		garrison_6_0 = {
+			enabled = false,
+			dnd = true,
+		},
+		garrison_7_0 = {
+			enabled = true,
+			dnd = true,
+		},
+		instance = { -- dungeons
+			enabled = true,
+			dnd = false,
+		},
+		loot_special = { -- personal loot, store item delivery, legendaries
+			enabled = true,
+			dnd = false,
+		},
+		loot_common = {
+			enabled = true,
+			dnd = false,
+			threshold = 1,
+		},
+		loot_currency = {
+			enabled = true,
+			dnd = false,
+		},
+		world = { -- world quest, invasion
+			enabled = true,
+			dnd = false,
+		},
+		transmog = {
+			enabled = true,
+			dnd = false,
+		},
+	}
 }
 
 ------------
@@ -162,6 +185,45 @@ dispatcher:SetScript("OnEvent", EventHandler)
 ------------
 -- ANCHOR --
 ------------
+
+local function GetScreenQuadrant(frame)
+	local x, y = frame:GetCenter()
+
+	if not (x and y) then
+		return "UNKNOWN"
+	end
+
+	local screenWidth = _G.UIParent:GetRight()
+	local screenHeight = _G.UIParent:GetTop()
+	local screenLeft = screenWidth / 3
+	local screenRight = screenWidth * 2 / 3
+
+	if y >= screenHeight * 2 / 3 then
+		if x <= screenLeft then
+			return "TOPLEFT"
+		elseif x >= screenRight then
+			return "TOPRIGHT"
+		else
+			return "TOP"
+		end
+	elseif y <= screenHeight / 3 then
+		if x <= screenLeft then
+			return "BOTTOMLEFT"
+		elseif x >= screenRight then
+			return "BOTTOMRIGHT"
+		else
+			return "BOTTOM"
+		end
+	else
+		if x <= screenLeft then
+			return "LEFT"
+		elseif x >= screenRight then
+			return "RIGHT"
+		else
+			return "CENTER"
+		end
+	end
+end
 
 local function CalculatePosition(self)
 	local selfCenterX, selfCenterY = self:GetCenter()
@@ -216,6 +278,22 @@ anchorFrame:SetToplevel(true)
 anchorFrame:RegisterForDrag("LeftButton")
 anchorFrame:SetScript("OnDragStart", Anchor_OnDragStart)
 anchorFrame:SetScript("OnDragStop", Anchor_OnDragStop)
+anchorFrame.Enable = function(self)
+	self:EnableMouse(true)
+	self.BG:Show()
+	self.Text:Show()
+end
+anchorFrame.Disable = function(self)
+	self:EnableMouse(false)
+	self.BG:Hide()
+	self.Text:Hide()
+end
+anchorFrame.Refresh = function(self)
+	self:SetMovable(true)
+	self:ClearAllPoints()
+	self:SetSize(234 * CFG.scale, 58 * CFG.scale)
+	self:SetPoint(unpack(CFG.point))
+end
 
 do
 	local texture = anchorFrame:CreateTexture(nil, "BACKGROUND")
@@ -231,18 +309,6 @@ do
 	text:SetText(L["ANCHOR"])
 	text:Hide()
 	anchorFrame.Text = text
-end
-
-local function Anchor_Enable()
-	anchorFrame:EnableMouse(true)
-	anchorFrame.BG:Show()
-	anchorFrame.Text:Show()
-end
-
-local function Anchor_Disable()
-	anchorFrame:EnableMouse(false)
-	anchorFrame.BG:Hide()
-	anchorFrame.Text:Hide()
 end
 
 -----------
@@ -363,8 +429,8 @@ _G.C_Timer.NewTicker(0.05, ProcessAnimatedText)
 local function IsDNDEnabled()
 	local counter = 0
 
-	for k in pairs (CFG.dnd) do
-		if k then
+	for _, v in pairs (CFG.type) do
+		if v.dnd then
 			counter = counter + 1
 		end
 	end
@@ -653,8 +719,20 @@ end
 
 local function ToastButton_OnEnter(self)
 	if self.id then
+		local quadrant = GetScreenQuadrant(self)
+		local p, rP, x, y = "TOPLEFT", "BOTTOMRIGHT", -2, 2
+
+		if quadrant == "BOTTOMLEFT" or quadrant == "BOTTOM" then
+			p, rP, x, y = "BOTTOMLEFT", "TOPRIGHT", -2, -2
+		elseif quadrant == "TOPRIGHT" or quadrant == "RIGHT" then
+			p, rP, x, y = "TOPRIGHT", "BOTTOMLEFT", 2, 2
+		elseif quadrant == "BOTTOMRIGHT" then
+			p, rP, x, y = "BOTTOMRIGHT", "TOPLEFT", 2, -2
+		end
+
 		if self.type == "item" then
-			_G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", -2, 2)
+			_G.GameTooltip:SetOwner(self, "ANCHOR_NONE")
+			_G.GameTooltip:SetPoint(p, self, rP, x, y)
 			_G.GameTooltip:SetItemByID(self.id)
 			_G.GameTooltip:Show()
 		elseif self.type == "follower" then
@@ -667,30 +745,45 @@ local function ToastButton_OnEnter(self)
 			if isOK and link then
 				local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = string.split(":", link)
 				local followerType = _G.C_Garrison.GetFollowerTypeByID(tonumber(garrisonFollowerID))
+
 				_G.GarrisonFollowerTooltip_Show(tonumber(garrisonFollowerID), false, tonumber(quality), tonumber(level), 0, 0, tonumber(itemLevel), tonumber(spec1), tonumber(ability1), tonumber(ability2), tonumber(ability3), tonumber(ability4), tonumber(trait1), tonumber(trait2), tonumber(trait3), tonumber(trait4))
 
 				if followerType == _G.LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
 					_G.GarrisonShipyardFollowerTooltip:ClearAllPoints()
-					_G.GarrisonShipyardFollowerTooltip:SetPoint("TOPLEFT", self, "BOTTOMRIGHT", -2, 2)
+					_G.GarrisonShipyardFollowerTooltip:SetPoint(p, self, rP, x, y)
 				else
 					_G.GarrisonFollowerTooltip:ClearAllPoints()
-					_G.GarrisonFollowerTooltip:SetPoint("TOPLEFT", self, "BOTTOMRIGHT", -2, 2)
+					_G.GarrisonFollowerTooltip:SetPoint(p, self, rP, x, y)
 				end
 			end
 		elseif self.type == "ability" then
-			_G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", -2, 2)
+			_G.GameTooltip:SetOwner(self, "ANCHOR_NONE")
+			_G.GameTooltip:SetPoint(p, self, rP, x, y)
 			_G.GameTooltip:SetSpellByID(self.id)
 			_G.GameTooltip:Show()
 		end
 	elseif self.link then
+		local quadrant = GetScreenQuadrant(self)
+		local p, rP, x, y = "TOPLEFT", "BOTTOMRIGHT", -2, 2
+
+		if quadrant == "BOTTOMLEFT" or quadrant == "BOTTOM" then
+			p, rP, x, y = "BOTTOMLEFT", "TOPRIGHT", -2, -2
+		elseif quadrant == "TOPRIGHT" or quadrant == "RIGHT" then
+			p, rP, x, y = "TOPRIGHT", "BOTTOMLEFT", 2, 2
+		elseif quadrant == "BOTTOMRIGHT" then
+			p, rP, x, y = "BOTTOMRIGHT", "TOPLEFT", 2, -2
+		end
+
 		if self.type == "item" then
 			if string.find(self.link, "battlepet:") then
 				local _, speciesID, level, breedQuality, maxHealth, power, speed = string.split(":", self.link)
-				_G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", -2, 2)
+				_G.GameTooltip:SetOwner(self, "ANCHOR_NONE")
+				_G.GameTooltip:SetPoint(p, self, rP, x, y)
 				_G.GameTooltip:Show()
 				_G.BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed))
 			else
-				_G.GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT", -2, 2)
+				_G.GameTooltip:SetOwner(self, "ANCHOR_NONE")
+				_G.GameTooltip:SetPoint(p, self, rP, x, y)
 				_G.GameTooltip:SetHyperlink(self.link)
 				_G.GameTooltip:Show()
 			end
@@ -1209,7 +1302,7 @@ end
 function dispatcher:PLAYER_REGEN_DISABLED()
 	if anchorFrame:IsMouseEnabled() then
 		Anchor_OnDragStop(anchorFrame)
-		Anchor_Disable()
+		anchorFrame:Disable()
 	end
 end
 
@@ -1263,7 +1356,7 @@ local function AchievementToast_SetUp(achievementID, flag, isCriteria)
 	toast.Icon:SetTexture(icon)
 	toast.id = achievementID
 
-	SpawnToast(toast, CFG.dnd.achievement)
+	SpawnToast(toast, CFG.type.achievement.dnd)
 end
 
 function dispatcher:ACHIEVEMENT_EARNED(...)
@@ -1280,7 +1373,7 @@ function dispatcher:CRITERIA_EARNED(...)
 end
 
 local function EnableAchievementToasts()
-	if CFG.achievement_enabled then
+	if CFG.type.achievement.enabled then
 		dispatcher:RegisterEvent("ACHIEVEMENT_EARNED")
 		dispatcher:RegisterEvent("CRITERIA_EARNED")
 	end
@@ -1310,7 +1403,7 @@ function dispatcher:ARTIFACT_DIGSITE_COMPLETE(...)
 	toast.Icon:SetTexture(raceTexture)
 	toast.soundFile = "UI_DigsiteCompletion_Toast"
 
-	SpawnToast(toast, CFG.dnd.archaeology)
+	SpawnToast(toast, CFG.type.archaeology.dnd)
 end
 
 local function ArcheologyProgressBarAnimOut_OnFinished(self)
@@ -1332,7 +1425,7 @@ local function EnableArchaeologyToasts()
 		_G.ArcheologyDigsiteProgressBar.AnimOutAndTriggerToast:SetScript("OnFinished", ArcheologyProgressBarAnimOut_OnFinished)
 	end
 
-	if CFG.archaeology_enabled then
+	if CFG.type.archaeology.enabled then
 		dispatcher:RegisterEvent("ARTIFACT_DIGSITE_COMPLETE")
 	end
 end
@@ -1376,15 +1469,15 @@ local function GarrisonMissionToast_SetUp(followerType, garrisonType, missionID,
 	toast.soundFile = "UI_Garrison_Toast_MissionComplete"
 	toast.id = missionID
 
-	SpawnToast(toast, garrisonType == _G.LE_GARRISON_TYPE_7_0 and CFG.dnd.garrison_7_0 or CFG.dnd.garrison_6_0)
+	SpawnToast(toast, garrisonType == _G.LE_GARRISON_TYPE_7_0 and CFG.type.garrison_7_0.dnd or CFG.type.garrison_6_0.dnd)
 end
 
 function dispatcher:GARRISON_MISSION_FINISHED(...)
 	local followerType, missionID = ...
 	local garrisonType = GetGarrisonTypeByFollowerType(followerType)
 
-	if (garrisonType == _G.LE_GARRISON_TYPE_7_0 and not CFG.garrison_7_0_enabled) or
-		(garrisonType == _G.LE_GARRISON_TYPE_6_0 and not CFG.garrison_6_0_enabled) then
+	if (garrisonType == _G.LE_GARRISON_TYPE_7_0 and not CFG.type.garrison_7_0.enabled) or
+		(garrisonType == _G.LE_GARRISON_TYPE_6_0 and not CFG.type.garrison_6_0.enabled) then
 		return
 	end
 
@@ -1404,8 +1497,8 @@ function dispatcher:GARRISON_RANDOM_MISSION_ADDED(...)
 	local followerType, missionID = ...
 	local garrisonType = GetGarrisonTypeByFollowerType(followerType)
 
-	if (garrisonType == _G.LE_GARRISON_TYPE_7_0 and not CFG.garrison_7_0_enabled) or
-		(garrisonType == _G.LE_GARRISON_TYPE_6_0 and not CFG.garrison_6_0_enabled) then
+	if (garrisonType == _G.LE_GARRISON_TYPE_7_0 and not CFG.type.garrison_7_0.enabled) or
+		(garrisonType == _G.LE_GARRISON_TYPE_6_0 and not CFG.type.garrison_6_0.enabled) then
 		return
 	end
 
@@ -1459,15 +1552,15 @@ local function GarrisonFollowerToast_SetUp(followerType, garrisonType, followerI
 	toast.soundFile = "UI_Garrison_Toast_FollowerGained"
 	toast.id = followerID
 
-	SpawnToast(toast, garrisonType == _G.LE_GARRISON_TYPE_7_0 and CFG.dnd.garrison_7_0 or CFG.dnd.garrison_6_0)
+	SpawnToast(toast, garrisonType == _G.LE_GARRISON_TYPE_7_0 and CFG.type.garrison_7_0.dnd or CFG.type.garrison_6_0.dnd)
 end
 
 function dispatcher:GARRISON_FOLLOWER_ADDED(...)
 	local followerID, name, _, level, quality, isUpgraded, texPrefix, followerType = ...
 	local garrisonType = GetGarrisonTypeByFollowerType(followerType)
 
-	if (garrisonType == _G.LE_GARRISON_TYPE_7_0 and not CFG.garrison_7_0_enabled) or
-		(garrisonType == _G.LE_GARRISON_TYPE_6_0 and not CFG.garrison_6_0_enabled) then
+	if (garrisonType == _G.LE_GARRISON_TYPE_7_0 and not CFG.type.garrison_7_0.enabled) or
+		(garrisonType == _G.LE_GARRISON_TYPE_6_0 and not CFG.type.garrison_6_0.enabled) then
 		return
 	end
 
@@ -1483,7 +1576,7 @@ function dispatcher:GARRISON_BUILDING_ACTIVATABLE(...)
 	toast.Icon:SetTexture("Interface\\Icons\\Garrison_Build")
 	toast.soundFile = "UI_Garrison_Toast_BuildingComplete"
 
-	SpawnToast(toast, CFG.dnd.garrison_6_0)
+	SpawnToast(toast, CFG.type.garrison_6_0.dnd)
 end
 
 function dispatcher:GARRISON_TALENT_COMPLETE(...)
@@ -1497,37 +1590,37 @@ function dispatcher:GARRISON_TALENT_COMPLETE(...)
 	toast.Icon:SetTexture(talent.icon)
 	toast.soundFile = "UI_OrderHall_Talent_Ready_Toast"
 
-	SpawnToast(toast, CFG.dnd.garrison_7_0)
+	SpawnToast(toast, CFG.type.garrison_7_0.dnd)
 end
 
 local function EnableGarrisonToasts()
-	if CFG.garrison_6_0_enabled or CFG.garrison_7_0_enabled then
+	if CFG.type.garrison_6_0.enabled or CFG.type.garrison_7_0.enabled then
 		dispatcher:RegisterEvent("GARRISON_FOLLOWER_ADDED")
 		dispatcher:RegisterEvent("GARRISON_MISSION_FINISHED")
 		dispatcher:RegisterEvent("GARRISON_RANDOM_MISSION_ADDED")
 
-		if CFG.garrison_6_0_enabled then
+		if CFG.type.garrison_6_0.enabled then
 			dispatcher:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE")
 		end
 
-		if CFG.garrison_7_0_enabled then
+		if CFG.type.garrison_7_0.enabled then
 			dispatcher:RegisterEvent("GARRISON_TALENT_COMPLETE")
 		end
 	end
 end
 
 local function DisableGarrisonToasts()
-	if not CFG.garrison_6_0_enabled and not CFG.garrison_7_0_enabled then
+	if not CFG.type.garrison_6_0.enabled and not CFG.type.garrison_7_0.enabled then
 		dispatcher:UnregisterEvent("GARRISON_FOLLOWER_ADDED")
 		dispatcher:UnregisterEvent("GARRISON_MISSION_FINISHED")
 		dispatcher:UnregisterEvent("GARRISON_RANDOM_MISSION_ADDED")
 	end
 
-	if not CFG.garrison_6_0_enabled then
+	if not CFG.type.garrison_6_0.enabled then
 		dispatcher:UnregisterEvent("GARRISON_BUILDING_ACTIVATABLE")
 	end
 
-	if not CFG.garrison_7_0_enabled then
+	if not CFG.type.garrison_7_0.enabled then
 		dispatcher:UnregisterEvent("GARRISON_TALENT_COMPLETE")
 	end
 end
@@ -1613,7 +1706,7 @@ local function LFGToast_SetUp(isScenario)
 		toast.soundFile = "LFG_Rewards"
 	end
 
-	SpawnToast(toast, CFG.dnd.instance)
+	SpawnToast(toast, CFG.type.instance.dnd)
 end
 
 function dispatcher:LFG_COMPLETION_REWARD()
@@ -1628,7 +1721,7 @@ function dispatcher:LFG_COMPLETION_REWARD()
 end
 
 local function EnableInstanceToasts()
-	if CFG.instance_enabled then
+	if CFG.type.instance.enabled then
 		dispatcher:RegisterEvent("LFG_COMPLETION_REWARD")
 	end
 end
@@ -1718,7 +1811,7 @@ local function LootWonToast_Setup(itemLink, quantity, rollType, roll, showFactio
 	end
 
 	if toast then
-		SpawnToast(toast, CFG.dnd.loot_special)
+		SpawnToast(toast, CFG.type.loot_special.dnd)
 	end
 end
 
@@ -1772,7 +1865,7 @@ function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(...)
 		toast.soundFile = "UI_LegendaryLoot_Toast"
 		toast.link = itemLink
 
-		SpawnToast(toast, CFG.dnd.loot_special)
+		SpawnToast(toast, CFG.type.loot_special.dnd)
 	end
 end
 
@@ -1807,7 +1900,7 @@ function dispatcher:SHOW_LOOT_TOAST_UPGRADE(...)
 
 		toast.Arrows.requested = true
 
-		SpawnToast(toast, CFG.dnd.loot_special)
+		SpawnToast(toast, CFG.type.loot_special.dnd)
 	end
 end
 
@@ -1842,11 +1935,11 @@ function dispatcher:STORE_PRODUCT_DELIVERED(...)
 	toast.soundFile = "UI_igStore_PurchaseDelivered_Toast_01"
 	toast.id = payloadID
 
-	SpawnToast(toast, CFG.dnd.loot_special)
+	SpawnToast(toast, CFG.type.loot_special.dnd)
 end
 
 local function EnableSpecialLootToasts()
-	if CFG.loot_special_enabled then
+	if CFG.type.loot_special.enabled then
 		dispatcher:RegisterEvent("LOOT_ITEM_ROLL_WON")
 		dispatcher:RegisterEvent("SHOW_LOOT_TOAST")
 		dispatcher:RegisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED")
@@ -1892,7 +1985,7 @@ local function LootCommonToast_Setup(itemLink, quantity)
 			name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
 		end
 
-		if quality >= CFG.loot_common_quality_threshold then
+		if quality >= CFG.type.loot_common.threshold and quality <= 4 then
 			local toast = GetToast("item")
 			local color = _G.ITEM_QUALITY_COLORS[quality or 4]
 
@@ -1909,7 +2002,7 @@ local function LootCommonToast_Setup(itemLink, quantity)
 			toast.link = itemLink
 			toast.chat = true
 
-			SpawnToast(toast, CFG.dnd.loot_common)
+			SpawnToast(toast, CFG.type.loot_common.dnd)
 		end
 	end
 end
@@ -1939,7 +2032,7 @@ function dispatcher:CHAT_MSG_LOOT(message)
 end
 
 local function EnableCommonLootToasts()
-	if CFG.loot_common_enabled then
+	if CFG.type.loot_common.enabled then
 		dispatcher:RegisterEvent("CHAT_MSG_LOOT")
 	end
 end
@@ -1991,7 +2084,7 @@ function dispatcher:CHAT_MSG_CURRENCY(message)
 		toast.itemCount = quantity
 		toast.link = itemLink
 
-		SpawnToast(toast, CFG.dnd.loot_currency)
+		SpawnToast(toast, CFG.type.loot_currency.dnd)
 	else
 		if isQueued then
 			toast.itemCount = toast.itemCount + quantity
@@ -2011,7 +2104,7 @@ function dispatcher:CHAT_MSG_CURRENCY(message)
 end
 
 local function EnableCurrencyLootToasts()
-	if CFG.loot_currency_enabled then
+	if CFG.type.loot_currency.enabled then
 		dispatcher:RegisterEvent("CHAT_MSG_CURRENCY")
 	end
 end
@@ -2052,13 +2145,13 @@ function dispatcher:NEW_RECIPE_LEARNED(...)
 			toast.soundFile = "UI_Professions_NewRecipeLearned_Toast"
 			toast.id = recipeID
 
-			SpawnToast(toast, CFG.dnd.recipe)
+			SpawnToast(toast, CFG.type.recipe.dnd)
 		end
 	end
 end
 
 local function EnableRecipeToasts()
-	if CFG.recipe_enabled then
+	if CFG.type.recipe.enabled then
 		dispatcher:RegisterEvent("NEW_RECIPE_LEARNED")
 	end
 end
@@ -2118,7 +2211,7 @@ local function InvasionToast_SetUp(questID)
 	toast.soundFile = "UI_Scenario_Ending"
 	toast.id = questID
 
-	SpawnToast(toast, CFG.dnd.world)
+	SpawnToast(toast, CFG.type.world.dnd)
 end
 
 local function WorldQuestToast_SetUp(questID)
@@ -2198,7 +2291,7 @@ local function WorldQuestToast_SetUp(questID)
 	toast.soundFile = "UI_WorldQuest_Complete"
 	toast.id = questID
 
-	SpawnToast(toast, CFG.dnd.world)
+	SpawnToast(toast, CFG.type.world.dnd)
 end
 
 function dispatcher:SCENARIO_COMPLETED(...)
@@ -2233,7 +2326,7 @@ function dispatcher:QUEST_LOOT_RECEIVED(...)
 end
 
 local function EnableWorldToasts()
-	if CFG.world_enabled then
+	if CFG.type.world.enabled then
 		dispatcher:RegisterEvent("SCENARIO_COMPLETED")
 		dispatcher:RegisterEvent("QUEST_TURNED_IN")
 		dispatcher:RegisterEvent("QUEST_LOOT_RECEIVED")
@@ -2293,7 +2386,7 @@ local function TransmogToast_SetUp(sourceID, isAdded)
 	toast.id = sourceID
 	toast.link = transmogLink
 
-	SpawnToast(toast, CFG.dnd.transmog)
+	SpawnToast(toast, CFG.type.transmog.dnd)
 end
 
 function dispatcher:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
@@ -2317,7 +2410,7 @@ function dispatcher:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
 end
 
 local function EnableTransmogToasts()
-	if CFG.transmog_enabled then
+	if CFG.type.transmog.enabled then
 		dispatcher:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED")
 		dispatcher:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED")
 	end
@@ -2471,9 +2564,9 @@ end
 -----------
 
 -- local function SpawnTestToast()
--- 	if not _G.DevTools_Dump then
--- 		_G.UIParentLoadAddOn("Blizzard_DebugTools")
--- 	end
+	-- if not _G.DevTools_Dump then
+	-- 	_G.UIParentLoadAddOn("Blizzard_DebugTools")
+	-- end
 
 -- 	SpawnTestGarrisonToast()
 
@@ -2511,13 +2604,17 @@ local function CopyTable(src, dest)
 	return dest
 end
 
-local function DiffTable(src , dest)
+local function ReplaceTable(src, dest)
+	return CopyTable(src, table.wipe(dest))
+end
+
+local function DiffTable(src, dest)
 	if type(dest) ~= "table" then
 		return {}
 	end
 
 	if type(src) ~= "table" then
-		return dest
+		return CopyTable(dest)
 	end
 
 	for k, v in pairs(dest) do
@@ -2530,34 +2627,10 @@ local function DiffTable(src , dest)
 		end
 	end
 
-	return dest
+	return CopyTable(dest)
 end
 
-local function SetConfigValue(valuePath, value)
-	local temp = {string.split(".", valuePath)}
-	local t = CFG
-
-	if #temp > 0 then
-		for i = 1, #temp - 1 do
-			t = t[temp[i]]
-		end
-
-		t[temp[#temp]] = value
-	end
-end
-
-local function GetConfigValue(valuePath)
-	local temp = {string.split(".", valuePath)}
-	local t = CFG
-
-	if #temp > 0 then
-		for i = 1, #temp do
-			t = t[temp[i]]
-		end
-
-		return t
-	end
-end
+local panels = {}
 
 local function RegisterControlForRefresh(parent, control)
 	if not parent or not control then
@@ -2568,7 +2641,7 @@ local function RegisterControlForRefresh(parent, control)
 	table.insert(parent.controls, control)
 end
 
-local function OptionsPanelRefresh(panel)
+local function RefreshOptions(panel)
 	for _, control in pairs(panel.controls) do
 		if control.RefreshValue then
 			control:RefreshValue()
@@ -2576,70 +2649,78 @@ local function OptionsPanelRefresh(panel)
 	end
 end
 
+local function RefreshAllOptions()
+	anchorFrame:Refresh()
+
+	for i = 1, #panels do
+		panels[i]:refresh()
+	end
+end
+
 local function AnchorFrame_Toggle()
 	if anchorFrame:IsMouseEnabled() then
-		Anchor_Disable()
+		anchorFrame:Disable()
 	else
-		Anchor_Enable()
+		anchorFrame:Enable()
 	end
 end
 
 local function ToggleToasts(value, state)
-	if value == "achievement_enabled" then
+	if value == "achievement" then
 		if state then
 			EnableAchievementToasts()
 		else
 			DisableAchievementToasts()
 		end
-	elseif value == "archaeology_enabled" then
+	elseif value == "archaeology" then
 		if state then
 			EnableArchaeologyToasts()
 		else
 			DisableArchaeologyToasts()
 		end
-	elseif value == "garrison_6_0_enabled" or value == "garrison_7_0_enabled" then
+	elseif value == "garrison_6_0" or value == "garrison_7_0" then
 		if state then
 			EnableGarrisonToasts()
 		else
 			DisableGarrisonToasts()
 		end
-	elseif value == "instance_enabled" then
+	elseif value == "instance" then
 		if state then
 			EnableInstanceToasts()
 		else
 			DisableInstanceToasts()
 		end
-	elseif value == "loot_special_enabled" then
+	elseif value == "loot_special" then
 		if state then
 			EnableSpecialLootToasts()
 		else
 			DisableSpecialLootToasts()
 		end
-	elseif value == "loot_common_enabled" then
+	elseif value == "loot_common" then
 		if state then
 			EnableCommonLootToasts()
 		else
 			DisableCommonLootToasts()
 		end
-	elseif value == "loot_currency_enabled" then
+	elseif value == "loot_currency" then
 		if state then
 			EnableCurrencyLootToasts()
 		else
 			DisableCurrencyLootToasts()
 		end
-	elseif value == "recipe_enabled" then
+	elseif value == "recipe" then
 		if state then
 			EnableRecipeToasts()
 		else
 			DisableRecipeToasts()
 		end
-	elseif value == "world_enabled" then
+	elseif value == "world" then
 		if state then
 			EnableWorldToasts()
 		else
 			DisableWorldToasts()
 		end
-	elseif value == "transmog_enabled" then
+	elseif value == "transmog" then
 		if state then
 			EnableTransmogToasts()
 		else
@@ -2728,13 +2809,8 @@ end
 
 ------
 
-local function CheckButton_SetValue(self, value)
-	self:SetChecked(value)
-	SetConfigValue(self.watchedValue, value)
-end
-
 local function CheckButton_RefreshValue(self)
-	self:SetChecked(GetConfigValue(self.watchedValue))
+	self:SetChecked(self:GetValue())
 end
 
 local function CheckButton_OnClick(self)
@@ -2751,130 +2827,135 @@ local function CheckButton_OnLeave()
 	_G.GameTooltip:Hide()
 end
 
-local function CreateConfigCheckButton(parent, name, text, tooltiptext)
-	local object = _G.CreateFrame("CheckButton", "$parent"..name, parent, "InterfaceOptionsCheckButtonTemplate")
+local function CreateConfigCheckButton(panel, params)
+	params = params or {}
+
+	local object = _G.CreateFrame("CheckButton", params.name, params.parent or panel, "InterfaceOptionsCheckButtonTemplate")
 	object:SetHitRectInsets(0, 0, 0, 0)
 	object.type = "Button"
-	object.SetValue = CheckButton_SetValue
+	object.GetValue = params.get
+	object.SetValue = params.set
 	object.RefreshValue = CheckButton_RefreshValue
-	object:SetScript("OnClick", CheckButton_OnClick)
-	object.Text:SetText(text)
+	object:SetScript("OnClick", params.click or CheckButton_OnClick)
+	object.Text:SetText(params.text)
 
-	if tooltiptext then
-		object.tooltipText = tooltiptext
+	if params.tooltip_text then
+		object.tooltipText = params.tooltip_text
 		object:SetScript("OnEnter", CheckButton_OnEnter)
 		object:SetScript("OnLeave", CheckButton_OnLeave)
 	end
 
-	RegisterControlForRefresh(parent, object)
+	RegisterControlForRefresh(panel, object)
 
 	return object
 end
 
 ------
 
-local function CreateConfigButton(parent, name, text, func)
-	local object = _G.CreateFrame("Button", "$parent"..name, parent, "UIPanelButtonTemplate")
+local function CreateConfigButton(panel, params)
+	params = params or {}
+
+	local object = _G.CreateFrame("Button", params.name, params.parent or panel, "UIPanelButtonTemplate")
 	object.type = "Button"
-	object:SetText(text)
-	object:SetWidth(object:GetTextWidth() + 18)
-	object:SetScript("OnClick", func)
+	object:SetText(params.text)
+	object:SetWidth(math.max(object:GetTextWidth() + 18, 70))
+	object:SetScript("OnClick", params.func)
 
 	return object
 end
 
 ------
-
-local function DropDownMenu_SetValue(self, value)
-	self.value = value
-	_G.UIDropDownMenu_SetSelectedValue(self, value)
-	SetConfigValue(self.watchedValue, value)
-end
 
 local function DropDownMenu_RefreshValue(self)
 	_G.UIDropDownMenu_Initialize(self, self.initialize)
-	self.value = GetConfigValue(self.watchedValue)
-	_G.UIDropDownMenu_SetSelectedValue(self, self.value)
+	_G.UIDropDownMenu_SetSelectedValue(self, self:GetValue())
 end
 
-local function CreateConfigDropDown(parent, name, text, func)
-	local object = _G.CreateFrame("Frame", "$parent"..name, parent, "UIDropDownMenuTemplate")
+local function CreateConfigDropDownMenu(panel, params)
+	params = params or {}
+
+	local object = _G.CreateFrame("Frame", params.name, params.parent or panel, "UIDropDownMenuTemplate")
 	object.type = "DropDownMenu"
-	object.SetValue = DropDownMenu_SetValue
+	object.SetValue = params.set
+	object.GetValue = params.get
 	object.RefreshValue = DropDownMenu_RefreshValue
-	_G.UIDropDownMenu_Initialize(object, func)
+	_G.UIDropDownMenu_Initialize(object, params.init)
+	_G.UIDropDownMenu_SetWidth(object, params.width or 128)
 
-	local label = object:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	label:SetPoint("BOTTOMLEFT", object, "TOPLEFT", 16, 3)
-	label:SetJustifyH("LEFT")
-	label:SetText(text)
-	object.Text = label
+	local text = object:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	text:SetPoint("BOTTOMLEFT", object, "TOPLEFT", 16, 3)
+	text:SetJustifyH("LEFT")
+	text:SetText(params.text)
+	object.Label = text
 
-	RegisterControlForRefresh(parent, object)
+	RegisterControlForRefresh(panel, object)
 
 	return object
 end
 
 ------
 
-local function Slider_SetValue(self, value)
+local function Slider_RefreshValue(self)
+	local value = self:GetValue()
+
 	self.value = value
 	self:SetDisplayValue(value)
 	self.CurrentValue:SetText(value)
-	SetConfigValue(self.watchedValue, value)
-end
-
-local function Slider_RefreshValue(self)
-	self:SetDisplayValue(GetConfigValue(self.watchedValue))
-	self.CurrentValue:SetText(GetConfigValue(self.watchedValue))
 end
 
 local function Slider_OnValueChanged(self, value, userInput)
 	if userInput then
 		value = tonumber(string.format("%.1f", value))
 
-		if value ~= GetConfigValue(self.watchedValue) then
+		if value ~= self.value then
 			self:SetValue(value)
+			self:RefreshValue()
 		end
 	end
 end
 
-local function CreateConfigSlider(parent, name, text, stepValue, minValue, maxValue)
-	local object = _G.CreateFrame("Slider", "$parent"..name, parent, "OptionsSliderTemplate")
-	object:SetMinMaxValues(minValue, maxValue)
-	object:SetValueStep(stepValue)
+local function CreateConfigSlider(panel, params)
+	params = params or {}
+
+	local object = _G.CreateFrame("Slider", params.name, params.parent or panel, "OptionsSliderTemplate")
+	object.type = "Slider"
+	object:SetMinMaxValues(params.min, params.max)
+	object:SetValueStep(params.step)
 	object:SetObeyStepOnDrag(true)
 	object.SetDisplayValue = object.SetValue -- default
-	object.SetValue = Slider_SetValue
+	object.GetValue = params.get
+	object.SetValue = params.set
 	object.RefreshValue = Slider_RefreshValue
 	object:SetScript("OnValueChanged", Slider_OnValueChanged)
 
-	local label = _G[object:GetName().."Text"]
-	label:SetText(text)
-	label:SetVertexColor(1, 0.82, 0)
-	object.Text = label
+	local text = _G[object:GetName().."Text"]
+	text:SetText(params.text)
+	text:SetVertexColor(1, 0.82, 0)
+	object.Text = text
 
 	local lowText = _G[object:GetName().."Low"]
-	lowText:SetText(minValue)
+	lowText:SetText(params.min)
 	object.LowValue = lowText
 
-	local curText = object:CreateFontString("$parentCurrent", "ARTWORK", "GameFontHighlightSmall")
+	local curText = object:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	curText:SetPoint("TOP", object, "BOTTOM", 0, 3)
 	object.CurrentValue = curText
 
 	local highText = _G[object:GetName().."High"]
-	highText:SetText(maxValue)
+	highText:SetText(params.max)
 	object.HighValue = highText
 
-	RegisterControlForRefresh(parent, object)
+	RegisterControlForRefresh(panel, object)
 
 	return object
 end
 
 ------
 
-local function CreateConfigDivider(parent, text)
-	local object = parent:CreateTexture(nil, "ARTWORK")
+local function CreateConfigDivider(panel, params)
+	params = params or {}
+
+	local object = panel:CreateTexture(nil, "ARTWORK")
 	object:SetHeight(4)
 	object:SetPoint("LEFT", 10, 0)
 	object:SetPoint("RIGHT", -10, 0)
@@ -2882,11 +2963,11 @@ local function CreateConfigDivider(parent, text)
 	object:SetTexCoord(0, 1, 0.0625, 0.65625)
 	object:SetAlpha(0.5)
 
-	local label = parent:CreateFontString(nil, "ARTWORK", "GameFontNormalMed2")
+	local label = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalMed2")
 	label:SetWordWrap(false)
 	label:SetPoint("LEFT", object, "LEFT", 12, 1)
 	label:SetPoint("RIGHT", object, "RIGHT", -12, 1)
-	label:SetText(text)
+	label:SetText(params.text)
 	object.Text = label
 
 	return object
@@ -2906,145 +2987,70 @@ local function SettingsButton_OnClick(self)
 	_G.ToggleDropDownMenu(nil, nil, self.DropDown, self, -2, 2, nil, nil, 10)
 end
 
-local function CheckButton_OnClickHook(self)
-	ToggleToasts(self.watchedValue, self:GetChecked())
-end
+local function CreateToastConfigLine(panel, params)
+	params = params or {}
 
-local function CreateToastConfigLine(parent, cfg, anchor)
-	local holder = _G.CreateFrame("Frame", "$parent"..cfg.name.."Line", parent)
-	holder:SetHeight(33)
-	holder:SetPoint("TOP", anchor, "BOTTOM", 0, -2)
-	holder:SetPoint("LEFT", parent, "LEFT", 16, 0)
-	holder:SetPoint("RIGHT", parent, "RIGHT", -16, 0)
+	local object = _G.CreateFrame("Frame", params.name, params.parent or panel)
+	object:SetHeight(33)
+	object:SetPoint("LEFT", panel, "LEFT", 16, 0)
+	object:SetPoint("RIGHT", panel, "RIGHT", -16, 0)
 
-	local texture = holder:CreateTexture(nil, "BACKGROUND", nil, -8)
+	local texture = object:CreateTexture(nil, "BACKGROUND", nil, -8)
 	texture:SetAllPoints()
 	texture:SetColorTexture(0.3, 0.3, 0.3, 0.3)
 
-	local name = holder:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-	name:SetPoint("TOPLEFT", holder, "TOPLEFT", 6, 0)
+	local name = object:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	name:SetPoint("TOPLEFT", object, "TOPLEFT", 6, 0)
 	name:SetHeight(33)
 	name:SetJustifyV("MIDDLE")
-	name:SetText(cfg.name)
+	name:SetText(params.text)
 
-	if cfg.dropdown then
-		local settings = _G.CreateFrame("Button", "$parent"..cfg.name.."SettingsButton", holder)
+	if params.dropdown then
+		local settings = _G.CreateFrame("Button", "$parentSettingsButton", object)
 		settings:SetSize(22, 22)
 		settings:SetPoint("LEFT", name, "RIGHT", 0, 0)
 		settings:SetScript("OnEnter", SettingsButton_OnEnter)
 		settings:SetScript("OnLeave", SettingsButton_OnLeave)
 		settings:SetScript("OnClick", SettingsButton_OnClick)
-		settings.DropDown = cfg.dropdown
+		settings.DropDown = params.dropdown
 
-		local icon = settings:CreateTexture(nil, "ARTWORK")
-		icon:SetTexture("Interface\\WorldMap\\GEAR_64GREY")
-		icon:SetAlpha(0.5)
-		icon:SetPoint("TOPLEFT", 1, -1)
-		icon:SetPoint("BOTTOMRIGHT", -1, 1)
-		settings.Icon = icon
+		texture = settings:CreateTexture(nil, "ARTWORK")
+		texture:SetTexture("Interface\\WorldMap\\GEAR_64GREY")
+		texture:SetAlpha(0.5)
+		texture:SetPoint("TOPLEFT", 1, -1)
+		texture:SetPoint("BOTTOMRIGHT", -1, 1)
+		settings.Icon = texture
 	end
 
-	local enabledCB = CreateConfigCheckButton(parent, cfg.name.."Toggle", nil, cfg.enable_tooltip)
-	enabledCB:SetPoint("TOPLEFT", holder, "TOPLEFT", 320, -4)
-	enabledCB:HookScript("OnClick", CheckButton_OnClickHook)
-	enabledCB.watchedValue = cfg.enabled
+	local toastToggle = CreateConfigCheckButton(panel, {
+		parent = object,
+		name = "$parentToggle",
+		tooltip_text = params.toast_tooltip,
+		get = params.toast_get,
+		set = params.toast_set,
+	})
+	toastToggle:SetPoint("TOPLEFT", object, "TOPLEFT", 320, -4)
 
-	RegisterControlForRefresh(parent, enabledCB)
+	local dndToggle = CreateConfigCheckButton(panel, {
+		parent = object,
+		name = "$parentDNDToggle",
+		tooltip_text = L["DND_TOOLTIP"],
+		get = params.dnd_get,
+		set = params.dnd_set,
+	})
+	dndToggle:SetPoint("LEFT", toastToggle, "RIGHT", 96, 0)
 
-	local dndCB = CreateConfigCheckButton(parent, cfg.name.."DNDToggle", nil, L["DND_TOOLTIP"])
-	dndCB:SetPoint("LEFT", enabledCB, "RIGHT", 96, 0)
-	dndCB.watchedValue = cfg.dnd
-
-	RegisterControlForRefresh(parent, dndCB)
-
-	if cfg.testFunc then
-		local testB = CreateConfigButton(parent, cfg.name.."TestButton", L["TEST"], cfg.testFunc)
-		testB:SetPoint("TOPRIGHT", holder, "TOPRIGHT", -6, -5)
+	if params.test_func then
+		local testButton = CreateConfigButton(panel, {
+			parent = object,
+			name = "$parentTestButton",
+			text = L["TEST"],
+			func = params.test_func
+		})
+		testButton:SetPoint("TOPRIGHT", object, "TOPRIGHT", -6, -5)
 	end
 
-	return holder
-end
-
-------
-
-local function GrowthDirectionDropDownMenu_OnClick(self)
-	self.owner:SetValue(self.value)
-end
-
-local function GrowthDirectionDropDownMenu_Initialize(self)
-	local info = _G.UIDropDownMenu_CreateInfo()
-
-	info.text = L["GROWTH_DIR_UP"]
-	info.func = GrowthDirectionDropDownMenu_OnClick
-	info.value = "UP"
-	info.owner = self
-	info.checked = nil
-	_G.UIDropDownMenu_AddButton(info)
-
-	info.text = L["GROWTH_DIR_DOWN"]
-	info.func = GrowthDirectionDropDownMenu_OnClick
-	info.value = "DOWN"
-	info.owner = self
-	info.checked = nil
-	_G.UIDropDownMenu_AddButton(info)
-
-	info.text = L["GROWTH_DIR_LEFT"]
-	info.func = GrowthDirectionDropDownMenu_OnClick
-	info.value = "LEFT"
-	info.owner = self
-	info.checked = nil
-	_G.UIDropDownMenu_AddButton(info)
-
-	info.text = L["GROWTH_DIR_RIGHT"]
-	info.func = GrowthDirectionDropDownMenu_OnClick
-	info.value = "RIGHT"
-	info.owner = self
-	info.checked = nil
-	_G.UIDropDownMenu_AddButton(info)
-end
-
-------
-
-local function DelaySlider_OnValueChanged(self, value, userInput)
-	if userInput then
-		value = tonumber(string.format("%.1f", value))
-
-		if value ~= GetConfigValue(self.watchedValue) then
-			self:SetValue(value)
-
-			UpdateFadeOutDelay(value)
-		end
-	end
-end
-
-------
-
-local function ScaleSlider_OnValueChanged(self, value, userInput)
-	if userInput then
-		value = tonumber(string.format("%.1f", value))
-
-		if value ~= GetConfigValue(self.watchedValue) then
-			self:SetValue(value)
-
-			UpdateScale(value)
-		end
-	end
-end
-
-------
-
-local function SaveDefaultTemplate()
-	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
-		table.wipe(_G.LS_TOASTS_CFG_GLOBAL["Default"])
-	else
-		_G.LS_TOASTS_CFG_GLOBAL["Default"] = {}
-	end
-
-	CopyTable(CFG, _G.LS_TOASTS_CFG_GLOBAL["Default"])
-end
-
-local function WipeDefaultTemplate()
-	table.wipe(_G.LS_TOASTS_CFG_GLOBAL)
+	return object
 end
 
 ------
@@ -3054,7 +3060,7 @@ local function DropDown_Close()
 end
 
 local function LootDropDown_SetLootThreshold(_, quality)
-	CFG.loot_common_quality_threshold = quality
+	CFG.type.loot_common.threshold = quality
 end
 
 local function LootDropDown_Initialize()
@@ -3066,9 +3072,9 @@ local function LootDropDown_Initialize()
 	_G.UIDropDownMenu_AddButton(info)
 	table.wipe(info)
 
-	for i = 1, 7 do
+	for i = 1, 4 do
 		info.text = _G.ITEM_QUALITY_COLORS[i].hex.._G["ITEM_QUALITY"..i.."_DESC"].."|r"
-		info.checked = i == CFG.loot_common_quality_threshold
+		info.checked = i == CFG.type.loot_common.threshold
 		info.arg1 = i
 		info.func = LootDropDown_SetLootThreshold
 		_G.UIDropDownMenu_AddButton(info)
@@ -3083,17 +3089,90 @@ end
 
 ------
 
+local function SetProfile(name)
+	if not _G.LS_TOASTS_CFG_GLOBAL[name] or name == _G.LS_TOASTS_CFG.profile then
+		return
+	end
+
+	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
+
+	_G.LS_TOASTS_CFG.profile = name
+
+	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile]), CFG)
+
+	RefreshAllOptions()
+end
+
+local function ResetProfile(name)
+	if not _G.LS_TOASTS_CFG_GLOBAL[name] then return end
+
+	_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(DEFAULTS)
+
+	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[name]), CFG)
+
+	RefreshAllOptions()
+end
+
+local function CreateProfile(name, base)
+	if _G.LS_TOASTS_CFG_GLOBAL[name] then return end
+
+	-- Save currently active profile
+	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
+
+	-- Create new profile
+	_G.LS_TOASTS_CFG.profile = name
+
+	if base and _G.LS_TOASTS_CFG_GLOBAL[base] then
+		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(_G.LS_TOASTS_CFG_GLOBAL[base])
+	else
+		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(DEFAULTS)
+	end
+
+	-- Activate new profile
+	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[name]), CFG)
+
+	-- Refresh config panels
+	RefreshAllOptions()
+end
+
+local function DeleteProfile(name)
+	_G.LS_TOASTS_CFG_GLOBAL[name] = nil
+
+	_G.LS_TOASTS_CFG.profile = "Default"
+
+	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL.Default), CFG)
+
+	RefreshAllOptions()
+end
+
+local function ProfileDropDownButton_OnClick(self)
+	self.owner:SetValue(self.value)
+end
+
+------
+
 local function CreateConfigPanel()
 	-- General Panel
 	local panel = _G.CreateFrame("Frame", "LSToastsConfigPanel", _G.InterfaceOptionsFramePanelContainer)
 	panel.name = "|cff1a9fc0ls:|r Toasts"
 	panel:Hide()
+	table.insert(panels, panel)
 
 	local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 	title:SetPoint("TOPLEFT", 16, -16)
 	title:SetJustifyH("LEFT")
 	title:SetJustifyV("TOP")
 	title:SetText(L["SETTINGS_GENERAL_LABEL"])
+
+	local profileTag = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	profileTag:SetPoint("LEFT", title, "RIGHT", 2, 0)
+	profileTag:SetJustifyH("LEFT")
+	profileTag:SetJustifyV("TOP")
+	profileTag.RefreshValue = function(self)
+		self:SetFormattedText("[|cffffffff%s|r]", _G.LS_TOASTS_CFG.profile)
+	end
+
+	RegisterControlForRefresh(panel, profileTag)
 
 	local subtext = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	subtext:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
@@ -3105,58 +3184,395 @@ local function CreateConfigPanel()
 	subtext:SetMaxLines(4)
 	subtext:SetText(L["SETTINGS_GENERAL_DESC"])
 
-	local acnhorButton = CreateConfigButton(panel, "AnchorToggle", L["ANCHOR_FRAME"], AnchorFrame_Toggle)
+	local acnhorButton = CreateConfigButton(panel, {
+		name = "$parentAnchorToggle",
+		text = L["ANCHOR_FRAME"],
+		func = AnchorFrame_Toggle
+	})
 	acnhorButton:SetPoint("TOPLEFT", subtext, "BOTTOMLEFT", 0, -8)
 
-	local soundToggle = CreateConfigCheckButton(panel, "SFXToggle", L["ENABLE_SOUND"])
+	local soundToggle = CreateConfigCheckButton(panel, {
+		name = "$parentSFXToggle",
+		text = L["ENABLE_SOUND"],
+		get = function() return CFG.sfx_enabled end,
+		set = function(_, value)
+			CFG.sfx_enabled = value
+		end,
+	})
 	soundToggle:SetPoint("LEFT", acnhorButton, "RIGHT", 32, 0)
-	soundToggle.watchedValue = "sfx_enabled"
 
-	local divider = CreateConfigDivider(panel, L["APPEARANCE_TITLE"])
+	local divider = CreateConfigDivider(panel, {
+		text = L["APPEARANCE_TITLE"]
+	})
 	divider:SetPoint("TOP", soundToggle, "BOTTOM", 0, -10)
 
-	local numSlider = CreateConfigSlider(panel, "NumSlider", L["TOAST_NUM"], 1, 1, 20)
+	local numSlider = CreateConfigSlider(panel, {
+		name = "$parentNumSlider",
+		text = L["TOAST_NUM"],
+		min = 1,
+		max = 20,
+		step = 1,
+		get = function() return CFG.max_active_toasts end,
+		set = function(_, value)
+			CFG.max_active_toasts = value
+		end,
+	})
 	numSlider:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 16, -24)
-	numSlider.watchedValue = "max_active_toasts"
 
-	local delaySlider = CreateConfigSlider(panel, "FadeOutSlider", L["FADE_OUT_DELAY"], 0.4, 0.8, 6.0)
+	local delaySlider = CreateConfigSlider(panel, {
+		name = "$parentFadeOutSlider",
+		text = L["FADE_OUT_DELAY"],
+		min = 0.8,
+		max = 6,
+		step = 0.4,
+		get = function() return CFG.fadeout_delay end,
+		set = function(_, value)
+			CFG.fadeout_delay = value
+
+			UpdateFadeOutDelay(value)
+		end,
+	})
 	delaySlider:SetPoint("LEFT", numSlider, "RIGHT", 69, 0)
-	delaySlider:SetScript("OnValueChanged", DelaySlider_OnValueChanged)
-	delaySlider.watchedValue = "fadeout_delay"
 
-	local scaleSlider = CreateConfigSlider(panel, "ScaleSlider", L["SCALE"], 0.1, 0.8, 2)
+	local scaleSlider = CreateConfigSlider(panel, {
+		name = "$parentScaleSlider",
+		text = L["SCALE"],
+		min = 0.8,
+		max = 2,
+		step = 0.1,
+		get = function() return CFG.scale end,
+		set = function(_, value)
+			CFG.scale = value
+
+			UpdateScale(value)
+		end,
+	})
 	scaleSlider:SetPoint("LEFT", delaySlider, "RIGHT", 69, 0)
-	scaleSlider:SetScript("OnValueChanged", ScaleSlider_OnValueChanged)
-	scaleSlider.watchedValue = "scale"
 
-	local growthDropdown = CreateConfigDropDown(panel, "DirectionDropDown", L["GROWTH_DIR"], GrowthDirectionDropDownMenu_Initialize)
+	local growthDropdown = CreateConfigDropDownMenu(panel, {
+		name = "$parentDirectionDropDown",
+		text = L["GROWTH_DIR"],
+		init = function(self)
+			local info = _G.UIDropDownMenu_CreateInfo()
+
+			info.text = L["GROWTH_DIR_UP"]
+			info.func = function(button) self:SetValue(button.value) end
+			info.value = "UP"
+			info.owner = self
+			info.checked = nil
+			_G.UIDropDownMenu_AddButton(info)
+
+			info.text = L["GROWTH_DIR_DOWN"]
+			info.value = "DOWN"
+			info.checked = nil
+			_G.UIDropDownMenu_AddButton(info)
+
+			info.text = L["GROWTH_DIR_LEFT"]
+			info.value = "LEFT"
+			info.checked = nil
+			_G.UIDropDownMenu_AddButton(info)
+
+			info.text = L["GROWTH_DIR_RIGHT"]
+			info.value = "RIGHT"
+			info.checked = nil
+			_G.UIDropDownMenu_AddButton(info)
+		end,
+		get = function() return CFG.growth_direction end,
+		set = function(self, value)
+			_G.UIDropDownMenu_SetSelectedValue(self, value)
+
+			CFG.growth_direction = value
+		end
+	})
 	growthDropdown:SetPoint("TOPLEFT", numSlider, "BOTTOMLEFT", -13, -32)
-	growthDropdown.watchedValue = "growth_direction"
 
-	local colorToggle = CreateConfigCheckButton(panel, "NameColorToggle", L["COLOURS"], L["COLOURS_TOOLTIP"])
+	local colorToggle = CreateConfigCheckButton(panel, {
+		name = "$parentNameColorToggle",
+		text = L["COLOURS"],
+		tooltip_text = L["COLOURS_TOOLTIP"],
+		get = function() return CFG.colored_names_enabled end,
+		set = function(_, value)
+			CFG.colored_names_enabled = value
+		end,
+	})
 	colorToggle:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", -3, -32)
-	colorToggle.watchedValue = "colored_names_enabled"
 
-	divider = CreateConfigDivider(panel, L["PROFILE_TITLE"])
+	divider = CreateConfigDivider(panel, {
+		text = L["PROFILE_TITLE"]
+	})
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
 
-	subtext = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-	subtext:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 6, -8)
-	subtext:SetPoint("RIGHT", -16, 0)
-	subtext:SetHeight(44)
-	subtext:SetJustifyH("LEFT")
-	subtext:SetJustifyV("TOP")
-	subtext:SetNonSpaceWrap(true)
-	subtext:SetMaxLines(4)
-	subtext:SetText(L["PROFILE_DESC"] )
+	local createProfileDialog = _G.CreateFrame("Frame", "$parentNewProfileDialog", panel, "CompactUnitFrameProfileDialogWithCoverTemplate")
+	createProfileDialog:SetSize(384, 160)
+	createProfileDialog:Hide()
+	createProfileDialog:SetScript("OnShow", function(self)
+		self.OkayButton:Disable()
+	end)
+	createProfileDialog:SetScript("OnHide", function(self)
+		self.EditBox:SetText("")
 
-	local saveDefaults = CreateConfigButton(panel, "SaveDefaultsButton", L["PROFILE_SAVE"], SaveDefaultTemplate)
-	saveDefaults:SetPoint("TOPLEFT", subtext, "BOTTOMLEFT", 0, -8)
+		self:Hide()
+	end)
 
-	local wipeDefaults = CreateConfigButton(panel, "WipeDefaultsButton", L["PROFILE_WIPE"], WipeDefaultTemplate)
-	wipeDefaults:SetPoint("LEFT", saveDefaults, "RIGHT", 4, 0)
+	local header = createProfileDialog:CreateFontString(nil, "ARTWORK", "GameFontNormalMed2")
+	header:SetHeight(18)
+	header:SetPoint("TOP", 0, -14)
+	header:SetPoint("LEFT", 14, 0)
+	header:SetPoint("RIGHT", -14, 0)
+	header:SetJustifyH("CENTER")
+	header:SetJustifyV("MIDDLE")
+	header:SetText("Create New Profile")
+	createProfileDialog.Header = header
 
-	panel.refresh = OptionsPanelRefresh
+	local editbox = _G.CreateFrame("EditBox", nil, createProfileDialog, "InputBoxTemplate")
+	editbox:SetSize(256, 32)
+	editbox:SetPoint("TOP", header, "BOTTOM", 0, -2)
+	editbox:SetAutoFocus(false)
+	editbox:SetMaxLetters(31)
+	editbox:SetScript("OnTextChanged", function(self, isUserInput)
+		if isUserInput then
+			local name = self:GetText()
+			name = string.trim(name)
+			name = string.gsub(name, "[,\\%^%$%(%)%%%.%[%]%*%+%?]", "")
+
+			if name == "" or _G.LS_TOASTS_CFG_GLOBAL[name] then
+				createProfileDialog.OkayButton:Disable()
+			else
+				createProfileDialog.OkayButton:Enable()
+			end
+		end
+	end)
+	editbox:SetScript("OnEnterPressed", function()
+		createProfileDialog.OkayButton:Click()
+	end)
+	createProfileDialog.EditBox = editbox
+
+	header = createProfileDialog:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	header:SetHeight(16)
+	header:SetPoint("TOP", editbox, "BOTTOM", 0, -2)
+	header:SetPoint("LEFT", 14, 0)
+	header:SetPoint("RIGHT", -14, 0)
+	header:SetJustifyH("CENTER")
+	header:SetJustifyV("MIDDLE")
+	header:SetText("Copy from:")
+	createProfileDialog.Header = header
+
+	local profileSelector = CreateConfigDropDownMenu(panel, {
+		parent = createProfileDialog,
+		name = "$parentSelectorDropDown",
+		init = function(self)
+			local info = _G.UIDropDownMenu_CreateInfo()
+
+			for k in pairs(_G.LS_TOASTS_CFG_GLOBAL) do
+				info.text = k
+				info.func = ProfileDropDownButton_OnClick
+				info.value = k
+				info.owner = self
+				info.checked = nil
+				_G.UIDropDownMenu_AddButton(info)
+			end
+
+			_G.UIDropDownMenu_SetSelectedValue(self, "Default")
+		end,
+		get = function(self)
+			return _G.UIDropDownMenu_GetSelectedValue(self)
+		end,
+		set = function(self, value)
+			_G.UIDropDownMenu_SetSelectedValue(self, value)
+		end
+	})
+	profileSelector:SetPoint("TOP", header, "BOTTOM", 0, -2)
+	createProfileDialog.DropDown = profileSelector
+
+	local okayButton = CreateConfigButton(panel, {
+		parent = createProfileDialog,
+		text = _G.OKAY,
+		func = function()
+			local name = editbox:GetText()
+			name = string.trim(name)
+			name = string.gsub(name, "[,\\%^%$%(%)%%%.%[%]%*%+%?]", "")
+
+			if name ~= "" and not _G.LS_TOASTS_CFG_GLOBAL[name] then
+				editbox:SetText("")
+				editbox:ClearFocus()
+
+				CreateProfile(name, profileSelector:GetValue())
+
+				createProfileDialog:Hide()
+			end
+		end,
+	})
+	okayButton:SetWidth(116)
+	okayButton:SetPoint("BOTTOMRIGHT", createProfileDialog, "BOTTOM", -6, 14)
+	createProfileDialog.OkayButton = okayButton
+
+	local cancelButton = CreateConfigButton(panel, {
+		parent = createProfileDialog,
+		text = _G.CANCEL,
+		func = function()
+			editbox:SetText("")
+			editbox:ClearFocus()
+
+			createProfileDialog:Hide()
+		end
+	})
+	cancelButton:SetWidth(116)
+	cancelButton:SetPoint("BOTTOMLEFT", createProfileDialog, "BOTTOM", 6, 14)
+	createProfileDialog.CancelButton = cancelButton
+
+	-- Delete Profile Dialog
+	local deleteProfileDialog = _G.CreateFrame("Frame", "$parentDeleteProfileDialog", panel, "CompactUnitFrameProfileDialogWithCoverTemplate")
+	deleteProfileDialog:SetSize(384, 96)
+	deleteProfileDialog:Hide()
+	deleteProfileDialog:SetScript("OnShow", function(self)
+		self.Header:SetFormattedText("Are you sure you want to delete |cffffffff%s|r profile?", self.profile)
+	end)
+	deleteProfileDialog:SetScript("OnHide", function(self)
+		self:Hide()
+	end)
+
+	header = deleteProfileDialog:CreateFontString(nil, "ARTWORK", "GameFontNormalMed2")
+	header:SetHeight(36)
+	header:SetPoint("TOP", 0, -14)
+	header:SetPoint("LEFT", 14, 0)
+	header:SetPoint("RIGHT", -14, 0)
+	header:SetJustifyH("CENTER")
+	header:SetJustifyV("MIDDLE")
+	deleteProfileDialog.Header = header
+
+	okayButton = CreateConfigButton(panel, {
+		parent = deleteProfileDialog,
+		text = _G.OKAY,
+		func = function()
+			DeleteProfile(deleteProfileDialog.profile)
+
+			deleteProfileDialog:Hide()
+		end,
+	})
+	okayButton:SetWidth(116)
+	okayButton:SetPoint("BOTTOMRIGHT", deleteProfileDialog, "BOTTOM", -6, 14)
+	deleteProfileDialog.OkayButton = okayButton
+
+	cancelButton = CreateConfigButton(panel, {
+		parent = deleteProfileDialog,
+		text = _G.CANCEL,
+		func = function()
+			deleteProfileDialog:Hide()
+		end
+	})
+	cancelButton:SetWidth(116)
+	cancelButton:SetPoint("BOTTOMLEFT", deleteProfileDialog, "BOTTOM", 6, 14)
+	deleteProfileDialog.CancelButton = cancelButton
+
+	-- Reset Profile Dialog
+	local resetProfileDialog = _G.CreateFrame("Frame", "$parentResetProfileDialog", panel, "CompactUnitFrameProfileDialogWithCoverTemplate")
+	resetProfileDialog:SetSize(384, 96)
+	resetProfileDialog:Hide()
+	resetProfileDialog:SetScript("OnShow", function(self)
+		self.Header:SetFormattedText("Are you sure you want to reset |cffffffff%s|r profile?", self.profile)
+	end)
+	resetProfileDialog:SetScript("OnHide", function(self)
+		self:Hide()
+	end)
+
+	header = resetProfileDialog:CreateFontString(nil, "ARTWORK", "GameFontNormalMed2")
+	header:SetHeight(36)
+	header:SetPoint("TOP", 0, -14)
+	header:SetPoint("LEFT", 14, 0)
+	header:SetPoint("RIGHT", -14, 0)
+	header:SetJustifyH("CENTER")
+	header:SetJustifyV("MIDDLE")
+	resetProfileDialog.Header = header
+
+	okayButton = CreateConfigButton(panel, {
+		parent = resetProfileDialog,
+		text = _G.OKAY,
+		func = function()
+			ResetProfile(resetProfileDialog.profile)
+
+			resetProfileDialog:Hide()
+		end,
+	})
+	okayButton:SetWidth(116)
+	okayButton:SetPoint("BOTTOMRIGHT", resetProfileDialog, "BOTTOM", -6, 14)
+	resetProfileDialog.OkayButton = okayButton
+
+	cancelButton = CreateConfigButton(panel, {
+		parent = resetProfileDialog,
+		text = _G.CANCEL,
+		func = function()
+			resetProfileDialog:Hide()
+		end
+	})
+	cancelButton:SetWidth(116)
+	cancelButton:SetPoint("BOTTOMLEFT", resetProfileDialog, "BOTTOM", 6, 14)
+	resetProfileDialog.CancelButton = cancelButton
+
+	local profileDropdown = CreateConfigDropDownMenu(panel, {
+		name = "$parentProfileDropDown",
+		text = "Profile",
+		init = function(self)
+			local info = _G.UIDropDownMenu_CreateInfo()
+
+			for k in pairs(_G.LS_TOASTS_CFG_GLOBAL) do
+				info.text = k
+				info.func = ProfileDropDownButton_OnClick
+				info.value = k
+				info.owner = self
+				info.checked = nil
+				_G.UIDropDownMenu_AddButton(info)
+			end
+
+			info.text = "New Profile"
+			info.func = function()
+				createProfileDialog:Show()
+			end
+			info.value = nil
+			info.checked = nil
+			info.owner = self
+			info.notCheckable = true
+			_G.UIDropDownMenu_AddButton(info)
+		end,
+		get = function() return _G.LS_TOASTS_CFG.profile end,
+		set = function(self, value)
+			_G.UIDropDownMenu_SetSelectedValue(self, value)
+
+			SetProfile(value)
+		end
+	})
+	profileDropdown:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 3, -24)
+
+	local deleteProfileButton = CreateConfigButton(panel, {
+		text = _G.DELETE,
+		func = function()
+			local name = profileDropdown:GetValue()
+
+			if name and name ~= "Default" then
+				_G.CloseDropDownMenus()
+
+				deleteProfileDialog.profile = name
+				deleteProfileDialog:Show()
+			end
+		end
+	})
+	deleteProfileButton:SetPoint("TOPRIGHT", profileDropdown, "BOTTOMRIGHT", -16, 2)
+
+	local resetProfileButton = CreateConfigButton(panel, {
+		text = _G.RESET,
+		func = function()
+			local name = profileDropdown:GetValue()
+
+			if name then
+				_G.CloseDropDownMenus()
+
+				resetProfileDialog.profile = name
+				resetProfileDialog:Show()
+			end
+		end
+	})
+	resetProfileButton:SetPoint("RIGHT", deleteProfileButton, "LEFT", -4, 0)
+
+	panel.refresh = RefreshOptions
 
 	_G.InterfaceOptions_AddCategory(panel, true)
 
@@ -3165,12 +3581,23 @@ local function CreateConfigPanel()
 	panel.name = L["SETTINGS_TYPE_LABEL"]
 	panel.parent = "|cff1a9fc0ls:|r Toasts"
 	panel:Hide()
+	table.insert(panels, panel)
 
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 	title:SetPoint("TOPLEFT", 16, -16)
 	title:SetJustifyH("LEFT")
 	title:SetJustifyV("TOP")
 	title:SetText(L["SETTINGS_TYPE_LABEL"])
+
+	profileTag = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	profileTag:SetPoint("LEFT", title, "RIGHT", 2, 0)
+	profileTag:SetJustifyH("LEFT")
+	profileTag:SetJustifyV("TOP")
+	profileTag.RefreshValue = function(self)
+		self:SetFormattedText("[|cffffffff%s|r]", _G.LS_TOASTS_CFG.profile)
+	end
+
+	RegisterControlForRefresh(panel, profileTag)
 
 	subtext = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
 	subtext:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8)
@@ -3189,43 +3616,184 @@ local function CreateConfigPanel()
 	_G.UIDropDownMenu_Initialize(lootDropDown, LootDropDown_Initialize)
 
 	local layout = {
-		[1] = {name = L["TYPE_ACHIEVEMENT"], enabled = "achievement_enabled", dnd = "dnd.achievement", testFunc = SpawnTestAchievementToast},
-		[2] = {name = L["TYPE_ARCHAEOLOGY"], enabled = "archaeology_enabled", dnd = "dnd.archaeology", testFunc = SpawnTestArchaeologyToast},
-		[3] = {name = L["TYPE_GARRISON"], enabled = "garrison_6_0_enabled", dnd = "dnd.garrison_6_0", testFunc = SpawnTestGarrisonToast},
-		[4] = {name = L["TYPE_CLASS_HALL"], enabled = "garrison_7_0_enabled", dnd = "dnd.garrison_7_0", testFunc = SpawnTestClassHallToast},
-		[5] = {name = L["TYPE_DUNGEON"], enabled = "instance_enabled", dnd = "dnd.instance"},
-		[6] = {name = L["TYPE_LOOT_SPECIAL"], enabled = "loot_special_enabled", enable_tooltip = L["TYPE_LOOT_SPECIAL_TOOLTIP"], dnd = "dnd.loot_special", testFunc = SpawnTestLootToast},
-		[7] = {name = L["TYPE_LOOT_COMMON"], enabled = "loot_common_enabled", enable_tooltip = L["TYPE_LOOT_COMMON_TOOLTIP"], dnd = "dnd.loot_common", dropdown = lootDropDown},
-		[8] = {name = L["TYPE_LOOT_CURRENCY"], enabled = "loot_currency_enabled", dnd = "dnd.loot_currency", testFunc = SpawnTestCurrencyToast},
-		[9] = {name = L["TYPE_RECIPE"], enabled = "recipe_enabled", dnd = "dnd.recipe", testFunc = SpawnTestRecipeToast},
-		[10] = {name = L["TYPE_WORLD QUEST"], enabled = "world_enabled", dnd = "dnd.world", testFunc = SpawnTestWorldEventToast},
-		[11] = {name = L["TYPE_TRANSMOG"], enabled = "transmog_enabled", dnd = "dnd.transmog", testFunc = SpawnTestTransmogToast},
+		[1] = {
+			name = "$parentAchievement",
+			text = L["TYPE_ACHIEVEMENT"],
+			toast_get = function() return CFG.type.achievement.enabled end,
+			toast_set = function(_, value)
+				CFG.type.achievement.enabled = value
+
+				ToggleToasts("achievement", value)
+			end,
+			dnd_get = function() return CFG.type.achievement.dnd end,
+			dnd_set = function(_, value) CFG.type.achievement.dnd = value end,
+			test_func = SpawnTestAchievementToast,
+		},
+		[2] = {
+			name = "$parentArchaeology",
+			text = L["TYPE_ARCHAEOLOGY"],
+			toast_get = function() return CFG.type.archaeology.enabled end,
+			toast_set = function(_, value)
+				CFG.type.archaeology.enabled = value
+
+				ToggleToasts("archaeology", value)
+			end,
+			dnd_get = function() return CFG.type.archaeology.dnd end,
+			dnd_set = function(_, value) CFG.type.archaeology.dnd = value end,
+			test_func = SpawnTestArchaeologyToast,
+		},
+		[3] = {
+			name = "$parentGarrison",
+			text = L["TYPE_GARRISON"],
+			toast_get = function() return CFG.type.garrison_6_0.enabled end,
+			toast_set = function(_, value)
+				CFG.type.garrison_6_0.enabled = value
+
+				ToggleToasts("garrison_6_0", value)
+			end,
+			dnd_get = function() return CFG.type.garrison_6_0.dnd end,
+			dnd_set = function(_, value) CFG.type.garrison_6_0.dnd = value end,
+			test_func = SpawnTestGarrisonToast,
+		},
+		[4] = {
+			name = "$parentClassHall",
+			text = L["TYPE_CLASS_HALL"],
+			toast_get = function() return CFG.type.garrison_7_0.enabled end,
+			toast_set = function(_, value)
+				CFG.type.garrison_7_0.enabled = value
+
+				ToggleToasts("garrison_7_0", value)
+			end,
+			dnd_get = function() return CFG.type.garrison_7_0.dnd end,
+			dnd_set = function(_, value) CFG.type.garrison_7_0.dnd = value end,
+			test_func = SpawnTestClassHallToast,
+		},
+		[5] = {
+			name = "$parentDungeon",
+			text = L["TYPE_DUNGEON"],
+			toast_get = function() return CFG.type.instance.enabled end,
+			toast_set = function(_, value)
+				CFG.type.instance.enabled = value
+
+				ToggleToasts("instance", value)
+			end,
+			dnd_get = function() return CFG.type.instance.dnd end,
+			dnd_set = function(_, value) CFG.type.instance.dnd = value end,
+		},
+		[6] = {
+			name = "$parentLootSpecial",
+			text = L["TYPE_LOOT_SPECIAL"],
+			toast_tooltip = L["TYPE_LOOT_SPECIAL_TOOLTIP"],
+			toast_get = function() return CFG.type.loot_special.enabled end,
+			toast_set = function(_, value)
+				CFG.type.loot_special.enabled = value
+
+				ToggleToasts("loot_special", value)
+			end,
+			dnd_get = function() return CFG.type.loot_special.dnd end,
+			dnd_set = function(_, value) CFG.type.loot_special.dnd = value end,
+			test_func = SpawnTestLootToast,
+		},
+		[7] = {
+			name = "$parentLootCommon",
+			text = L["TYPE_LOOT_COMMON"],
+			toast_tooltip = L["TYPE_LOOT_COMMON_TOOLTIP"],
+			toast_get = function() return CFG.type.loot_common.enabled end,
+			toast_set = function(_, value)
+				CFG.type.loot_common.enabled = value
+
+				ToggleToasts("loot_common", value)
+			end,
+			dnd_get = function() return CFG.type.loot_common.dnd end,
+			dnd_set = function(_, value) CFG.type.loot_common.dnd = value end,
+			dropdown = lootDropDown,
+		},
+		[8] = {
+			name = "$parentLootCurrency",
+			text = L["TYPE_LOOT_CURRENCY"],
+			toast_get = function() return CFG.type.loot_currency.enabled end,
+			toast_set = function(_, value)
+				CFG.type.loot_currency.enabled = value
+
+				ToggleToasts("loot_currency", value)
+			end,
+			dnd_get = function() return CFG.type.loot_currency.dnd end,
+			dnd_set = function(_, value) CFG.type.loot_currency.dnd = value end,
+			test_func = SpawnTestCurrencyToast,
+		},
+		[9] = {
+			name = "$parentRecipe",
+			text = L["TYPE_RECIPE"],
+			toast_get = function() return CFG.type.recipe.enabled end,
+			toast_set = function(_, value)
+				CFG.type.recipe.enabled = value
+
+				ToggleToasts("recipe", value)
+			end,
+			dnd_get = function() return CFG.type.recipe.dnd end,
+			dnd_set = function(_, value) CFG.type.recipe.dnd = value end,
+			test_func = SpawnTestRecipeToast,
+		},
+		[10] = {
+			name = "$parentWorldQuest",
+			text = L["TYPE_WORLD_QUEST"],
+			toast_get = function() return CFG.type.world.enabled end,
+			toast_set = function(_, value)
+				CFG.type.world.enabled = value
+
+				ToggleToasts("world", value)
+			end,
+			dnd_get = function() return CFG.type.world.dnd end,
+			dnd_set = function(_, value) CFG.type.world.dnd = value end,
+			test_func = SpawnTestWorldEventToast,
+		},
+		[11] = {
+			name = "$parentTransmog",
+			text = L["TYPE_TRANSMOG"],
+			toast_get = function() return CFG.type.transmog.enabled end,
+			toast_set = function(_, value)
+				CFG.type.transmog.enabled = value
+
+				ToggleToasts("transmog", value)
+			end,
+			dnd_get = function() return CFG.type.transmog.dnd end,
+			dnd_set = function(_, value) CFG.type.transmog.dnd = value end,
+			test_func = SpawnTestTransmogToast,
+		},
 	}
 
-	local anchor = CreateToastConfigLine(panel, layout[1], subtext)
-	anchor:SetPoint("TOP", subtext, "BOTTOM", 0, -18)
+	local lines = {}
+
+	for i = 1, #layout do
+		lines[i] = CreateToastConfigLine(panel, layout[i])
+	end
+
+	for i = 1, #lines do
+		if i == 1 then
+			lines[i]:SetPoint("TOP", subtext, "BOTTOM", 0, -18)
+		else
+			lines[i]:SetPoint("TOP", lines[i - 1], "BOTTOM", 0, -2)
+
+		end
+	end
 
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 6, 4)
+	title:SetPoint("BOTTOMLEFT", lines[1], "TOPLEFT", 6, 4)
 	title:SetText(L["TYPE"])
 
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetWidth(64)
 	title:SetJustifyH("CENTER")
-	title:SetPoint("BOTTOM", anchor, "TOPLEFT", 333, 4)
+	title:SetPoint("BOTTOM", lines[1], "TOPLEFT", 333, 4)
 	title:SetText(L["ENABLE"])
 
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetWidth(64)
 	title:SetJustifyH("CENTER")
-	title:SetPoint("BOTTOM", anchor, "TOPLEFT", 455, 4)
+	title:SetPoint("BOTTOM", lines[1], "TOPLEFT", 455, 4)
 	title:SetText(L["DND"])
 
-	for i = 2, #layout do
-		anchor = CreateToastConfigLine(panel, layout[i], anchor)
-	end
-
-	panel.refresh = OptionsPanelRefresh
+	panel.refresh = RefreshOptions
 
 	_G.InterfaceOptions_AddCategory(panel, true)
 end
@@ -3237,44 +3805,40 @@ end
 function dispatcher:ADDON_LOADED(arg)
 	if arg ~= addonName then return end
 
-	if not _G.LS_TOASTS_CFG_GLOBAL then
-		_G.LS_TOASTS_CFG_GLOBAL = {}
-	end
-
-	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
-		CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL["Default"])
-
-		CopyTable(CopyTable(_G.LS_TOASTS_CFG_GLOBAL["Default"], _G.LS_TOASTS_CFG), CFG)
+	if not _G.LS_TOASTS_CFG then
+		_G.LS_TOASTS_CFG = {
+			profile = "Default"
+		}
 	else
-		CopyTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG), CFG)
+		if not _G.LS_TOASTS_CFG.profile then
+			_G.LS_TOASTS_CFG.profile = "Default"
+		end
 	end
 
-	if CFG.dnd.loot ~= nil then
-		CFG.dnd.loot_special = CFG.dnd.loot
-		CFG.dnd.loot = nil
+	-- Create "Default" profile if it doesn't exist
+	if not _G.LS_TOASTS_CFG_GLOBAL then
+		_G.LS_TOASTS_CFG_GLOBAL = {
+			["Default"] = CopyTable(DEFAULTS)
+		}
+	else
+		if not _G.LS_TOASTS_CFG_GLOBAL.Default then
+			_G.LS_TOASTS_CFG_GLOBAL.Default = CopyTable(DEFAULTS)
+		end
 	end
 
-	if CFG.loot_enabled ~= nil then
-		CFG.loot_special_enabled = CFG.loot_enabled
-		CFG.loot_enabled = nil
+	-- Reset current profile to "Default" if it doesn't exist
+	if not _G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] then
+		_G.LS_TOASTS_CFG.profile = "Default"
 	end
 
-	if CFG.dnd.garrison ~= nil then
-		CFG.dnd.garrison_6_0 = CFG.dnd.garrison
-		CFG.dnd.garrison = nil
+	-- Reset profiles if they're REALLY old
+	for k, v in pairs(_G.LS_TOASTS_CFG_GLOBAL) do
+		if not v.version then
+			_G.LS_TOASTS_CFG_GLOBAL[k] = CopyTable(DEFAULTS)
+		end
 	end
 
-	if CFG.garrison_enabled ~= nil then
-		CFG.garrison_6_0_enabled = CFG.garrison_enabled
-		CFG.garrison_enabled = nil
-	end
-
-	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
-		_G.LS_TOASTS_CFG_GLOBAL["Default"].dnd.loot = nil
-		_G.LS_TOASTS_CFG_GLOBAL["Default"].loot_enabled = nil
-		_G.LS_TOASTS_CFG_GLOBAL["Default"].dnd.garrison = nil
-		_G.LS_TOASTS_CFG_GLOBAL["Default"].garrison_enabled = nil
-	end
+	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile]), CFG)
 
 	self:RegisterEvent("PLAYER_LOGIN")
 	self:RegisterEvent("PLAYER_LOGOUT")
@@ -3282,10 +3846,7 @@ function dispatcher:ADDON_LOADED(arg)
 end
 
 function dispatcher:PLAYER_LOGIN()
-	anchorFrame:SetMovable(true)
-	anchorFrame:ClearAllPoints() -- NOTE: just do it
-	anchorFrame:SetSize(234 * CFG.scale, 58 * CFG.scale)
-	anchorFrame:SetPoint(unpack(CFG.point))
+	anchorFrame:Refresh()
 
 	EnableAchievementToasts()
 	EnableArchaeologyToasts()
@@ -3328,10 +3889,18 @@ function dispatcher:PLAYER_LOGIN()
 end
 
 function dispatcher:PLAYER_LOGOUT()
-	if _G.LS_TOASTS_CFG_GLOBAL["Default"] then
-		_G.LS_TOASTS_CFG = DiffTable(_G.LS_TOASTS_CFG_GLOBAL["Default"], CFG)
-	else
-		_G.LS_TOASTS_CFG = DiffTable(DEFAULTS, CFG)
+	local VER = _G.GetAddOnMetadata(addonName, "Version")
+
+	-- Save active profile
+	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
+	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile].version = VER
+
+	-- Trim inactive profiles
+	for k, v in pairs(_G.LS_TOASTS_CFG_GLOBAL) do
+		if k ~= _G.LS_TOASTS_CFG.profile then
+			_G.LS_TOASTS_CFG_GLOBAL[k] = DiffTable(DEFAULTS, v)
+			_G.LS_TOASTS_CFG_GLOBAL[k].version = VER
+		end
 	end
 end
 
