@@ -1,3 +1,7 @@
+## Version 1.22
+
+- Fixed in-game config.
+
 ## Version 1.21
 
 - Reworked profile manager. Sadly, I had to reset all settings;
