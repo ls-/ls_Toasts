@@ -3959,7 +3959,10 @@ function dispatcher:PLAYER_LOGIN()
 		if msg == "" then
 			if not _G.LSToastsConfigPanel then
 				CreateConfigPanel()
-				_G.InterfaceOptionsFrame_OpenToCategory(_G.LSToastsConfigPanel)
+
+				_G.InterfaceAddOnsList_Update()
+				_G.InterfaceOptionsOptionsFrame_RefreshAddOns()
+				return _G.InterfaceOptionsFrame_OpenToCategory(_G.LSToastsConfigPanel)
 			end
 
 			if not _G.LSToastsConfigPanel:IsShown() then
