@@ -3818,7 +3818,6 @@ function dispatcher:ADDON_LOADED(arg)
 		_G.LS_TOASTS_CFG.profile = "Default"
 	end
 
-	-- Reset profiles if they're REALLY old
 	for k, v in pairs(_G.LS_TOASTS_CFG_GLOBAL) do
 		if not v.version then
 			_G.LS_TOASTS_CFG_GLOBAL[k] = CopyTable(DEFAULTS)
@@ -3878,11 +3877,9 @@ end
 function dispatcher:PLAYER_LOGOUT()
 	local VER = _G.GetAddOnMetadata(addonName, "Version")
 
-	-- Save active profile
 	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
 	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile].version = VER
 
-	-- Trim inactive profiles
 	for k, v in pairs(_G.LS_TOASTS_CFG_GLOBAL) do
 		if k ~= _G.LS_TOASTS_CFG.profile then
 			_G.LS_TOASTS_CFG_GLOBAL[k] = DiffTable(DEFAULTS, v)
