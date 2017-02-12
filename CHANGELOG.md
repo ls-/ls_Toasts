@@ -1,6 +1,6 @@
 ## Version 1.21
 
-- NEW! Reworked profile manager. Sadly, I had to reset all settings;
+- Reworked profile manager. Sadly, I had to reset all settings;
 - Added public methods to create, delete, set, and reset profiles. This feature is for addon devs. For more info, read [here](https://github.com/ls-/ls_Toasts#how-to-mod);
 - Removed config from global `ls_Toasts` table;
 - Updated German translation. Translated by Ithilrandir@Curse.
