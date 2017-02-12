@@ -175,12 +175,10 @@ function F:SkinToast() end
 -- DISPATCHER --
 ----------------
 
-local function EventHandler(self, event, ...)
-	self[event](self, ...)
-end
-
 local dispatcher = _G.CreateFrame("Frame")
-dispatcher:SetScript("OnEvent", EventHandler)
+dispatcher:SetScript("OnEvent", function(self, event, ...)
+	self[event](self, ...)
+end)
 
 ------------
 -- ANCHOR --
@@ -2633,9 +2631,7 @@ end
 local panels = {}
 
 local function RegisterControlForRefresh(parent, control)
-	if not parent or not control then
-		return
-	end
+	if not parent or not control then return end
 
 	parent.controls = parent.controls or {}
 	table.insert(parent.controls, control)
@@ -3090,9 +3086,7 @@ end
 ------
 
 local function SetProfile(name)
-	if not _G.LS_TOASTS_CFG_GLOBAL[name] or name == _G.LS_TOASTS_CFG.profile then
-		return
-	end
+	if not _G.LS_TOASTS_CFG_GLOBAL[name] or name == _G.LS_TOASTS_CFG.profile then return end
 
 	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
 
@@ -3116,10 +3110,8 @@ end
 local function CreateProfile(name, base)
 	if _G.LS_TOASTS_CFG_GLOBAL[name] then return end
 
-	-- Save currently active profile
 	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
 
-	-- Create new profile
 	_G.LS_TOASTS_CFG.profile = name
 
 	if base and _G.LS_TOASTS_CFG_GLOBAL[base] then
@@ -3128,10 +3120,8 @@ local function CreateProfile(name, base)
 		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(DEFAULTS)
 	end
 
-	-- Activate new profile
 	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[name]), CFG)
 
-	-- Refresh config panels
 	RefreshAllOptions()
 end
 
@@ -3288,8 +3278,8 @@ local function CreateConfigPanel()
 
 	local colorToggle = CreateConfigCheckButton(panel, {
 		name = "$parentNameColorToggle",
-		text = L["COLOURS"],
-		tooltip_text = L["COLOURS_TOOLTIP"],
+		text = L["COLORS"],
+		tooltip_text = L["COLORS_TOOLTIP"],
 		get = function() return CFG.colored_names_enabled end,
 		set = function(_, value)
 			CFG.colored_names_enabled = value
@@ -3298,7 +3288,7 @@ local function CreateConfigPanel()
 	colorToggle:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", -3, -32)
 
 	divider = CreateConfigDivider(panel, {
-		text = L["PROFILE_TITLE"]
+		text = L["PROFILES_TITLE"]
 	})
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
 
@@ -3307,10 +3297,10 @@ local function CreateConfigPanel()
 	createProfileDialog:Hide()
 	createProfileDialog:SetScript("OnShow", function(self)
 		self.OkayButton:Disable()
+		self.EditBox:SetFocus()
 	end)
 	createProfileDialog:SetScript("OnHide", function(self)
 		self.EditBox:SetText("")
-
 		self:Hide()
 	end)
 
@@ -3321,7 +3311,7 @@ local function CreateConfigPanel()
 	header:SetPoint("RIGHT", -14, 0)
 	header:SetJustifyH("CENTER")
 	header:SetJustifyV("MIDDLE")
-	header:SetText("Create New Profile")
+	header:SetText(L["PROFILE_CREATE_NEW"])
 	createProfileDialog.Header = header
 
 	local editbox = _G.CreateFrame("EditBox", nil, createProfileDialog, "InputBoxTemplate")
@@ -3354,7 +3344,7 @@ local function CreateConfigPanel()
 	header:SetPoint("RIGHT", -14, 0)
 	header:SetJustifyH("CENTER")
 	header:SetJustifyV("MIDDLE")
-	header:SetText("Copy from:")
+	header:SetText(L["PROFILE_COPY_FROM"])
 	createProfileDialog.Header = header
 
 	local profileSelector = CreateConfigDropDownMenu(panel, {
@@ -3386,7 +3376,7 @@ local function CreateConfigPanel()
 
 	local okayButton = CreateConfigButton(panel, {
 		parent = createProfileDialog,
-		text = _G.OKAY,
+		text = L["OKAY"],
 		func = function()
 			local name = editbox:GetText()
 			name = string.trim(name)
@@ -3408,7 +3398,7 @@ local function CreateConfigPanel()
 
 	local cancelButton = CreateConfigButton(panel, {
 		parent = createProfileDialog,
-		text = _G.CANCEL,
+		text = L["CANCEL"],
 		func = function()
 			editbox:SetText("")
 			editbox:ClearFocus()
@@ -3420,12 +3410,11 @@ local function CreateConfigPanel()
 	cancelButton:SetPoint("BOTTOMLEFT", createProfileDialog, "BOTTOM", 6, 14)
 	createProfileDialog.CancelButton = cancelButton
 
-	-- Delete Profile Dialog
 	local deleteProfileDialog = _G.CreateFrame("Frame", "$parentDeleteProfileDialog", panel, "CompactUnitFrameProfileDialogWithCoverTemplate")
 	deleteProfileDialog:SetSize(384, 96)
 	deleteProfileDialog:Hide()
 	deleteProfileDialog:SetScript("OnShow", function(self)
-		self.Header:SetFormattedText("Are you sure you want to delete |cffffffff%s|r profile?", self.profile)
+		self.Header:SetFormattedText(L["PROFILE_DELETE_CONFIRM"], self.profile)
 	end)
 	deleteProfileDialog:SetScript("OnHide", function(self)
 		self:Hide()
@@ -3442,7 +3431,7 @@ local function CreateConfigPanel()
 
 	okayButton = CreateConfigButton(panel, {
 		parent = deleteProfileDialog,
-		text = _G.OKAY,
+		text = L["OKAY"],
 		func = function()
 			DeleteProfile(deleteProfileDialog.profile)
 
@@ -3455,7 +3444,7 @@ local function CreateConfigPanel()
 
 	cancelButton = CreateConfigButton(panel, {
 		parent = deleteProfileDialog,
-		text = _G.CANCEL,
+		text = L["CANCEL"],
 		func = function()
 			deleteProfileDialog:Hide()
 		end
@@ -3469,7 +3458,7 @@ local function CreateConfigPanel()
 	resetProfileDialog:SetSize(384, 96)
 	resetProfileDialog:Hide()
 	resetProfileDialog:SetScript("OnShow", function(self)
-		self.Header:SetFormattedText("Are you sure you want to reset |cffffffff%s|r profile?", self.profile)
+		self.Header:SetFormattedText(L["PROFILE_RESET_CONFIRM"], self.profile)
 	end)
 	resetProfileDialog:SetScript("OnHide", function(self)
 		self:Hide()
@@ -3486,7 +3475,7 @@ local function CreateConfigPanel()
 
 	okayButton = CreateConfigButton(panel, {
 		parent = resetProfileDialog,
-		text = _G.OKAY,
+		text = L["OKAY"],
 		func = function()
 			ResetProfile(resetProfileDialog.profile)
 
@@ -3499,7 +3488,7 @@ local function CreateConfigPanel()
 
 	cancelButton = CreateConfigButton(panel, {
 		parent = resetProfileDialog,
-		text = _G.CANCEL,
+		text = L["CANCEL"],
 		func = function()
 			resetProfileDialog:Hide()
 		end
@@ -3510,7 +3499,7 @@ local function CreateConfigPanel()
 
 	local profileDropdown = CreateConfigDropDownMenu(panel, {
 		name = "$parentProfileDropDown",
-		text = "Profile",
+		text = L["PROFILE"],
 		init = function(self)
 			local info = _G.UIDropDownMenu_CreateInfo()
 
@@ -3543,7 +3532,7 @@ local function CreateConfigPanel()
 	profileDropdown:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 3, -24)
 
 	local deleteProfileButton = CreateConfigButton(panel, {
-		text = _G.DELETE,
+		text = L["DELETE"],
 		func = function()
 			local name = profileDropdown:GetValue()
 
@@ -3558,7 +3547,7 @@ local function CreateConfigPanel()
 	deleteProfileButton:SetPoint("TOPRIGHT", profileDropdown, "BOTTOMRIGHT", -16, 2)
 
 	local resetProfileButton = CreateConfigButton(panel, {
-		text = _G.RESET,
+		text = L["RESET"],
 		func = function()
 			local name = profileDropdown:GetValue()
 
@@ -3815,7 +3804,6 @@ function dispatcher:ADDON_LOADED(arg)
 		end
 	end
 
-	-- Create "Default" profile if it doesn't exist
 	if not _G.LS_TOASTS_CFG_GLOBAL then
 		_G.LS_TOASTS_CFG_GLOBAL = {
 			["Default"] = CopyTable(DEFAULTS)
@@ -3826,7 +3814,6 @@ function dispatcher:ADDON_LOADED(arg)
 		end
 	end
 
-	-- Reset current profile to "Default" if it doesn't exist
 	if not _G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] then
 		_G.LS_TOASTS_CFG.profile = "Default"
 	end
