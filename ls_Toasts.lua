@@ -3031,6 +3031,38 @@ end
 
 ------
 
+local function CreateConfigDialog(panel, params)
+	local object = _G.CreateFrame("Frame", params.name, panel)
+	object:SetPoint("CENTER")
+	object:SetFrameStrata("DIALOG")
+	object:Hide()
+	object:SetScript("OnShow", params.on_show)
+	object:SetScript("OnHide", params.on_hide)
+
+	object:SetBackdrop({
+		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		tile = true,
+		tileSize = 32,
+		edgeSize = 32,
+		insets = { left = 11, right = 12, top = 12, bottom = 11 }
+	})
+
+	local cover = _G.CreateFrame("Frame", nil, object)
+	cover:SetFrameLevel(object:GetFrameLevel())
+	cover:EnableMouse(true)
+	cover:SetAllPoints(panel)
+
+	local texture = cover:CreateTexture(nil, "BACKGROUND", nil, -7)
+	texture:SetPoint("TOPLEFT", 2, -2)
+	texture:SetPoint("BOTTOMRIGHT", -2, 2)
+	texture:SetColorTexture(0, 0, 0, 0.4)
+
+	return object
+end
+
+------
+
 local function DropDown_Close()
 	_G.CloseDropDownMenus()
 end
@@ -3302,17 +3334,18 @@ local function CreateConfigPanel()
 	})
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
 
-	local createProfileDialog = _G.CreateFrame("Frame", "$parentNewProfileDialog", panel, "CompactUnitFrameProfileDialogWithCoverTemplate")
+	local createProfileDialog = CreateConfigDialog(panel, {
+		name = "$parentNewProfileDialog",
+		on_show = function(self)
+			self.OkayButton:Disable()
+			self.EditBox:SetFocus()
+		end,
+		on_hide = function(self)
+			self.EditBox:SetText("")
+			self:Hide()
+		end,
+	})
 	createProfileDialog:SetSize(384, 160)
-	createProfileDialog:Hide()
-	createProfileDialog:SetScript("OnShow", function(self)
-		self.OkayButton:Disable()
-		self.EditBox:SetFocus()
-	end)
-	createProfileDialog:SetScript("OnHide", function(self)
-		self.EditBox:SetText("")
-		self:Hide()
-	end)
 
 	local header = createProfileDialog:CreateFontString(nil, "ARTWORK", "GameFontNormalMed2")
 	header:SetHeight(18)
@@ -3420,15 +3453,16 @@ local function CreateConfigPanel()
 	cancelButton:SetPoint("BOTTOMLEFT", createProfileDialog, "BOTTOM", 6, 14)
 	createProfileDialog.CancelButton = cancelButton
 
-	local deleteProfileDialog = _G.CreateFrame("Frame", "$parentDeleteProfileDialog", panel, "CompactUnitFrameProfileDialogWithCoverTemplate")
+	local deleteProfileDialog = CreateConfigDialog(panel, {
+		name = "$parentDeleteProfileDialog",
+		on_show = function(self)
+			self.Header:SetFormattedText(L["PROFILE_DELETE_CONFIRM"], self.profile)
+		end,
+		on_hide = function(self)
+			self:Hide()
+		end,
+	})
 	deleteProfileDialog:SetSize(384, 96)
-	deleteProfileDialog:Hide()
-	deleteProfileDialog:SetScript("OnShow", function(self)
-		self.Header:SetFormattedText(L["PROFILE_DELETE_CONFIRM"], self.profile)
-	end)
-	deleteProfileDialog:SetScript("OnHide", function(self)
-		self:Hide()
-	end)
 
 	header = deleteProfileDialog:CreateFontString(nil, "ARTWORK", "GameFontNormalMed2")
 	header:SetHeight(36)
@@ -3463,15 +3497,16 @@ local function CreateConfigPanel()
 	cancelButton:SetPoint("BOTTOMLEFT", deleteProfileDialog, "BOTTOM", 6, 14)
 	deleteProfileDialog.CancelButton = cancelButton
 
-	local resetProfileDialog = _G.CreateFrame("Frame", "$parentResetProfileDialog", panel, "CompactUnitFrameProfileDialogWithCoverTemplate")
+	local resetProfileDialog = CreateConfigDialog(panel, {
+		name = "$parentResetProfileDialog",
+		on_show = function(self)
+			self.Header:SetFormattedText(L["PROFILE_RESET_CONFIRM"], self.profile)
+		end,
+		on_hide = function(self)
+			self:Hide()
+		end,
+	})
 	resetProfileDialog:SetSize(384, 96)
-	resetProfileDialog:Hide()
-	resetProfileDialog:SetScript("OnShow", function(self)
-		self.Header:SetFormattedText(L["PROFILE_RESET_CONFIRM"], self.profile)
-	end)
-	resetProfileDialog:SetScript("OnHide", function(self)
-		self:Hide()
-	end)
 
 	header = resetProfileDialog:CreateFontString(nil, "ARTWORK", "GameFontNormalMed2")
 	header:SetHeight(36)
