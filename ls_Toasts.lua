@@ -146,6 +146,11 @@ local DEFAULTS = {
 	}
 }
 
+local F = {} -- F for Functions
+_G[addonName] = {
+	[1] = F,
+}
+
 ----------------
 -- DISPATCHER --
 ----------------
@@ -3794,11 +3799,6 @@ end
 ------------
 -- PUBLIC --
 ------------
-
-local F = {} -- F for Functions
-_G[addonName] = {
-	[1] = F,
-}
 
 -- F:SkinToast
 
