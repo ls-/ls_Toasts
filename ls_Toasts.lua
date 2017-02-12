@@ -3820,7 +3820,7 @@ function F:SkinToast() end
 -- Arguments:
 -- 	name	- "string" - new profile's name
 -- 	base	- "string" - if LS_TOASTS_CFG_GLOBAL[base] profile exists, it'll be used as a base for a new profile
---			- "table" - base table will be merged with DEFAULTS table to create a new profile
+--			- "table" - provided table will be used a base for a new profile
 --			- "nil" - DEFAULTS table will be used as a base for a new profile
 
 -- Returns:
