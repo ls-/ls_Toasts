@@ -32,7 +32,7 @@ This function is called after colours, textures and texts are set, but before to
 
 **Note #1:** For toasts' structures see definitions of `CreateBaseToastButton` and `GetToast` functions.
 
-You can create, set, reset, and deleted profiles.
+You can also create, delete, set, and reset profiles.
 
 ```Lua
 local toast_F = ls_Toasts[1]
