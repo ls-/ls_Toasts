@@ -3453,7 +3453,6 @@ local function CreateConfigPanel()
 	cancelButton:SetPoint("BOTTOMLEFT", deleteProfileDialog, "BOTTOM", 6, 14)
 	deleteProfileDialog.CancelButton = cancelButton
 
-	-- Reset Profile Dialog
 	local resetProfileDialog = _G.CreateFrame("Frame", "$parentResetProfileDialog", panel, "CompactUnitFrameProfileDialogWithCoverTemplate")
 	resetProfileDialog:SetSize(384, 96)
 	resetProfileDialog:Hide()
