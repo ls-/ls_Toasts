@@ -44,10 +44,10 @@ local created, reason = toast_F:CreateProfile("test")
 local deleted, reason = toast_F:DeleteProfile("test")
 
 -- activate existing "test" profile
-local set, reason = toast_F:SetProfile("test_profile")
+local set, reason = toast_F:SetProfile("test")
 
 -- reset existing "test" profile to defaults
-local reset, reason = toast_F:ResetProfile("test_profile")
+local reset, reason = toast_F:ResetProfile("test")
 
 ```
 
