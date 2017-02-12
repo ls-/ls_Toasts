@@ -146,31 +146,6 @@ local DEFAULTS = {
 	}
 }
 
-------------
--- PUBLIC --
-------------
-
-local F = {} -- F for Functions
-local PUBLIC = {
-	[1] = F,
-	[2] = CFG
-}
-
-_G[addonName] = PUBLIC
-
--- This function can be overridden by other addons
--- For toasts' structures, see definitions of CreateBaseToastButton and GetToast functions
-
-function F:SkinToast() end
-
--- Parameters:
--- 	toast
--- 	toastType	- types: "item", "mission", "follower", "achievement", "ability", "scenario", "misc"
-
--- Import:
--- 	local toast_F = unpack(ls_Toasts)
--- 	function toast_F:SkinToast(toast, toastType) --[[body]] end
-
 ----------------
 -- DISPATCHER --
 ----------------
@@ -3085,36 +3060,20 @@ end
 
 ------
 
-local function SetProfile(name)
-	if not _G.LS_TOASTS_CFG_GLOBAL[name] or name == _G.LS_TOASTS_CFG.profile then return end
-
-	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
-
-	_G.LS_TOASTS_CFG.profile = name
-
-	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile]), CFG)
-
-	RefreshAllOptions()
-end
-
-local function ResetProfile(name)
-	if not _G.LS_TOASTS_CFG_GLOBAL[name] then return end
-
-	_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(DEFAULTS)
-
-	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[name]), CFG)
-
-	RefreshAllOptions()
-end
-
 local function CreateProfile(name, base)
-	if _G.LS_TOASTS_CFG_GLOBAL[name] then return end
+	if not name then
+		return false, "no_name"
+	elseif name and _G.LS_TOASTS_CFG_GLOBAL[name] then
+		return false, "name_taken"
+	end
 
 	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
 
 	_G.LS_TOASTS_CFG.profile = name
 
-	if base and _G.LS_TOASTS_CFG_GLOBAL[base] then
+	if base and type(base) == "table" then
+		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(base)
+	elseif base and type(base) == "string" and _G.LS_TOASTS_CFG_GLOBAL[base] then
 		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(_G.LS_TOASTS_CFG_GLOBAL[base])
 	else
 		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(DEFAULTS)
@@ -3123,9 +3082,17 @@ local function CreateProfile(name, base)
 	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[name]), CFG)
 
 	RefreshAllOptions()
+
+	return true
 end
 
 local function DeleteProfile(name)
+	if not name then
+		return false, "no_name"
+	elseif name and name == "Default" then
+		return false, "default"
+	end
+
 	_G.LS_TOASTS_CFG_GLOBAL[name] = nil
 
 	_G.LS_TOASTS_CFG.profile = "Default"
@@ -3133,6 +3100,44 @@ local function DeleteProfile(name)
 	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL.Default), CFG)
 
 	RefreshAllOptions()
+
+	return true
+end
+
+local function SetProfile(name)
+	if not name then
+		return false, "no_name"
+	elseif name and not _G.LS_TOASTS_CFG_GLOBAL[name] then
+		return false, "missing"
+	elseif name and  name == _G.LS_TOASTS_CFG.profile then
+		return false, "current"
+	end
+
+	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
+
+	_G.LS_TOASTS_CFG.profile = name
+
+	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile]), CFG)
+
+	RefreshAllOptions()
+
+	return true
+end
+
+local function ResetProfile(name)
+	if not name then
+		return false, "no_name"
+	elseif name and not _G.LS_TOASTS_CFG_GLOBAL[name] then
+		return false, "missing"
+	end
+
+	_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(DEFAULTS)
+
+	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[name]), CFG)
+
+	RefreshAllOptions()
+
+	return true
 end
 
 local function ProfileDropDownButton_OnClick(self)
@@ -3784,6 +3789,101 @@ local function CreateConfigPanel()
 	panel.refresh = RefreshOptions
 
 	_G.InterfaceOptions_AddCategory(panel, true)
+end
+
+------------
+-- PUBLIC --
+------------
+
+local F = {} -- F for Functions
+_G[addonName] = {
+	[1] = F,
+}
+
+-- F:SkinToast
+
+-- Parameters:
+-- 	toast
+-- 	toastType	- types: "item", "mission", "follower", "achievement", "ability", "scenario", "misc"
+
+-- Example:
+-- 	local toast_F = ls_Toasts[1]
+-- 	function toast_F:SkinToast(toast, toastType) --[[body]] end
+
+-- This function can be and should be overridden by your addon
+-- For toasts' structures, see definitions of CreateBaseToastButton and GetToast functions
+
+function F:SkinToast() end
+
+-- F:CreateProfile
+
+-- Arguments:
+-- 	name	- "string" - new profile's name
+-- 	base	- "string" - if LS_TOASTS_CFG_GLOBAL[base] profile exists, it'll be used as a base for a new profile
+--			- "table" - base table will be merged with DEFAULTS table to create a new profile
+--			- "nil" - DEFAULTS table will be used as a base for a new profile
+
+-- Returns:
+-- created	- "boolean": true, false - if profile was successfully created
+-- reason 	- "string": "no_name", "name_taken" - reason why profile wasn't created, nil otherwise
+
+-- Example:
+-- 	local toast_F = ls_Toasts[1]
+-- 	local created, reason = toast_F:CreateProfile("test_profile")
+
+function F:CreateProfile(name, base)
+	return CreateProfile(name, base)
+end
+
+-- F:DeleteProfile
+
+-- Arguments:
+-- 	name	- "string" - profile's name you want to delete, can't be "Default"
+
+-- Returns:
+-- deleted	- "boolean": true, false - if profile was successfully deleted
+-- reason 	- "string": "no_name", "default" - reason why profile wasn't deleted, nil otherwise
+
+-- Example:
+-- 	local toast_F = ls_Toasts[1]
+-- 	local deleted, reason = toast_F:DeleteProfile("test_profile")
+
+function F:DeleteProfile(name)
+	return DeleteProfile(name)
+end
+
+-- F:SetProfile
+
+-- Arguments:
+-- 	name	- "string" - profile's name you want to activate
+
+-- Returns:
+-- set		- "boolean": true, false - if profile was successfully activated
+-- reason 	- "string": "no_name", "missing", "current" - reason why profile wasn't activated, nil otherwise
+
+-- Example:
+-- 	local toast_F = ls_Toasts[1]
+-- 	local set, reason = toast_F:SetProfile("test_profile")
+
+function F:SetProfile(name)
+	return SetProfile(name)
+end
+
+-- F:ResetProfile
+
+-- Arguments:
+-- 	name	- "string" - profile's name you want to reset
+
+-- Returns:
+-- reset	- "boolean": true, false - if profile was successfully reset
+-- reason 	- "string": "no_name", "missing" - reason why profile wasn't reset, nil otherwise
+
+-- Example:
+-- 	local toast_F = ls_Toasts[1]
+-- 	local reset, reason = toast_F:ResetProfile("test_profile")
+
+function F:ResetProfile(name)
+	return ResetProfile(name)
 end
 
 -------------
