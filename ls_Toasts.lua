@@ -2,11 +2,12 @@ local addonName, addonTable = ...
 local L = addonTable.L
 
 -- Lua
-local _G = _G
+local _G = getfenv(0)
 local math = _G.math
 local string = _G.string
 local table = _G.table
 local hooksecurefunc = _G.hooksecurefunc
+local issecurevariable = _G.issecurevariable
 local next = _G.next
 local pairs = _G.pairs
 local pcall = _G.pcall
@@ -20,6 +21,7 @@ local unpack = _G.unpack
 local Lerp = _G.Lerp
 
 -- Mine
+local PLAYER_NAME = _G.UnitName("player")
 local INLINE_NEED = "|TInterface\\Buttons\\UI-GroupLoot-Dice-Up:0:0:0:0:32:32:0:32:0:31|t"
 local INLINE_GREED = "|TInterface\\Buttons\\UI-GroupLoot-Coin-Up:0:0:0:0:32:32:0:32:0:31|t"
 local INLINE_DE = "|TInterface\\Buttons\\UI-GroupLoot-DE-Up:0:0:0:0:32:32:0:32:0:31|t"
@@ -34,6 +36,37 @@ local queuedToasts = {}
 local scenarioToasts = {}
 local textsToAnimate = {}
 local toastCounter = 0
+
+local secure_vars ={
+	common_loot = {
+		LOOT_ITEM_SELF = {
+			is_secure = true,
+			tainted_by = ""
+		},
+		LOOT_ITEM_PUSHED_SELF = {
+			is_secure = true,
+			tainted_by = ""
+		},
+		LOOT_ITEM_SELF_MULTIPLE = {
+			is_secure = true,
+			tainted_by = ""
+		},
+		LOOT_ITEM_PUSHED_SELF_MULTIPLE = {
+			is_secure = true,
+			tainted_by = ""
+		},
+	},
+	currency = {
+		CURRENCY_GAINED = {
+			is_secure = true,
+			tainted_by = ""
+		},
+		CURRENCY_GAINED_MULTIPLE = {
+			is_secure = true,
+			tainted_by = ""
+		},
+	},
+}
 
 local EQUIP_SLOTS = {
 	["INVTYPE_HEAD"] = {_G.INVSLOT_HEAD},
@@ -1944,28 +1977,130 @@ local function DisableSpecialLootToasts()
 	_G.BonusRollFrame.FinishRollAnim:SetScript("OnFinished", BonusRollFrame_FinishedFading_Disabled)
 end
 
-local LOOT_ITEM_PATTERN = (_G.LOOT_ITEM_SELF):gsub("%%s", "(.+)")
-local LOOT_ITEM_PUSHED_PATTERN = (_G.LOOT_ITEM_PUSHED_SELF):gsub("%%s", "(.+)")
-local LOOT_ITEM_MULTIPLE_PATTERN = (_G.LOOT_ITEM_SELF_MULTIPLE):gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
-local LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = (_G.LOOT_ITEM_PUSHED_SELF_MULTIPLE):gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
+do
+	local function Toast_Setup(link, quantity)
+		if not GetToastToUpdate(link, "item") then
+			local name, quality, icon, _
 
-local function LootCommonToast_Setup(itemLink, quantity)
-	itemLink = FixItemLink(itemLink)
+			if string.find(link, "battlepet:") then
+				local _, speciesID, _, breedQuality = string.split(":", link)
+				name, icon = _G.C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+				quality = tonumber(breedQuality)
+			else
+				name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(link)
+			end
 
-	if not GetToastToUpdate(itemLink, "item") then
-		local name, quality, icon, _
+			if quality >= CFG.type.loot_common.threshold and quality <= 4 then
+				local toast = GetToast("item")
+				local color = _G.ITEM_QUALITY_COLORS[quality or 4]
 
-		if string.find(itemLink, "battlepet:") then
-			local _, speciesID, _, breedQuality = string.split(":", itemLink)
-			name, icon = _G.C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-			quality = tonumber(breedQuality)
-		else
-			name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(itemLink)
+				if CFG.colored_names_enabled then
+					toast.Text:SetTextColor(color.r, color.g, color.b)
+				end
+
+				toast.Title:SetText(L["YOU_RECEIVED"])
+				toast.Text:SetText(name)
+				toast.Count:SetText(quantity > 1 and quantity or "")
+				toast.Border:SetVertexColor(color.r, color.g, color.b)
+				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+				toast.Icon:SetTexture(icon)
+				toast.link = link
+				toast.chat = true
+
+				SpawnToast(toast, CFG.type.loot_common.dnd)
+			end
+		end
+	end
+
+	local LOOT_ITEM_PATTERN
+	local LOOT_ITEM_PUSHED_PATTERN
+	local LOOT_ITEM_MULTIPLE_PATTERN
+	local LOOT_ITEM_PUSHED_MULTIPLE_PATTERN
+
+	function dispatcher:CHAT_MSG_LOOT(message, _, _, _, target)
+		if target ~= PLAYER_NAME then
+			return
 		end
 
-		if quality >= CFG.type.loot_common.threshold and quality <= 4 then
-			local toast = GetToast("item")
-			local color = _G.ITEM_QUALITY_COLORS[quality or 4]
+		local link, quantity = message:match(LOOT_ITEM_MULTIPLE_PATTERN)
+
+		if not link then
+			link, quantity = message:match(LOOT_ITEM_PUSHED_MULTIPLE_PATTERN)
+
+			if not link then
+				quantity, link = 1, message:match(LOOT_ITEM_PATTERN)
+
+				if not link then
+					quantity, link = 1, message:match(LOOT_ITEM_PUSHED_PATTERN)
+
+					if not link then
+						return
+					end
+				end
+			end
+		end
+
+		link = FixItemLink(link)
+		quantity = tonumber(quantity) or 0
+
+		_G.C_Timer.After(0.125, function() Toast_Setup(link, quantity) end)
+	end
+
+	function dispatcher:EnableCommonLootToasts()
+		local tainted = 0
+
+		for k, v in pairs(secure_vars.common_loot) do
+			local isSecure, name = issecurevariable(k)
+
+			v.is_secure = isSecure
+			v.tainted_by = name
+
+			if not isSecure then
+				tainted = tainted + 1
+			end
+		end
+
+		-- Do not enable common loot toasts if required vars are tainted
+		if tainted > 0 then
+			CFG.type.loot_common.enabled = false
+		else
+			LOOT_ITEM_PATTERN = _G.LOOT_ITEM_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+			LOOT_ITEM_PUSHED_PATTERN = _G.LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+			LOOT_ITEM_MULTIPLE_PATTERN = _G.LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+			LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = _G.LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		end
+
+		if CFG.type.loot_common.enabled then
+			self:RegisterEvent("CHAT_MSG_LOOT")
+		end
+	end
+
+	function dispatcher:DisableCommonLootToasts()
+		self:UnregisterEvent("CHAT_MSG_LOOT")
+	end
+
+	function dispatcher:TestCommonLootToast()
+		local _, link = _G.GetItemInfo(124442)
+
+		if link then
+			Toast_Setup(link, 44)
+		end
+	end
+end
+
+do
+	local function Toast_Setup(link, quantity)
+		local toast, isQueued = GetToastToUpdate(link, "item")
+		local isUpdated = true
+
+		if not toast then
+			toast = GetToast("item")
+			isUpdated = false
+		end
+
+		if not isUpdated then
+			local name, _, icon, _, _, _, _, quality = _G.GetCurrencyInfo(link)
+			local color = _G.ITEM_QUALITY_COLORS[quality or 1]
 
 			if CFG.colored_names_enabled then
 				toast.Text:SetTextColor(color.r, color.g, color.b)
@@ -1977,118 +2112,87 @@ local function LootCommonToast_Setup(itemLink, quantity)
 			toast.Border:SetVertexColor(color.r, color.g, color.b)
 			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 			toast.Icon:SetTexture(icon)
-			toast.link = itemLink
-			toast.chat = true
+			toast.soundFile = 31578
+			toast.itemCount = quantity
+			toast.link = link
 
-			SpawnToast(toast, CFG.type.loot_common.dnd)
-		end
-	end
-end
+			SpawnToast(toast, CFG.type.loot_currency.dnd)
+		else
+			if isQueued then
+				toast.itemCount = toast.itemCount + quantity
+				toast.Count:SetText(toast.itemCount)
+			else
+				toast.itemCount = toast.itemCount + quantity
+				toast.Count:SetAnimatedText(toast.itemCount)
 
-function dispatcher:CHAT_MSG_LOOT(message)
-	local itemLink, quantity = message:match(LOOT_ITEM_MULTIPLE_PATTERN)
+				toast.CountUpdate:SetText("+"..quantity)
+				toast.CountUpdateAnim:Stop()
+				toast.CountUpdateAnim:Play()
 
-	if not itemLink then
-		itemLink, quantity = message:match(LOOT_ITEM_PUSHED_MULTIPLE_PATTERN)
-
-		if not itemLink then
-			quantity, itemLink = 1, message:match(LOOT_ITEM_PATTERN)
-
-			if not itemLink then
-				quantity, itemLink = 1, message:match(LOOT_ITEM_PUSHED_PATTERN)
-
-				if not itemLink then
-					return
-				end
+				toast.AnimOut:Stop()
+				toast.AnimOut:Play()
 			end
 		end
 	end
 
-	quantity = tonumber(quantity) or 0
+	local CURRENCY_GAINED_PATTERN
+	local CURRENCY_GAINED_MULTIPLE_PATTERN
 
-	_G.C_Timer.After(0.125, function() LootCommonToast_Setup(itemLink, quantity) end)
-end
+	function dispatcher:CHAT_MSG_CURRENCY(message)
+		local link, quantity = message:match(CURRENCY_GAINED_MULTIPLE_PATTERN)
 
-local function EnableCommonLootToasts()
-	if CFG.type.loot_common.enabled then
-		dispatcher:RegisterEvent("CHAT_MSG_LOOT")
-	end
-end
+		if not link then
+			quantity, link = 1, message:match(CURRENCY_GAINED_PATTERN)
 
-local function DisableCommonLootToasts()
-	dispatcher:UnregisterEvent("CHAT_MSG_LOOT")
-end
-
-local CURRENCY_GAINED_PATTERN = (_G.CURRENCY_GAINED):gsub("%%s", "(.+)")
-local CURRENCY_GAINED_MULTIPLE_PATTERN = (_G.CURRENCY_GAINED_MULTIPLE):gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
-
-function dispatcher:CHAT_MSG_CURRENCY(message)
-	local itemLink, quantity = message:match(CURRENCY_GAINED_MULTIPLE_PATTERN)
-
-	if not itemLink then
-		quantity, itemLink = 1, message:match(CURRENCY_GAINED_PATTERN)
-
-		if not itemLink then
-			return
-		end
-	end
-
-	itemLink = string.match(itemLink, "|H(.+)|h.+|h")
-	quantity = tonumber(quantity) or 0
-
-	local toast, isQueued = GetToastToUpdate(itemLink, "item")
-	local isUpdated = true
-
-	if not toast then
-		toast = GetToast("item")
-		isUpdated = false
-	end
-
-	if not isUpdated then
-		local name, _, icon, _, _, _, _, quality = _G.GetCurrencyInfo(itemLink)
-		local color = _G.ITEM_QUALITY_COLORS[quality or 1]
-
-		if CFG.colored_names_enabled then
-			toast.Text:SetTextColor(color.r, color.g, color.b)
+			if not link then
+				return
+			end
 		end
 
-		toast.Title:SetText(L["YOU_RECEIVED"])
-		toast.Text:SetText(name)
-		toast.Count:SetText(quantity > 1 and quantity or "")
-		toast.Border:SetVertexColor(color.r, color.g, color.b)
-		toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-		toast.Icon:SetTexture(icon)
-		toast.soundFile = 31578
-		toast.itemCount = quantity
-		toast.link = itemLink
+		link = FixItemLink(link)
+		quantity = tonumber(quantity) or 0
 
-		SpawnToast(toast, CFG.type.loot_currency.dnd)
-	else
-		if isQueued then
-			toast.itemCount = toast.itemCount + quantity
-			toast.Count:SetText(toast.itemCount)
+		Toast_Setup(link, quantity)
+	end
+
+	function dispatcher:EnableCurrencyLootToasts()
+		local tainted = 0
+
+		for k, v in pairs(secure_vars.currency) do
+			local isSecure, name = issecurevariable(k)
+
+			v.is_secure = isSecure
+			v.tainted_by = name
+
+			if not isSecure then
+				tainted = tainted + 1
+			end
+		end
+
+		-- Do not enable currency toasts if required vars are tainted
+		if tainted > 0 then
+			CFG.type.loot_currency.enabled = false
 		else
-			toast.itemCount = toast.itemCount + quantity
-			toast.Count:SetAnimatedText(toast.itemCount)
+			CURRENCY_GAINED_PATTERN = _G.CURRENCY_GAINED:gsub("%%s", "(.+)")
+			CURRENCY_GAINED_MULTIPLE_PATTERN = _G.CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
+		end
 
-			toast.CountUpdate:SetText("+"..quantity)
-			toast.CountUpdateAnim:Stop()
-			toast.CountUpdateAnim:Play()
-
-			toast.AnimOut:Stop()
-			toast.AnimOut:Play()
+		if CFG.type.loot_currency.enabled then
+			self:RegisterEvent("CHAT_MSG_CURRENCY")
 		end
 	end
-end
 
-local function EnableCurrencyLootToasts()
-	if CFG.type.loot_currency.enabled then
-		dispatcher:RegisterEvent("CHAT_MSG_CURRENCY")
+	function dispatcher:DisableCurrencyLootToasts()
+		self:UnregisterEvent("CHAT_MSG_CURRENCY")
 	end
-end
 
-local function DisableCurrencyLootToasts()
-	dispatcher:UnregisterEvent("CHAT_MSG_CURRENCY")
+	function dispatcher:TestCurrencyToast()
+		local link, _ = _G.GetCurrencyLink(824)
+
+		if link then
+			Toast_Setup(link, math.random(300, 600))
+		end
+	end
 end
 
 ------------
@@ -2520,15 +2624,6 @@ local function SpawnTestLootToast()
 	dispatcher:STORE_PRODUCT_DELIVERED(1, 915544, "Pouch of Enduring Wisdom", 105911)
 end
 
-local function SpawnTestCurrencyToast()
-	-- currency
-	local link, _ = _G.GetCurrencyLink(824)
-
-	if link then
-		dispatcher:CHAT_MSG_CURRENCY(string.format(_G.CURRENCY_GAINED_MULTIPLE, link, math.random(300, 600)))
-	end
-end
-
 local function SpawnTestTransmogToast()
 	local appearance = _G.C_TransmogCollection.GetCategoryAppearances(1) and _G.C_TransmogCollection.GetCategoryAppearances(1)[1]
 	local source = _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID) and _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID)[1]
@@ -2542,9 +2637,9 @@ end
 -----------
 
 -- local function SpawnTestToast()
-	-- if not _G.DevTools_Dump then
-	-- 	_G.UIParentLoadAddOn("Blizzard_DebugTools")
-	-- end
+-- 	if not _G.DevTools_Dump then
+-- 		_G.UIParentLoadAddOn("Blizzard_DebugTools")
+-- 	end
 
 -- 	SpawnTestGarrisonToast()
 
@@ -2674,15 +2769,15 @@ local function ToggleToasts(value, state)
 		end
 	elseif value == "loot_common" then
 		if state then
-			EnableCommonLootToasts()
+			dispatcher:EnableCommonLootToasts()
 		else
-			DisableCommonLootToasts()
+			dispatcher:DisableCommonLootToasts()
 		end
 	elseif value == "loot_currency" then
 		if state then
-			EnableCurrencyLootToasts()
+			dispatcher:EnableCurrencyLootToasts()
 		else
-			DisableCurrencyLootToasts()
+			dispatcher:DisableCurrencyLootToasts()
 		end
 	elseif value == "recipe" then
 		if state then
@@ -2951,6 +3046,86 @@ end
 
 ------
 
+local function InfoButton_OnEnter(self)
+	_G.HelpPlate_TooltipHide()
+
+	if self.tooltipDir == "UP" then
+		_G.HelpPlateTooltip.ArrowUP:Show()
+		_G.HelpPlateTooltip.ArrowGlowUP:Show()
+		_G.HelpPlateTooltip:SetPoint("BOTTOM", self, "TOP", 0, 10)
+	elseif self.tooltipDir == "DOWN" then
+		_G.HelpPlateTooltip.ArrowDOWN:Show()
+		_G.HelpPlateTooltip.ArrowGlowDOWN:Show()
+		_G.HelpPlateTooltip:SetPoint("TOP", self, "BOTTOM", 0, -10)
+	elseif self.tooltipDir == "LEFT" then
+		_G.HelpPlateTooltip.ArrowLEFT:Show()
+		_G.HelpPlateTooltip.ArrowGlowLEFT:Show()
+		_G.HelpPlateTooltip:SetPoint("RIGHT", self, "LEFT", -10, 0)
+	elseif self.tooltipDir == "RIGHT" then
+		_G.HelpPlateTooltip.ArrowRIGHT:Show()
+		_G.HelpPlateTooltip.ArrowGlowRIGHT:Show()
+		_G.HelpPlateTooltip:SetPoint("LEFT", self, "RIGHT", 10, 0)
+	end
+
+	_G.HelpPlateTooltip.Text:SetWidth(0)
+	_G.HelpPlateTooltip.Text:SetText(self.toolTipText)
+
+	_G.HelpPlateTooltip:SetWidth(_G.HelpPlateTooltip.Text:GetWidth() + 20)
+	_G.HelpPlateTooltip:Show()
+end
+
+local function InfoButton_OnLeave()
+	_G.HelpPlateTooltip:SetWidth(220)
+	_G.HelpPlateTooltip.Text:SetWidth(200)
+	_G.HelpPlate_TooltipHide()
+end
+
+local function CreateWarningPlate(panel, params)
+	params = params or {}
+
+	local object = _G.CreateFrame("Frame", params.name, params.parent or panel, "ThinBorderTemplate")
+	object:EnableMouse(true)
+	object:SetFrameLevel(1)
+	object:SetFrameStrata("DIALOG")
+	object:Show()
+	object.RefreshValue = params.refresh
+
+	for i = 1, #object.Textures do
+		object.Textures[i]:SetVertexColor(1, 0.82, 0)
+	end
+
+	local texture = object:CreateTexture(nil, "BACKGROUND")
+	texture:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\warning-bg", true, true)
+	texture:SetHorizTile(true)
+	texture:SetVertTile(true)
+	texture:SetAllPoints()
+	texture:SetVertexColor(1, 0.82, 0, 0.5)
+
+	local button = _G.CreateFrame("Button", "$parentInfoButton", object)
+	button:SetSize(24, 24)
+	button:SetScript("OnClick", params.click)
+	button:SetScript("OnEnter", InfoButton_OnEnter)
+	button:SetScript("OnLeave", InfoButton_OnLeave)
+	button.toolTipText = params.tooltip_text
+	button.tooltipDir = params.tooltip_dir or "UP"
+	button:SetPoint("CENTER", object, "CENTER", 0, 0)
+	object.Button = button
+
+	button:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD")
+
+	texture = button:CreateTexture(nil, "ARTWORK")
+	texture:SetAllPoints()
+	texture:SetTexture("Interface\\COMMON\\help-i")
+	texture:SetTexCoord(13 / 64, 51 / 64, 13 / 64, 51 / 64)
+	texture:SetBlendMode("BLEND")
+
+	RegisterControlForRefresh(panel, object)
+
+	return object
+end
+
+------
+
 local function SettingsButton_OnEnter(self)
 	self.Icon:SetAlpha(1)
 end
@@ -2980,6 +3155,17 @@ local function CreateToastConfigLine(panel, params)
 	name:SetHeight(33)
 	name:SetJustifyV("MIDDLE")
 	name:SetText(params.text)
+
+	if params.warning_refresh then
+		local warning = CreateWarningPlate(panel, {
+			name = "$parentWarningPlate",
+			frame_level = object:GetFrameLevel() + 4,
+			tooltip_text = params.warning_tooltip_text,
+			tooltip_dir = params.warning_tooltip_dir,
+			refresh = params.warning_refresh
+		})
+		warning:SetAllPoints(object)
+	end
 
 	if params.dropdown then
 		local settings = _G.CreateFrame("Button", "$parentSettingsButton", object)
@@ -3740,6 +3926,25 @@ local function CreateConfigPanel()
 			dnd_get = function() return CFG.type.loot_common.dnd end,
 			dnd_set = function(_, value) CFG.type.loot_common.dnd = value end,
 			dropdown = lootDropDown,
+			warning_refresh = function(self)
+				local tainted = 0
+				local text = ""..L["TAINT_HEADER"]
+
+				for k, v in pairs(secure_vars.common_loot) do
+					if not v.is_secure then
+						tainted = tainted + 1
+
+						text = text..L["TAINT_LINE"]:format(k, v.tainted_by)
+					end
+				end
+
+				if tainted > 0 then
+					self.Button.toolTipText = text
+					self:Show()
+				else
+					self:Hide()
+				end
+			end
 		},
 		[8] = {
 			name = "$parentLootCurrency",
@@ -3752,7 +3957,26 @@ local function CreateConfigPanel()
 			end,
 			dnd_get = function() return CFG.type.loot_currency.dnd end,
 			dnd_set = function(_, value) CFG.type.loot_currency.dnd = value end,
-			test_func = SpawnTestCurrencyToast,
+			test_func = dispatcher.TestCurrencyToast,
+			warning_refresh = function(self)
+				local tainted = 0
+				local text = ""..L["TAINT_HEADER"]
+
+				for k, v in pairs(secure_vars.currency) do
+					if not v.is_secure then
+						tainted = tainted + 1
+
+						text = text..L["TAINT_LINE"]:format(k, v.tainted_by)
+					end
+				end
+
+				if tainted > 0 then
+					self.Button.toolTipText = text
+					self:Show()
+				else
+					self:Hide()
+				end
+			end
 		},
 		[9] = {
 			name = "$parentRecipe",
@@ -3973,8 +4197,8 @@ function dispatcher:PLAYER_LOGIN()
 	EnableGarrisonToasts()
 	EnableInstanceToasts()
 	EnableSpecialLootToasts()
-	EnableCommonLootToasts()
-	EnableCurrencyLootToasts()
+	self:EnableCommonLootToasts()
+	self:EnableCurrencyLootToasts()
 	EnableRecipeToasts()
 	EnableWorldToasts()
 	EnableTransmogToasts()

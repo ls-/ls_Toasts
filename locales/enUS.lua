@@ -38,7 +38,7 @@ L["SETTINGS_GENERAL_LABEL"] = _G.GENERAL_LABEL
 L["ENABLE_SOUND"] = _G.ENABLE_SOUND
 L["ENABLE"] = _G.ENABLE
 
--- Requires translation
+-- Require translation
 L["ANCHOR"] = "Toast Anchor"
 L["ANCHOR_FRAME"] = "Anchor Frame"
 L["APPEARANCE_TITLE"] = "Appearance"
@@ -62,6 +62,8 @@ L["SCALE"] = "Scale"
 L["SETTINGS_GENERAL_DESC"] = "Thome thettings, duh...\nI strongly recommend to |cffe52626/reload|r UI after you're done setting up the addon. Even if you opened and closed this panel without changing anything, |cffe52626/reload|r UI. |cffffd200By doing so, you'll remove this config entry from the system and prevent possible taints.|r"
 L["SETTINGS_TYPE_DESC"] = "Moar thettings..."
 L["SETTINGS_TYPE_LABEL"] = "Toast Types"
+L["TAINT_HEADER"] = "|cffff0000These toasts are disabled due to tainted variables!|r\n"
+L["TAINT_LINE"] = "\n\"%s\" is tainted by \"|cffffd200%s|r\""
 L["TEST"] = "Test"
 L["TOAST_NUM"] = "Number of Toasts"
 L["TRANSMOG_ADDED"] = "Appearance Added"
