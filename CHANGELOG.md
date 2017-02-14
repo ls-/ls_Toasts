@@ -1,3 +1,11 @@
+## Version 1.23
+
+- First attempt to address issue that made some people receive party/raid members' loot toasts. As of this version if addon detects that necessary variables were modified by another addon, it'll disable common loot and/or currency toasts, you'll be able to see which variables were modified and what addon did it in in-game config. Addon will also start checking if `CHAT_MSG_LOOT`'s `5th (target) param is the same as player's name;
+- Updated German translation. Translated by pas06@Curse.
+
+NOTE: Warning preview. !test is my test addon.
+![image](http://i.imgur.com/SVPzRN8.png)
+
 ## Version 1.22
 
 - Fixed in-game config.
