@@ -588,6 +588,10 @@ local function ResetToast(toast)
 		toast.Rank:SetText("")
 	end
 
+	if toast.RankBG then
+		toast.RankBG:Hide()
+	end
+
 	if toast.IconText then
 		toast.IconText:SetText("")
 	end
@@ -1244,6 +1248,13 @@ local function GetToast(toastType)
 			rank:SetPoint("BOTTOMRIGHT", toast.Icon, "BOTTOMRIGHT", -2, 2)
 			rank:SetJustifyH("RIGHT")
 			toast.Rank = rank
+
+			local rankBG = toast:CreateTexture(nil, "ARTWORK", nil, 1)
+			rankBG:SetPoint("BOTTOMLEFT", toast.Icon, "BOTTOMLEFT", 2, 2)
+			rankBG:SetPoint("BOTTOMRIGHT", toast.Icon, "BOTTOMRIGHT", -2, 2)
+			rankBG:SetHeight(12)
+			rankBG:SetColorTexture(0, 0, 0, 0.6)
+			toast.RankBG = rankBG
 
 			toast.type = "ability"
 		end
@@ -2341,6 +2352,7 @@ do
 				toast.Text:SetText(recipeName)
 				toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-recipe")
 				toast.Rank:SetText(rankTexture)
+				toast.RankBG:SetShown(not not rank)
 				toast.Icon:SetTexture(_G.C_TradeSkillUI.GetTradeSkillTexture(tradeSkillID))
 				toast.soundFile = "UI_Professions_NewRecipeLearned_Toast"
 				toast.id = recipeID
