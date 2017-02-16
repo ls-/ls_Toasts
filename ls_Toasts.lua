@@ -3179,7 +3179,7 @@ local function CreateToastConfigLine(panel, params)
 
 	local texture = object:CreateTexture(nil, "BACKGROUND", nil, -8)
 	texture:SetAllPoints()
-	texture:SetColorTexture(0.3, 0.3, 0.3, 0.3)
+	object.BG = texture
 
 	local name = object:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 	name:SetPoint("TOPLEFT", object, "TOPLEFT", 6, 0)
@@ -4063,7 +4063,12 @@ local function CreateConfigPanel()
 			lines[i]:SetPoint("TOP", subtext, "BOTTOM", 0, -18)
 		else
 			lines[i]:SetPoint("TOP", lines[i - 1], "BOTTOM", 0, -2)
+		end
 
+		if i % 2 == 0 then
+			lines[i].BG:SetColorTexture(0.3, 0.3, 0.3, 0.3)
+		else
+			lines[i].BG:SetColorTexture(0.6, 0.6, 0.6, 0.3)
 		end
 	end
 
