@@ -1750,11 +1750,9 @@ end
 do
 	local function Toast_SetUp(name, subtypeID, textureFilename, moneyReward, xpReward, numItemRewards, isScenario, isScenarioBonusComplete)
 		local toast = GetToast("scenario")
-		local title = L["DUNGEON_COMPLETED"]
-		local soundFile = "LFG_Rewards"
 		local usedRewards = 0
 
-		if moneyReward > 0 then
+		if moneyReward and moneyReward > 0 then
 			usedRewards = usedRewards + 1
 			local reward = toast["Reward"..usedRewards]
 
@@ -1765,7 +1763,7 @@ do
 			end
 		end
 
-		if xpReward > 0 and _G.UnitLevel("player") < _G.MAX_PLAYER_LEVEL then
+		if xpReward and xpReward > 0 and _G.UnitLevel("player") < _G.MAX_PLAYER_LEVEL then
 			usedRewards = usedRewards + 1
 			local reward = toast["Reward"..usedRewards]
 
@@ -1776,7 +1774,7 @@ do
 			end
 		end
 
-		for i = 1, numItemRewards do
+		for i = 1, numItemRewards or 0 do
 			usedRewards = usedRewards + 1
 			local reward = toast["Reward"..usedRewards]
 
@@ -1796,24 +1794,25 @@ do
 		end
 
 		if isScenario then
-			title = L["SCENARIO_COMPLETED"]
-			soundFile = "UI_Scenario_Ending"
-
 			if isScenarioBonusComplete then
 				toast.Bonus:Show()
 			end
+
+			toast.Title:SetText(L["SCENARIO_COMPLETED"])
+			toast.soundFile = "UI_Scenario_Ending"
+		else
+			if subtypeID == _G.LFG_SUBTYPEID_HEROIC then
+				toast.Heroic:Show()
+			end
+
+			toast.Title:SetText(L["DUNGEON_COMPLETED"])
+			toast.soundFile = "LFG_Rewards"
 		end
 
-		if subtypeID == _G.LFG_SUBTYPEID_HEROIC then
-			toast.Heroic:Show()
-		end
-
-		toast.Title:SetText(title)
 		toast.Text:SetText(name)
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-dungeon")
 		toast.Icon:SetTexture("Interface\\LFGFrame\\LFGIcon-"..textureFilename)
 		toast.usedRewards = usedRewards
-		toast.soundFile = soundFile
 
 		SpawnToast(toast, CFG.type.instance.dnd)
 	end
@@ -1824,17 +1823,13 @@ do
 
 			if scenarioType ~= _G.LE_SCENARIO_TYPE_LEGION_INVASION then
 				local name, _, subtypeID, textureFilename, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = _G.GetLFGCompletionReward()
-				local moneyReward = moneyBase + moneyVar * numStrangers
-				local xpReward = experienceBase + experienceVar * numStrangers
 
-				Toast_SetUp(name, subtypeID, textureFilename, moneyReward, xpReward, numItemRewards, true, hasBonusStep and isBonusStepComplete)
+				Toast_SetUp(name, subtypeID, textureFilename, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards, true, hasBonusStep and isBonusStepComplete)
 			end
 		else
 			local name, _, subtypeID, textureFilename, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = _G.GetLFGCompletionReward()
-			local moneyReward = moneyBase + moneyVar * numStrangers
-			local xpReward = experienceBase + experienceVar * numStrangers
 
-			Toast_SetUp(name, subtypeID, textureFilename, moneyReward, xpReward, numItemRewards)
+			Toast_SetUp(name, subtypeID, textureFilename, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards)
 		end
 	end
 
@@ -2388,180 +2383,191 @@ end
 -----------
 -- WORLD --
 -----------
-
-local function InvasionToast_SetUp(questID)
-	if GetToastToUpdate(questID, "scenario") then
-		return
-	end
-
-	local toast = GetToast("scenario")
-	local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, _, areaName = _G.C_Scenario.GetInfo()
-	-- local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, _, areaName =
-		-- "Invasion: Azshara", 0, 0, 0, false, false, true, 12345, 12345, 4, "Azshara"
-	local usedRewards = 0
-
-	if money > 0 then
-		usedRewards = usedRewards + 1
-		local reward = toast["Reward"..usedRewards]
-
-		if reward then
-			_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\inv_misc_coin_02")
-			reward.money = money
-			reward:Show()
+do
+	local function Toast_SetUp(questID, name, moneyReward, xpReward, numCurrencyRewards, isInvasion, isInvasionBonusComplete)
+		if GetToastToUpdate(questID, "scenario") then
+			return
 		end
-	end
 
-	if xp > 0 and _G.UnitLevel("player") < _G.MAX_PLAYER_LEVEL then
-		usedRewards = usedRewards + 1
-		local reward = toast["Reward"..usedRewards]
+		local toast = GetToast("scenario")
+		-- local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, _, areaName = _G.C_Scenario.GetInfo()
+		-- local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, _, areaName =
+			-- "Invasion: Azshara", 0, 0, 0, false, false, true, 12345, 12345, 4, "Azshara"
+		local usedRewards = 0
 
-		if reward then
-			_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\xp_icon")
-			reward.xp = xp
-			reward:Show()
+		if moneyReward and moneyReward > 0 then
+			usedRewards = usedRewards + 1
+			local reward = toast["Reward"..usedRewards]
+
+			if reward then
+				_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\inv_misc_coin_02")
+				reward.money = moneyReward
+				reward:Show()
+			end
 		end
-	end
 
-	if hasBonusStep and isBonusStepComplete then
-		toast.Bonus:Show()
-	end
+		if xpReward and xpReward > 0 and _G.UnitLevel("player") < _G.MAX_PLAYER_LEVEL then
+			usedRewards = usedRewards + 1
+			local reward = toast["Reward"..usedRewards]
 
-	toast.Title:SetText(L["SCENARIO_INVASION_COMPLETED"])
-	toast.Text:SetText(areaName or scenarioName)
-	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legion")
-	toast.Icon:SetTexture("Interface\\Icons\\Ability_Warlock_DemonicPower")
-	toast.Border:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
-	toast.IconBorder:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
-	toast.usedRewards = usedRewards
-	toast.soundFile = "UI_Scenario_Ending"
-	toast.id = questID
-
-	SpawnToast(toast, CFG.type.world.dnd)
-end
-
-local function WorldQuestToast_SetUp(questID)
-	if GetToastToUpdate(questID, "scenario") then
-		return
-	end
-
-	local toast = GetToast("scenario")
-	local _, _, _, taskName = _G.GetTaskInfo(questID)
-	local _, _, worldQuestType, rarity, _, tradeskillLineIndex = _G.GetQuestTagInfo(questID)
-	local color = _G.WORLD_QUEST_QUALITY_COLORS[rarity] or _G.WORLD_QUEST_QUALITY_COLORS[1]
-	local money = _G.GetQuestLogRewardMoney(questID)
-	local xp = _G.GetQuestLogRewardXP(questID)
-	local usedRewards = 0
-	local icon = "Interface\\Icons\\Achievement_Quests_Completed_TwilightHighlands"
-
-	if money > 0 then
-		usedRewards = usedRewards + 1
-		local reward = toast["Reward"..usedRewards]
-
-		if reward then
-			_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\inv_misc_coin_02")
-			reward.money = money
-			reward:Show()
+			if reward then
+				_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\xp_icon")
+				reward.xp = xpReward
+				reward:Show()
+			end
 		end
-	end
 
-	if xp > 0 and _G.UnitLevel("player") < _G.MAX_PLAYER_LEVEL then
-		usedRewards = usedRewards + 1
-		local reward = toast["Reward"..usedRewards]
+		for i = 1, numCurrencyRewards or 0 do
+			usedRewards = usedRewards + 1
+			local reward = toast["Reward"..usedRewards]
 
-		if reward then
-			_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\xp_icon")
-			reward.xp = xp
-			reward:Show()
+			if reward then
+				local _, texture = _G.GetQuestLogRewardCurrencyInfo(i, questID)
+				local isOK = pcall(_G.SetPortraitToTexture, reward.Icon, texture)
+
+				if not isOK then
+					_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\INV_Box_02")
+				end
+
+				reward.currency = i
+				reward:Show()
+			end
 		end
-	end
 
-	for i = 1, _G.GetNumQuestLogRewardCurrencies(questID) do
-		usedRewards = usedRewards + 1
-		local reward = toast["Reward"..usedRewards]
-
-		if reward then
-			local _, texture = _G.GetQuestLogRewardCurrencyInfo(i, questID)
-			local isOK = pcall(_G.SetPortraitToTexture, reward.Icon, texture)
-
-			if not isOK then
-				_G.SetPortraitToTexture(reward.Icon, "Interface\\Icons\\INV_Box_02")
+		if isInvasion then
+			if isInvasionBonusComplete then
+				toast.Bonus:Show()
 			end
 
-			reward.currency = i
-			reward:Show()
+			toast.Title:SetText(L["SCENARIO_INVASION_COMPLETED"])
+			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legion")
+			toast.Icon:SetTexture("Interface\\Icons\\Ability_Warlock_DemonicPower")
+			toast.Border:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
+			toast.IconBorder:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
+			toast.soundFile = "UI_Scenario_Ending"
+		else
+			local _, _, worldQuestType, rarity, _, _, tradeskillLineIndex = _G.GetQuestTagInfo(questID)
+			local color = _G.WORLD_QUEST_QUALITY_COLORS[rarity] or _G.WORLD_QUEST_QUALITY_COLORS[1]
+
+			if worldQuestType == _G.LE_QUEST_TAG_TYPE_PVP then
+				toast.Icon:SetTexture("Interface\\Icons\\achievement_arena_2v2_1")
+			elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_PET_BATTLE then
+				toast.Icon:SetTexture("Interface\\Icons\\INV_Pet_BattlePetTraining")
+			elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_PROFESSION and tradeskillLineIndex then
+				toast.Icon:SetTexture(select(2, _G.GetProfessionInfo(tradeskillLineIndex)))
+			elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_DUNGEON then
+				toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Bone_Skull_02")
+			else
+				toast.Icon:SetTexture("Interface\\Icons\\Achievement_Quests_Completed_TwilightHighlands")
+			end
+
+			toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])
+			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-worldquest")
+			toast.Border:SetVertexColor(color.r, color.g, color.b)
+			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+			toast.soundFile = "UI_WorldQuest_Complete"
+		end
+
+		toast.Text:SetText(name)
+		toast.usedRewards = usedRewards
+		toast.id = questID
+
+		SpawnToast(toast, CFG.type.world.dnd)
+	end
+
+	function dispatcher:SCENARIO_COMPLETED(questID)
+		local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, scenarioType, areaName = _G.C_Scenario.GetInfo();
+
+		if scenarioType == _G.LE_SCENARIO_TYPE_LEGION_INVASION then
+			if questID then
+				Toast_SetUp(questID, areaName or scenarioName, money, xp, nil, true, hasBonusStep and isBonusStepComplete)
+			end
 		end
 	end
 
-	if worldQuestType == _G.LE_QUEST_TAG_TYPE_PVP then
-		icon = "Interface\\Icons\\achievement_arena_2v2_1"
-	elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_PET_BATTLE then
-		icon = "Interface\\Icons\\INV_Pet_BattlePetTraining"
-	elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_PROFESSION and tradeskillLineIndex then
-		icon = _G.C_TradeSkillUI.GetTradeSkillTexture(select(7, _G.GetProfessionInfo(tradeskillLineIndex)))
-	elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_DUNGEON then
-		icon = "Interface\\Icons\\INV_Misc_Bone_Skull_02"
-	end
-
-	if CFG.colored_names_enabled then
-		toast.Text:SetTextColor(color.r, color.g, color.b)
-	end
-
-	toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])
-	toast.Text:SetText(taskName)
-	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-worldquest")
-	toast.Icon:SetTexture(icon)
-	toast.Border:SetVertexColor(color.r, color.g, color.b)
-	toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-	toast.usedRewards = usedRewards
-	toast.soundFile = "UI_WorldQuest_Complete"
-	toast.id = questID
-
-	SpawnToast(toast, CFG.type.world.dnd)
-end
-
-function dispatcher:SCENARIO_COMPLETED(...)
-	if select(10, _G.C_Scenario.GetInfo()) == _G.LE_SCENARIO_TYPE_LEGION_INVASION then
-		local questID = ...
-
-		if questID then
-			InvasionToast_SetUp(questID)
-		end
-	end
-end
-
-function dispatcher:QUEST_TURNED_IN(...)
-	local questID = ...
-
-	if _G.QuestUtils_IsQuestWorldQuest(questID) then
-		WorldQuestToast_SetUp(questID)
-	end
-end
-
-function dispatcher:QUEST_LOOT_RECEIVED(...)
-	local questID, itemLink = ...
-
-	--- QUEST_LOOT_RECEIVED may fire before QUEST_TURNED_IN
-	if _G.QuestUtils_IsQuestWorldQuest(questID) then
-		if not GetToastToUpdate(questID, "scenario") then
-			WorldQuestToast_SetUp(questID)
+	function dispatcher:QUEST_TURNED_IN(questID)
+		if _G.QuestUtils_IsQuestWorldQuest(questID) then
+			Toast_SetUp(questID, _G.C_TaskQuest.GetQuestInfoByQuestID(questID), _G.GetQuestLogRewardMoney(questID), _G.GetQuestLogRewardXP(questID), _G.GetNumQuestLogRewardCurrencies(questID))
 		end
 	end
 
-	UpdateToast(questID, "scenario", itemLink)
-end
+	function dispatcher:QUEST_LOOT_RECEIVED(questID, itemLink)
+		--- QUEST_LOOT_RECEIVED may fire before QUEST_TURNED_IN
+		if _G.QuestUtils_IsQuestWorldQuest(questID) then
+			if not GetToastToUpdate(questID, "scenario") then
+				Toast_SetUp(questID, _G.C_TaskQuest.GetQuestInfoByQuestID(questID), _G.GetQuestLogRewardMoney(questID), _G.GetQuestLogRewardXP(questID), _G.GetNumQuestLogRewardCurrencies(questID))
+			end
+		end
 
-local function EnableWorldToasts()
-	if CFG.type.world.enabled then
-		dispatcher:RegisterEvent("SCENARIO_COMPLETED")
-		dispatcher:RegisterEvent("QUEST_TURNED_IN")
-		dispatcher:RegisterEvent("QUEST_LOOT_RECEIVED")
+		UpdateToast(questID, "scenario", itemLink)
 	end
-end
 
-local function DisableWorldToasts()
-	dispatcher:UnregisterEvent("SCENARIO_COMPLETED")
-	dispatcher:UnregisterEvent("QUEST_TURNED_IN")
-	dispatcher:UnregisterEvent("QUEST_LOOT_RECEIVED")
+	function dispatcher:EnableWorldToasts()
+		if CFG.type.world.enabled then
+			dispatcher:RegisterEvent("SCENARIO_COMPLETED")
+			dispatcher:RegisterEvent("QUEST_TURNED_IN")
+			dispatcher:RegisterEvent("QUEST_LOOT_RECEIVED")
+		end
+	end
+
+	function dispatcher:DisableWorldToasts()
+		dispatcher:UnregisterEvent("SCENARIO_COMPLETED")
+		dispatcher:UnregisterEvent("QUEST_TURNED_IN")
+		dispatcher:UnregisterEvent("QUEST_LOOT_RECEIVED")
+	end
+
+	function dispatcher:TestWorldToast()
+		-- reward, Blood of Sargeras
+		local _, link = _G.GetItemInfo(124124)
+
+		if link then
+			-- invasion
+			Toast_SetUp(43301, "", 123456, 123456, nil, true)
+			UpdateToast(43301, "scenario", link)
+
+			-- world quest, may not work
+			local quests = _G.C_TaskQuest.GetQuestsForPlayerByMapID(1014)
+
+			if #quests == 0 then
+				quests = _G.C_TaskQuest.GetQuestsForPlayerByMapID(1015)
+
+				if #quests == 0 then
+					quests = _G.C_TaskQuest.GetQuestsForPlayerByMapID(1017)
+
+					if #quests == 0 then
+						quests = _G.C_TaskQuest.GetQuestsForPlayerByMapID(1018)
+
+						if #quests == 0 then
+							quests = _G.C_TaskQuest.GetQuestsForPlayerByMapID(1021)
+
+							if #quests == 0 then
+								quests = _G.C_TaskQuest.GetQuestsForPlayerByMapID(1024)
+
+								if #quests == 0 then
+									quests = _G.C_TaskQuest.GetQuestsForPlayerByMapID(1033)
+
+									if #quests == 0 then
+										quests = _G.C_TaskQuest.GetQuestsForPlayerByMapID(1096)
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+
+			for _, quest in pairs(quests) do
+				if _G.HaveQuestData(quest.questId) then
+					if _G.QuestUtils_IsQuestWorldQuest(quest.questId) then
+						Toast_SetUp(quest.questId, _G.C_TaskQuest.GetQuestInfoByQuestID(quest.questId), 123456, 123456)
+						UpdateToast(quest.questId, "scenario", link)
+
+						return
+					end
+				end
+			end
+		end
+	end
 end
 
 --------------
@@ -2658,47 +2664,6 @@ do
 		Toast_SetUp(source.sourceID)
 	end
 end
-
------------
--- TESTS --
------------
-
-local function SpawnTestWorldEventToast()
-	-- Work Order: Ancient Rejuvenation Potions
-	local _, link = _G.GetItemInfo(124124)
-
-	if link then
-		WorldQuestToast_SetUp(41662)
-		UpdateToast(41662, "scenario", link)
-	else
-		_G.C_Timer.After(0.25, SpawnTestWorldEventToast)
-	end
-end
-
------------
--- DEBUG --
------------
-
--- local function SpawnTestToast()
--- 	if not _G.DevTools_Dump then
--- 		_G.UIParentLoadAddOn("Blizzard_DebugTools")
--- 	end
-
--- 	SpawnTestGarrisonToast()
-
--- 	SpawnTestAchievementToast()
-
--- 	SpawnTestRecipeToast()
-
--- 	SpawnTestArchaeologyToast()
-
--- 	SpawnTestLootToast()
-
--- 	SpawnTestWorldEventToast()
--- end
-
--- _G.SLASH_LSADDTOAST1 = "/lstoasttest"
--- _G.SlashCmdList["LSADDTOAST"] = SpawnTestToast
 
 --------------------
 -- IN-GAME CONFIG --
@@ -2830,9 +2795,9 @@ local function ToggleToasts(value, state)
 		end
 	elseif value == "world" then
 		if state then
-			EnableWorldToasts()
+			dispatcher:EnableWorldToasts()
 		else
-			DisableWorldToasts()
+			dispatcher:DisableWorldToasts()
 		end
 	elseif value == "transmog" then
 		if state then
@@ -4047,7 +4012,7 @@ local function CreateConfigPanel()
 			end,
 			dnd_get = function() return CFG.type.world.dnd end,
 			dnd_set = function(_, value) CFG.type.world.dnd = value end,
-			test_func = SpawnTestWorldEventToast,
+			test_func = dispatcher.TestWorldToast,
 		},
 		[11] = {
 			name = "$parentTransmog",
@@ -4250,7 +4215,7 @@ function dispatcher:PLAYER_LOGIN()
 	self:EnableCommonLootToasts()
 	self:EnableCurrencyLootToasts()
 	self:EnableRecipeToasts()
-	EnableWorldToasts()
+	self:EnableWorldToasts()
 	self:EnableTransmogToasts()
 
 	for event in pairs(BLACKLISTED_EVENTS) do
