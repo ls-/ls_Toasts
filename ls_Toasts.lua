@@ -22,9 +22,10 @@ local Lerp = _G.Lerp
 
 -- Mine
 local PLAYER_NAME = _G.UnitName("player")
-local TITLE_NEED_TEMPLATE = "%s |cff00ff00%s|r|TInterface\\Buttons\\UI-GroupLoot-Dice-Up:0:0:0:0:32:32:0:32:0:31|t"
-local TITLE_GREED_TEMPLATE = "%s |cff00ff00%s|r|TInterface\\Buttons\\UI-GroupLoot-Coin-Up:0:0:0:0:32:32:0:32:0:31|t"
+local HONOR_TEMPLATE = "%s |TInterface\\Icons\\PVPCurrency-Honor-%s:0|t"
 local TITLE_DE_TEMPLATE = "%s |cff00ff00%s|r|TInterface\\Buttons\\UI-GroupLoot-DE-Up:0:0:0:0:32:32:0:32:0:31|t"
+local TITLE_GREED_TEMPLATE = "%s |cff00ff00%s|r|TInterface\\Buttons\\UI-GroupLoot-Coin-Up:0:0:0:0:32:32:0:32:0:31|t"
+local TITLE_NEED_TEMPLATE = "%s |cff00ff00%s|r|TInterface\\Buttons\\UI-GroupLoot-Dice-Up:0:0:0:0:32:32:0:32:0:31|t"
 local abilityToasts = {}
 local achievementToasts = {}
 local activeToasts = {}
@@ -1871,7 +1872,7 @@ end
 ------------------
 
 do
-	local function Toast_SetUp(link, quantity, rollType, roll, factionGroup, isItem, isMoney, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase)
+	local function Toast_SetUp(link, quantity, rollType, roll, factionGroup, isItem, isMoney, isHonor, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase)
 		if isItem then
 			if link then
 				local toast = GetToast("item")
@@ -1963,6 +1964,23 @@ do
 			toast.soundFile = 31578
 
 			SpawnToast(toast, CFG.type.loot_special.dnd)
+		elseif isHonor then
+			local toast = GetToast("misc")
+
+			if factionGroup then
+				toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-"..factionGroup)
+
+				quantity = HONOR_TEMPLATE:format(quantity, factionGroup)
+			else
+				quantity = _G.MERCHANT_HONOR_POINTS:format(quantity)
+			end
+
+			toast.Title:SetText(L["YOU_RECEIVED"])
+			toast.Text:SetText(quantity)
+			toast.Icon:SetTexture("Interface\\Icons\\Achievement_LegionPVPTier4")
+			toast.soundFile = 31578
+
+			SpawnToast(toast, CFG.type.loot_special.dnd)
 		end
 	end
 
@@ -1980,38 +1998,43 @@ do
 	end
 
 	function dispatcher:LOOT_ITEM_ROLL_WON(link, quantity, rollType, roll, isUpgraded)
-		Toast_SetUp(link, quantity, rollType, roll, nil, true, nil, nil, nil, isUpgraded)
+		Toast_SetUp(link, quantity, rollType, roll, nil, true, nil, nil, nil, nil, isUpgraded)
 	end
 
 	function dispatcher:SHOW_LOOT_TOAST(typeID, link, quantity, _, _, isPersonal, _, lessAwesome, isUpgraded)
-		Toast_SetUp(link, quantity, nil, nil, nil, typeID == "item", typeID == "money", isPersonal, lessAwesome, isUpgraded)
+		local factionGroup = _G.UnitFactionGroup("player")
+		factionGroup = (typeID == "honor" and factionGroup ~= "Neutral") and factionGroup or nil
+
+		Toast_SetUp(link, quantity, nil, nil, factionGroup, typeID == "item", typeID == "money", typeID == "honor", isPersonal, lessAwesome, isUpgraded)
 	end
 
 	function dispatcher:SHOW_LOOT_TOAST_UPGRADE(link, quantity, _, _, baseQuality)
-		Toast_SetUp(link, quantity, nil, nil, nil, true, nil, nil, nil, true, baseQuality)
+		Toast_SetUp(link, quantity, nil, nil, nil, true, nil, nil, nil, nil, true, baseQuality)
 	end
 
 	function dispatcher:SHOW_PVP_FACTION_LOOT_TOAST(typeID, link, quantity, _, _, isPersonal, lessAwesome)
 		local factionGroup = _G.UnitFactionGroup("player")
+		factionGroup = factionGroup ~= "Neutral" and factionGroup or nil
 
-		Toast_SetUp(link, quantity, nil, nil, factionGroup ~= "Neutral" and factionGroup or nil, typeID == "item", typeID == "money", isPersonal, lessAwesome)
+		Toast_SetUp(link, quantity, nil, nil, factionGroup, typeID == "item", typeID == "money", typeID == "honor", isPersonal, lessAwesome)
 	end
 
 	function dispatcher:SHOW_RATED_PVP_REWARD_TOAST(typeID, link, quantity, _, _, isPersonal, lessAwesome)
 		local factionGroup = _G.UnitFactionGroup("player")
+		factionGroup = factionGroup ~= "Neutral" and factionGroup or nil
 
-		Toast_SetUp(link, quantity, nil, nil, factionGroup ~= "Neutral" and factionGroup or nil, typeID == "item", typeID == "money", isPersonal, lessAwesome)
+		Toast_SetUp(link, quantity, nil, nil, factionGroup, typeID == "item", typeID == "money", typeID == "honor", isPersonal, lessAwesome)
 	end
 
 	function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(link)
-		Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, true)
+		Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
 	end
 
 	function dispatcher:STORE_PRODUCT_DELIVERED(_, _, _, payloadID)
 		local _, link = _G.GetItemInfo(payloadID)
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
+			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, nil, true)
 		else
 			return _G.C_Timer.After(0.25, function() self:STORE_PRODUCT_DELIVERED(nil, nil, nil, payloadID) end)
 		end
@@ -2049,6 +2072,12 @@ do
 		-- money
 		Toast_SetUp(nil, 12345678, nil, nil, nil, nil, true)
 
+		-- honour
+		local factionGroup = _G.UnitFactionGroup("player")
+		factionGroup = factionGroup ~= "Neutral" and factionGroup or "Horde"
+
+		Toast_SetUp(nil, 1250, nil, nil, factionGroup, nil, nil, true)
+
 		-- roll won, Tunic of the Underworld
 		local _, link = _G.GetItemInfo(134439)
 
@@ -2060,36 +2089,34 @@ do
 		_, link = _G.GetItemInfo(142679)
 
 		if link then
-			local factionGroup = _G.UnitFactionGroup("player")
-
-			Toast_SetUp(link, 1, nil, nil, factionGroup ~= "Neutral" and factionGroup or "Horde", true, true)
+			Toast_SetUp(link, 1, nil, nil, factionGroup, true)
 		end
 
 		-- titanforged, Bonespeaker Bracers
 		_, link = _G.GetItemInfo("item:134222::::::::110:63::36:4:3432:41:1527:3337:::")
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, true)
+			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, true)
 		end
 
 		-- upgraded from uncommon to epic, Nightsfall Brestplate
 		_, link = _G.GetItemInfo("item:139055::::::::110:70::36:3:3432:1507:3336:::")
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, true, 2)
+			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, true, 2)
 		end
 		-- legendary, Sephuz's Secret
 		_, link = _G.GetItemInfo(132452)
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, true)
+			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
 		end
 
 		-- store, Pouch of Enduring Wisdom
 		_, link = _G.GetItemInfo(105911)
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
+			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, nil, true)
 		end
 	end
 end
