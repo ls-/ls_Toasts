@@ -266,29 +266,11 @@ local function CalculatePosition(self)
 	return p, p, math.floor(x + 0.5), math.floor(y + 0.5)
 end
 
-local function Anchor_OnDragStart(self)
-	self:StartMoving()
-end
-
-local function Anchor_OnDragStop(self)
-	self:StopMovingOrSizing()
-
-	local anchor = "UIParent"
-	local p, rP, x, y = CalculatePosition(self)
-
-	self:ClearAllPoints()
-	self:SetPoint(p, anchor, rP, x, y)
-
-	CFG.point = {p, anchor, rP, x, y}
-end
-
 local anchorFrame = _G.CreateFrame("Frame", "LSToastAnchor", _G.UIParent)
 anchorFrame:SetClampedToScreen(true)
 anchorFrame:SetClampRectInsets(-24, 12, 12, -12)
 anchorFrame:SetToplevel(true)
 anchorFrame:RegisterForDrag("LeftButton")
-anchorFrame:SetScript("OnDragStart", Anchor_OnDragStart)
-anchorFrame:SetScript("OnDragStop", Anchor_OnDragStop)
 anchorFrame.Enable = function(self)
 	self:EnableMouse(true)
 	self.BG:Show()
@@ -299,12 +281,35 @@ anchorFrame.Disable = function(self)
 	self.BG:Hide()
 	self.Text:Hide()
 end
+anchorFrame.Toggle = function(self)
+	if self:IsMouseEnabled() then
+		self:Disable()
+	else
+		self:Enable()
+	end
+end
 anchorFrame.Refresh = function(self)
 	self:SetMovable(true)
 	self:ClearAllPoints()
 	self:SetSize(234 * CFG.scale, 58 * CFG.scale)
 	self:SetPoint(unpack(CFG.point))
 end
+anchorFrame.StartDrag = function(self)
+	self:StartMoving()
+end
+anchorFrame.StopDrag = function(self)
+	self:StopMovingOrSizing()
+
+	local anchor = "UIParent"
+	local p, rP, x, y = CalculatePosition(self)
+
+	self:ClearAllPoints()
+	self:SetPoint(p, anchor, rP, x, y)
+
+	CFG.point = {p, anchor, rP, x, y}
+end
+anchorFrame:SetScript("OnDragStart", anchorFrame.StartDrag)
+anchorFrame:SetScript("OnDragStop", anchorFrame.StopDrag)
 
 do
 	local texture = anchorFrame:CreateTexture(nil, "BACKGROUND")
@@ -1328,7 +1333,7 @@ end
 
 function dispatcher:PLAYER_REGEN_DISABLED()
 	if anchorFrame:IsMouseEnabled() then
-		Anchor_OnDragStop(anchorFrame)
+		anchorFrame:StopDrag()
 		anchorFrame:Disable()
 	end
 end
@@ -2736,14 +2741,6 @@ local function RefreshAllOptions()
 	end
 end
 
-local function AnchorFrame_Toggle()
-	if anchorFrame:IsMouseEnabled() then
-		anchorFrame:Disable()
-	else
-		anchorFrame:Enable()
-	end
-end
-
 local function ToggleToasts(value, state)
 	if value == "achievement" then
 		if state then
@@ -3413,7 +3410,7 @@ local function CreateConfigPanel()
 	local acnhorButton = CreateConfigButton(panel, {
 		name = "$parentAnchorToggle",
 		text = L["ANCHOR_FRAME"],
-		func = AnchorFrame_Toggle
+		func = function() anchorFrame:Toggle() end,
 	})
 	acnhorButton:SetPoint("TOPLEFT", subtext, "BOTTOMLEFT", 0, -8)
 
