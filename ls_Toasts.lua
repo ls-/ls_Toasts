@@ -561,6 +561,7 @@ local function ResetToast(toast)
 	toast.Text:SetText("")
 	toast.Text:SetTextColor(1, 1, 1)
 	toast.TextBG:SetVertexColor(0, 0, 0)
+	toast.Border:SetVertexColor(1, 1, 1)
 	toast.AnimIn:Stop()
 	toast.AnimOut:Stop()
 
