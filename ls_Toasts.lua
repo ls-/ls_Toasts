@@ -2301,8 +2301,8 @@ do
 		if tainted > 0 then
 			CFG.type.loot_currency.enabled = false
 		else
-			CURRENCY_GAINED_PATTERN = _G.CURRENCY_GAINED:gsub("%%s", "(.+)")
-			CURRENCY_GAINED_MULTIPLE_PATTERN = _G.CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)")
+			CURRENCY_GAINED_PATTERN = _G.CURRENCY_GAINED:gsub("%%s", "(.+)"):gsub("^", "^")
+			CURRENCY_GAINED_MULTIPLE_PATTERN = _G.CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
 		end
 
 		if CFG.type.loot_currency.enabled then
