@@ -1,3 +1,12 @@
+## Version 1.24
+
+- Added "ls: Toasts" config entry w/ "Enable" button to interface options panel. However, It doesn't change the fact that you still need to reload UI after you're done setting up the addon, hence I also added "Reload UI" button;
+- Disabled common loot and currency string checks. Hopefully new patterns will perform better, but if I start getting reports about party/raid member loot toasts again, I'll re-enable them;
+- Changed addon name's colour so it'll no longer interfere w/ addon list sorting;
+- Updated Korean translation. Translated by yuk6196@Curse;
+- Updated German translation. Translated by pas06@Curse;
+- Numerous bug fixes and tweaks.
+
 ## Version 1.23
 
 - First attempt to address issue that made some people receive party/raid members' loot toasts. As of this version if addon detects that necessary variables were modified by another addon, it'll disable common loot and/or currency toasts, you'll be able to see which variables were modified and what addon did it in in-game config. Addon will also start checking if `CHAT_MSG_LOOT`'s 5th param (target) is the same as player's name;
