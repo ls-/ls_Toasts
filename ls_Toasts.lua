@@ -3402,12 +3402,9 @@ end
 
 ------
 
-local function CreateConfigPanel()
+local function PopulateConfigPanels()
 	-- General Panel
-	local panel = _G.CreateFrame("Frame", "LSToastsConfigPanel", _G.InterfaceOptionsFramePanelContainer)
-	panel.name = "|cff1a9fc0ls:|r Toasts"
-	panel:Hide()
-	table.insert(panels, panel)
+	local panel = panels[1]
 
 	local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 	title:SetPoint("TOPLEFT", 16, -16)
@@ -3826,12 +3823,10 @@ local function CreateConfigPanel()
 
 	panel.refresh = RefreshOptions
 
-	_G.InterfaceOptions_AddCategory(panel, true)
-
 	-- Toast Types Panel
 	panel = _G.CreateFrame("Frame", "LSToastsTypesConfigPanel", _G.InterfaceOptionsFramePanelContainer)
 	panel.name = L["SETTINGS_TYPE_LABEL"]
-	panel.parent = "|cff1a9fc0ls:|r Toasts"
+	panel.parent = L["LS_TOASTS"]
 	panel:Hide()
 	table.insert(panels, panel)
 
@@ -4093,6 +4088,8 @@ local function CreateConfigPanel()
 	panel.refresh = RefreshOptions
 
 	_G.InterfaceOptions_AddCategory(panel, true)
+	_G.InterfaceAddOnsList_Update()
+	_G.InterfaceOptionsOptionsFrame_RefreshAddOns()
 end
 
 ------------
@@ -4253,17 +4250,29 @@ function dispatcher:PLAYER_LOGIN()
 		end
 	end)
 
+	local panel = _G.CreateFrame("Frame", "LSToastsConfigPanel", _G.InterfaceOptionsFramePanelContainer)
+	panel.name = L["LS_TOASTS"]
+	panel:Hide()
+	table.insert(panels, panel)
+
+	local button = CreateConfigButton(panel, {
+		text = L["ENABLE"],
+		func = function(self)
+			self:ClearAllPoints()
+			self:Hide()
+
+			PopulateConfigPanels()
+		end,
+	})
+	button:SetPoint("TOPLEFT", 16, -16)
+
+	_G.InterfaceOptions_AddCategory(panel, true)
+	_G.InterfaceAddOnsList_Update()
+	_G.InterfaceOptionsOptionsFrame_RefreshAddOns()
+
 	_G.SLASH_LSTOASTS1 = "/lstoasts"
 	_G.SlashCmdList["LSTOASTS"] = function(msg)
 		if msg == "" then
-			if not _G.LSToastsConfigPanel then
-				CreateConfigPanel()
-
-				_G.InterfaceAddOnsList_Update()
-				_G.InterfaceOptionsOptionsFrame_RefreshAddOns()
-				return _G.InterfaceOptionsFrame_OpenToCategory(_G.LSToastsConfigPanel)
-			end
-
 			if not _G.LSToastsConfigPanel:IsShown() then
 				_G.InterfaceOptionsFrame_OpenToCategory(_G.LSToastsConfigPanel)
 			else
