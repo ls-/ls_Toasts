@@ -7,7 +7,7 @@ local math = _G.math
 local string = _G.string
 local table = _G.table
 local hooksecurefunc = _G.hooksecurefunc
-local issecurevariable = _G.issecurevariable
+-- local issecurevariable = _G.issecurevariable
 local next = _G.next
 local pairs = _G.pairs
 local pcall = _G.pcall
@@ -38,36 +38,36 @@ local scenarioToasts = {}
 local textsToAnimate = {}
 local toastCounter = 0
 
-local secure_vars ={
-	common_loot = {
-		LOOT_ITEM_SELF = {
-			is_secure = true,
-			tainted_by = ""
-		},
-		LOOT_ITEM_PUSHED_SELF = {
-			is_secure = true,
-			tainted_by = ""
-		},
-		LOOT_ITEM_SELF_MULTIPLE = {
-			is_secure = true,
-			tainted_by = ""
-		},
-		LOOT_ITEM_PUSHED_SELF_MULTIPLE = {
-			is_secure = true,
-			tainted_by = ""
-		},
-	},
-	currency = {
-		CURRENCY_GAINED = {
-			is_secure = true,
-			tainted_by = ""
-		},
-		CURRENCY_GAINED_MULTIPLE = {
-			is_secure = true,
-			tainted_by = ""
-		},
-	},
-}
+-- local secure_vars ={
+-- 	common_loot = {
+-- 		LOOT_ITEM_SELF = {
+-- 			is_secure = true,
+-- 			tainted_by = ""
+-- 		},
+-- 		LOOT_ITEM_PUSHED_SELF = {
+-- 			is_secure = true,
+-- 			tainted_by = ""
+-- 		},
+-- 		LOOT_ITEM_SELF_MULTIPLE = {
+-- 			is_secure = true,
+-- 			tainted_by = ""
+-- 		},
+-- 		LOOT_ITEM_PUSHED_SELF_MULTIPLE = {
+-- 			is_secure = true,
+-- 			tainted_by = ""
+-- 		},
+-- 	},
+-- 	currency = {
+-- 		CURRENCY_GAINED = {
+-- 			is_secure = true,
+-- 			tainted_by = ""
+-- 		},
+-- 		CURRENCY_GAINED_MULTIPLE = {
+-- 			is_secure = true,
+-- 			tainted_by = ""
+-- 		},
+-- 	},
+-- }
 
 local EQUIP_SLOTS = {
 	["INVTYPE_HEAD"] = {_G.INVSLOT_HEAD},
@@ -2195,28 +2195,28 @@ do
 	end
 
 	function dispatcher:EnableCommonLootToasts()
-		local tainted = 0
+		-- local tainted = 0
 
-		for k, v in pairs(secure_vars.common_loot) do
-			local isSecure, name = issecurevariable(k)
+		-- for k, v in pairs(secure_vars.common_loot) do
+		-- 	local isSecure, name = issecurevariable(k)
 
-			v.is_secure = isSecure
-			v.tainted_by = name
+		-- 	v.is_secure = isSecure
+		-- 	v.tainted_by = name
 
-			if not isSecure then
-				tainted = tainted + 1
-			end
-		end
+		-- 	if not isSecure then
+		-- 		tainted = tainted + 1
+		-- 	end
+		-- end
 
-		-- Do not enable common loot toasts if required vars are tainted
-		if tainted > 0 then
-			CFG.type.loot_common.enabled = false
-		else
-			LOOT_ITEM_PATTERN = _G.LOOT_ITEM_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
-			LOOT_ITEM_PUSHED_PATTERN = _G.LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
-			LOOT_ITEM_MULTIPLE_PATTERN = _G.LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-			LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = _G.LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		end
+		-- -- Do not enable common loot toasts if required vars are tainted
+		-- if tainted > 0 then
+		-- 	CFG.type.loot_common.enabled = false
+		-- else
+		LOOT_ITEM_PATTERN = _G.LOOT_ITEM_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+		LOOT_ITEM_PUSHED_PATTERN = _G.LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+		LOOT_ITEM_MULTIPLE_PATTERN = _G.LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = _G.LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		-- end
 
 		if CFG.type.loot_common.enabled then
 			self:RegisterEvent("CHAT_MSG_LOOT")
@@ -2312,26 +2312,26 @@ do
 	end
 
 	function dispatcher:EnableCurrencyLootToasts()
-		local tainted = 0
+	-- 	local tainted = 0
 
-		for k, v in pairs(secure_vars.currency) do
-			local isSecure, name = issecurevariable(k)
+	-- 	for k, v in pairs(secure_vars.currency) do
+	-- 		local isSecure, name = issecurevariable(k)
 
-			v.is_secure = isSecure
-			v.tainted_by = name
+	-- 		v.is_secure = isSecure
+	-- 		v.tainted_by = name
 
-			if not isSecure then
-				tainted = tainted + 1
-			end
-		end
+	-- 		if not isSecure then
+	-- 			tainted = tainted + 1
+	-- 		end
+	-- 	end
 
-		-- Do not enable currency toasts if required vars are tainted
-		if tainted > 0 then
-			CFG.type.loot_currency.enabled = false
-		else
-			CURRENCY_GAINED_PATTERN = _G.CURRENCY_GAINED:gsub("%%s", "(.+)"):gsub("^", "^")
-			CURRENCY_GAINED_MULTIPLE_PATTERN = _G.CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		end
+	-- 	-- Do not enable currency toasts if required vars are tainted
+	-- 	if tainted > 0 then
+	-- 		CFG.type.loot_currency.enabled = false
+	-- 	else
+		CURRENCY_GAINED_PATTERN = _G.CURRENCY_GAINED:gsub("%%s", "(.+)"):gsub("^", "^")
+		CURRENCY_GAINED_MULTIPLE_PATTERN = _G.CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+	-- 	end
 
 		if CFG.type.loot_currency.enabled then
 			self:RegisterEvent("CHAT_MSG_CURRENCY")
@@ -3962,25 +3962,25 @@ local function PopulateConfigPanels()
 			dnd_get = function() return CFG.type.loot_common.dnd end,
 			dnd_set = function(_, value) CFG.type.loot_common.dnd = value end,
 			dropdown = lootDropDown,
-			warning_refresh = function(self)
-				local tainted = 0
-				local text = ""..L["TAINT_HEADER"]
+			-- warning_refresh = function(self)
+			-- 	local tainted = 0
+			-- 	local text = ""..L["TAINT_HEADER"]
 
-				for k, v in pairs(secure_vars.common_loot) do
-					if not v.is_secure then
-						tainted = tainted + 1
+			-- 	for k, v in pairs(secure_vars.common_loot) do
+			-- 		if not v.is_secure then
+			-- 			tainted = tainted + 1
 
-						text = text..L["TAINT_LINE"]:format(k, v.tainted_by)
-					end
-				end
+			-- 			text = text..L["TAINT_LINE"]:format(k, v.tainted_by)
+			-- 		end
+			-- 	end
 
-				if tainted > 0 then
-					self.Button.toolTipText = text
-					self:Show()
-				else
-					self:Hide()
-				end
-			end,
+			-- 	if tainted > 0 then
+			-- 		self.Button.toolTipText = text
+			-- 		self:Show()
+			-- 	else
+			-- 		self:Hide()
+			-- 	end
+			-- end,
 			test_func = dispatcher.TestCommonLootToast,
 		},
 		[8] = {
@@ -3995,25 +3995,25 @@ local function PopulateConfigPanels()
 			dnd_get = function() return CFG.type.loot_currency.dnd end,
 			dnd_set = function(_, value) CFG.type.loot_currency.dnd = value end,
 			test_func = dispatcher.TestCurrencyToast,
-			warning_refresh = function(self)
-				local tainted = 0
-				local text = ""..L["TAINT_HEADER"]
+			-- warning_refresh = function(self)
+			-- 	local tainted = 0
+			-- 	local text = ""..L["TAINT_HEADER"]
 
-				for k, v in pairs(secure_vars.currency) do
-					if not v.is_secure then
-						tainted = tainted + 1
+			-- 	for k, v in pairs(secure_vars.currency) do
+			-- 		if not v.is_secure then
+			-- 			tainted = tainted + 1
 
-						text = text..L["TAINT_LINE"]:format(k, v.tainted_by)
-					end
-				end
+			-- 			text = text..L["TAINT_LINE"]:format(k, v.tainted_by)
+			-- 		end
+			-- 	end
 
-				if tainted > 0 then
-					self.Button.toolTipText = text
-					self:Show()
-				else
-					self:Hide()
-				end
-			end
+			-- 	if tainted > 0 then
+			-- 		self.Button.toolTipText = text
+			-- 		self:Show()
+			-- 	else
+			-- 		self:Hide()
+			-- 	end
+			-- end
 		},
 		[9] = {
 			name = "$parentRecipe",
