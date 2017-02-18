@@ -3830,6 +3830,13 @@ local function PopulateConfigPanels()
 	panel:Hide()
 	table.insert(panels, panel)
 
+	local reloadButton = CreateConfigButton(panel, {
+		name = "$parentReloadUIButton",
+		text = L["RELOADUI"],
+		func = function() _G.ReloadUI() end
+		})
+	reloadButton:SetPoint("TOPRIGHT", -16, -16)
+
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
 	title:SetPoint("TOPLEFT", 16, -16)
 	title:SetJustifyH("LEFT")
@@ -4256,6 +4263,7 @@ function dispatcher:PLAYER_LOGIN()
 	table.insert(panels, panel)
 
 	local button = CreateConfigButton(panel, {
+		name = "$parentEnabler",
 		text = L["ENABLE"],
 		func = function(self)
 			self:ClearAllPoints()
@@ -4265,6 +4273,13 @@ function dispatcher:PLAYER_LOGIN()
 		end,
 	})
 	button:SetPoint("TOPLEFT", 16, -16)
+
+	local reloadButton = CreateConfigButton(panel, {
+		name = "$parentReloadUIButton",
+		text = L["RELOADUI"],
+		func = function() _G.ReloadUI() end
+	})
+	reloadButton:SetPoint("TOPRIGHT", -16, -16)
 
 	_G.InterfaceOptions_AddCategory(panel, true)
 	_G.InterfaceAddOnsList_Update()
