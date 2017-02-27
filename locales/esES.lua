@@ -1,4 +1,4 @@
-﻿-- Contributors: Gotxiko
+﻿-- Contributors: Gotxiko@GitHub
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -8,7 +8,6 @@ local _G = getfenv(0)
 
 if _G.GetLocale() ~= "esES" then return end
 
--- Require translation
 L["ANCHOR"] = "Marco Toast"
 L["ANCHOR_FRAME"] = "Marco de anclaje"
 L["APPEARANCE_TITLE"] = "Apariencia"
