@@ -1,4 +1,4 @@
-﻿-- Contributors:
+﻿-- Contributors: Gotxiko
 
 local _, addonTable = ...
 local L = addonTable.L
