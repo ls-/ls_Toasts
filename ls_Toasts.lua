@@ -159,6 +159,7 @@ local DEFAULTS = {
 		loot_special = { -- personal loot, store item delivery, legendaries
 			enabled = true,
 			dnd = false,
+			threshold = 1,
 		},
 		loot_common = {
 			enabled = true,
@@ -1875,83 +1876,86 @@ do
 	local function Toast_SetUp(link, quantity, rollType, roll, factionGroup, isItem, isMoney, isHonor, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase)
 		if isItem then
 			if link then
-				local toast = GetToast("item")
 				link = ParseLink(link)
 				local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(link)
-				local color = _G.ITEM_QUALITY_COLORS[quality] or _G.ITEM_QUALITY_COLORS[1]
-				local title = L["YOU_WON"]
-				local soundFile = 31578
 
-				if rollType == _G.LOOT_ROLL_TYPE_NEED then
-					title = TITLE_NEED_TEMPLATE:format(title, roll)
-				elseif rollType == _G.LOOT_ROLL_TYPE_GREED then
-					title = TITLE_GREED_TEMPLATE:format(title, roll)
-				elseif rollType == _G.LOOT_ROLL_TYPE_DISENCHANT then
-					title = TITLE_DE_TEMPLATE:format(title, roll)
-				end
+				if quality >= CFG.type.loot_special.threshold and quality <= 5 then
+					local toast = GetToast("item")
+					local color = _G.ITEM_QUALITY_COLORS[quality] or _G.ITEM_QUALITY_COLORS[1]
+					local title = L["YOU_WON"]
+					local soundFile = 31578
 
-				if factionGroup then
-					toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-"..factionGroup)
-				end
-
-				if isPersonal or lessAwesome then
-					title = L["YOU_RECEIVED"]
-
-					if lessAwesome then
-						soundFile = 51402
-					end
-				end
-
-				if isUpgraded then
-					if baseQuality and baseQuality < quality then
-						title = L["ITEM_UPGRADED_FORMAT"]:format(color.hex, _G["ITEM_QUALITY"..quality.."_DESC"])
-					else
-						title = L["ITEM_UPGRADED"]
+					if rollType == _G.LOOT_ROLL_TYPE_NEED then
+						title = TITLE_NEED_TEMPLATE:format(title, roll)
+					elseif rollType == _G.LOOT_ROLL_TYPE_GREED then
+						title = TITLE_GREED_TEMPLATE:format(title, roll)
+					elseif rollType == _G.LOOT_ROLL_TYPE_DISENCHANT then
+						title = TITLE_DE_TEMPLATE:format(title, roll)
 					end
 
-					soundFile = 51561
-
-					local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
-
-					for i = 1, 5 do
-						toast.Arrows["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)
+					if factionGroup then
+						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-"..factionGroup)
 					end
 
-					toast.Arrows.requested = true
+					if isPersonal or lessAwesome then
+						title = L["YOU_RECEIVED"]
 
-					toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
+						if lessAwesome then
+							soundFile = 51402
+						end
+					end
+
+					if isUpgraded then
+						if baseQuality and baseQuality < quality then
+							title = L["ITEM_UPGRADED_FORMAT"]:format(color.hex, _G["ITEM_QUALITY"..quality.."_DESC"])
+						else
+							title = L["ITEM_UPGRADED"]
+						end
+
+						soundFile = 51561
+
+						local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
+
+						for i = 1, 5 do
+							toast.Arrows["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)
+						end
+
+						toast.Arrows.requested = true
+
+						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
+					end
+
+					if isLegendary then
+						title = L["ITEM_LEGENDARY"]
+						soundFile = "UI_LegendaryLoot_Toast"
+
+						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legendary")
+						toast.Dragon:Show()
+					end
+
+					if isStorePurchase then
+						title = L["BLIZZARD_STORE_PURCHASE_DELIVERED"]
+						soundFile = "UI_igStore_PurchaseDelivered_Toast_01"
+
+						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
+					end
+
+					toast.Title:SetText(title)
+					toast.Text:SetText(name)
+					toast.Count:SetText(quantity > 1 and quantity or "")
+					toast.Border:SetVertexColor(color.r, color.g, color.b)
+					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+					toast.Icon:SetTexture(icon)
+					toast.UpgradeIcon:SetShown(IsItemAnUpgrade(link))
+					toast.link = link
+					toast.soundFile = soundFile
+
+					if CFG.colored_names_enabled then
+						toast.Text:SetTextColor(color.r, color.g, color.b)
+					end
+
+					SpawnToast(toast, CFG.type.loot_special.dnd)
 				end
-
-				if isLegendary then
-					title = L["ITEM_LEGENDARY"]
-					soundFile = "UI_LegendaryLoot_Toast"
-
-					toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legendary")
-					toast.Dragon:Show()
-				end
-
-				if isStorePurchase then
-					title = L["BLIZZARD_STORE_PURCHASE_DELIVERED"]
-					soundFile = "UI_igStore_PurchaseDelivered_Toast_01"
-
-					toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
-				end
-
-				toast.Title:SetText(title)
-				toast.Text:SetText(name)
-				toast.Count:SetText(quantity > 1 and quantity or "")
-				toast.Border:SetVertexColor(color.r, color.g, color.b)
-				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-				toast.Icon:SetTexture(icon)
-				toast.UpgradeIcon:SetShown(IsItemAnUpgrade(link))
-				toast.link = link
-				toast.soundFile = soundFile
-
-				if CFG.colored_names_enabled then
-					toast.Text:SetTextColor(color.r, color.g, color.b)
-				end
-
-				SpawnToast(toast, CFG.type.loot_special.dnd)
 			end
 		elseif isMoney then
 			local toast = GetToast("misc")
@@ -3286,11 +3290,11 @@ local function DropDown_Close()
 	_G.CloseDropDownMenus()
 end
 
-local function LootDropDown_SetLootThreshold(_, quality)
-	CFG.type.loot_common.threshold = quality
+local function LootDropDown_SetLootThreshold(_, key, quality)
+	CFG.type[key].threshold = quality
 end
 
-local function LootDropDown_Initialize()
+local function LootDropDown_Initialize(self)
 	local info = _G.UIDropDownMenu_CreateInfo()
 
 	info.text = _G.LOOT_THRESHOLD
@@ -3299,10 +3303,11 @@ local function LootDropDown_Initialize()
 	_G.UIDropDownMenu_AddButton(info)
 	table.wipe(info)
 
-	for i = 1, 4 do
+	for i = 1, (self.key == "loot_special" and 5 or 4) do
 		info.text = _G.ITEM_QUALITY_COLORS[i].hex.._G["ITEM_QUALITY"..i.."_DESC"].."|r"
-		info.checked = i == CFG.type.loot_common.threshold
-		info.arg1 = i
+		info.checked = i == CFG.type[self.key].threshold
+		info.arg1 = self.key
+		info.arg2 = i
 		info.func = LootDropDown_SetLootThreshold
 		_G.UIDropDownMenu_AddButton(info)
 		table.wipe(info)
@@ -3863,11 +3868,19 @@ local function PopulateConfigPanels()
 	subtext:SetMaxLines(3)
 	subtext:SetText(L["SETTINGS_TYPE_DESC"])
 
-	local lootDropDown = _G.CreateFrame("Frame", "$parentLootCommonDropDown", panel, "UIDropDownMenuTemplate")
-	lootDropDown.displayMode = "MENU"
-	lootDropDown.point = "TOPLEFT"
-	lootDropDown.relativePoint = "BOTTOMRIGHT"
-	_G.UIDropDownMenu_Initialize(lootDropDown, LootDropDown_Initialize)
+	local lootSpecialDropDown = _G.CreateFrame("Frame", "$parentLootSpecialDropDown", panel, "UIDropDownMenuTemplate")
+	lootSpecialDropDown.displayMode = "MENU"
+	lootSpecialDropDown.point = "TOPLEFT"
+	lootSpecialDropDown.relativePoint = "BOTTOMRIGHT"
+	lootSpecialDropDown.key = "loot_special"
+	_G.UIDropDownMenu_Initialize(lootSpecialDropDown, LootDropDown_Initialize)
+
+	local lootCommonDropDown = _G.CreateFrame("Frame", "$parentLootCommonDropDown", panel, "UIDropDownMenuTemplate")
+	lootCommonDropDown.displayMode = "MENU"
+	lootCommonDropDown.point = "TOPLEFT"
+	lootCommonDropDown.relativePoint = "BOTTOMRIGHT"
+	lootCommonDropDown.key = "loot_common"
+	_G.UIDropDownMenu_Initialize(lootCommonDropDown, LootDropDown_Initialize)
 
 	local layout = {
 		[1] = {
@@ -3947,6 +3960,7 @@ local function PopulateConfigPanels()
 			end,
 			dnd_get = function() return CFG.type.loot_special.dnd end,
 			dnd_set = function(_, value) CFG.type.loot_special.dnd = value end,
+			dropdown = lootSpecialDropDown,
 			test_func = dispatcher.TestSpecialLootToast,
 		},
 		[7] = {
@@ -3961,7 +3975,7 @@ local function PopulateConfigPanels()
 			end,
 			dnd_get = function() return CFG.type.loot_common.dnd end,
 			dnd_set = function(_, value) CFG.type.loot_common.dnd = value end,
-			dropdown = lootDropDown,
+			dropdown = lootCommonDropDown,
 			-- warning_refresh = function(self)
 			-- 	local tainted = 0
 			-- 	local text = ""..L["TAINT_HEADER"]
