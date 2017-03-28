@@ -1,3 +1,11 @@
+## Version 70200.01
+
+- New version format: INTERFACE_VERSION.PATCH;
+- Added 7.2 support;
+- Added special loot item quality threshold drop down;
+- Added Spanish translation. Translated by Gotxiko@GitHub;
+- Updated Traditional Chinese translation. Translated by BNSSNB@Curse.
+
 ## Version 1.24
 
 - Added "ls: Toasts" config entry w/ "Enable" button to interface options panel. However, It doesn't change the fact that you still need to reload UI after you're done setting up the addon, hence I also added "Reload UI" button;
