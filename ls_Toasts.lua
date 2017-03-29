@@ -2614,7 +2614,7 @@ end
 do
 	local function IsAppearanceKnown(sourceID)
 		local data = _G.C_TransmogCollection.GetSourceInfo(sourceID)
-		local sources = _G.C_TransmogCollection.GetAppearanceSources(data.appearanceID)
+		local sources = _G.C_TransmogCollection.GetAppearanceSources(data.visualID)
 
 		if sources then
 			for i = 1, #sources do
