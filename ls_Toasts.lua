@@ -2492,7 +2492,7 @@ do
 				toast.Icon:SetTexture("Interface\\Icons\\INV_Pet_BattlePetTraining")
 			elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_PROFESSION and tradeskillLineIndex then
 				toast.Icon:SetTexture(select(2, _G.GetProfessionInfo(tradeskillLineIndex)))
-			elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_DUNGEON then
+			elseif worldQuestType == _G.LE_QUEST_TAG_TYPE_DUNGEON or worldQuestType == _G.LE_QUEST_TAG_TYPE_RAID then
 				toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Bone_Skull_02")
 			else
 				toast.Icon:SetTexture("Interface\\Icons\\Achievement_Quests_Completed_TwilightHighlands")
