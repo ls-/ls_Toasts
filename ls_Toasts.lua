@@ -2483,7 +2483,7 @@ do
 			toast.IconBorder:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
 			toast.soundFile = "UI_Scenario_Ending"
 		else
-			local _, _, worldQuestType, rarity, _, _, tradeskillLineIndex = _G.GetQuestTagInfo(questID)
+			local _, _, worldQuestType, rarity, _, tradeskillLineIndex = _G.GetQuestTagInfo(questID)
 			local color = _G.WORLD_QUEST_QUALITY_COLORS[rarity] or _G.WORLD_QUEST_QUALITY_COLORS[1]
 
 			if worldQuestType == _G.LE_QUEST_TAG_TYPE_PVP then
