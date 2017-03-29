@@ -1,3 +1,9 @@
+## Version 70200.02
+
+- Fixed transmog toast issue;
+- Fixed profession world quest toast issue;
+- Misc tweaks.
+
 ## Version 70200.01
 
 - New version format: INTERFACE_VERSION.PATCH;
