@@ -38,37 +38,6 @@ local scenarioToasts = {}
 local textsToAnimate = {}
 local toastCounter = 0
 
--- local secure_vars ={
--- 	common_loot = {
--- 		LOOT_ITEM_SELF = {
--- 			is_secure = true,
--- 			tainted_by = ""
--- 		},
--- 		LOOT_ITEM_PUSHED_SELF = {
--- 			is_secure = true,
--- 			tainted_by = ""
--- 		},
--- 		LOOT_ITEM_SELF_MULTIPLE = {
--- 			is_secure = true,
--- 			tainted_by = ""
--- 		},
--- 		LOOT_ITEM_PUSHED_SELF_MULTIPLE = {
--- 			is_secure = true,
--- 			tainted_by = ""
--- 		},
--- 	},
--- 	currency = {
--- 		CURRENCY_GAINED = {
--- 			is_secure = true,
--- 			tainted_by = ""
--- 		},
--- 		CURRENCY_GAINED_MULTIPLE = {
--- 			is_secure = true,
--- 			tainted_by = ""
--- 		},
--- 	},
--- }
-
 local EQUIP_SLOTS = {
 	["INVTYPE_HEAD"] = {_G.INVSLOT_HEAD},
 	["INVTYPE_NECK"] = {_G.INVSLOT_NECK},
@@ -2285,28 +2254,10 @@ do
 	end
 
 	function dispatcher:EnableCommonLootToasts()
-		-- local tainted = 0
-
-		-- for k, v in pairs(secure_vars.common_loot) do
-		-- 	local isSecure, name = issecurevariable(k)
-
-		-- 	v.is_secure = isSecure
-		-- 	v.tainted_by = name
-
-		-- 	if not isSecure then
-		-- 		tainted = tainted + 1
-		-- 	end
-		-- end
-
-		-- -- Do not enable common loot toasts if required vars are tainted
-		-- if tainted > 0 then
-		-- 	CFG.type.loot_common.enabled = false
-		-- else
 		LOOT_ITEM_PATTERN = _G.LOOT_ITEM_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
 		LOOT_ITEM_PUSHED_PATTERN = _G.LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
 		LOOT_ITEM_MULTIPLE_PATTERN = _G.LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
 		LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = _G.LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		-- end
 
 		if CFG.type.loot_common.enabled then
 			self:RegisterEvent("CHAT_MSG_LOOT")
@@ -2402,26 +2353,8 @@ do
 	end
 
 	function dispatcher:EnableCurrencyLootToasts()
-	-- 	local tainted = 0
-
-	-- 	for k, v in pairs(secure_vars.currency) do
-	-- 		local isSecure, name = issecurevariable(k)
-
-	-- 		v.is_secure = isSecure
-	-- 		v.tainted_by = name
-
-	-- 		if not isSecure then
-	-- 			tainted = tainted + 1
-	-- 		end
-	-- 	end
-
-	-- 	-- Do not enable currency toasts if required vars are tainted
-	-- 	if tainted > 0 then
-	-- 		CFG.type.loot_currency.enabled = false
-	-- 	else
 		CURRENCY_GAINED_PATTERN = _G.CURRENCY_GAINED:gsub("%%s", "(.+)"):gsub("^", "^")
 		CURRENCY_GAINED_MULTIPLE_PATTERN = _G.CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-	-- 	end
 
 		if CFG.type.loot_currency.enabled then
 			self:RegisterEvent("CHAT_MSG_CURRENCY")
@@ -3172,86 +3105,6 @@ end
 
 ------
 
-local function InfoButton_OnEnter(self)
-	_G.HelpPlate_TooltipHide()
-
-	if self.tooltipDir == "UP" then
-		_G.HelpPlateTooltip.ArrowUP:Show()
-		_G.HelpPlateTooltip.ArrowGlowUP:Show()
-		_G.HelpPlateTooltip:SetPoint("BOTTOM", self, "TOP", 0, 10)
-	elseif self.tooltipDir == "DOWN" then
-		_G.HelpPlateTooltip.ArrowDOWN:Show()
-		_G.HelpPlateTooltip.ArrowGlowDOWN:Show()
-		_G.HelpPlateTooltip:SetPoint("TOP", self, "BOTTOM", 0, -10)
-	elseif self.tooltipDir == "LEFT" then
-		_G.HelpPlateTooltip.ArrowLEFT:Show()
-		_G.HelpPlateTooltip.ArrowGlowLEFT:Show()
-		_G.HelpPlateTooltip:SetPoint("RIGHT", self, "LEFT", -10, 0)
-	elseif self.tooltipDir == "RIGHT" then
-		_G.HelpPlateTooltip.ArrowRIGHT:Show()
-		_G.HelpPlateTooltip.ArrowGlowRIGHT:Show()
-		_G.HelpPlateTooltip:SetPoint("LEFT", self, "RIGHT", 10, 0)
-	end
-
-	_G.HelpPlateTooltip.Text:SetWidth(0)
-	_G.HelpPlateTooltip.Text:SetText(self.toolTipText)
-
-	_G.HelpPlateTooltip:SetWidth(_G.HelpPlateTooltip.Text:GetWidth() + 20)
-	_G.HelpPlateTooltip:Show()
-end
-
-local function InfoButton_OnLeave()
-	_G.HelpPlateTooltip:SetWidth(220)
-	_G.HelpPlateTooltip.Text:SetWidth(200)
-	_G.HelpPlate_TooltipHide()
-end
-
-local function CreateWarningPlate(panel, params)
-	params = params or {}
-
-	local object = _G.CreateFrame("Frame", params.name, params.parent or panel, "ThinBorderTemplate")
-	object:EnableMouse(true)
-	object:SetFrameLevel(1)
-	object:SetFrameStrata("DIALOG")
-	object:Show()
-	object.RefreshValue = params.refresh
-
-	for i = 1, #object.Textures do
-		object.Textures[i]:SetVertexColor(1, 0.82, 0)
-	end
-
-	local texture = object:CreateTexture(nil, "BACKGROUND")
-	texture:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\warning-bg", true, true)
-	texture:SetHorizTile(true)
-	texture:SetVertTile(true)
-	texture:SetAllPoints()
-	texture:SetVertexColor(1, 0.82, 0, 0.5)
-
-	local button = _G.CreateFrame("Button", "$parentInfoButton", object)
-	button:SetSize(24, 24)
-	button:SetScript("OnClick", params.click)
-	button:SetScript("OnEnter", InfoButton_OnEnter)
-	button:SetScript("OnLeave", InfoButton_OnLeave)
-	button.toolTipText = params.tooltip_text
-	button.tooltipDir = params.tooltip_dir or "UP"
-	button:SetPoint("CENTER", object, "CENTER", 0, 0)
-	object.Button = button
-
-	button:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD")
-
-	texture = button:CreateTexture(nil, "ARTWORK")
-	texture:SetAllPoints()
-	texture:SetTexture("Interface\\COMMON\\help-i")
-	texture:SetTexCoord(13 / 64, 51 / 64, 13 / 64, 51 / 64)
-	texture:SetBlendMode("BLEND")
-
-	RegisterControlForRefresh(panel, object)
-
-	return object
-end
-
-------
-
 local function SettingsButton_OnEnter(self)
 	self.Icon:SetAlpha(1)
 end
@@ -3281,17 +3134,6 @@ local function CreateToastConfigLine(panel, params)
 	name:SetHeight(33)
 	name:SetJustifyV("MIDDLE")
 	name:SetText(params.text)
-
-	if params.warning_refresh then
-		local warning = CreateWarningPlate(panel, {
-			name = "$parentWarningPlate",
-			frame_level = object:GetFrameLevel() + 4,
-			tooltip_text = params.warning_tooltip_text,
-			tooltip_dir = params.warning_tooltip_dir,
-			refresh = params.warning_refresh
-		})
-		warning:SetAllPoints(object)
-	end
 
 	if params.dropdown then
 		local settings = _G.CreateFrame("Button", "$parentSettingsButton", object)
@@ -4065,25 +3907,6 @@ local function PopulateConfigPanels()
 			dnd_get = function() return CFG.type.loot_common.dnd end,
 			dnd_set = function(_, value) CFG.type.loot_common.dnd = value end,
 			dropdown = lootCommonDropDown,
-			-- warning_refresh = function(self)
-			-- 	local tainted = 0
-			-- 	local text = ""..L["TAINT_HEADER"]
-
-			-- 	for k, v in pairs(secure_vars.common_loot) do
-			-- 		if not v.is_secure then
-			-- 			tainted = tainted + 1
-
-			-- 			text = text..L["TAINT_LINE"]:format(k, v.tainted_by)
-			-- 		end
-			-- 	end
-
-			-- 	if tainted > 0 then
-			-- 		self.Button.toolTipText = text
-			-- 		self:Show()
-			-- 	else
-			-- 		self:Hide()
-			-- 	end
-			-- end,
 			test_func = dispatcher.TestCommonLootToast,
 		},
 		[8] = {
@@ -4098,25 +3921,6 @@ local function PopulateConfigPanels()
 			dnd_get = function() return CFG.type.loot_currency.dnd end,
 			dnd_set = function(_, value) CFG.type.loot_currency.dnd = value end,
 			test_func = dispatcher.TestCurrencyToast,
-			-- warning_refresh = function(self)
-			-- 	local tainted = 0
-			-- 	local text = ""..L["TAINT_HEADER"]
-
-			-- 	for k, v in pairs(secure_vars.currency) do
-			-- 		if not v.is_secure then
-			-- 			tainted = tainted + 1
-
-			-- 			text = text..L["TAINT_LINE"]:format(k, v.tainted_by)
-			-- 		end
-			-- 	end
-
-			-- 	if tainted > 0 then
-			-- 		self.Button.toolTipText = text
-			-- 		self:Show()
-			-- 	else
-			-- 		self:Hide()
-			-- 	end
-			-- end
 		},
 		[9] = {
 			name = "$parentRecipe",
