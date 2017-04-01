@@ -551,6 +551,7 @@ local function ResetToast(toast)
 	toast.dnd = nil
 	toast.chat = nil
 	toast.link = nil
+	toast.event = nil
 	toast.itemCount = nil
 	toast.soundFile = nil
 	toast.usedRewards = nil
@@ -651,16 +652,30 @@ local function RecycleToast(toast)
 	RefreshToasts()
 end
 
-local function GetToastToUpdate(id, toastType)
-	for _, toast in pairs(activeToasts) do
-		if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
-			return toast, false
+local function GetToastToUpdate(id, toastType, toastEvent)
+	if toastEvent then
+		for _, toast in pairs(activeToasts) do
+			if toastEvent == toast.event and toastType == toast.type and (id == toast.id or id == toast.link) then
+				return toast, false
+			end
 		end
-	end
 
-	for _, toast in pairs(queuedToasts) do
-		if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
-			return toast, true
+		for _, toast in pairs(queuedToasts) do
+			if toastEvent == toast.event and toastType == toast.type and (id == toast.id or id == toast.link) then
+				return toast, true
+			end
+		end
+	else
+		for _, toast in pairs(activeToasts) do
+			if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
+				return toast, false
+			end
+		end
+
+		for _, toast in pairs(queuedToasts) do
+			if not toast.chat and toastType == toast.type and (id == toast.id or id == toast.link) then
+				return toast, true
+			end
 		end
 	end
 
@@ -1873,88 +1888,127 @@ end
 ------------------
 
 do
-	local function Toast_SetUp(link, quantity, rollType, roll, factionGroup, isItem, isMoney, isHonor, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase)
+	local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, isItem, isMoney, isHonor, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase)
 		if isItem then
 			if link then
 				link = ParseLink(link)
-				local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(link)
 
-				if quality >= CFG.type.loot_special.threshold and quality <= 5 then
-					local toast = GetToast("item")
-					local color = _G.ITEM_QUALITY_COLORS[quality] or _G.ITEM_QUALITY_COLORS[1]
-					local title = L["YOU_WON"]
-					local soundFile = 31578
+				local toast, isQueued = GetToastToUpdate(link, "item", event)
+				local isUpdated = true
 
-					if rollType == _G.LOOT_ROLL_TYPE_NEED then
-						title = TITLE_NEED_TEMPLATE:format(title, roll)
-					elseif rollType == _G.LOOT_ROLL_TYPE_GREED then
-						title = TITLE_GREED_TEMPLATE:format(title, roll)
-					elseif rollType == _G.LOOT_ROLL_TYPE_DISENCHANT then
-						title = TITLE_DE_TEMPLATE:format(title, roll)
+				if not toast then
+					toast = GetToast("item")
+					isUpdated = false
+				end
+
+				if not isUpdated then
+					local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(link)
+
+					if quality >= CFG.type.loot_special.threshold and quality <= 5 then
+						local color = _G.ITEM_QUALITY_COLORS[quality] or _G.ITEM_QUALITY_COLORS[1]
+						local title = L["YOU_WON"]
+						local soundFile = 31578
+
+						if rollType == _G.LOOT_ROLL_TYPE_NEED then
+							title = TITLE_NEED_TEMPLATE:format(title, roll)
+						elseif rollType == _G.LOOT_ROLL_TYPE_GREED then
+							title = TITLE_GREED_TEMPLATE:format(title, roll)
+						elseif rollType == _G.LOOT_ROLL_TYPE_DISENCHANT then
+							title = TITLE_DE_TEMPLATE:format(title, roll)
+						end
+
+						if factionGroup then
+							toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-"..factionGroup)
+						end
+
+						if isPersonal or lessAwesome then
+							title = L["YOU_RECEIVED"]
+
+							if lessAwesome then
+								soundFile = 51402
+							end
+						end
+
+						if isUpgraded then
+							if baseQuality and baseQuality < quality then
+								title = L["ITEM_UPGRADED_FORMAT"]:format(color.hex, _G["ITEM_QUALITY"..quality.."_DESC"])
+							else
+								title = L["ITEM_UPGRADED"]
+							end
+
+							soundFile = 51561
+
+							local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
+
+							for i = 1, 5 do
+								toast.Arrows["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)
+							end
+
+							toast.Arrows.requested = true
+
+							toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
+						end
+
+						if isLegendary then
+							title = L["ITEM_LEGENDARY"]
+							soundFile = "UI_LegendaryLoot_Toast"
+
+							toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legendary")
+							toast.Dragon:Show()
+						end
+
+						if isStorePurchase then
+							title = L["BLIZZARD_STORE_PURCHASE_DELIVERED"]
+							soundFile = "UI_igStore_PurchaseDelivered_Toast_01"
+
+							toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
+						end
+
+						toast.Title:SetText(title)
+						toast.Text:SetText(name)
+						toast.Count:SetText(quantity > 1 and quantity or "")
+						toast.Border:SetVertexColor(color.r, color.g, color.b)
+						toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+						toast.Icon:SetTexture(icon)
+						toast.UpgradeIcon:SetShown(IsItemAnUpgrade(link))
+						toast.itemCount = quantity
+						toast.link = link
+						toast.soundFile = soundFile
+						toast.event = event
+
+						if CFG.colored_names_enabled then
+							toast.Text:SetTextColor(color.r, color.g, color.b)
+						end
+
+						SpawnToast(toast, CFG.type.loot_special.dnd)
+					else
+						RecycleToast(toast)
 					end
-
-					if factionGroup then
-						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-"..factionGroup)
-					end
-
-					if isPersonal or lessAwesome then
-						title = L["YOU_RECEIVED"]
-
-						if lessAwesome then
-							soundFile = 51402
+				else
+					if rollType then
+						if rollType == _G.LOOT_ROLL_TYPE_NEED then
+							toast.Title:SetFormattedText(TITLE_NEED_TEMPLATE, L["YOU_WON"], roll)
+						elseif rollType == _G.LOOT_ROLL_TYPE_GREED then
+							toast.Title:SetFormattedText(TITLE_GREED_TEMPLATE, L["YOU_WON"], roll)
+						elseif rollType == _G.LOOT_ROLL_TYPE_DISENCHANT then
+							toast.Title:SetFormattedText(TITLE_DE_TEMPLATE, L["YOU_WON"], roll)
 						end
 					end
 
-					if isUpgraded then
-						if baseQuality and baseQuality < quality then
-							title = L["ITEM_UPGRADED_FORMAT"]:format(color.hex, _G["ITEM_QUALITY"..quality.."_DESC"])
-						else
-							title = L["ITEM_UPGRADED"]
-						end
+					if isQueued then
+						toast.itemCount = toast.itemCount + quantity
+						toast.Count:SetText(toast.itemCount)
+					else
+						toast.itemCount = toast.itemCount + quantity
+						toast.Count:SetAnimatedText(toast.itemCount)
 
-						soundFile = 51561
+						toast.CountUpdate:SetText("+"..quantity)
+						toast.CountUpdateAnim:Stop()
+						toast.CountUpdateAnim:Play()
 
-						local upgradeTexture = _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or _G.LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
-
-						for i = 1, 5 do
-							toast.Arrows["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)
-						end
-
-						toast.Arrows.requested = true
-
-						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
+						toast.AnimOut:Stop()
+						toast.AnimOut:Play()
 					end
-
-					if isLegendary then
-						title = L["ITEM_LEGENDARY"]
-						soundFile = "UI_LegendaryLoot_Toast"
-
-						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legendary")
-						toast.Dragon:Show()
-					end
-
-					if isStorePurchase then
-						title = L["BLIZZARD_STORE_PURCHASE_DELIVERED"]
-						soundFile = "UI_igStore_PurchaseDelivered_Toast_01"
-
-						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
-					end
-
-					toast.Title:SetText(title)
-					toast.Text:SetText(name)
-					toast.Count:SetText(quantity > 1 and quantity or "")
-					toast.Border:SetVertexColor(color.r, color.g, color.b)
-					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-					toast.Icon:SetTexture(icon)
-					toast.UpgradeIcon:SetShown(IsItemAnUpgrade(link))
-					toast.link = link
-					toast.soundFile = soundFile
-
-					if CFG.colored_names_enabled then
-						toast.Text:SetTextColor(color.r, color.g, color.b)
-					end
-
-					SpawnToast(toast, CFG.type.loot_special.dnd)
 				end
 			end
 		elseif isMoney then
@@ -2002,43 +2056,43 @@ do
 	end
 
 	function dispatcher:LOOT_ITEM_ROLL_WON(link, quantity, rollType, roll, isUpgraded)
-		Toast_SetUp(link, quantity, rollType, roll, nil, true, nil, nil, nil, nil, isUpgraded)
+		Toast_SetUp("LOOT_ITEM_ROLL_WON", link, quantity, rollType, roll, nil, true, nil, nil, nil, nil, isUpgraded)
 	end
 
 	function dispatcher:SHOW_LOOT_TOAST(typeID, link, quantity, _, _, isPersonal, _, lessAwesome, isUpgraded)
 		local factionGroup = _G.UnitFactionGroup("player")
 		factionGroup = (typeID == "honor" and factionGroup ~= "Neutral") and factionGroup or nil
 
-		Toast_SetUp(link, quantity, nil, nil, factionGroup, typeID == "item", typeID == "money", typeID == "honor", isPersonal, lessAwesome, isUpgraded)
+		Toast_SetUp("SHOW_LOOT_TOAST", link, quantity, nil, nil, factionGroup, typeID == "item", typeID == "money", typeID == "honor", isPersonal, lessAwesome, isUpgraded)
 	end
 
 	function dispatcher:SHOW_LOOT_TOAST_UPGRADE(link, quantity, _, _, baseQuality)
-		Toast_SetUp(link, quantity, nil, nil, nil, true, nil, nil, nil, nil, true, baseQuality)
+		Toast_SetUp("SHOW_LOOT_TOAST_UPGRADE", link, quantity, nil, nil, nil, true, nil, nil, nil, nil, true, baseQuality)
 	end
 
 	function dispatcher:SHOW_PVP_FACTION_LOOT_TOAST(typeID, link, quantity, _, _, isPersonal, lessAwesome)
 		local factionGroup = _G.UnitFactionGroup("player")
 		factionGroup = factionGroup ~= "Neutral" and factionGroup or nil
 
-		Toast_SetUp(link, quantity, nil, nil, factionGroup, typeID == "item", typeID == "money", typeID == "honor", isPersonal, lessAwesome)
+		Toast_SetUp("SHOW_PVP_FACTION_LOOT_TOAST", link, quantity, nil, nil, factionGroup, typeID == "item", typeID == "money", typeID == "honor", isPersonal, lessAwesome)
 	end
 
 	function dispatcher:SHOW_RATED_PVP_REWARD_TOAST(typeID, link, quantity, _, _, isPersonal, lessAwesome)
 		local factionGroup = _G.UnitFactionGroup("player")
 		factionGroup = factionGroup ~= "Neutral" and factionGroup or nil
 
-		Toast_SetUp(link, quantity, nil, nil, factionGroup, typeID == "item", typeID == "money", typeID == "honor", isPersonal, lessAwesome)
+		Toast_SetUp("SHOW_RATED_PVP_REWARD_TOAST", link, quantity, nil, nil, factionGroup, typeID == "item", typeID == "money", typeID == "honor", isPersonal, lessAwesome)
 	end
 
 	function dispatcher:SHOW_LOOT_TOAST_LEGENDARY_LOOTED(link)
-		Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
+		Toast_SetUp("SHOW_LOOT_TOAST_LEGENDARY_LOOTED", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
 	end
 
 	function dispatcher:STORE_PRODUCT_DELIVERED(_, _, _, payloadID)
 		local _, link = _G.GetItemInfo(payloadID)
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, nil, true)
+			Toast_SetUp("STORE_PRODUCT_DELIVERED", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, nil, true)
 		else
 			return _G.C_Timer.After(0.25, function() self:STORE_PRODUCT_DELIVERED(nil, nil, nil, payloadID) end)
 		end
@@ -2074,53 +2128,53 @@ do
 
 	function dispatcher:TestSpecialLootToast()
 		-- money
-		Toast_SetUp(nil, 12345678, nil, nil, nil, nil, true)
+		Toast_SetUp("SPECIAL_LOOT_TEST", nil, 12345678, nil, nil, nil, nil, true)
 
 		-- honour
 		local factionGroup = _G.UnitFactionGroup("player")
 		factionGroup = factionGroup ~= "Neutral" and factionGroup or "Horde"
 
-		Toast_SetUp(nil, 1250, nil, nil, factionGroup, nil, nil, true)
+		Toast_SetUp("SPECIAL_LOOT_TEST", nil, 1250, nil, nil, factionGroup, nil, nil, true)
 
 		-- roll won, Tunic of the Underworld
 		local _, link = _G.GetItemInfo(134439)
 
 		if link then
-			Toast_SetUp(link, 1, 1, 64, nil, true)
+			Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, 1, 64, nil, true)
 		end
 
 		-- pvp, Fearless Gladiator's Dreadplate Girdle
 		_, link = _G.GetItemInfo(142679)
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, factionGroup, true)
+			Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, factionGroup, true)
 		end
 
 		-- titanforged, Bonespeaker Bracers
 		_, link = _G.GetItemInfo("item:134222::::::::110:63::36:4:3432:41:1527:3337:::")
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, true)
+			Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, true, nil, nil, nil, nil, true)
 		end
 
 		-- upgraded from uncommon to epic, Nightsfall Brestplate
 		_, link = _G.GetItemInfo("item:139055::::::::110:70::36:3:3432:1507:3336:::")
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, true, 2)
+			Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, true, nil, nil, nil, nil, true, 2)
 		end
 		-- legendary, Sephuz's Secret
 		_, link = _G.GetItemInfo(132452)
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
+			Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
 		end
 
 		-- store, Pouch of Enduring Wisdom
 		_, link = _G.GetItemInfo(105911)
 
 		if link then
-			Toast_SetUp(link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, nil, true)
+			Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, nil, true)
 		end
 	end
 end
@@ -2130,8 +2184,20 @@ end
 -----------------
 
 do
-	local function Toast_SetUp(link, quantity)
-		if not GetToastToUpdate(link, "item") then
+	local function Toast_SetUp(event, link, quantity)
+		if GetToastToUpdate(link, "item") then
+			return
+		end
+
+		local toast, isQueued = GetToastToUpdate(link, "item", event)
+		local isUpdated = true
+
+		if not toast then
+			toast = GetToast("item")
+			isUpdated = false
+		end
+
+		if not isUpdated then
 			local name, quality, icon, _
 
 			if string.find(link, "battlepet:") then
@@ -2143,7 +2209,6 @@ do
 			end
 
 			if quality >= CFG.type.loot_common.threshold and quality <= 4 then
-				local toast = GetToast("item")
 				local color = _G.ITEM_QUALITY_COLORS[quality or 4]
 
 				toast.Title:SetText(L["YOU_RECEIVED"])
@@ -2152,7 +2217,9 @@ do
 				toast.Border:SetVertexColor(color.r, color.g, color.b)
 				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 				toast.Icon:SetTexture(icon)
+				toast.itemCount = quantity
 				toast.link = link
+				toast.event = event
 				toast.chat = true
 
 				if CFG.colored_names_enabled then
@@ -2160,6 +2227,23 @@ do
 				end
 
 				SpawnToast(toast, CFG.type.loot_common.dnd)
+			else
+				RecycleToast(toast)
+			end
+		else
+			if isQueued then
+				toast.itemCount = toast.itemCount + quantity
+				toast.Count:SetText(toast.itemCount)
+			else
+				toast.itemCount = toast.itemCount + quantity
+				toast.Count:SetAnimatedText(toast.itemCount)
+
+				toast.CountUpdate:SetText("+"..quantity)
+				toast.CountUpdateAnim:Stop()
+				toast.CountUpdateAnim:Play()
+
+				toast.AnimOut:Stop()
+				toast.AnimOut:Play()
 			end
 		end
 	end
@@ -2195,7 +2279,7 @@ do
 		link = ParseLink(link)
 		quantity = tonumber(quantity) or 0
 
-		_G.C_Timer.After(0.125, function() Toast_SetUp(link, quantity) end)
+		_G.C_Timer.After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, quantity) end)
 	end
 
 	function dispatcher:EnableCommonLootToasts()
@@ -2236,11 +2320,11 @@ do
 		local _, link = _G.GetItemInfo(124442)
 
 		if link then
-			Toast_SetUp(link, 44)
+			Toast_SetUp("COMMON_LOOT_TEST", link, 44)
 		end
 
 		-- battlepet, Anubisath Idol
-		Toast_SetUp("battlepet:1155:25:3:1725:276:244:0000000000000000", 1)
+		Toast_SetUp("COMMON_LOOT_TEST", "battlepet:1155:25:3:1725:276:244:0000000000000000", 1)
 	end
 end
 
