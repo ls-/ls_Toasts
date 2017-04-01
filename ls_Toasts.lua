@@ -475,7 +475,9 @@ local function HasNonDNDToast()
 end
 
 local function SpawnToast(toast, isDND)
-	if not toast then return end
+	if not toast then
+		return
+	end
 
 	if #activeToasts >= CFG.max_active_toasts or (_G.InCombatLockdown() and isDND) then
 		if _G.InCombatLockdown() and isDND then
@@ -2504,6 +2506,7 @@ end
 -----------
 -- WORLD --
 -----------
+
 do
 	local function Toast_SetUp(questID, name, moneyReward, xpReward, numCurrencyRewards, isInvasion, isInvasionBonusComplete)
 		if GetToastToUpdate(questID, "scenario") then
@@ -2835,7 +2838,9 @@ end
 local panels = {}
 
 local function RegisterControlForRefresh(parent, control)
-	if not parent or not control then return end
+	if not parent or not control then
+		return
+	end
 
 	parent.controls = parent.controls or {}
 	table.insert(parent.controls, control)
@@ -4292,7 +4297,9 @@ end
 -------------
 
 function dispatcher:ADDON_LOADED(arg)
-	if arg ~= addonName then return end
+	if arg ~= addonName then
+		return
+	end
 
 	if not _G.LS_TOASTS_CFG then
 		_G.LS_TOASTS_CFG = {
