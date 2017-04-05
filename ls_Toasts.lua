@@ -3988,13 +3988,11 @@ local function PopulateConfigPanels()
 	title:SetText(L["TYPE"])
 
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetWidth(64)
 	title:SetJustifyH("CENTER")
 	title:SetPoint("BOTTOM", lines[1], "TOPLEFT", 333, 4)
 	title:SetText(L["ENABLE"])
 
 	title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetWidth(64)
 	title:SetJustifyH("CENTER")
 	title:SetPoint("BOTTOM", lines[1], "TOPLEFT", 455, 4)
 	title:SetText(L["DND"])
