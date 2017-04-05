@@ -1,4 +1,4 @@
-﻿-- Contributors:
+﻿-- Contributors: BLizzatron@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
