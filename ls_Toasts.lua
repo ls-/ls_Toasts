@@ -3708,7 +3708,7 @@ local function PopulateConfigPanels()
 				_G.UIDropDownMenu_AddButton(info)
 			end
 
-			info.text = "New Profile"
+			info.text = L["NEW_PROFILE"]
 			info.func = function()
 				createProfileDialog:Show()
 			end
