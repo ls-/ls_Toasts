@@ -1,3 +1,7 @@
+## Version 70200.04
+
+- Fixed bonus roll toast issues;
+
 ## Version 70200.03
 
 - Added item toasts stacking. Toasts for identical items that were triggered by the same events will now stack. If two items have similar names, but have different item links and/or come from different events, for example, "CHAT_MSG_LOOT" and "SHOW_LOOT_TOAST", they'll be shown as two different toasts;
