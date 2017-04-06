@@ -1,6 +1,6 @@
 ## Version 70200.04
 
-- Fixed bonus roll toast issues;
+- Fixed bonus roll toast issues.
 
 ## Version 70200.03
 
