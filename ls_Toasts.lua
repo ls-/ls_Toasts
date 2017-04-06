@@ -2014,9 +2014,7 @@ do
 	end
 
 	local function BonusRollFrame_FinishedFading_Disabled(self)
-		local frame = self:GetParent()
-
-		_G.GroupLootContainer_RemoveFrame(_G.GroupLootContainer, frame)
+		_G.GroupLootContainer_RemoveFrame(_G.GroupLootContainer, self:GetParent())
 	end
 
 	local function BonusRollFrame_FinishedFading_Enabled(self)
