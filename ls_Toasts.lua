@@ -342,39 +342,41 @@ local function IsItemAnUpgrade(itemLink)
 	local itemLevel = _G.GetDetailedItemLevelInfo(itemLink)
 	local slot1, slot2 = unpack(EQUIP_SLOTS[itemEquipLoc] or {})
 
-	if slot1 then
-		local itemLinkInSlot1 = _G.GetInventoryItemLink("player", slot1)
+	if itemLevel then
+		if slot1 then
+			local itemLinkInSlot1 = _G.GetInventoryItemLink("player", slot1)
 
-		if itemLinkInSlot1 then
-			local itemLevelInSlot1 = _G.GetDetailedItemLevelInfo(itemLinkInSlot1)
+			if itemLinkInSlot1 then
+				local itemLevelInSlot1 = _G.GetDetailedItemLevelInfo(itemLinkInSlot1)
 
-			if itemLevel > itemLevelInSlot1 then
-				return true
-			end
-		else
-			-- Make sure that slot is empty
-			if not _G.GetInventoryItemID("player", slot1) then
-				return true
-			end
-		end
-	end
-
-	if slot2 then
-		local isSlot2Equippable = itemEquipLoc ~= "INVTYPE_WEAPON" and true or _G.CanDualWield()
-
-		if isSlot2Equippable then
-			local itemLinkInSlot2 = _G.GetInventoryItemLink("player", slot2)
-
-			if itemLinkInSlot2 then
-				local itemLevelInSlot2 = _G.GetDetailedItemLevelInfo(itemLinkInSlot2)
-
-				if itemLevel > itemLevelInSlot2 then
+				if itemLevelInSlot1 and itemLevel > itemLevelInSlot1 then
 					return true
 				end
 			else
 				-- Make sure that slot is empty
-				if not _G.GetInventoryItemID("player", slot2) then
+				if not _G.GetInventoryItemID("player", slot1) then
 					return true
+				end
+			end
+		end
+
+		if slot2 then
+			local isSlot2Equippable = itemEquipLoc ~= "INVTYPE_WEAPON" and true or _G.CanDualWield()
+
+			if isSlot2Equippable then
+				local itemLinkInSlot2 = _G.GetInventoryItemLink("player", slot2)
+
+				if itemLinkInSlot2 then
+					local itemLevelInSlot2 = _G.GetDetailedItemLevelInfo(itemLinkInSlot2)
+
+					if itemLevelInSlot2 and itemLevel > itemLevelInSlot2 then
+						return true
+					end
+				else
+					-- Make sure that slot is empty
+					if not _G.GetInventoryItemID("player", slot2) then
+						return true
+					end
 				end
 			end
 		end
