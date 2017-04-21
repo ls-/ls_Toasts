@@ -4115,7 +4115,7 @@ function dispatcher:ADDON_LOADED(arg)
 
 	if not _G.LS_TOASTS_CFG_GLOBAL then
 		_G.LS_TOASTS_CFG_GLOBAL = {
-			["Default"] = CopyTable(DEFAULTS)
+			Default = CopyTable(DEFAULTS)
 		}
 	else
 		if not _G.LS_TOASTS_CFG_GLOBAL.Default then
