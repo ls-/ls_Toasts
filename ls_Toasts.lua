@@ -6,13 +6,14 @@ local _G = getfenv(0)
 local math = _G.math
 local string = _G.string
 local table = _G.table
+local debugstack = _G.debugstack
 local hooksecurefunc = _G.hooksecurefunc
--- local issecurevariable = _G.issecurevariable
 local next = _G.next
 local pairs = _G.pairs
 local pcall = _G.pcall
 local print = _G.print
 local select = _G.select
+local setmetatable = _G.setmetatable
 local tonumber = _G.tonumber
 local type = _G.type
 local unpack = _G.unpack
@@ -150,7 +151,43 @@ local DEFAULTS = {
 	}
 }
 
-local F = {} -- F for Functions
+local SKINS = {
+	Default = {
+		func = function() end
+	},
+	num = 1,
+}
+
+SKINS.handler = SKINS.Default.func
+
+local _F, F = {}, {} -- private, proxy
+setmetatable(F, {
+	__index = function(_, k)
+		return _F[k]
+	end,
+	__newindex = function(_, k, v)
+		if type(v) ~= "function" then
+			return
+		end
+
+		if k ~= "SkinToast" then
+			if not _F[k] then
+				_F[k] = v
+			end
+		else
+			local name = debugstack(2, 2, 0):match("[Aa.]?[Dd.]?[Dd.]?[Oo.]?[Nn.][Ss.]?\\(.+)\\")
+
+			if name then
+				name = name:gsub("_", " "):gsub("[^%w%s]", "")
+			else
+				name = "Skin"..(SKINS.num + 1)
+			end
+
+			_F:CreateSkin(name, function(...) v(_, ...) end)
+		end
+	end,
+})
+
 _G[addonName] = {
 	[1] = F,
 }
@@ -301,6 +338,25 @@ end
 -----------
 -- UTILS --
 -----------
+
+local function FlushToastsCache()
+	table.wipe(queuedToasts)
+
+	for _ = 1, #activeToasts do
+		activeToasts[1]:Click("RightButton")
+	end
+
+	table.wipe(abilityToasts)
+	table.wipe(achievementToasts)
+	table.wipe(followerToasts)
+	table.wipe(itemToasts)
+	table.wipe(miscToasts)
+	table.wipe(missonToasts)
+	table.wipe(scenarioToasts)
+	table.wipe(textsToAnimate)
+
+	toastCounter = 0
+end
 
 local function ParseLink(link)
 	if not link or link == "[]" or link == "" then
@@ -476,7 +532,7 @@ local function SpawnToast(toast, isDND)
 
 	table.insert(activeToasts, toast)
 
-	F:SkinToast(toast, toast.type)
+	SKINS.handler(toast, toast.type)
 
 	toast:Show()
 
@@ -3217,6 +3273,83 @@ end
 
 ------
 
+local function CreateConfigToast(panel)
+	local _, link = _G.GetItemInfo(124442)
+
+	if not link then
+		return CreateConfigToast(panel)
+	end
+
+	local name, _, quality, _, _, _, _, _, _, texture = _G.GetItemInfo(link)
+	local color = _G.ITEM_QUALITY_COLORS[quality or 4]
+
+	local toast = _G.CreateFrame("Frame", "LSPreviewToast", panel)
+	toast:SetSize(234, 58)
+	toast:Show()
+
+	local bg = toast:CreateTexture(nil, "BACKGROUND", nil, 0)
+	bg:SetPoint("TOPLEFT", 5, -5)
+	bg:SetPoint("BOTTOMRIGHT", -5, 5)
+	bg:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-default")
+	bg:SetTexCoord(1 / 256, 225 / 256, 1 / 64, 49 / 64)
+	toast.BG = bg
+
+	local border = toast:CreateTexture(nil, "BACKGROUND", nil, 1)
+	border:SetAllPoints()
+	border:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-border")
+	border:SetTexCoord(1 / 256, 235 / 256, 1 / 64, 59 / 64)
+	border:SetVertexColor(color.r, color.g, color.b)
+	toast.Border = border
+
+	local icon = toast:CreateTexture(nil, "BACKGROUND", nil, 2)
+	icon:SetPoint("TOPLEFT", 7, -7)
+	icon:SetSize(44, 44)
+	icon:SetTexture(texture)
+	toast.Icon = icon
+
+	local iconBorder = toast:CreateTexture(nil, "ARTWORK", nil, 2)
+	iconBorder:SetPoint("TOPLEFT", 7, -7)
+	iconBorder:SetSize(44, 44)
+	iconBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-icon-border")
+	iconBorder:SetTexCoord(1 / 64, 45 / 64, 1 / 64, 45 / 64)
+	iconBorder:SetVertexColor(color.r, color.g, color.b)
+	toast.IconBorder = iconBorder
+
+	local title = toast:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	title:SetPoint("TOPLEFT", 55, -12)
+	title:SetWidth(170)
+	title:SetJustifyH("CENTER")
+	title:SetWordWrap(false)
+	title:SetText(L["YOU_RECEIVED"])
+	toast.Title = title
+
+	local text = toast:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	text:SetPoint("BOTTOMLEFT", 55, 12)
+	text:SetWidth(170)
+	text:SetJustifyH("CENTER")
+	text:SetWordWrap(false)
+	text:SetText(name)
+	toast.Text = text
+
+	local textBG = toast:CreateTexture(nil, "BACKGROUND", nil, 2)
+	textBG:SetSize(174, 44)
+	textBG:SetPoint("BOTTOMLEFT", 53, 7)
+	textBG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-text-bg")
+	textBG:SetTexCoord(1 / 256, 175 / 256, 1 / 64, 45 / 64)
+	textBG:SetVertexColor(0, 0, 0)
+	toast.TextBG = textBG
+
+	toast.Glow = toast:CreateTexture()
+
+	toast.Shine = toast:CreateTexture()
+
+	SKINS.handler(toast, "misc")
+
+	return toast
+end
+
+------
+
 local function DropDown_Close()
 	_G.CloseDropDownMenus()
 end
@@ -3259,10 +3392,6 @@ local function CreateProfile(name, base)
 		return false, "name_taken"
 	end
 
-	_G.LS_TOASTS_CFG_GLOBAL[_G.LS_TOASTS_CFG.profile] = DiffTable(DEFAULTS, CFG)
-
-	_G.LS_TOASTS_CFG.profile = name
-
 	if base and type(base) == "table" then
 		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(base)
 	elseif base and type(base) == "string" and _G.LS_TOASTS_CFG_GLOBAL[base] then
@@ -3270,10 +3399,6 @@ local function CreateProfile(name, base)
 	else
 		_G.LS_TOASTS_CFG_GLOBAL[name] = CopyTable(DEFAULTS)
 	end
-
-	ReplaceTable(CopyTable(DEFAULTS, _G.LS_TOASTS_CFG_GLOBAL[name]), CFG)
-
-	RefreshAllOptions()
 
 	return true
 end
@@ -3333,6 +3458,28 @@ local function ResetProfile(name)
 end
 
 local function ProfileDropDownButton_OnClick(self)
+	self.owner:SetValue(self.value)
+end
+
+------
+
+local function SetSkin(name)
+	if not name then
+		return false, "no_name"
+	elseif not SKINS[name] then
+		return false, "no_skin"
+	elseif name == "handler" then
+		return false, "invalid"
+	end
+
+	_G.LS_TOASTS_CFG.skin = name
+
+	SKINS.handler = SKINS[name].func
+
+	FlushToastsCache()
+end
+
+local function SkinDropDownButton_OnClick(self)
 	self.owner:SetValue(self.value)
 end
 
@@ -3482,9 +3629,56 @@ local function PopulateConfigPanels()
 	colorToggle:SetPoint("TOPLEFT", delaySlider, "BOTTOMLEFT", -3, -32)
 
 	divider = CreateConfigDivider(panel, {
-		text = L["PROFILES_TITLE"]
+		text = L["SKINS_TITLE"]
 	})
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
+
+	local previewToastParent = _G.CreateFrame("Frame", nil, panel)
+	previewToastParent:SetSize(8, 8)
+	previewToastParent:SetPoint("TOPRIGHT", divider, "BOTTOMRIGHT", -100, -10)
+
+	local previewToast = CreateConfigToast(panel)
+	previewToast:SetPoint("TOPRIGHT", previewToastParent, "TOPRIGHT", 0, 0)
+
+	local skinDropdown = CreateConfigDropDownMenu(panel, {
+		name = "$parentSkinDropDown",
+		text = L["SKIN"],
+		init = function(self)
+			local info = _G.UIDropDownMenu_CreateInfo()
+
+			for k in pairs(SKINS) do
+				if k ~= "handler" and k ~= "num" then
+					info.text = k
+					info.func = SkinDropDownButton_OnClick
+					info.value = k
+					info.owner = self
+					info.checked = nil
+					_G.UIDropDownMenu_AddButton(info)
+				end
+			end
+		end,
+		get = function() return _G.LS_TOASTS_CFG.skin end,
+		set = function(self, value)
+			_G.UIDropDownMenu_SetSelectedValue(self, value)
+
+			SetSkin(value)
+
+			if previewToast then
+				-- old
+				previewToast:Hide()
+
+				-- new
+				previewToast = CreateConfigToast(panels[1])
+				previewToast:SetPoint("TOPRIGHT", previewToastParent, "TOPRIGHT", 0, 0)
+			end
+		end
+	})
+	skinDropdown:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 3, -24)
+
+	divider = CreateConfigDivider(panel, {
+		text = L["PROFILES_TITLE"]
+	})
+	divider:SetPoint("TOP", previewToast, "BOTTOM", 0, -10)
 
 	local createProfileDialog = CreateConfigDialog(panel, {
 		name = "$parentNewProfileDialog",
@@ -3581,7 +3775,11 @@ local function PopulateConfigPanels()
 				editbox:SetText("")
 				editbox:ClearFocus()
 
-				CreateProfile(name, profileSelector:GetValue())
+				local isOK = CreateProfile(name, profileSelector:GetValue())
+
+				if isOK then
+					SetProfile(name)
+				end
 
 				createProfileDialog:Hide()
 			end
@@ -4008,21 +4206,6 @@ end
 -- PUBLIC --
 ------------
 
--- F:SkinToast
-
--- Parameters:
--- 	toast
--- 	toastType	- types: "item", "mission", "follower", "achievement", "ability", "scenario", "misc"
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	function toast_F:SkinToast(toast, toastType) --[[body]] end
-
--- This function can be and should be overridden by your addon
--- For toasts' structures, see definitions of CreateBaseToastButton and GetToast functions
-
-function F:SkinToast() end
-
 -- F:CreateProfile
 
 -- Arguments:
@@ -4094,6 +4277,34 @@ function F:ResetProfile(name)
 	return ResetProfile(name)
 end
 
+-- F:CreateSkin(name, func)
+
+function F:CreateSkin(name, func)
+	if not name then
+		return false
+	elseif not func then
+		return false
+	elseif type(func) ~= "function" then
+		return false
+	elseif SKINS[name] then
+		return false
+	elseif name == "handler" or name == "num" then
+		return false
+	end
+
+	SKINS[name] = {
+		func = func
+	}
+
+	SKINS.num = SKINS.num + 1
+end
+
+-- F:SetSkin(name)
+
+function F:SetSkin(name)
+	return SetSkin(name)
+end
+
 -------------
 -- LOADING --
 -------------
@@ -4105,11 +4316,16 @@ function dispatcher:ADDON_LOADED(arg)
 
 	if not _G.LS_TOASTS_CFG then
 		_G.LS_TOASTS_CFG = {
-			profile = "Default"
+			profile = "Default",
+			skin = "Default"
 		}
 	else
 		if not _G.LS_TOASTS_CFG.profile then
 			_G.LS_TOASTS_CFG.profile = "Default"
+		end
+
+		if not _G.LS_TOASTS_CFG.skin then
+			_G.LS_TOASTS_CFG.skin = "Default"
 		end
 	end
 
@@ -4163,6 +4379,12 @@ function dispatcher:PLAYER_LOGIN()
 			self:UnregisterEvent(event)
 		end
 	end)
+
+	if not SKINS[_G.LS_TOASTS_CFG.skin] then
+		_G.LS_TOASTS_CFG.skin = "Default"
+	end
+
+	SetSkin(_G.LS_TOASTS_CFG.skin)
 
 	local panel = _G.CreateFrame("Frame", "LSToastsConfigPanel", _G.InterfaceOptionsFramePanelContainer)
 	panel.name = L["LS_TOASTS"]
