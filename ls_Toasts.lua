@@ -2705,13 +2705,13 @@ do
 		return false
 	end
 
-	local function Toast_SetUp(sourceID, isAdded)
+	local function Toast_SetUp(sourceID, isAdded, attempt)
 		local _, _, _, icon, _, _, transmogLink = _G.C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
 		local name
 		transmogLink, _, name = ParseLink(transmogLink)
 
 		if not transmogLink then
-			return _G.C_Timer.After(0.25, function() Toast_SetUp(sourceID, isAdded) end)
+			return attempt < 4 and _G.C_Timer.After(0.25, function() Toast_SetUp(sourceID, isAdded, attempt + 1) end)
 		end
 
 		local toast = GetToast("misc")
@@ -2734,23 +2734,29 @@ do
 		SpawnToast(toast, CFG.type.transmog.dnd)
 	end
 
-	function dispatcher:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
+	function dispatcher:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt)
 		local isKnown = IsAppearanceKnown(sourceID)
+		attempt = attempt or 1
 
-		if isKnown == false then
-			Toast_SetUp(sourceID, true)
-		elseif isKnown == nil then
-			_G.C_Timer.After(0.25, function() self:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID) end)
+		if attempt < 4 then
+			if isKnown == false then
+				Toast_SetUp(sourceID, true, 1)
+			elseif isKnown == nil then
+				_G.C_Timer.After(0.25, function() self:TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt + 1) end)
+			end
 		end
 	end
 
-	function dispatcher:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
-		local isKnown = IsAppearanceKnown(sourceID)
+	function dispatcher:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt)
+		local isKnown = IsAppearanceKnown(sourceID, true)
+		attempt = attempt or 1
 
-		if isKnown == false then
-			Toast_SetUp(sourceID)
-		elseif isKnown == nil then
-			_G.C_Timer.After(0.25, function() self:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID) end)
+		if attempt < 4 then
+			if isKnown == false then
+				Toast_SetUp(sourceID, nil, 1)
+			elseif isKnown == nil then
+				_G.C_Timer.After(0.25, function() self:TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt + 1) end)
+			end
 		end
 	end
 
@@ -2771,10 +2777,10 @@ do
 		local source = _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID) and _G.C_TransmogCollection.GetAppearanceSources(appearance.visualID)[1]
 
 		-- added
-		Toast_SetUp(source.sourceID, true)
+		Toast_SetUp(source.sourceID, true, 1)
 
 		-- removed
-		Toast_SetUp(source.sourceID)
+		Toast_SetUp(source.sourceID, nil, 1)
 	end
 end
 
