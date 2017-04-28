@@ -18,17 +18,25 @@ Replacement for default alert system. Better toasts, cheers!
 - Done.
 
 ## How to Mod
-If you're UI developer, you may want to reskin my toasts. To do so, you'll need to override special dummy function by adding something like this to your addon code:
+If you're UI developer, you may want to reskin my toasts. To create a skin you need to do the following:
 
 ```Lua
 local toast_F = ls_Toasts[1]
 
-function toast_F:SkinToast(toast, toastType)
+toast_F:CreateSkin("skin_name", function(toast, toastType)
 	-- do something here
-end
+end)
 ```
 
 This function is called after colours, textures and texts are set, but before toast is shown. Toast and its type are passed as arguments.
+
+If you want to activate your skin right away, add this line to your code:
+
+```Lua
+toast_F:SetSkin("skin_name")
+```
+
+Skin activation is optional, users can switch skins via in-game config.
 
 **Note #1:** For toasts' structures see definitions of `CreateBaseToastButton` and `GetToast` functions.
 
