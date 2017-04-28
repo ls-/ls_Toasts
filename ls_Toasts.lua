@@ -363,12 +363,13 @@ local function ParseLink(link)
 		return
 	end
 
-	local name
-	link, name = string.match(link, "|H(.+)|h%[(.+)%]|h")
+	local temp, name = string.match(link, "|H(.+)|h%[(.+)%]|h")
+	link = temp or link
+
 	local linkTable = {string.split(":", link)}
 
 	if linkTable[1] ~= "item" then
-		return link, linkTable[1], name
+		return linkTable[1], link, link, name
 	end
 
 	if linkTable[12] ~= "" then
@@ -377,7 +378,7 @@ local function ParseLink(link)
 		table.remove(linkTable, 15 + (tonumber(linkTable[14]) or 0))
 	end
 
-	return table.concat(linkTable, ":"), linkTable[1], name
+	return linkTable[1], table.concat(linkTable, ":"), link, name
 end
 
 local function DumpToasts()
@@ -774,7 +775,7 @@ local function ToastButton_OnClick(self, button)
 				end
 			elseif self.type == "misc" then
 				if self.link then
-					if string.sub(self.link, 1, 18) == "transmogappearance" then
+					if string.find(self.link, "transmog") then
 						if not _G.CollectionsJournal then
 							_G.CollectionsJournal_LoadUI()
 						end
@@ -856,7 +857,7 @@ local function ToastButton_OnEnter(self)
 			else
 				_G.GameTooltip:SetOwner(self, "ANCHOR_NONE")
 				_G.GameTooltip:SetPoint(p, self, rP, x, y)
-				_G.GameTooltip:SetHyperlink(self.link)
+				_G.GameTooltip:SetHyperlink(self.tooltipLink or self.link)
 				_G.GameTooltip:Show()
 			end
 		end
@@ -1920,9 +1921,9 @@ do
 	local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, isItem, isMoney, isHonor, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase)
 		if isItem then
 			if link then
-				link = ParseLink(link)
+				local _, sanitizedLink, originalLink = ParseLink(link)
 
-				local toast, isQueued = GetToastToUpdate(link, "item", event)
+				local toast, isQueued = GetToastToUpdate(sanitizedLink, "item", event)
 				local isUpdated = true
 
 				if not toast then
@@ -1931,7 +1932,7 @@ do
 				end
 
 				if not isUpdated then
-					local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(link)
+					local name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(originalLink)
 
 					if quality >= CFG.type.loot_special.threshold and quality <= 5 then
 						local color = _G.ITEM_QUALITY_COLORS[quality] or _G.ITEM_QUALITY_COLORS[1]
@@ -1999,9 +2000,10 @@ do
 						toast.Border:SetVertexColor(color.r, color.g, color.b)
 						toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 						toast.Icon:SetTexture(icon)
-						toast.UpgradeIcon:SetShown(IsItemAnUpgrade(link))
+						toast.UpgradeIcon:SetShown(IsItemAnUpgrade(originalLink))
 						toast.itemCount = quantity
-						toast.link = link
+						toast.tooltipLink = originalLink
+						toast.link = sanitizedLink
 						toast.soundFile = soundFile
 						toast.event = event
 
@@ -2212,11 +2214,13 @@ end
 
 do
 	local function Toast_SetUp(event, link, quantity)
-		if GetToastToUpdate(link, "item") then
+		local linkType, sanitizedLink, originalLink = ParseLink(link)
+
+		if GetToastToUpdate(sanitizedLink, "item") then
 			return
 		end
 
-		local toast, isQueued = GetToastToUpdate(link, "item", event)
+		local toast, isQueued = GetToastToUpdate(sanitizedLink, "item", event)
 		local isUpdated = true
 
 		if not toast then
@@ -2227,12 +2231,12 @@ do
 		if not isUpdated then
 			local name, quality, icon, _
 
-			if string.find(link, "battlepet:") then
-				local _, speciesID, _, breedQuality, _ = string.split(":", link)
+			if linkType == "battlepet" then
+				local _, speciesID, _, breedQuality, _ = string.split(":", originalLink)
 				name, icon = _G.C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 				quality = tonumber(breedQuality)
 			else
-				name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(link)
+				name, _, quality, _, _, _, _, _, _, icon = _G.GetItemInfo(originalLink)
 			end
 
 			if quality >= CFG.type.loot_common.threshold and quality <= 4 then
@@ -2245,7 +2249,8 @@ do
 				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 				toast.Icon:SetTexture(icon)
 				toast.itemCount = quantity
-				toast.link = link
+				toast.tooltipLink = originalLink
+				toast.link = sanitizedLink
 				toast.event = event
 				toast.chat = true
 
@@ -2303,7 +2308,6 @@ do
 			end
 		end
 
-		link = ParseLink(link)
 		quantity = tonumber(quantity) or 0
 
 		_G.C_Timer.After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, quantity) end)
@@ -2393,6 +2397,7 @@ do
 
 	function dispatcher:CHAT_MSG_CURRENCY(message)
 		local link, quantity = message:match(CURRENCY_GAINED_MULTIPLE_PATTERN)
+		local _
 
 		if not link then
 			quantity, link = 1, message:match(CURRENCY_GAINED_PATTERN)
@@ -2402,7 +2407,7 @@ do
 			end
 		end
 
-		link = ParseLink(link)
+		_, link = ParseLink(link)
 		quantity = tonumber(quantity) or 0
 
 		Toast_SetUp(link, quantity)
@@ -2706,11 +2711,11 @@ do
 	end
 
 	local function Toast_SetUp(sourceID, isAdded, attempt)
-		local _, _, _, icon, _, _, transmogLink = _G.C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+		local _, _, _, icon, _, _, link = _G.C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
 		local name
-		transmogLink, _, name = ParseLink(transmogLink)
+		_, link, _, name = ParseLink(link)
 
-		if not transmogLink then
+		if not link then
 			return attempt < 4 and _G.C_Timer.After(0.25, function() Toast_SetUp(sourceID, isAdded, attempt + 1) end)
 		end
 
@@ -2728,7 +2733,7 @@ do
 		toast.IconBorder:SetVertexColor(1, 128 / 255, 1)
 		toast.Icon:SetTexture(icon)
 		toast.id = sourceID
-		toast.link = transmogLink
+		toast.link = link
 		toast.soundFile = "UI_DigsiteCompletion_Toast"
 
 		SpawnToast(toast, CFG.type.transmog.dnd)
