@@ -1,3 +1,8 @@
+## Version 70200.05
+
+- Reworked skins. All existing skins should work just for now, but you'll have to enable the skin of your choice via in-game config. Skin devs should make some minor adjustments;
+- Added countermeasures to limit bloat caused by transmog toasts.
+
 ## Version 70200.04
 
 - Fixed bonus roll toast issues.
