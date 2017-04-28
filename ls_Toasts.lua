@@ -3479,7 +3479,7 @@ local function SetSkin(name)
 		return false, "no_name"
 	elseif not SKINS[name] then
 		return false, "no_skin"
-	elseif name == "handler" then
+	elseif name == "handler" or name == "num" then
 		return false, "invalid"
 	end
 
