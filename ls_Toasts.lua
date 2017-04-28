@@ -4292,15 +4292,15 @@ end
 
 function F:CreateSkin(name, func)
 	if not name then
-		return false
+		return false, "no_name"
 	elseif not func then
-		return false
+		return false, "no_func"
 	elseif type(func) ~= "function" then
-		return false
+		return false, "func_invalid"
 	elseif SKINS[name] then
-		return false
+		return false, "name_taken"
 	elseif name == "handler" or name == "num" then
-		return false
+		return false, "name_prohibited"
 	end
 
 	SKINS[name] = {
