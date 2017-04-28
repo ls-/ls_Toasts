@@ -95,6 +95,7 @@ local CFG = {}
 local DEFAULTS = {
 	version = "",
 	growth_direction = "DOWN",
+	skin = "Default",
 	point = {"TOPLEFT", "UIParent", "TOPLEFT", 24, -12},
 	max_active_toasts = 12,
 	sfx_enabled = true,
@@ -3483,7 +3484,7 @@ local function SetSkin(name)
 		return false, "invalid"
 	end
 
-	_G.LS_TOASTS_CFG.skin = name
+	CFG.skin = name
 
 	SKINS.handler = SKINS[name].func
 
@@ -3668,7 +3669,7 @@ local function PopulateConfigPanels()
 				end
 			end
 		end,
-		get = function() return _G.LS_TOASTS_CFG.skin end,
+		get = function() return CFG.skin end,
 		set = function(self, value)
 			_G.UIDropDownMenu_SetSelectedValue(self, value)
 
@@ -4280,16 +4281,11 @@ function dispatcher:ADDON_LOADED(arg)
 
 	if not _G.LS_TOASTS_CFG then
 		_G.LS_TOASTS_CFG = {
-			profile = "Default",
-			skin = "Default"
+			profile = "Default"
 		}
 	else
 		if not _G.LS_TOASTS_CFG.profile then
 			_G.LS_TOASTS_CFG.profile = "Default"
-		end
-
-		if not _G.LS_TOASTS_CFG.skin then
-			_G.LS_TOASTS_CFG.skin = "Default"
 		end
 	end
 
@@ -4344,11 +4340,11 @@ function dispatcher:PLAYER_LOGIN()
 		end
 	end)
 
-	if not SKINS[_G.LS_TOASTS_CFG.skin] then
-		_G.LS_TOASTS_CFG.skin = "Default"
+	if not SKINS[CFG.skin] then
+		CFG.skin = "Default"
 	end
 
-	SetSkin(_G.LS_TOASTS_CFG.skin)
+	SetSkin(CFG.skin)
 
 	local panel = _G.CreateFrame("Frame", "LSToastsConfigPanel", _G.InterfaceOptionsFramePanelContainer)
 	panel.name = L["LS_TOASTS"]
