@@ -4219,36 +4219,11 @@ end
 
 -- F:CreateProfile
 
--- Arguments:
--- 	name	- "string" - new profile's name
--- 	base	- "string" - if LS_TOASTS_CFG_GLOBAL[base] profile exists, it'll be used as a base for a new profile
---			- "table" - provided table will be used a base for a new profile
---			- "nil" - DEFAULTS table will be used as a base for a new profile
-
--- Returns:
--- created	- "boolean": true, false - if profile was successfully created
--- reason 	- "string": "no_name", "name_taken" - reason why profile wasn't created, nil otherwise
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	local created, reason = toast_F:CreateProfile("test_profile")
-
 function F:CreateProfile(name, base)
 	return CreateProfile(name, base)
 end
 
 -- F:DeleteProfile
-
--- Arguments:
--- 	name	- "string" - profile's name you want to delete, can't be "Default"
-
--- Returns:
--- deleted	- "boolean": true, false - if profile was successfully deleted
--- reason 	- "string": "no_name", "default" - reason why profile wasn't deleted, nil otherwise
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	local deleted, reason = toast_F:DeleteProfile("test_profile")
 
 function F:DeleteProfile(name)
 	return DeleteProfile(name)
@@ -4256,33 +4231,11 @@ end
 
 -- F:SetProfile
 
--- Arguments:
--- 	name	- "string" - profile's name you want to activate
-
--- Returns:
--- set		- "boolean": true, false - if profile was successfully activated
--- reason 	- "string": "no_name", "missing", "current" - reason why profile wasn't activated, nil otherwise
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	local set, reason = toast_F:SetProfile("test_profile")
-
 function F:SetProfile(name)
 	return SetProfile(name)
 end
 
 -- F:ResetProfile
-
--- Arguments:
--- 	name	- "string" - profile's name you want to reset
-
--- Returns:
--- reset	- "boolean": true, false - if profile was successfully reset
--- reason 	- "string": "no_name", "missing" - reason why profile wasn't reset, nil otherwise
-
--- Example:
--- 	local toast_F = ls_Toasts[1]
--- 	local reset, reason = toast_F:ResetProfile("test_profile")
 
 function F:ResetProfile(name)
 	return ResetProfile(name)
