@@ -1,3 +1,12 @@
+## Version 70200.07
+
+- Re-release of 70200.05;
+- Fixed in-game config issue that led to client freeze.
+
+## Version 70200.06
+
+- Rollback. 70200.05 never happened.
+
 ## Version 70200.05
 
 - Reworked skins. All existing skins should work just for now, but you'll have to enable the skin of your choice via in-game config. Skin devs should make some minor adjustments;
