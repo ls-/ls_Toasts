@@ -3285,83 +3285,6 @@ end
 
 ------
 
-local function CreateConfigToast(panel)
-	local _, link = _G.GetItemInfo(124442)
-
-	if not link then
-		return CreateConfigToast(panel)
-	end
-
-	local name, _, quality, _, _, _, _, _, _, texture = _G.GetItemInfo(link)
-	local color = _G.ITEM_QUALITY_COLORS[quality or 4]
-
-	local toast = _G.CreateFrame("Frame", "LSPreviewToast", panel)
-	toast:SetSize(234, 58)
-	toast:Show()
-
-	local bg = toast:CreateTexture(nil, "BACKGROUND", nil, 0)
-	bg:SetPoint("TOPLEFT", 5, -5)
-	bg:SetPoint("BOTTOMRIGHT", -5, 5)
-	bg:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-default")
-	bg:SetTexCoord(1 / 256, 225 / 256, 1 / 64, 49 / 64)
-	toast.BG = bg
-
-	local border = toast:CreateTexture(nil, "BACKGROUND", nil, 1)
-	border:SetAllPoints()
-	border:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-border")
-	border:SetTexCoord(1 / 256, 235 / 256, 1 / 64, 59 / 64)
-	border:SetVertexColor(color.r, color.g, color.b)
-	toast.Border = border
-
-	local icon = toast:CreateTexture(nil, "BACKGROUND", nil, 2)
-	icon:SetPoint("TOPLEFT", 7, -7)
-	icon:SetSize(44, 44)
-	icon:SetTexture(texture)
-	toast.Icon = icon
-
-	local iconBorder = toast:CreateTexture(nil, "ARTWORK", nil, 2)
-	iconBorder:SetPoint("TOPLEFT", 7, -7)
-	iconBorder:SetSize(44, 44)
-	iconBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-icon-border")
-	iconBorder:SetTexCoord(1 / 64, 45 / 64, 1 / 64, 45 / 64)
-	iconBorder:SetVertexColor(color.r, color.g, color.b)
-	toast.IconBorder = iconBorder
-
-	local title = toast:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetPoint("TOPLEFT", 55, -12)
-	title:SetWidth(170)
-	title:SetJustifyH("CENTER")
-	title:SetWordWrap(false)
-	title:SetText(L["YOU_RECEIVED"])
-	toast.Title = title
-
-	local text = toast:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-	text:SetPoint("BOTTOMLEFT", 55, 12)
-	text:SetWidth(170)
-	text:SetJustifyH("CENTER")
-	text:SetWordWrap(false)
-	text:SetText(name)
-	toast.Text = text
-
-	local textBG = toast:CreateTexture(nil, "BACKGROUND", nil, 2)
-	textBG:SetSize(174, 44)
-	textBG:SetPoint("BOTTOMLEFT", 53, 7)
-	textBG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-text-bg")
-	textBG:SetTexCoord(1 / 256, 175 / 256, 1 / 64, 45 / 64)
-	textBG:SetVertexColor(0, 0, 0)
-	toast.TextBG = textBG
-
-	toast.Glow = toast:CreateTexture()
-
-	toast.Shine = toast:CreateTexture()
-
-	SKINS.handler(toast, "misc")
-
-	return toast
-end
-
-------
-
 local function DropDown_Close()
 	_G.CloseDropDownMenus()
 end
@@ -3645,13 +3568,6 @@ local function PopulateConfigPanels()
 	})
 	divider:SetPoint("TOP", growthDropdown, "BOTTOM", 0, -10)
 
-	local previewToastParent = _G.CreateFrame("Frame", nil, panel)
-	previewToastParent:SetSize(8, 8)
-	previewToastParent:SetPoint("TOPRIGHT", divider, "BOTTOMRIGHT", -100, -10)
-
-	local previewToast = CreateConfigToast(panel)
-	previewToast:SetPoint("TOPRIGHT", previewToastParent, "TOPRIGHT", 0, 0)
-
 	local skinDropdown = CreateConfigDropDownMenu(panel, {
 		name = "$parentSkinDropDown",
 		text = L["SKIN"],
@@ -3674,15 +3590,6 @@ local function PopulateConfigPanels()
 			_G.UIDropDownMenu_SetSelectedValue(self, value)
 
 			SetSkin(value)
-
-			if previewToast then
-				-- old
-				previewToast:Hide()
-
-				-- new
-				previewToast = CreateConfigToast(panels[1])
-				previewToast:SetPoint("TOPRIGHT", previewToastParent, "TOPRIGHT", 0, 0)
-			end
 		end
 	})
 	skinDropdown:SetPoint("TOPLEFT", divider, "BOTTOMLEFT", 3, -24)
@@ -3690,7 +3597,7 @@ local function PopulateConfigPanels()
 	divider = CreateConfigDivider(panel, {
 		text = L["PROFILES_TITLE"]
 	})
-	divider:SetPoint("TOP", previewToast, "BOTTOM", 0, -10)
+	divider:SetPoint("TOP", skinDropdown, "BOTTOM", 0, -10)
 
 	local createProfileDialog = CreateConfigDialog(panel, {
 		name = "$parentNewProfileDialog",
