@@ -582,6 +582,7 @@ local function ResetToast(toast)
 	toast.dnd = nil
 	toast.chat = nil
 	toast.link = nil
+	toast.tooltipLink = nil
 	toast.event = nil
 	toast.itemCount = nil
 	toast.soundFile = nil
