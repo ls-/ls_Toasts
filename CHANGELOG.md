@@ -1,3 +1,9 @@
+## Version 70200.08
+
+- Fixed toast tooltips;
+- Updated Korean translation. Translated by yuk6196@Curse;
+- Updated Russian translation.
+
 ## Version 70200.07
 
 - Re-release of 70200.05;
