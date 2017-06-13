@@ -1,6 +1,6 @@
 ## Interface: 70200
 ## Author: lightspark
-## Version: 70200.08
+## Version: 70200.09
 ## Title: ls: |cff1a9fc0Toasts|r
 ## Notes: Better toasts, cheers!
 ## SavedVariables: LS_TOASTS_CFG_GLOBAL
