@@ -1693,8 +1693,10 @@ do
 		SpawnToast(toast, CFG.type.garrison_7_0.dnd)
 	end
 
-	function dispatcher:GARRISON_TALENT_COMPLETE(garrisonType)
-		TalentToast_SetUp(_G.C_Garrison.GetCompleteTalent(garrisonType))
+	function dispatcher:GARRISON_TALENT_COMPLETE(garrisonType, doAlert)
+		if doAlert then
+			TalentToast_SetUp(_G.C_Garrison.GetCompleteTalent(garrisonType))
+		end
 	end
 
 	function dispatcher:EnableGarrisonToasts()
@@ -1789,8 +1791,15 @@ do
 		end
 
 		-- talent
-		local talents = _G.C_Garrison.GetTalentTrees(_G.LE_GARRISON_TYPE_7_0, select(3, _G.UnitClass("player")))
-		local talentID = talents and talents[1] and talents[1][1] and talents[1][1].id or nil
+		local talentTreeIDs = _G.C_Garrison.GetTalentTreeIDsByClassID(_G.LE_GARRISON_TYPE_7_0, select(3, _G.UnitClass("player")))
+		local talentTreeID = talentTreeIDs and talentTreeIDs[1] or nil
+		local tree, _
+
+		if talentTreeID then
+			_, _, tree = _G.C_Garrison.GetTalentTreeInfoForID(_G.LE_GARRISON_TYPE_7_0, talentTreeID)
+		end
+
+		local talentID = tree and tree[1] and tree[1][1] and tree[1][1].id or nil
 
 		if talentID then
 			TalentToast_SetUp(talentID)
@@ -1803,7 +1812,7 @@ end
 --------------
 
 do
-	local function Toast_SetUp(name, subtypeID, textureFilename, moneyReward, xpReward, numItemRewards, isScenario, isScenarioBonusComplete)
+	local function Toast_SetUp(name, subtypeID, textureFile, moneyReward, xpReward, numItemRewards, isScenario, isScenarioBonusComplete)
 		local toast = GetToast("scenario")
 		local usedRewards = 0
 
@@ -1866,7 +1875,7 @@ do
 
 		toast.Text:SetText(name)
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-dungeon")
-		toast.Icon:SetTexture("Interface\\LFGFrame\\LFGIcon-"..textureFilename)
+		toast.Icon:SetTexture(textureFile or "Interface\\LFGFrame\\LFGIcon-Dungeon")
 		toast.usedRewards = usedRewards
 
 		SpawnToast(toast, CFG.type.instance.dnd)
@@ -1877,14 +1886,14 @@ do
 			local _, _, _, _, hasBonusStep, isBonusStepComplete, _, _, _, scenarioType = _G.C_Scenario.GetInfo();
 
 			if scenarioType ~= _G.LE_SCENARIO_TYPE_LEGION_INVASION then
-				local name, _, subtypeID, textureFilename, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = _G.GetLFGCompletionReward()
+				local name, _, subtypeID, textureFile, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = _G.GetLFGCompletionReward()
 
-				Toast_SetUp(name, subtypeID, textureFilename, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards, true, hasBonusStep and isBonusStepComplete)
+				Toast_SetUp(name, subtypeID, textureFile, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards, true, hasBonusStep and isBonusStepComplete)
 			end
 		else
-			local name, _, subtypeID, textureFilename, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = _G.GetLFGCompletionReward()
+			local name, _, subtypeID, textureFile, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = _G.GetLFGCompletionReward()
 
-			Toast_SetUp(name, subtypeID, textureFilename, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards)
+			Toast_SetUp(name, subtypeID, textureFile, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards)
 		end
 	end
 
@@ -1900,17 +1909,17 @@ do
 
 	function dispatcher:TestInstanceToast()
 		-- dungeon, Wailing Caverns
-		local name, _, subtypeID, _, _, _, _, _, _, _, textureFilename = _G.GetLFGDungeonInfo(1)
+		local name, _, subtypeID = _G.GetLFGDungeonInfo(1)
 
 		if name then
-			Toast_SetUp(name, subtypeID, textureFilename, 123456, 123456, 0)
+			Toast_SetUp(name, subtypeID, nil, 123456, 123456, 0)
 		end
 
 		-- scenario, Crypt of Forgotten Kings
-		name, _, subtypeID, _, _, _, _, _, _, _, textureFilename = _G.GetLFGDungeonInfo(504)
+		name, _, subtypeID = _G.GetLFGDungeonInfo(504)
 
 		if name then
-			Toast_SetUp(name, subtypeID, textureFilename, 123456, 123456, 0, true, true)
+			Toast_SetUp(name, subtypeID, nil, 123456, 123456, 0, true, true)
 		end
 	end
 end
