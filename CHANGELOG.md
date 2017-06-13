@@ -1,3 +1,7 @@
+## Version 70200.09
+
+- Added 7.2.5 support.
+
 ## Version 70200.08
 
 - Fixed toast tooltips;
