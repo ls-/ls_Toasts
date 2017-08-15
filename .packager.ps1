@@ -25,9 +25,12 @@ if (Get-Content (".\" + $name + ".toc") | Where { $_ -match "(Version: +)([a-zA-
 }
 
 $includedFiles = @(
+	".\config.lua",
+	".\core.lua",
+	".\init.lua",
 	".\LICENSE.txt",
-	".\ls_Toasts.lua",
 	".\ls_Toasts.toc",
+	".\systems.lua",
 	".\locales\",
 	".\media\"
 )
