@@ -31,6 +31,7 @@ $includedFiles = @(
 	".\LICENSE.txt",
 	".\ls_Toasts.toc",
 	".\systems.lua",
+	".\embeds\"
 	".\locales\",
 	".\media\"
 )
