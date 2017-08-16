@@ -1017,6 +1017,18 @@ do
 			if quality >= C.db.profile.types.loot_common.threshold and quality <= 4 then
 				local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[4]
 
+				if C.db.profile.colors.name then
+					name = color.hex..name.."|r"
+				end
+
+				if C.db.profile.types.loot_common.ilvl then
+					local iLevel = E:GetItemLevel(originalLink)
+
+					if iLevel > 0 then
+						name = "["..color.hex..iLevel.."|r] "..name
+					end
+				end
+
 				toast.Title:SetText(L["YOU_RECEIVED"])
 				toast.Text:SetText(name)
 				toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -1033,10 +1045,6 @@ do
 					tooltip_link = originalLink,
 					item_id = itemID,
 				}
-
-				if C.db.profile.colors.name then
-					toast.Text:SetTextColor(color.r, color.g, color.b)
-				end
 
 				toast:HookScript("OnClick", Toast_OnClick)
 				toast:HookScript("OnEnter", Toast_OnEnter)
@@ -1124,6 +1132,7 @@ do
 		enabled = true,
 		dnd = false,
 		threshold = 1,
+		ilvl = true,
 	}, {
 		name = L["TYPE_LOOT_COMMON"],
 		args = {
@@ -1165,6 +1174,18 @@ do
 					else
 						Disable()
 					end
+				end
+			},
+			ilvl = {
+				order = 4,
+				type = "toggle",
+				name = L["SHOW_ILVL"],
+				desc = L["SHOW_ILVL_DESC"],
+				get = function()
+					return C.db.profile.types.loot_common.ilvl
+				end,
+				set = function(_, value)
+					C.db.profile.types.loot_common.ilvl = value
 				end
 			},
 			threshold = {
@@ -1296,6 +1317,18 @@ do
 							toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
 						end
 
+						if C.db.profile.colors.name then
+							name = color.hex..name.."|r"
+						end
+
+						if C.db.profile.types.loot_special.ilvl then
+							local iLevel = E:GetItemLevel(originalLink)
+
+							if iLevel > 0 then
+								name = "["..color.hex..iLevel.."|r] "..name
+							end
+						end
+
 						toast.Title:SetText(title)
 						toast.Text:SetText(name)
 						toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -1314,10 +1347,6 @@ do
 							sound_file = soundFile,
 							tooltip_link = originalLink,
 						}
-
-						if C.db.profile.colors.name then
-							toast.Text:SetTextColor(color.r, color.g, color.b)
-						end
 
 						toast:HookScript("OnClick", Toast_OnClick)
 						toast:HookScript("OnEnter", Toast_OnEnter)
@@ -1528,6 +1557,7 @@ do
 		enabled = true,
 		dnd = false,
 		threshold = 1,
+		ilvl = true,
 	}, {
 		name = L["TYPE_LOOT_SPECIAL"],
 		args = {
@@ -1571,8 +1601,20 @@ do
 					end
 				end
 			},
-			threshold = {
+			ilvl = {
 				order = 4,
+				type = "toggle",
+				name = L["SHOW_ILVL"],
+				desc = L["SHOW_ILVL_DESC"],
+				get = function()
+					return C.db.profile.types.loot_special.ilvl
+				end,
+				set = function(_, value)
+					C.db.profile.types.loot_special.ilvl = value
+				end
+			},
+			threshold = {
+				order = 5,
 				type = "select",
 				name = L["LOOT_THRESHOLD"],
 				values = {

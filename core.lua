@@ -295,6 +295,16 @@ do
 
 		return false
 	end
+
+	function E.GetItemLevel(_, itemLink)
+		local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, _, itemSubClassID = GetItemInfo(itemLink)
+
+		if itemSubClassID == 11 or slots[itemEquipLoc] then
+			return GetDetailedItemLevelInfo(itemLink) or 0
+		end
+
+		return 0
+	end
 end
 
 function E.SearchBagsForItemID(_, itemID)
