@@ -1,4 +1,4 @@
-﻿-- Contributors: BLizzatron@Curse
+﻿-- Contributors: ls-@GitHub, BLizzatron@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -25,7 +25,10 @@ L["GROWTH_DIR_UP"] = "Вверх"
 L["OPEN_CONFIG"] = "Открыть настройки"
 L["SCALE"] = "Масштаб"
 L["SETTINGS_TYPE_LABEL"] = "Типы уведомлений"
+L["SHOW_ILVL"] = "Показывать ур. пр."
+L["SHOW_ILVL_DESC"] = "Показывать уровень предмета рядом с его названием."
 L["SKIN"] = "Обложка"
+L["STRATA"] = "Слой"
 L["TEST"] = "Тест"
 L["TEST_ALL"] = "Тестировать всё"
 L["TOAST_NUM"] = "Количество уведомлений"
