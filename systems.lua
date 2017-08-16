@@ -1090,9 +1090,7 @@ do
 			end
 		end
 
-		quantity = tonumber(quantity) or 0
-
-		C_Timer.After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, quantity) end)
+		C_Timer.After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
 	end
 
 	local function Enable()
