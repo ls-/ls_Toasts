@@ -318,6 +318,7 @@ anchorFrame:SetClampedToScreen(true)
 anchorFrame:SetClampRectInsets(-24, 12, 12, -12)
 anchorFrame:SetToplevel(true)
 anchorFrame:RegisterForDrag("LeftButton")
+anchorFrame:SetFrameStrata("DIALOG")
 
 do
 	local function CalculatePosition(self)
@@ -757,7 +758,7 @@ do
 		toast:SetScript("OnLeave", Toast_OnLeave)
 		toast:SetSize(234, 58)
 		toast:SetScale(C.db.profile.scale)
-		toast:SetFrameStrata("DIALOG")
+		toast:SetFrameStrata(C.db.profile.strata)
 
 		local bg = toast:CreateTexture(nil, "BACKGROUND", nil, 0)
 		bg:SetPoint("TOPLEFT", 5, -5)
@@ -1319,5 +1320,19 @@ function E.UpdateFadeOutDelay(_, value)
 
 	for _, toast in next, createdToasts do
 		toast.AnimOut.Anim1:SetStartDelay(value)
+	end
+end
+
+function E.UpdateStrata(_, value)
+	for _, toast in next, queuedToasts do
+		toast:SetFrameStrata(value)
+	end
+
+	for _, toast in next, activeToasts do
+		toast:SetFrameStrata(value)
+	end
+
+	for _, toast in next, createdToasts do
+		toast:SetFrameStrata(value)
 	end
 end

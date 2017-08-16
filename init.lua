@@ -18,6 +18,22 @@ local InterfaceOptionsFrame_Show = _G.InterfaceOptionsFrame_Show
 -- Mine
 local VER = tonumber(GetAddOnMetadata(addonName, "Version"):gsub("%D", ""), nil)
 
+local STRATAS = {
+	[1] = "BACKGROUND",
+	[2] = "LOW",
+	[3] = "MEDIUM",
+	[4] = "HIGH",
+	[5] = "DIALOG",
+}
+
+local STRATA_INDICES ={
+	BACKGROUND = 1,
+	LOW = 2,
+	MEDIUM = 3,
+	HIGH = 4,
+	DIALOG = 5,
+}
+
 local BLACKLISTED_EVENTS = {
 	ACHIEVEMENT_EARNED = true,
 	CRITERIA_EARNED = true,
@@ -185,8 +201,23 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 							C.db.profile.colors.name = value
 						end
 					},
-					skin = {
+					strata = {
 						order = 3,
+						type = "select",
+						name = L["STRATA"],
+						values = STRATAS,
+						get = function()
+							return STRATA_INDICES[C.db.profile.strata]
+						end,
+						set = function(_, value)
+							value = STRATAS[value]
+							C.db.profile.strata = value
+
+							E:UpdateStrata(value)
+						end,
+					},
+					skin = {
+						order = 4,
 						type = "select",
 						name = L["SKIN"],
 						values = E.GetAllSkins,
