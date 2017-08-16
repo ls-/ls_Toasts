@@ -543,7 +543,7 @@ do
 			if PlaySoundKitID then
 				PlaySoundKitID(soundFile)
 			else
-				PlaySound(soundFile, "SFX")
+				PlaySound(soundFile, "SFX", true)
 			end
 		end
 
