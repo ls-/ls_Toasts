@@ -1768,22 +1768,26 @@ do
 		local toast, isNew, isQueued = E:GetToast(nil, "event", event)
 
 		if isNew then
-			toast.Text.PostSetAnimatedValue = PostSetAnimatedValue
+			if quantity >= C.db.profile.types.loot_gold.threshold then
+				toast.Text.PostSetAnimatedValue = PostSetAnimatedValue
 
-			toast.Title:SetText(L["YOU_RECEIVED"])
-			toast.Text:SetAnimatedValue(quantity, true)
-			toast.Border:SetVertexColor(0.9, 0.75, 0.26)
-			toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
-			toast.IconBorder:Show()
-			toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
+				toast.Title:SetText(L["YOU_RECEIVED"])
+				toast.Text:SetAnimatedValue(quantity, true)
+				toast.Border:SetVertexColor(0.9, 0.75, 0.26)
+				toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
+				toast.IconBorder:Show()
+				toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
 
-			toast._data = {
-				event = event,
-				count = quantity,
-				sound_file = 865, -- SOUNDKIT.IG_BACKPACK_COIN_OK
-			}
+				toast._data = {
+					event = event,
+					count = quantity,
+					sound_file = 865, -- SOUNDKIT.IG_BACKPACK_COIN_OK
+				}
 
-			toast:Spawn(C.db.profile.types.loot_gold.dnd)
+				toast:Spawn(C.db.profile.types.loot_gold.dnd)
+			else
+				toast:Recycle()
+			end
 		else
 			if isQueued then
 				toast._data.count = toast._data.count + quantity
@@ -1801,7 +1805,7 @@ do
 	local function PLAYER_MONEY()
 		local cur = GetMoney()
 
-		if cur - old >= C.db.profile.types.loot_gold.threshold then
+		if cur - old > 0 then
 			Toast_SetUp("PLAYER_MONEY", cur - old)
 		end
 
