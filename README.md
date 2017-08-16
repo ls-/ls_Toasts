@@ -28,7 +28,7 @@ If you're a UI developer, you may want to reskin my toasts. To create a skin you
 ```Lua
 local toast_F = ls_Toasts[1]
 
-toast_F:CreateSkin("skin_name", function(toast)
+toast_F:RegisterSkin("skin_name", function(toast)
   -- do something here
 end)
 ```
