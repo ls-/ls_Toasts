@@ -1,3 +1,13 @@
+# CHANGELOG
+
+## Version 70200.10
+
+- Project overhaul. New in-game config;
+- Added option to change toasts' strata;
+- Added option to show ilvl;
+- Moved gold toasts to a separate group: Loot (Gold);
+- Numerous bug fixes and tweaks.
+
 ## Version 70200.09
 
 - Added 7.2.5 support.
