@@ -8,6 +8,8 @@
 - Moved gold toasts to a separate group: Loot (Gold);
 - Numerous bug fixes and tweaks.
 
+NOTE: Now this addon is more of a framework, others can hook up to it to show toasts. All built-in toast groups are written as plugins, so you may use them as ref.
+
 ## Version 70200.09
 
 - Added 7.2.5 support.
