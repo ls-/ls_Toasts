@@ -1867,7 +1867,7 @@ do
 	end
 
 	local function Test()
-		Toast_SetUp("LOOT_GOLD_TEST", m_random(10000, 1000000))
+		Toast_SetUp("LOOT_GOLD_TEST", m_random(C.db.profile.types.loot_gold.threshold + 1, C.db.profile.types.loot_gold.threshold * 2))
 	end
 
 	E:RegisterOptions("loot_gold", {
