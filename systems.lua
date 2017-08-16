@@ -1264,14 +1264,6 @@ do
 						local title = L["YOU_WON"]
 						local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 
-						if rollType == LOOT_ROLL_TYPE_NEED then
-							title = TITLE_NEED_TEMPLATE:format(title, roll)
-						elseif rollType == LOOT_ROLL_TYPE_GREED then
-							title = TITLE_GREED_TEMPLATE:format(title, roll)
-						elseif rollType == LOOT_ROLL_TYPE_DISENCHANT then
-							title = TITLE_DE_TEMPLATE:format(title, roll)
-						end
-
 						if factionGroup then
 							toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-"..factionGroup)
 						end
@@ -1315,6 +1307,14 @@ do
 							soundFile = 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
 
 							toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
+						end
+
+						if rollType == LOOT_ROLL_TYPE_NEED then
+							title = TITLE_NEED_TEMPLATE:format(title, roll)
+						elseif rollType == LOOT_ROLL_TYPE_GREED then
+							title = TITLE_GREED_TEMPLATE:format(title, roll)
+						elseif rollType == LOOT_ROLL_TYPE_DISENCHANT then
+							title = TITLE_DE_TEMPLATE:format(title, roll)
 						end
 
 						if C.db.profile.colors.name then
