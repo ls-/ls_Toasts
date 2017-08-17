@@ -312,12 +312,12 @@ function E.SearchBagsForItemID(_, itemID)
 	for i = 0, NUM_BAG_SLOTS do
 		for j = 1, GetContainerNumSlots(i) do
 			if GetContainerItemID(i, j) == itemID then
-				return i
+				return i, j
 			end
 		end
 	end
 
-	return -1
+	return -1, -1
 end
 
 ------------
