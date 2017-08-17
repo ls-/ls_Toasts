@@ -1035,7 +1035,7 @@ do
 				toast.Icon:SetTexture(icon)
 				toast.IconBorder:Show()
 				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-				toast.IconText1:SetText(quantity > 1 and quantity or "")
+				toast.IconText1:SetAnimatedValue(quantity, true)
 
 				toast._data = {
 					count = quantity,
@@ -1335,7 +1335,7 @@ do
 						toast.Icon:SetTexture(icon)
 						toast.IconBorder:Show()
 						toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-						toast.IconText1:SetText(quantity > 1 and quantity or "")
+						toast.IconText1:SetAnimatedValue(quantity, true)
 						toast.UpgradeIcon:SetShown(E:IsItemUpgrade(originalLink))
 
 						toast._data = {
@@ -1668,7 +1668,7 @@ do
 			toast.Icon:SetTexture(icon)
 			toast.IconBorder:Show()
 			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-			toast.IconText1:SetText(quantity > 1 and quantity or "")
+			toast.IconText1:SetAnimatedValue(quantity, true)
 
 			toast._data = {
 				event = event,
