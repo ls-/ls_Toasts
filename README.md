@@ -13,7 +13,7 @@ Replacement for default alert system. Better toasts, cheers!
 
 - One design for all toasts;
 - DND mode. You can enable DND mode for different toast groups. Toasts in DND mode won't be displayed in combat, but will be queued up in the system. Once you leave combat, they'll start popping up;
-- In-game config. Use **/LSTOASTS** or **/LST** command to open config panel. From there you can disable sounds, move alert frames, etc.
+- In-game config. Use **`/LSTOASTS`** or **`/LST`** command to open config panel. From there you can disable sounds, move alert frames, etc.
 
 ## Usage
 
