@@ -1,8 +1,8 @@
 local addonName, addonTable = ...
 local E, L, C, D = addonTable.E, addonTable.L, addonTable.C, addonTable.D
 
---[[ luacheck: globals getfenv LibStub AlertFrame InterfaceOptionsFramePanelContainer SlashCmdList LS_TOASTS_CFG_GLOBAL
-LS_TOASTS_GLOBAL_CONFIG SLASH_LSTOASTS1 SLASH_LSTOASTS2 ]]
+--[[ luacheck: globals getfenv LibStub AlertFrame InterfaceOptionsFramePanelContainer SlashCmdList LS_TOASTS_CFG
+LS_TOASTS_CFG_GLOBAL LS_TOASTS_GLOBAL_CONFIG SLASH_LSTOASTS1 SLASH_LSTOASTS2 ]]
 
 -- Lua
 local _G = getfenv(0)
@@ -117,25 +117,29 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 					data.colored_names_enabled = nil
 				end
 
-				if data.point and not data.point.p then
-					data.point.p = data.point[1]
-					data.point.rP = data.point[3]
-					data.point.x = data.point[4]
-					data.point.y = data.point[5]
-
-					data.point[1] = nil
-					data.point[2] = nil
-					data.point[3] = nil
-					data.point[4] = nil
-					data.point[5] = nil
-				end
-
 				if data.type then
 					data.types = data.type
 					data.type = nil
 				end
 
+				-- Do not convert point
+				data.point = nil
 				data.version = nil
+
+				-- Ignore stuff from REALLY old configs
+				data.achievement_enabled = nil
+				data.archaeology_enabled = nil
+				data.garrison_6_0_enabled = nil
+				data.garrison_7_0_enabled = nil
+				data.instance_enabled = nil
+				data.loot_common_enabled = nil
+				data.loot_common_quality_threshold = nil
+				data.loot_currency_enabled = nil
+				data.loot_special_enabled = nil
+				data.recipe_enabled = nil
+				data.transmog_enabled = nil
+				data.world_enabled = nil
+				data.dnd = nil
 
 				if name == profile then
 					CopyTable(data, C.db.profile)
@@ -154,6 +158,28 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		end
 
 		LS_TOASTS_CFG_GLOBAL = nil
+	end
+
+	-- cleanup
+	LS_TOASTS_CFG = nil
+
+	-- jic old stuff was accidentally copied
+	if LS_TOASTS_GLOBAL_CONFIG and LS_TOASTS_GLOBAL_CONFIG.profiles then
+		for _, data in next, LS_TOASTS_GLOBAL_CONFIG.profiles do
+			data.achievement_enabled = nil
+			data.archaeology_enabled = nil
+			data.garrison_6_0_enabled = nil
+			data.garrison_7_0_enabled = nil
+			data.instance_enabled = nil
+			data.loot_common_enabled = nil
+			data.loot_common_quality_threshold = nil
+			data.loot_currency_enabled = nil
+			data.loot_special_enabled = nil
+			data.recipe_enabled = nil
+			data.transmog_enabled = nil
+			data.world_enabled = nil
+			data.dnd = nil
+		end
 	end
 
 	C.options = {
