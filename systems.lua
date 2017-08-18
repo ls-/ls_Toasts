@@ -1004,18 +1004,20 @@ do
 		end
 
 		if isNew then
-			local name, quality, icon, _
+			local name, quality, icon, _, classID, subClassID, bindType, isQuestItem
 
 			if linkType == "battlepet" then
 				local _, speciesID, _, breedQuality, _ = s_split(":", originalLink)
 				name, icon = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 				quality = tonumber(breedQuality)
 			else
-				name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(originalLink)
+				name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
+				isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 			end
 
-			if quality >= C.db.profile.types.loot_common.threshold and quality <= 4 then
-				local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[4]
+			if (quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
+				or (C.db.profile.types.loot_common.quest and isQuestItem) then
+				local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 
 				if C.db.profile.colors.name then
 					name = color.hex..name.."|r"
@@ -1035,6 +1037,7 @@ do
 				toast.Icon:SetTexture(icon)
 				toast.IconBorder:Show()
 				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+				toast.IconHL:SetShown(isQuestItem)
 				toast.IconText1:SetAnimatedValue(quantity, true)
 
 				toast._data = {
@@ -1133,6 +1136,7 @@ do
 		dnd = false,
 		threshold = 1,
 		ilvl = true,
+		quest = false,
 	}, {
 		name = L["TYPE_LOOT_COMMON"],
 		args = {
@@ -1204,6 +1208,18 @@ do
 				set = function(_, value)
 					 C.db.profile.types.loot_common.threshold = value
 				end,
+			},
+			quest = {
+				order = 6,
+				type = "toggle",
+				name = L["SHOW_QUEST_ITEMS"],
+				desc = L["SHOW_QUEST_ITEMS_DESC"],
+				get = function()
+					return C.db.profile.types.loot_common.quest
+				end,
+				set = function(_, value)
+					C.db.profile.types.loot_common.quest = value
+				end
 			},
 			test = {
 				type = "execute",

@@ -716,6 +716,7 @@ do
 		self.Icon:SetSize(44, 44)
 		self.IconBorder:Hide()
 		self.IconBorder:SetVertexColor(1, 1, 1)
+		self.IconHL:Hide()
 		self.IconText1:SetText("")
 		self.IconText1:SetTextColor(1, 1, 1)
 		self.IconText1.PostSetAnimatedValue = nil
@@ -789,7 +790,14 @@ do
 		icon:SetSize(44, 44)
 		toast.Icon = icon
 
-		local iconBorder = toast:CreateTexture(nil, "BACKGROUND", nil, 4)
+		local iconHL = toast:CreateTexture(nil, "BACKGROUND", nil, 3)
+		iconHL:SetPoint("TOPLEFT", 7, -7)
+		iconHL:SetSize(44, 44)
+		iconHL:SetTexture("Interface\\ContainerFrame\\UI-Icon-QuestBorder")
+		iconHL:Hide()
+		toast.IconHL = iconHL
+
+		local iconBorder = toast:CreateTexture(nil, "BACKGROUND", nil, 5)
 		iconBorder:SetPoint("TOPLEFT", 7, -7)
 		iconBorder:SetSize(44, 44)
 		iconBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-icon-border")
@@ -803,7 +811,7 @@ do
 		iconText1.SetAnimatedValue = SetAnimatedValue
 		toast.IconText1 = iconText1
 
-		local iconText1BG = toast:CreateTexture(nil, "BACKGROUND", nil, 3)
+		local iconText1BG = toast:CreateTexture(nil, "BACKGROUND", nil, 4)
 		iconText1BG:SetPoint("BOTTOMLEFT", icon, "BOTTOMLEFT", 2, 2)
 		iconText1BG:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -2, 2)
 		iconText1BG:SetHeight(12)
