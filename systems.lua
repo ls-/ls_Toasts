@@ -342,7 +342,7 @@ do
 		end
 	end
 
-	local function Toast_SetUp(event, name, subtypeID, textureFile, moneyReward, xpReward, numItemRewards, isScenario, isScenarioBonusComplete)
+	local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpReward, numItemRewards, isScenario, isScenarioBonusComplete)
 		local toast = E:GetToast()
 		local usedSlots = 0
 		local soundFile
@@ -416,7 +416,7 @@ do
 
 			soundFile = 31754 -- SOUNDKIT.UI_SCENARIO_ENDING
 		else
-			if subtypeID == LFG_SUBTYPEID_HEROIC then
+			if subTypeID == LFG_SUBTYPEID_HEROIC then
 				toast.Skull:Show()
 			end
 
@@ -444,14 +444,14 @@ do
 			local _, _, _, _, hasBonusStep, isBonusStepComplete, _, _, _, scenarioType = C_Scenario.GetInfo()
 
 			if scenarioType ~= LE_SCENARIO_TYPE_LEGION_INVASION then
-				local name, _, subtypeID, textureFile, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = GetLFGCompletionReward()
+				local name, _, subTypeID, textureFile, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = GetLFGCompletionReward()
 
-				Toast_SetUp("LFG_COMPLETION_REWARD", name, subtypeID, textureFile, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards, true, hasBonusStep and isBonusStepComplete)
+				Toast_SetUp("LFG_COMPLETION_REWARD", name, subTypeID, textureFile, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards, true, hasBonusStep and isBonusStepComplete)
 			end
 		else
-			local name, _, subtypeID, textureFile, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = GetLFGCompletionReward()
+			local name, _, subTypeID, textureFile, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = GetLFGCompletionReward()
 
-			Toast_SetUp("LFG_COMPLETION_REWARD", name, subtypeID, textureFile, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards)
+			Toast_SetUp("LFG_COMPLETION_REWARD", name, subTypeID, textureFile, moneyBase + moneyVar * numStrangers, experienceBase + experienceVar * numStrangers, numItemRewards)
 		end
 	end
 
@@ -467,17 +467,17 @@ do
 
 	local function Test()
 		-- dungeon, Wailing Caverns
-		local name, _, subtypeID = GetLFGDungeonInfo(1)
+		local name, _, subTypeID = GetLFGDungeonInfo(1)
 
 		if name then
-			Toast_SetUp("INSTANCE_TEST", name, subtypeID, nil, 123456, 123456, 0)
+			Toast_SetUp("INSTANCE_TEST", name, subTypeID, nil, 123456, 123456, 0)
 		end
 
 		-- scenario, Crypt of Forgotten Kings
-		name, _, subtypeID = GetLFGDungeonInfo(504)
+		name, _, subTypeID = GetLFGDungeonInfo(504)
 
 		if name then
-			Toast_SetUp("INSTANCE_TEST", name, subtypeID, nil, 123456, 123456, 0, true, true)
+			Toast_SetUp("INSTANCE_TEST", name, subTypeID, nil, 123456, 123456, 0, true, true)
 		end
 	end
 
