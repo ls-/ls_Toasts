@@ -96,7 +96,7 @@ do
 			toast.Title:SetText(L["ACHIEVEMENT_PROGRESSED"])
 			toast.Text:SetText(flag)
 
-			toast.Points:SetText("")
+			toast.IconText1:SetText("")
 		else
 			toast.Title:SetText(L["ACHIEVEMENT_UNLOCKED"])
 			toast.Text:SetText(name)
