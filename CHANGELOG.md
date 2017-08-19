@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Version 70200.11
+
+- Exposed `L` table. Will be useful for plugin devs;
+- Added option to show quest item toasts regardless of their quality;
+- Added Simplified Chinese translation. Translated by y368413@Curse;
+- Updated Traditional Chinese translation. Translated by gaspy10@Curse;
+- Updated Korean translation. Translated by yuk6196@Curse;
+- Updated Russian translation;
+- Misc bug fixes and tweaks.
+
 ## Version 70200.10
 
 - Project overhaul. New in-game config;
