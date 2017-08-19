@@ -81,6 +81,7 @@ setmetatable(E, {
 _G[addonName] = {
 	[1] = E,
 	[2] = C,
+	[3] = L,
 }
 
 ------------
