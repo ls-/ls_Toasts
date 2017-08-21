@@ -16,6 +16,8 @@ D.profile = {
 	},
 	colors = {
 		name = false,
+		border = true,
+		icon_border = true,
 	},
 	point = {
 		p = "TOPLEFT",

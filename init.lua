@@ -215,20 +215,8 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 							C.db.profile.sfx.enabled = value
 						end
 					},
-					colored_names = {
-						order = 2,
-						type = "toggle",
-						name = L["COLORS"],
-						desc = L["COLORS_TOOLTIP"],
-						get = function()
-							return C.db.profile.colors.name
-						end,
-						set = function(_, value)
-							C.db.profile.colors.name = value
-						end
-					},
 					strata = {
-						order = 3,
+						order = 2,
 						type = "select",
 						name = L["STRATA"],
 						values = STRATAS,
@@ -243,7 +231,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						end,
 					},
 					skin = {
-						order = 4,
+						order = 3,
 						type = "select",
 						name = L["SKIN"],
 						values = E.GetAllSkins,
@@ -318,15 +306,54 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 							E:RefreshQueue()
 						end,
 					},
+					colors = {
+						order = 20,
+						type = "group",
+						guiInline = true,
+						name = L["COLORS"],
+						args = {
+							name = {
+								order = 1,
+								type = "toggle",
+								name = L["NAME"],
+								get = function()
+									return C.db.profile.colors.name
+								end,
+								set = function(_, value)
+									C.db.profile.colors.name = value
+								end
+							},
+							border = {
+								order = 2,
+								type = "toggle",
+								name = L["BORDER"],
+								get = function()
+									return C.db.profile.colors.border
+								end,
+								set = function(_, value)
+									C.db.profile.colors.border = value
+								end
+							},
+							icon_border = {
+								order = 3,
+								type = "toggle",
+								name = L["ICON_BORDER"],
+								get = function()
+									return C.db.profile.colors.icon_border
+								end,
+								set = function(_, value)
+									C.db.profile.colors.icon_border = value
+								end
+							},
+						}
+					},
 				},
 			},
 			types = {
 				order = 4,
 				type = "group",
 				name = L["SETTINGS_TYPE_LABEL"],
-				args = {
-
-				},
+				args = {},
 			},
 		},
 	}

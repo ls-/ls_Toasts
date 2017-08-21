@@ -104,8 +104,14 @@ do
 			if flag then
 				toast.IconText1:SetText("")
 			else
-				toast.Border:SetVertexColor(0.9, 0.75, 0.26)
-				toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
+				if C.db.profile.colors.border then
+					toast.Border:SetVertexColor(0.9, 0.75, 0.26)
+				end
+
+				if C.db.profile.colors.icon_border then
+					toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
+				end
+
 				toast.IconText1:SetText(points == 0 and "" or points)
 			end
 		end
@@ -213,10 +219,13 @@ do
 		local toast = E:GetToast()
 		local raceName, raceTexture	= GetArchaeologyRaceInfoByID(researchFieldID)
 
+		if C.db.profile.colors.border then
+			toast.Border:SetVertexColor(0.9, 0.4, 0.1)
+		end
+
 		toast.Title:SetText(L["DIGSITE_COMPLETED"])
 		toast.Text:SetText(raceName)
 		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-archaeology")
-		toast.Border:SetVertexColor(0.9, 0.4, 0.1)
 		toast.Icon:SetPoint("TOPLEFT", 7, -3)
 		toast.Icon:SetSize(76, 76)
 		toast.Icon:SetTexture(raceTexture)
@@ -560,8 +569,15 @@ do
 			toast.Title:SetText(L["GARRISON_MISSION_COMPLETED"])
 		end
 
+		if C.db.profile.colors.name then
+			toast.Text:SetTextColor(color.r, color.g, color.b)
+		end
+
+		if C.db.profile.colors.border then
+			toast.Border:SetVertexColor(color.r, color.g, color.b)
+		end
+
 		toast.Text:SetText(missionInfo.name)
-		toast.Border:SetVertexColor(color.r, color.g, color.b)
 		toast.Icon:SetAtlas(missionInfo.typeAtlas, false)
 		toast.IconText1:SetText(level)
 
@@ -570,10 +586,6 @@ do
 			mission_id = missionID,
 			sound_file = 44294, -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
 		}
-
-		if C.db.profile.colors.name then
-			toast.Text:SetTextColor(color.r, color.g, color.b)
-		end
 
 		toast:Spawn(garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd or C.db.profile.types.garrison_6_0.dnd)
 	end
@@ -677,8 +689,11 @@ do
 			toast.Text:SetTextColor(color.r, color.g, color.b)
 		end
 
+		if C.db.profile.colors.border then
+			toast.Border:SetVertexColor(color.r, color.g, color.b)
+		end
+
 		toast.Text:SetText(name)
-		toast.Border:SetVertexColor(color.r, color.g, color.b)
 
 		toast._data = {
 			event = event,
@@ -1031,12 +1046,18 @@ do
 					end
 				end
 
+				if C.db.profile.colors.border then
+					toast.Border:SetVertexColor(color.r, color.g, color.b)
+				end
+
+				if C.db.profile.colors.icon_border then
+					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+				end
+
 				toast.Title:SetText(L["YOU_RECEIVED"])
 				toast.Text:SetText(name)
-				toast.Border:SetVertexColor(color.r, color.g, color.b)
 				toast.Icon:SetTexture(icon)
 				toast.IconBorder:Show()
-				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 				toast.IconHL:SetShown(isQuestItem)
 				toast.IconText1:SetAnimatedValue(quantity, true)
 
@@ -1345,12 +1366,18 @@ do
 							end
 						end
 
+						if C.db.profile.colors.border then
+							toast.Border:SetVertexColor(color.r, color.g, color.b)
+						end
+
+						if C.db.profile.colors.icon_border then
+							toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+						end
+
 						toast.Title:SetText(title)
 						toast.Text:SetText(name)
-						toast.Border:SetVertexColor(color.r, color.g, color.b)
 						toast.Icon:SetTexture(icon)
 						toast.IconBorder:Show()
-						toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 						toast.IconText1:SetAnimatedValue(quantity, true)
 						toast.UpgradeIcon:SetShown(E:IsItemUpgrade(originalLink))
 
@@ -1678,12 +1705,22 @@ do
 			local name, _, icon, _, _, _, _, quality = GetCurrencyInfo(link)
 			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 
+			if C.db.profile.colors.name then
+				toast.Text:SetTextColor(color.r, color.g, color.b)
+			end
+
+			if C.db.profile.colors.border then
+				toast.Border:SetVertexColor(color.r, color.g, color.b)
+			end
+
+			if C.db.profile.colors.icon_border then
+				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+			end
+
 			toast.Title:SetText(L["YOU_RECEIVED"])
 			toast.Text:SetText(name)
-			toast.Border:SetVertexColor(color.r, color.g, color.b)
 			toast.Icon:SetTexture(icon)
 			toast.IconBorder:Show()
-			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 			toast.IconText1:SetAnimatedValue(quantity, true)
 
 			toast._data = {
@@ -1693,10 +1730,6 @@ do
 				sound_file = 31578, -- SOUNDKIT.UI_EPICLOOT_TOAST
 				tooltip_link = originalLink,
 			}
-
-			if C.db.profile.colors.name then
-				toast.Text:SetTextColor(color.r, color.g, color.b)
-			end
 
 			toast:HookScript("OnEnter", Toast_OnEnter)
 			toast:Spawn(C.db.profile.types.loot_currency.dnd)
@@ -1829,12 +1862,18 @@ do
 			if quantity >= C.db.profile.types.loot_gold.threshold then
 				toast.Text.PostSetAnimatedValue = PostSetAnimatedValue
 
+				if C.db.profile.colors.border then
+					toast.Border:SetVertexColor(0.9, 0.75, 0.26)
+				end
+
+				if C.db.profile.colors.icon_border then
+					toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
+				end
+
 				toast.Title:SetText(L["YOU_RECEIVED"])
 				toast.Text:SetAnimatedValue(quantity, true)
-				toast.Border:SetVertexColor(0.9, 0.75, 0.26)
 				toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
 				toast.IconBorder:Show()
-				toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
 
 				toast._data = {
 					event = event,
@@ -2149,12 +2188,18 @@ do
 				toast.Title:SetText(L["TRANSMOG_REMOVED"])
 			end
 
+			if C.db.profile.colors.border then
+				toast.Border:SetVertexColor(1, 0.5, 1)
+			end
+
+			if C.db.profile.colors.icon_border then
+				toast.IconBorder:SetVertexColor(1, 0.5, 1)
+			end
+
 			toast.Text:SetText(name)
 			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-transmog")
-			toast.Border:SetVertexColor(1, 128 / 255, 1)
 			toast.Icon:SetTexture(icon)
 			toast.IconBorder:Show()
-			toast.IconBorder:SetVertexColor(1, 128 / 255, 1)
 
 			toast._data = {
 				event = event,
@@ -2389,11 +2434,17 @@ do
 					toast.Bonus:Show()
 				end
 
+				if C.db.profile.colors.border then
+					toast.Border:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
+				end
+
+				if C.db.profile.colors.icon_border then
+					toast.IconBorder:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
+				end
+
 				toast.Title:SetText(L["SCENARIO_INVASION_COMPLETED"])
 				toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legion")
 				toast.Icon:SetTexture("Interface\\Icons\\Ability_Warlock_DemonicPower")
-				toast.Border:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
-				toast.IconBorder:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
 
 				soundFile = 31754 -- SOUNDKIT.UI_SCENARIO_ENDING
 			else
@@ -2412,10 +2463,16 @@ do
 					toast.Icon:SetTexture("Interface\\Icons\\Achievement_Quests_Completed_TwilightHighlands")
 				end
 
+				if C.db.profile.colors.border then
+					toast.Border:SetVertexColor(color.r, color.g, color.b)
+				end
+
+				if C.db.profile.colors.icon_border then
+					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+				end
+
 				toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])
 				toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-worldquest")
-				toast.Border:SetVertexColor(color.r, color.g, color.b)
-				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 
 				soundFile = 73277 -- SOUNDKIT.UI_WORLDQUEST_COMPLETE
 			end
