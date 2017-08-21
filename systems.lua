@@ -1003,6 +1003,10 @@ do
 		end
 	end
 
+	local function PostSetAnimatedValue(self, value)
+		self:SetText(value == 1 and "" or value)
+	end
+
 	local function Toast_SetUp(event, link, quantity)
 		local sanitizedLink, originalLink, linkType, itemID = E:SanitizeLink(link)
 		local toast, isNew, isQueued
@@ -1033,6 +1037,8 @@ do
 			if (quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
 				or (C.db.profile.types.loot_common.quest and isQuestItem) then
 				local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
+
+				toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
 				if C.db.profile.colors.name then
 					name = color.hex..name.."|r"
@@ -1286,6 +1292,10 @@ do
 		end
 	end
 
+	local function PostSetAnimatedValue(self, value)
+		self:SetText(value == 1 and "" or value)
+	end
+
 	local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, isItem, isHonor, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase)
 		if isItem then
 			if link then
@@ -1300,6 +1310,8 @@ do
 						local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 						local title = L["YOU_WON"]
 						local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+
+						toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
 						if factionGroup then
 							toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-"..factionGroup)
