@@ -1863,7 +1863,7 @@ end
 do
 	local old
 
-	local function PostSetAnimatedValue (self, value)
+	local function PostSetAnimatedValue(self, value)
 		self:SetText(GetMoneyString(value))
 	end
 
