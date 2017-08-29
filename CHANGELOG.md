@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Version 70300.01
+
+- Added options to control border and icon border colouring;
+- Added new toast type: Collection. Includes toasts for mounts, pets and toys;
+- Fixed item count text. If item count it 1, it's hidden;
+- Updated German translation. Translated by pas06@Curse;
+- Updated Korean translation. Translated by yuk6196@Curse;
+- Updated Russian translation;
+- Updated Simplified Chinese translation. Translated by y368413@Curse;
+- Updated Traditional Chinese translation. Translated by gaspy10@Curse;
+- Misc bug fixes and tweaks.
+
 ## Version 70200.11
 
 - Exposed `L` table. Will be useful for plugin devs;
