@@ -22,19 +22,43 @@ local pcall = _G.pcall
 local s_split = _G.string.split
 local tonumber = _G.tonumber
 local tostring = _G.tostring
+local next = _G.next
 
 -- Blizz
 local AchievementFrame_LoadUI = _G.AchievementFrame_LoadUI
 local BattlePetToolTip_Show = _G.BattlePetToolTip_Show
-local C_Garrison = _G.C_Garrison
-local C_MountJournal = _G.C_MountJournal
-local C_PetJournal = _G.C_PetJournal
-local C_Scenario = _G.C_Scenario
-local C_TaskQuest = _G.C_TaskQuest
-local C_Timer = _G.C_Timer
-local C_ToyBox = _G.C_ToyBox
-local C_TradeSkillUI = _G.C_TradeSkillUI
-local C_TransmogCollection = _G.C_TransmogCollection
+local C_Garrison_GetAvailableMissions = _G.C_Garrison.GetAvailableMissions
+local C_Garrison_GetBasicMissionInfo = _G.C_Garrison.GetBasicMissionInfo
+local C_Garrison_GetBuildingInfo = _G.C_Garrison.GetBuildingInfo
+local C_Garrison_GetBuildings = _G.C_Garrison.GetBuildings
+local C_Garrison_GetCompleteTalent = _G.C_Garrison.GetCompleteTalent
+local C_Garrison_GetFollowerInfo = _G.C_Garrison.GetFollowerInfo
+local C_Garrison_GetFollowerLink = _G.C_Garrison.GetFollowerLink
+local C_Garrison_GetFollowerLinkByID = _G.C_Garrison.GetFollowerLinkByID
+local C_Garrison_GetFollowers = _G.C_Garrison.GetFollowers
+local C_Garrison_GetFollowerTypeByID = _G.C_Garrison.GetFollowerTypeByID
+local C_Garrison_GetTalent = _G.C_Garrison.GetTalent
+local C_Garrison_GetTalentTreeIDsByClassID = _G.C_Garrison.GetTalentTreeIDsByClassID
+local C_Garrison_GetTalentTreeInfoForID = _G.C_Garrison.GetTalentTreeInfoForID
+local C_Garrison_IsOnGarrisonMap = _G.C_Garrison.IsOnGarrisonMap
+local C_MountJournal_GetMountInfoByID = _G.C_MountJournal.GetMountInfoByID
+local C_PetJournal_GetPetInfoByPetID = _G.C_PetJournal.GetPetInfoByPetID
+local C_PetJournal_GetPetInfoBySpeciesID = _G.C_PetJournal.GetPetInfoBySpeciesID
+local C_PetJournal_GetPetStats = _G.C_PetJournal.GetPetStats
+local C_Scenario_GetInfo = _G.C_Scenario.GetInfo
+local C_Scenario_IsInScenario = _G.C_Scenario.IsInScenario
+local C_Scenario_TreatScenarioAsDungeon = _G.C_Scenario.TreatScenarioAsDungeon
+local C_TaskQuest_GetQuestInfoByQuestID = _G.C_TaskQuest.GetQuestInfoByQuestID
+local C_TaskQuest_GetQuestsForPlayerByMapID = _G.C_TaskQuest.GetQuestsForPlayerByMapID
+local C_Timer_After = _G.C_Timer.After
+local C_ToyBox_GetToyInfo = _G.C_ToyBox.GetToyInfo
+local C_TradeSkillUI_GetTradeSkillLineForRecipe = _G.C_TradeSkillUI.GetTradeSkillLineForRecipe
+local C_TradeSkillUI_GetTradeSkillTexture = _G.C_TradeSkillUI.GetTradeSkillTexture
+local C_TradeSkillUI_OpenTradeSkill = _G.C_TradeSkillUI.OpenTradeSkill
+local C_TransmogCollection_GetAppearanceSourceInfo = _G.C_TransmogCollection.GetAppearanceSourceInfo
+local C_TransmogCollection_GetAppearanceSources = _G.C_TransmogCollection.GetAppearanceSources
+local C_TransmogCollection_GetCategoryAppearances = _G.C_TransmogCollection.GetCategoryAppearances
+local C_TransmogCollection_GetSourceInfo = _G.C_TransmogCollection.GetSourceInfo
 local CollectionsJournal_LoadUI = _G.CollectionsJournal_LoadUI
 local GarrisonFollowerTooltip_Show = _G.GarrisonFollowerTooltip_Show
 local GetAchievementInfo = _G.GetAchievementInfo
@@ -377,15 +401,15 @@ do
 
 		if isNew then
 			if isMount then
-				name, _, icon = C_MountJournal.GetMountInfoByID(ID)
+				name, _, icon = C_MountJournal_GetMountInfoByID(ID)
 			elseif isPet then
 				local customName, rarity
-				_, _, _, _, rarity = C_PetJournal.GetPetStats(ID)
-				_, customName, _, _, _, _, _, name, icon = C_PetJournal.GetPetInfoByPetID(ID)
+				_, _, _, _, rarity = C_PetJournal_GetPetStats(ID)
+				_, customName, _, _, _, _, _, name, icon = C_PetJournal_GetPetInfoByPetID(ID)
 				color = ITEM_QUALITY_COLORS[rarity - 1]
 				name = customName or name
 			elseif isToy then
-				_, name, icon = C_ToyBox.GetToyInfo(ID)
+				_, name, icon = C_ToyBox_GetToyInfo(ID)
 			end
 
 			if not name then
@@ -661,8 +685,8 @@ do
 	end
 
 	local function LFG_COMPLETION_REWARD()
-		if C_Scenario.IsInScenario() and not C_Scenario.TreatScenarioAsDungeon() then
-			local _, _, _, _, hasBonusStep, isBonusStepComplete, _, _, _, scenarioType = C_Scenario.GetInfo()
+		if C_Scenario_IsInScenario() and not C_Scenario_TreatScenarioAsDungeon() then
+			local _, _, _, _, hasBonusStep, isBonusStepComplete, _, _, _, scenarioType = C_Scenario_GetInfo()
 
 			if scenarioType ~= LE_SCENARIO_TYPE_LEGION_INVASION then
 				local name, _, subTypeID, textureFile, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = GetLFGCompletionReward()
@@ -770,7 +794,7 @@ do
 	end
 
 	local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
-		local missionInfo = C_Garrison.GetBasicMissionInfo(missionID)
+		local missionInfo = C_Garrison_GetBasicMissionInfo(missionID)
 		local color = missionInfo.isRare and ITEM_QUALITY_COLORS[3] or ITEM_QUALITY_COLORS[1]
 		local level = missionInfo.iLevel == 0 and missionInfo.level or missionInfo.iLevel
 		local toast = E:GetToast()
@@ -813,7 +837,7 @@ do
 		local _, instanceType = GetInstanceInfo()
 		local validInstance = false
 
-		if instanceType == "none" or C_Garrison.IsOnGarrisonMap() then
+		if instanceType == "none" or C_Garrison_IsOnGarrisonMap() then
 			validInstance = true
 		end
 
@@ -837,15 +861,15 @@ do
 
 	local function FollowerToast_OnEnter(self)
 		if self._data then
-			local isOK, link = pcall(C_Garrison.GetFollowerLink, self._data.follower_id)
+			local isOK, link = pcall(C_Garrison_GetFollowerLink, self._data.follower_id)
 
 			if not isOK then
-				isOK, link = pcall(C_Garrison.GetFollowerLinkByID, self._data.follower_id)
+				isOK, link = pcall(C_Garrison_GetFollowerLinkByID, self._data.follower_id)
 			end
 
 			if isOK and link then
 				local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = s_split(":", link)
-				local followerType = C_Garrison.GetFollowerTypeByID(tonumber(garrisonFollowerID))
+				local followerType = C_Garrison_GetFollowerTypeByID(tonumber(garrisonFollowerID))
 
 				GarrisonFollowerTooltip_Show(tonumber(garrisonFollowerID), false, tonumber(quality), tonumber(level), 0, 0, tonumber(itemLevel), tonumber(spec1), tonumber(ability1), tonumber(ability2), tonumber(ability3), tonumber(ability4), tonumber(trait1), tonumber(trait2), tonumber(trait3), tonumber(trait4))
 
@@ -862,7 +886,7 @@ do
 	end
 
 	local function FollowerToast_SetUp(event, garrisonType, followerTypeID, followerID, name, texPrefix, level, quality, isUpgraded)
-		local followerInfo = C_Garrison.GetFollowerInfo(followerID)
+		local followerInfo = C_Garrison_GetFollowerInfo(followerID)
 		local followerStrings = GarrisonFollowerOptions[followerTypeID].strings
 		local upgradeTexture = LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
 		local color = ITEM_QUALITY_COLORS[quality]
@@ -954,7 +978,7 @@ do
 	------
 
 	local function TalentToast_SetUp(event, talentID)
-		local talent = C_Garrison.GetTalent(talentID)
+		local talent = C_Garrison_GetTalent(talentID)
 		local toast = E:GetToast()
 
 		toast.Title:SetText(L["GARRISON_NEW_TALENT"])
@@ -973,7 +997,7 @@ do
 
 	local function GARRISON_TALENT_COMPLETE(garrisonType, doAlert)
 		if doAlert then
-			TalentToast_SetUp("GARRISON_TALENT_COMPLETE", C_Garrison.GetCompleteTalent(garrisonType))
+			TalentToast_SetUp("GARRISON_TALENT_COMPLETE", C_Garrison_GetCompleteTalent(garrisonType))
 		end
 	end
 
@@ -1011,7 +1035,7 @@ do
 
 	local function TestGarrison()
 		-- follower
-		local followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_6_0)
+		local followers = C_Garrison_GetFollowers(LE_FOLLOWER_TYPE_GARRISON_6_0)
 		local follower = followers and followers[1] or nil
 
 		if follower then
@@ -1019,7 +1043,7 @@ do
 		end
 
 		-- ship
-		followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
+		followers = C_Garrison_GetFollowers(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
 		follower = followers and followers[1] or nil
 
 		if follower then
@@ -1027,7 +1051,7 @@ do
 		end
 
 		-- garrison mission
-		local missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0)
+		local missions = C_Garrison_GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0)
 		local missionID = missions and missions[1] and missions[1].missionID or nil
 
 		if missionID then
@@ -1035,7 +1059,7 @@ do
 		end
 
 		-- shipyard mission
-		missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
+		missions = C_Garrison_GetAvailableMissions(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
 		missionID = missions and missions[1] and missions[1].missionID or nil
 
 		if missionID then
@@ -1043,17 +1067,17 @@ do
 		end
 
 		-- building
-		local buildings = C_Garrison.GetBuildings(LE_GARRISON_TYPE_6_0)
+		local buildings = C_Garrison_GetBuildings(LE_GARRISON_TYPE_6_0)
 		local buildingID = buildings and buildings[1] and buildings[1].buildingID or nil
 
 		if buildingID then
-			BuildingToast_SetUp("GARRISON_BUILDING_TEST", select(2, C_Garrison.GetBuildingInfo(buildingID)))
+			BuildingToast_SetUp("GARRISON_BUILDING_TEST", select(2, C_Garrison_GetBuildingInfo(buildingID)))
 		end
 	end
 
 	local function TestClassHall()
 		-- champion
-		local followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_7_0)
+		local followers = C_Garrison_GetFollowers(LE_FOLLOWER_TYPE_GARRISON_7_0)
 		local follower = followers and followers[1] or nil
 
 		if follower then
@@ -1061,7 +1085,7 @@ do
 		end
 
 		-- mission
-		local missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_7_0)
+		local missions = C_Garrison_GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_7_0)
 		local missionID = missions and missions[1] and missions[1].missionID or nil
 
 		if missionID then
@@ -1069,12 +1093,12 @@ do
 		end
 
 		-- talent
-		local talentTreeIDs = C_Garrison.GetTalentTreeIDsByClassID(LE_GARRISON_TYPE_7_0, PLAYER_CLASS)
+		local talentTreeIDs = C_Garrison_GetTalentTreeIDsByClassID(LE_GARRISON_TYPE_7_0, PLAYER_CLASS)
 		local talentTreeID = talentTreeIDs and talentTreeIDs[1] or nil
 		local tree, _
 
 		if talentTreeID then
-			_, _, tree = C_Garrison.GetTalentTreeInfoForID(LE_GARRISON_TYPE_7_0, talentTreeID)
+			_, _, tree = C_Garrison_GetTalentTreeInfoForID(LE_GARRISON_TYPE_7_0, talentTreeID)
 		end
 
 		local talentID = tree and tree[1] and tree[1][1] and tree[1][1].id or nil
@@ -1239,7 +1263,7 @@ do
 
 			if linkType == "battlepet" then
 				local _, speciesID, _, breedQuality, _ = s_split(":", originalLink)
-				name, icon = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+				name, icon = C_PetJournal_GetPetInfoBySpeciesID(speciesID)
 				quality = tonumber(breedQuality)
 			else
 				name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
@@ -1340,7 +1364,7 @@ do
 			end
 		end
 
-		C_Timer.After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
+		C_Timer_After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
 	end
 
 	local function Enable()
@@ -1728,7 +1752,7 @@ do
 		if link then
 			Toast_SetUp("STORE_PRODUCT_DELIVERED", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
 		else
-			return C_Timer.After(0.25, function() STORE_PRODUCT_DELIVERED(nil, nil, nil, payloadID) end)
+			return C_Timer_After(0.25, function() STORE_PRODUCT_DELIVERED(nil, nil, nil, payloadID) end)
 		end
 	end
 
@@ -2229,7 +2253,7 @@ do
 			end
 
 			if TradeSkillFrame then
-				if C_TradeSkillUI.OpenTradeSkill(self._data.tradeskill_id) then
+				if C_TradeSkillUI_OpenTradeSkill(self._data.tradeskill_id) then
 					TradeSkillFrame:SelectRecipe(self._data.recipe_id)
 				end
 			end
@@ -2244,7 +2268,7 @@ do
 	end
 
 	local function Toast_SetUp(event, recipeID)
-		local tradeSkillID = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
+		local tradeSkillID = C_TradeSkillUI_GetTradeSkillLineForRecipe(recipeID)
 
 		if tradeSkillID then
 			local recipeName = GetSpellInfo(recipeID)
@@ -2265,7 +2289,7 @@ do
 				toast.Title:SetText(rank and rank > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
 				toast.Text:SetText(recipeName)
 				toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-recipe")
-				toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(tradeSkillID))
+				toast.Icon:SetTexture(C_TradeSkillUI_GetTradeSkillTexture(tradeSkillID))
 				toast.IconBorder:Show()
 				toast.IconText1:SetText(rankTexture)
 				toast.IconText1BG:SetShown(not not rank)
@@ -2378,8 +2402,8 @@ do
 	end
 
 	local function IsAppearanceKnown(sourceID)
-		local data = C_TransmogCollection.GetSourceInfo(sourceID)
-		local sources = C_TransmogCollection.GetAppearanceSources(data.visualID)
+		local data = C_TransmogCollection_GetSourceInfo(sourceID)
+		local sources = C_TransmogCollection_GetAppearanceSources(data.visualID)
 
 		if sources then
 			for i = 1, #sources do
@@ -2395,12 +2419,12 @@ do
 	end
 
 	local function Toast_SetUp(event, sourceID, isAdded, attempt)
-		local _, _, _, icon, _, _, link = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+		local _, _, _, icon, _, _, link = C_TransmogCollection_GetAppearanceSourceInfo(sourceID)
 		local name
 		link, _, _, _, name = E:SanitizeLink(link)
 
 		if not link then
-			return attempt < 4 and C_Timer.After(0.25, function() Toast_SetUp(event, sourceID, isAdded, attempt + 1) end)
+			return attempt < 4 and C_Timer_After(0.25, function() Toast_SetUp(event, sourceID, isAdded, attempt + 1) end)
 		end
 
 		local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
@@ -2456,7 +2480,7 @@ do
 			if isKnown == false then
 				Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 			elseif isKnown == nil then
-				C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt + 1) end)
+				C_Timer_After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt + 1) end)
 			end
 		end
 	end
@@ -2469,7 +2493,7 @@ do
 			if isKnown == false then
 				Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
 			elseif isKnown == nil then
-				C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt + 1) end)
+				C_Timer_After(0.25, function() TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt + 1) end)
 			end
 		end
 	end
@@ -2487,14 +2511,14 @@ do
 	end
 
 	local function Test()
-		local appearance = C_TransmogCollection.GetCategoryAppearances(1) and C_TransmogCollection.GetCategoryAppearances(1)[1]
-		local source = C_TransmogCollection.GetAppearanceSources(appearance.visualID) and C_TransmogCollection.GetAppearanceSources(appearance.visualID)[1]
+		local appearance = C_TransmogCollection_GetCategoryAppearances(1) and C_TransmogCollection_GetCategoryAppearances(1)[1]
+		local source = C_TransmogCollection_GetAppearanceSources(appearance.visualID) and C_TransmogCollection_GetAppearanceSources(appearance.visualID)[1]
 
 		-- added
 		Toast_SetUp("TRANSMOG_TEST", source.sourceID, true, 1)
 
 		-- removed
-		C_Timer.After(2, function() Toast_SetUp("TRANSMOG_TEST", source.sourceID, nil, 1) end )
+		C_Timer_After(2, function() Toast_SetUp("TRANSMOG_TEST", source.sourceID, nil, 1) end )
 	end
 
 	E:RegisterOptions("transmog", {
@@ -2743,7 +2767,7 @@ do
 	end
 
 	local function SCENARIO_COMPLETED(questID)
-		local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, scenarioType, areaName = C_Scenario.GetInfo()
+		local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, scenarioType, areaName = C_Scenario_GetInfo()
 
 		if scenarioType == LE_SCENARIO_TYPE_LEGION_INVASION then
 			if questID then
@@ -2754,7 +2778,7 @@ do
 
 	local function QUEST_TURNED_IN(questID)
 		if QuestUtils_IsQuestWorldQuest(questID) then
-			Toast_SetUp("QUEST_TURNED_IN", false, questID, C_TaskQuest.GetQuestInfoByQuestID(questID), GetQuestLogRewardMoney(questID), GetQuestLogRewardXP(questID), GetNumQuestLogRewardCurrencies(questID))
+			Toast_SetUp("QUEST_TURNED_IN", false, questID, C_TaskQuest_GetQuestInfoByQuestID(questID), GetQuestLogRewardMoney(questID), GetQuestLogRewardXP(questID), GetNumQuestLogRewardCurrencies(questID))
 		end
 	end
 
@@ -2791,28 +2815,28 @@ do
 			Toast_SetUp("WORLD_TEST", true, 43301, nil, nil, nil, nil, link)
 
 			-- world quest, may not work
-			local quests = C_TaskQuest.GetQuestsForPlayerByMapID(1014)
+			local quests = C_TaskQuest_GetQuestsForPlayerByMapID(1014)
 
 			if #quests == 0 then
-				quests = C_TaskQuest.GetQuestsForPlayerByMapID(1015)
+				quests = C_TaskQuest_GetQuestsForPlayerByMapID(1015)
 
 				if #quests == 0 then
-					quests = C_TaskQuest.GetQuestsForPlayerByMapID(1017)
+					quests = C_TaskQuest_GetQuestsForPlayerByMapID(1017)
 
 					if #quests == 0 then
-						quests = C_TaskQuest.GetQuestsForPlayerByMapID(1018)
+						quests = C_TaskQuest_GetQuestsForPlayerByMapID(1018)
 
 						if #quests == 0 then
-							quests = C_TaskQuest.GetQuestsForPlayerByMapID(1021)
+							quests = C_TaskQuest_GetQuestsForPlayerByMapID(1021)
 
 							if #quests == 0 then
-								quests = C_TaskQuest.GetQuestsForPlayerByMapID(1024)
+								quests = C_TaskQuest_GetQuestsForPlayerByMapID(1024)
 
 								if #quests == 0 then
-									quests = C_TaskQuest.GetQuestsForPlayerByMapID(1033)
+									quests = C_TaskQuest_GetQuestsForPlayerByMapID(1033)
 
 									if #quests == 0 then
-										quests = C_TaskQuest.GetQuestsForPlayerByMapID(1096)
+										quests = C_TaskQuest_GetQuestsForPlayerByMapID(1096)
 									end
 								end
 							end
@@ -2821,10 +2845,10 @@ do
 				end
 			end
 
-			for _, quest in pairs(quests) do
+			for _, quest in next, quests do
 				if HaveQuestData(quest.questId) then
 					if QuestUtils_IsQuestWorldQuest(quest.questId) then
-						Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest.GetQuestInfoByQuestID(quest.questId), 123456, 123456)
+						Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest_GetQuestInfoByQuestID(quest.questId), 123456, 123456)
 						Toast_SetUp("WORLD_TEST", true, quest.questId, "scenario", nil, nil, nil, link)
 
 						return
@@ -2884,5 +2908,6 @@ do
 			},
 		},
 	})
+
 	E:RegisterSystem("world", Enable, Disable, Test)
 end
