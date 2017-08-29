@@ -10,7 +10,9 @@ LE_FOLLOWER_TYPE_GARRISON_7_0 LE_FOLLOWER_TYPE_SHIPYARD_6_2 LE_GARRISON_TYPE_6_0
 LE_QUEST_TAG_TYPE_DUNGEON LE_QUEST_TAG_TYPE_PET_BATTLE LE_QUEST_TAG_TYPE_PROFESSION LE_QUEST_TAG_TYPE_PVP
 LE_QUEST_TAG_TYPE_RAID LE_SCENARIO_TYPE_LEGION_INVASION LFG_SUBTYPEID_HEROIC LOOT_ITEM_PUSHED_SELF
 LOOT_ITEM_PUSHED_SELF_MULTIPLE LOOT_ITEM_SELF LOOT_ITEM_SELF_MULTIPLE LOOT_ROLL_TYPE_DISENCHANT LOOT_ROLL_TYPE_GREED
-LOOT_ROLL_TYPE_NEED LOOTUPGRADEFRAME_QUALITY_TEXTURES MAX_PLAYER_LEVEL WORLD_QUEST_QUALITY_COLORS ]]
+LOOT_ROLL_TYPE_NEED LOOTUPGRADEFRAME_QUALITY_TEXTURES MAX_PLAYER_LEVEL WORLD_QUEST_QUALITY_COLORS COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS
+COLLECTIONS_JOURNAL_TAB_INDEX_PETS COLLECTIONS_JOURNAL_TAB_INDEX_TOYS MountJournal_SelectByMountID PetJournal_SelectPet PetJournal
+ToyBox_UpdatePages ToyBox_FindPageForToyID ToyBox ]]
 
 -- Lua
 local _G = getfenv(0)
@@ -25,10 +27,12 @@ local tostring = _G.tostring
 local AchievementFrame_LoadUI = _G.AchievementFrame_LoadUI
 local BattlePetToolTip_Show = _G.BattlePetToolTip_Show
 local C_Garrison = _G.C_Garrison
+local C_MountJournal = _G.C_MountJournal
 local C_PetJournal = _G.C_PetJournal
 local C_Scenario = _G.C_Scenario
 local C_TaskQuest = _G.C_TaskQuest
 local C_Timer = _G.C_Timer
+local C_ToyBox = _G.C_ToyBox
 local C_TradeSkillUI = _G.C_TradeSkillUI
 local C_TransmogCollection = _G.C_TransmogCollection
 local CollectionsJournal_LoadUI = _G.CollectionsJournal_LoadUI
@@ -58,6 +62,7 @@ local GroupLootContainer_RemoveFrame = _G.GroupLootContainer_RemoveFrame
 local HaveQuestData = _G.HaveQuestData
 local OpenBag = _G.OpenBag
 local QuestUtils_IsQuestWorldQuest = _G.QuestUtils_IsQuestWorldQuest
+local SetCollectionsJournalShown = _G.SetCollectionsJournalShown
 local SetPortraitToTexture = _G.SetPortraitToTexture
 local ShowUIPanel = _G.ShowUIPanel
 local TradeSkillFrame_LoadUI = _G.TradeSkillFrame_LoadUI
@@ -326,6 +331,208 @@ do
 	})
 
 	E:RegisterSystem("archaeology", Enable, Disable, Test)
+end
+
+-------------------------
+-- MOUNTS, PETS & TOYS --
+-------------------------
+
+do
+	local function Toast_OnClick(self)
+		local data = self._data
+
+		if data then
+			if not CollectionsJournal then
+				CollectionsJournal_LoadUI()
+			end
+
+			if CollectionsJournal then
+				if data.is_mount then
+					SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS)
+					MountJournal_SelectByMountID(data.collection_id)
+				elseif data.is_pet then
+					SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
+					PetJournal_SelectPet(PetJournal, data.collection_id)
+				elseif data.is_toy then
+					SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_TOYS)
+					ToyBox_UpdatePages()
+
+					local toyPage = ToyBox_FindPageForToyID(data.collection_id)
+
+					if toyPage then
+						ToyBox.PagingFrame:SetCurrentPage(toyPage)
+					end
+				end
+			end
+		end
+	end
+
+	local function PostSetAnimatedValue(self, value)
+		self:SetText(value == 1 and "" or value)
+	end
+
+	local function Toast_SetUp(event, ID, isMount, isPet, isToy)
+		local toast, isNew, isQueued = E:GetToast(event, "collection_id", ID)
+		local color, name, icon, _
+
+		if isNew then
+			if isMount then
+				name, _, icon = C_MountJournal.GetMountInfoByID(ID)
+			elseif isPet then
+				local customName, rarity
+				_, _, _, _, rarity = C_PetJournal.GetPetStats(ID)
+				_, customName, _, _, _, _, _, name, icon = C_PetJournal.GetPetInfoByPetID(ID)
+				color = ITEM_QUALITY_COLORS[rarity - 1]
+				name = customName or name
+			elseif isToy then
+				_, name, icon = C_ToyBox.GetToyInfo(ID)
+			end
+
+			if not name then
+				return toast:Recycle()
+			end
+
+			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
+
+			if color and C.db.profile.colors.name then
+				toast.Text:SetTextColor(color.r, color.g, color.b)
+			end
+
+			if color and C.db.profile.colors.border then
+				toast.Border:SetVertexColor(color.r, color.g, color.b)
+			end
+
+			if color and C.db.profile.colors.icon_border then
+				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+			end
+
+			toast.Title:SetText(L["YOU_EARNED"])
+			toast.Text:SetText(name)
+			toast.Icon:SetTexture(icon)
+			toast.IconBorder:Show()
+			toast.IconText1:SetAnimatedValue(1, true)
+
+			toast._data = {
+				collection_id = ID,
+				count = 1,
+				event = event,
+				is_mount = isMount,
+				is_pet = isPet,
+				is_toy = isToy,
+				sound_file = 31578, -- SOUNDKIT.UI_EPICLOOT_TOAST
+			}
+
+			toast:HookScript("OnClick", Toast_OnClick)
+			toast:Spawn(C.db.profile.types.collection.dnd)
+		else
+			if isQueued then
+				toast._data.count = toast._data.count + 1
+				toast.IconText1:SetAnimatedValue(toast._data.count, true)
+			else
+				toast._data.count = toast._data.count + 1
+				toast.IconText1:SetAnimatedValue(toast._data.count)
+
+				toast.IconText2:SetText("+1")
+				toast.IconText2.Blink:Stop()
+				toast.IconText2.Blink:Play()
+
+				toast.AnimOut:Stop()
+				toast.AnimOut:Play()
+			end
+		end
+	end
+
+	local function NEW_MOUNT_ADDED(mountID)
+		Toast_SetUp("NEW_MOUNT_ADDED", mountID, true)
+	end
+
+	local function NEW_PET_ADDED(petID)
+		Toast_SetUp("NEW_PET_ADDED", petID, nil, true)
+	end
+
+	local function TOYS_UPDATED(toyID, isNew)
+		if toyID and isNew then
+			Toast_SetUp("TOYS_UPDATED", toyID, nil, nil, true)
+		end
+	end
+
+	local function Enable()
+		if C.db.profile.types.collection.enabled then
+			E:RegisterEvent("NEW_MOUNT_ADDED", NEW_MOUNT_ADDED)
+			E:RegisterEvent("NEW_PET_ADDED", NEW_PET_ADDED)
+			E:RegisterEvent("TOYS_UPDATED", TOYS_UPDATED)
+		end
+	end
+
+	local function Disable()
+		E:UnregisterEvent("NEW_MOUNT_ADDED", NEW_MOUNT_ADDED)
+		E:UnregisterEvent("NEW_PET_ADDED", NEW_PET_ADDED)
+		E:UnregisterEvent("TOYS_UPDATED", TOYS_UPDATED)
+	end
+
+	local function Test()
+		-- Golden Gryphon
+		Toast_SetUp("MOUNT_TEST", 129, true)
+
+		-- Abyssius
+		Toast_SetUp("PET_TEST", "BattlePet-0-000003553C94", nil, true)
+
+		-- Legion Pocket Portal
+		Toast_SetUp("TOY_TEST", 130199, nil, nil, true)
+	end
+
+	E:RegisterOptions("collection", {
+		enabled = true,
+		dnd = false,
+	}, {
+		name = L["TYPE_COLLECTION"],
+		args = {
+			enabled = {
+				order = 1,
+				type = "toggle",
+				name = L["ENABLE"],
+				get = function()
+					return C.db.profile.types.collection.enabled
+				end,
+				set = function(_, value)
+					C.db.profile.types.collection.enabled = value
+
+					if value then
+						Enable()
+					else
+						Disable()
+					end
+				end
+			},
+			dnd = {
+				order = 2,
+				type = "toggle",
+				name = L["DND"],
+				desc = L["DND_TOOLTIP"],
+				get = function()
+					return C.db.profile.types.collection.dnd
+				end,
+				set = function(_, value)
+					C.db.profile.types.collection.dnd = value
+
+					if value then
+						Enable()
+					else
+						Disable()
+					end
+				end
+			},
+			test = {
+				type = "execute",
+				order = 99,
+				width = "full",
+				name = L["TEST"],
+				func = Test,
+			},
+		},
+	})
+
+	E:RegisterSystem("collection", Enable, Disable, Test)
 end
 
 --------------
