@@ -420,6 +420,7 @@ do
 
 			toast.Title:SetText(L["YOU_EARNED"])
 			toast.Text:SetText(name)
+			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-collection")
 			toast.Icon:SetTexture(icon)
 			toast.IconBorder:Show()
 			toast.IconText1:SetAnimatedValue(1, true)
