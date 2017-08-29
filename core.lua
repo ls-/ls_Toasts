@@ -37,8 +37,7 @@ local IsLoggedIn = _G.IsLoggedIn
 local IsModifiedClick = _G.IsModifiedClick
 local IsUsableItem = _G.IsUsableItem
 local Lerp = _G.Lerp
-local PlaySound = _G.PlaySound
-local PlaySoundKitID = _G.PlaySoundKitID
+local PlaySound = _G.PlaySoundKitID or _G.PlaySound
 
 -- Mine
 local activeToasts = {}
@@ -551,12 +550,8 @@ do
 	local function Toast_OnShow(self)
 		local soundFile = self._data.sound_file
 
-		if C.db.profile.sfx.enabled and soundFile then
-			if PlaySoundKitID then
-				PlaySoundKitID(soundFile)
-			else
-				PlaySound(soundFile, "SFX", true)
-			end
+		if soundFile and C.db.profile.sfx.enabled then
+			PlaySound(soundFile)
 		end
 
 		self.AnimIn:Play()
