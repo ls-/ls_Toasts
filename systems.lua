@@ -1,28 +1,16 @@
 local _, addonTable = ...
 local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
---[[ luacheck: globals getfenv AchievementFrame AchievementFrame_SelectAchievement ArchaeologyFrame
-ArcheologyDigsiteProgressBar BonusRollFrame CollectionsJournal GameTooltip GarrisonFollowerOptions
-GarrisonFollowerTooltip GarrisonShipyardFollowerTooltip GroupLootContainer TradeSkillFrame
-WardrobeCollectionFrame_OpenTransmogLink CURRENCY_GAINED CURRENCY_GAINED_MULTIPLE ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC
-ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC ITEM_QUALITY5_DESC LE_FOLLOWER_TYPE_GARRISON_6_0
-LE_FOLLOWER_TYPE_GARRISON_7_0 LE_FOLLOWER_TYPE_SHIPYARD_6_2 LE_GARRISON_TYPE_6_0 LE_GARRISON_TYPE_7_0
-LE_QUEST_TAG_TYPE_DUNGEON LE_QUEST_TAG_TYPE_PET_BATTLE LE_QUEST_TAG_TYPE_PROFESSION LE_QUEST_TAG_TYPE_PVP
-LE_QUEST_TAG_TYPE_RAID LE_SCENARIO_TYPE_LEGION_INVASION LFG_SUBTYPEID_HEROIC LOOT_ITEM_PUSHED_SELF
-LOOT_ITEM_PUSHED_SELF_MULTIPLE LOOT_ITEM_SELF LOOT_ITEM_SELF_MULTIPLE LOOT_ROLL_TYPE_DISENCHANT LOOT_ROLL_TYPE_GREED
-LOOT_ROLL_TYPE_NEED LOOTUPGRADEFRAME_QUALITY_TEXTURES MAX_PLAYER_LEVEL WORLD_QUEST_QUALITY_COLORS COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS
-COLLECTIONS_JOURNAL_TAB_INDEX_PETS COLLECTIONS_JOURNAL_TAB_INDEX_TOYS MountJournal_SelectByMountID PetJournal_SelectPet PetJournal
-ToyBox_UpdatePages ToyBox_FindPageForToyID ToyBox ]]
-
 -- Lua
 local _G = getfenv(0)
 local hooksecurefunc = _G.hooksecurefunc
 local m_random = _G.math.random
+local next = _G.next
 local pcall = _G.pcall
 local s_split = _G.string.split
+local select = _G.select
 local tonumber = _G.tonumber
 local tostring = _G.tostring
-local next = _G.next
 
 -- Blizz
 local AchievementFrame_LoadUI = _G.AchievementFrame_LoadUI

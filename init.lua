@@ -1,12 +1,12 @@
 local addonName, addonTable = ...
 local E, L, C, D = addonTable.E, addonTable.L, addonTable.C, addonTable.D
 
---[[ luacheck: globals getfenv LibStub AlertFrame InterfaceOptionsFramePanelContainer SlashCmdList LS_TOASTS_CFG
-LS_TOASTS_CFG_GLOBAL LS_TOASTS_GLOBAL_CONFIG SLASH_LSTOASTS1 SLASH_LSTOASTS2 ]]
-
 -- Lua
 local _G = getfenv(0)
 local hooksecurefunc = _G.hooksecurefunc
+local next = _G.next
+local tonumber = _G.tonumber
+local type = _G.type
 
 -- Blizz
 local CreateFrame = _G.CreateFrame
@@ -16,6 +16,7 @@ local InterfaceOptions_AddCategory = _G.InterfaceOptions_AddCategory
 local InterfaceOptionsFrame_Show = _G.InterfaceOptionsFrame_Show
 
 -- Mine
+local LibStub = _G.LibStub
 local VER = tonumber(GetAddOnMetadata(addonName, "Version"):gsub("%D", ""), nil)
 
 local STRATAS = {
@@ -368,7 +369,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	C.options.args.profiles.order = 100
 	C.options.args.profiles.desc = nil
 
-	for event in pairs(BLACKLISTED_EVENTS) do
+	for event in next, BLACKLISTED_EVENTS do
 		AlertFrame:UnregisterEvent(event)
 	end
 

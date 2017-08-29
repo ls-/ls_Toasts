@@ -1,28 +1,27 @@
 local addonName, addonTable = ...
 local C, L = addonTable.C, addonTable.L
 
---[[ luacheck: globals getfenv BattlePetTooltip GameTooltip GarrisonFollowerTooltip GarrisonShipyardFollowerTooltip
-ShoppingTooltip1 ShoppingTooltip2 UIParent INVSLOT_BACK INVSLOT_CHEST INVSLOT_CHEST INVSLOT_FEET INVSLOT_FINGER1
-INVSLOT_FINGER2 INVSLOT_HAND INVSLOT_HEAD INVSLOT_LEGS INVSLOT_MAINHAND INVSLOT_NECK INVSLOT_OFFHAND INVSLOT_RANGED
-INVSLOT_SHOULDER INVSLOT_TRINKET1 INVSLOT_TRINKET2 INVSLOT_WAIST INVSLOT_WRIST NUM_BAG_SLOTS ]]
-
 -- Lua
 local _G = getfenv(0)
 local debugstack = _G.debugstack
+local error = _G.error
 local m_ceil = _G.math.ceil
 local m_floor = _G.math.floor
+local next = _G.next
 local s_format = _G.string.format
 local s_match = _G.string.match
 local s_split = _G.string.split
+local setmetatable = _G.setmetatable
 local t_concat = _G.table.concat
 local t_insert = _G.table.insert
 local t_remove = _G.table.remove
 local t_wipe = _G.table.wipe
 local tonumber = _G.tonumber
 local type = _G.type
+local unpack = _G.unpack
 
 -- Blizz
-local C_Timer = _G.C_Timer
+local C_Timer_NewTicker = _G.C_Timer.NewTicker
 local CanDualWield = _G.CanDualWield
 local CreateFrame = _G.CreateFrame
 local GameTooltip_ShowCompareItem = _G.GameTooltip_ShowCompareItem
@@ -504,7 +503,7 @@ end)
 
 -- E:GetToast(...)
 do
-	C_Timer.NewTicker(0.05, function()
+	C_Timer_NewTicker(0.05, function()
 		for text, targetValue in next, textsToAnimate do
 			local newValue
 
