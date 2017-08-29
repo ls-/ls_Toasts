@@ -30,6 +30,7 @@ local C_Garrison_GetTalentTreeIDsByClassID = _G.C_Garrison.GetTalentTreeIDsByCla
 local C_Garrison_GetTalentTreeInfoForID = _G.C_Garrison.GetTalentTreeInfoForID
 local C_Garrison_IsOnGarrisonMap = _G.C_Garrison.IsOnGarrisonMap
 local C_MountJournal_GetMountInfoByID = _G.C_MountJournal.GetMountInfoByID
+local C_PetJournal_GetPetInfoByIndex = _G.C_PetJournal.GetPetInfoByIndex
 local C_PetJournal_GetPetInfoByPetID = _G.C_PetJournal.GetPetInfoByPetID
 local C_PetJournal_GetPetInfoBySpeciesID = _G.C_PetJournal.GetPetInfoBySpeciesID
 local C_PetJournal_GetPetStats = _G.C_PetJournal.GetPetStats
@@ -394,7 +395,7 @@ do
 				local customName, rarity
 				_, _, _, _, rarity = C_PetJournal_GetPetStats(ID)
 				_, customName, _, _, _, _, _, name, icon = C_PetJournal_GetPetInfoByPetID(ID)
-				color = ITEM_QUALITY_COLORS[rarity - 1]
+				color = ITEM_QUALITY_COLORS[(rarity or 2) - 1]
 				name = customName or name
 			elseif isToy then
 				_, name, icon = C_ToyBox_GetToyInfo(ID)
@@ -487,8 +488,12 @@ do
 		-- Golden Gryphon
 		Toast_SetUp("MOUNT_TEST", 129, true)
 
-		-- Abyssius
-		Toast_SetUp("PET_TEST", "BattlePet-0-000003553C94", nil, true)
+		-- Pet
+		local petID = C_PetJournal_GetPetInfoByIndex(1)
+
+		if petID then
+			Toast_SetUp("PET_TEST", petID, nil, true)
+		end
 
 		-- Legion Pocket Portal
 		Toast_SetUp("TOY_TEST", 130199, nil, nil, true)
