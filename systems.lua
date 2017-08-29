@@ -487,8 +487,13 @@ do
 	}, {
 		name = L["TYPE_COLLECTION"],
 		args = {
-			enabled = {
+			desc = {
 				order = 1,
+				type = "description",
+				name = L["TYPE_COLLECTION_DESC"],
+			},
+			enabled = {
+				order = 2,
 				type = "toggle",
 				name = L["ENABLE"],
 				get = function()
@@ -505,7 +510,7 @@ do
 				end
 			},
 			dnd = {
-				order = 2,
+				order = 3,
 				type = "toggle",
 				name = L["DND"],
 				desc = L["DND_TOOLTIP"],
