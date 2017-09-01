@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 70300.02
+
+- Fixed toast fade out animation bug.
+
 ## Version 70300.01
 
 - Added options to control border and icon border colouring;
