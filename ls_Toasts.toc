@@ -7,7 +7,6 @@
 
 embeds\_embeds.xml
 locales\_locales.xml
-config.lua
-core.lua
-systems.lua
+core\_core.xml
+systems\_systems.xml
 init.lua

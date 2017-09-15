@@ -1,0 +1,14 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="achievement.lua"/>
+	<Script file="archaeology.lua"/>
+	<Script file="collection.lua"/>
+	<Script file="garrison.lua"/>
+	<Script file="instance.lua"/>
+	<Script file="loot_common.lua"/>
+	<Script file="loot_currency.lua"/>
+	<Script file="loot_gold.lua"/>
+	<Script file="loot_special.lua"/>
+	<Script file="recipe.lua"/>
+	<Script file="transmog.lua"/>
+	<Script file="world.lua"/>
+</Ui>
