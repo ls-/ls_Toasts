@@ -159,8 +159,8 @@ local function Test()
 		Toast_SetUp("PET_TEST", petID, nil, true)
 	end
 
-	-- Legion Pocket Portal
-	Toast_SetUp("TOY_TEST", 130199, nil, nil, true)
+	-- A Tiny Set of Warglaves
+	Toast_SetUp("TOY_TEST", 147537, nil, nil, true)
 end
 
 E:RegisterOptions("collection", {
