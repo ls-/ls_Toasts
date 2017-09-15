@@ -20,10 +20,10 @@ local PLAYER_NAME = UnitName("player")
 
 local function Toast_OnClick(self)
 	if self._data then
-		local slot = E:SearchBagsForItemID(self._data.item_id)
+		local bag = E:SearchBagsForItemID(self._data.item_id)
 
-		if slot >= 0 then
-			OpenBag(slot)
+		if bag >= 0 then
+			OpenBag(bag)
 		end
 	end
 end
