@@ -26,19 +26,25 @@ local function Toast_OnClick(self)
 		if CollectionsJournal then
 			if data.is_mount then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS)
-				MountJournal_SelectByMountID(data.collection_id)
+
+				local name = C_MountJournal_GetMountInfoByID(data.collection_id)
+
+				if name then
+					MountJournal_SelectByMountID(data.collection_id)
+					MountJournal.searchBox:SetText(name)
+				end
 			elseif data.is_pet then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
-				PetJournal_SelectPet(PetJournal, data.collection_id)
+
+				local _, customName, _, _, _, _, _, name = C_PetJournal_GetPetInfoByPetID(data.collection_id)
+				name = customName or name
+
+				if name then
+					PetJournal_SelectPet(PetJournal, data.collection_id)
+					PetJournal.searchBox:SetText(name)
+				end
 			elseif data.is_toy then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_TOYS)
-				ToyBox_UpdatePages()
-
-				local toyPage = ToyBox_FindPageForToyID(data.collection_id)
-
-				if toyPage then
-					ToyBox.PagingFrame:SetCurrentPage(toyPage)
-				end
 			end
 		end
 	end
