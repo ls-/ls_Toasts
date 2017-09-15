@@ -77,6 +77,7 @@ std = {
 		"GarrisonShipyardFollowerTooltip",
 		"GroupLootContainer",
 		"InterfaceOptionsFramePanelContainer",
+		"MountJournal",
 		"MountJournal_SelectByMountID",
 		"PetJournal",
 		"PetJournal_SelectPet",
