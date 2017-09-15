@@ -7,18 +7,21 @@ local _G = getfenv(0)
 -- Blizz
 local AchievementFrame_LoadUI = _G.AchievementFrame_LoadUI
 local GetAchievementInfo = _G.GetAchievementInfo
+local InCombatLockdown = _G.InCombatLockdown
 local ShowUIPanel = _G.ShowUIPanel
 
 -- Mine
 local function Toast_OnClick(self)
-	if self._data then
+	local data = self._data
+
+	if data and not InCombatLockdown() then
 		if not AchievementFrame then
 			AchievementFrame_LoadUI()
 		end
 
 		if AchievementFrame then
 			ShowUIPanel(AchievementFrame)
-			AchievementFrame_SelectAchievement(self._data.ach_id)
+			AchievementFrame_SelectAchievement(data.ach_id)
 		end
 	end
 end

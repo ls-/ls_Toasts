@@ -10,18 +10,21 @@ local C_TradeSkillUI_GetTradeSkillTexture = _G.C_TradeSkillUI.GetTradeSkillTextu
 local C_TradeSkillUI_OpenTradeSkill = _G.C_TradeSkillUI.OpenTradeSkill
 local GetSpellInfo = _G.GetSpellInfo
 local GetSpellRank = _G.GetSpellRank
+local InCombatLockdown = _G.InCombatLockdown
 local TradeSkillFrame_LoadUI = _G.TradeSkillFrame_LoadUI
 
 -- Mine
 local function Toast_OnClick(self)
-	if self._data then
+	local data = self._data
+
+	if data and not InCombatLockdown() then
 		if not TradeSkillFrame then
 			TradeSkillFrame_LoadUI()
 		end
 
 		if TradeSkillFrame then
-			if C_TradeSkillUI_OpenTradeSkill(self._data.tradeskill_id) then
-				TradeSkillFrame:SelectRecipe(self._data.recipe_id)
+			if C_TradeSkillUI_OpenTradeSkill(data.tradeskill_id) then
+				TradeSkillFrame:SelectRecipe(data.recipe_id)
 			end
 		end
 	end

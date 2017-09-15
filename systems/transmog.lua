@@ -11,16 +11,19 @@ local C_TransmogCollection_GetAppearanceSources = _G.C_TransmogCollection.GetApp
 local C_TransmogCollection_GetCategoryAppearances = _G.C_TransmogCollection.GetCategoryAppearances
 local C_TransmogCollection_GetSourceInfo = _G.C_TransmogCollection.GetSourceInfo
 local CollectionsJournal_LoadUI = _G.CollectionsJournal_LoadUI
+local InCombatLockdown = _G.InCombatLockdown
 
 -- Mine
 local function Toast_OnClick(self)
-	if self._data then
+	local data = self._data
+
+	if data and not InCombatLockdown() then
 		if not CollectionsJournal then
 			CollectionsJournal_LoadUI()
 		end
 
 		if CollectionsJournal then
-			WardrobeCollectionFrame_OpenTransmogLink(self._data.link)
+			WardrobeCollectionFrame_OpenTransmogLink(data.link)
 		end
 	end
 end
