@@ -11,13 +11,14 @@ local C_PetJournal_GetPetInfoByPetID = _G.C_PetJournal.GetPetInfoByPetID
 local C_PetJournal_GetPetStats = _G.C_PetJournal.GetPetStats
 local C_ToyBox_GetToyInfo = _G.C_ToyBox.GetToyInfo
 local CollectionsJournal_LoadUI = _G.CollectionsJournal_LoadUI
+local InCombatLockdown = _G.InCombatLockdown
 local SetCollectionsJournalShown = _G.SetCollectionsJournalShown
 
 -- Mine
 local function Toast_OnClick(self)
 	local data = self._data
 
-	if data then
+	if data and not InCombatLockdown() then
 		if not CollectionsJournal then
 			CollectionsJournal_LoadUI()
 		end
