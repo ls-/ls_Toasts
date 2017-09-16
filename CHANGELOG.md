@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version 70300.03
+
+- Fixed errors cause by toasts' click handlers. Sadly, as of now you won't be able to open UI panels via clicking related toasts while in combat;
+- Fixed taint issue caused by toy toast;
+- Added French translation. Translated by cyberlinkfr@Curse;
+- Updated German translation. Translated by pas06@Curse;
+
+NOTE: I reorganised folder structure, so you'll have to restart WoW client to make things work after the update.
+
 ## Version 70300.02
 
 - Fixed toast fade out animation bug.
