@@ -2,7 +2,7 @@
 
 ## Version 70300.03
 
-- Fixed errors cause by toasts' click handlers. Sadly, as of now you won't be able to open UI panels via clicking related toasts while in combat;
+- Fixed errors caused by toasts' click handlers. Sadly, as of now you won't be able to open UI panels via clicking related toasts while in combat;
 - Fixed taint issue caused by toy toast;
 - Added French translation. Translated by cyberlinkfr@Curse;
 - Updated German translation. Translated by pas06@Curse;
