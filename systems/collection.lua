@@ -10,46 +10,8 @@ local C_PetJournal_GetPetInfoByIndex = _G.C_PetJournal.GetPetInfoByIndex
 local C_PetJournal_GetPetInfoByPetID = _G.C_PetJournal.GetPetInfoByPetID
 local C_PetJournal_GetPetStats = _G.C_PetJournal.GetPetStats
 local C_ToyBox_GetToyInfo = _G.C_ToyBox.GetToyInfo
-local CollectionsJournal_LoadUI = _G.CollectionsJournal_LoadUI
-local InCombatLockdown = _G.InCombatLockdown
-local SetCollectionsJournalShown = _G.SetCollectionsJournalShown
 
 -- Mine
-local function Toast_OnClick(self)
-	local data = self._data
-
-	if data and not InCombatLockdown() then
-		if not CollectionsJournal then
-			CollectionsJournal_LoadUI()
-		end
-
-		if CollectionsJournal then
-			if data.is_mount then
-				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS)
-
-				local name = C_MountJournal_GetMountInfoByID(data.collection_id)
-
-				if name then
-					MountJournal_SelectByMountID(data.collection_id)
-					MountJournal.searchBox:SetText(name)
-				end
-			elseif data.is_pet then
-				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
-
-				local _, customName, _, _, _, _, _, name = C_PetJournal_GetPetInfoByPetID(data.collection_id)
-				name = customName or name
-
-				if name then
-					PetJournal_SelectPet(PetJournal, data.collection_id)
-					PetJournal.searchBox:SetText(name)
-				end
-			elseif data.is_toy then
-				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_TOYS)
-			end
-		end
-	end
-end
-
 local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or value)
 end
@@ -106,7 +68,6 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 			sound_file = 31578, -- SOUNDKIT.UI_EPICLOOT_TOAST
 		}
 
-		toast:HookScript("OnClick", Toast_OnClick)
 		toast:Spawn(C.db.profile.types.collection.dnd)
 	else
 		if isQueued then
