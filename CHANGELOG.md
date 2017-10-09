@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 70300.04
+
+- Removed click handler from collection toasts. It taints Blizz code too much;
+- Updated Korean translation. Translated by yuk6196@Curse;
+- Updated Simplified Chinese translation. Translated by y368413@Curse;
+- Updated Traditional Chinese translation. Translated by gaspy10@Curse.
+
 ## Version 70300.03
 
 - Fixed errors caused by toasts' click handlers. Sadly, as of now you won't be able to open UI panels via clicking related toasts while in combat;
