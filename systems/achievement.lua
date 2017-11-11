@@ -127,12 +127,6 @@ E:RegisterOptions("achievement", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.achievement.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {

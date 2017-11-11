@@ -142,12 +142,6 @@ E:RegisterOptions("loot_currency", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.loot_currency.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {

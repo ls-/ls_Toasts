@@ -181,12 +181,6 @@ E:RegisterOptions("transmog", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.transmog.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {

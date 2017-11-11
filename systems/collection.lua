@@ -207,12 +207,6 @@ E:RegisterOptions("collection", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.collection.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {

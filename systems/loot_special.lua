@@ -398,12 +398,6 @@ E:RegisterOptions("loot_special", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.loot_special.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		ilvl = {

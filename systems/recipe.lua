@@ -133,12 +133,6 @@ E:RegisterOptions("recipe", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.recipe.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {

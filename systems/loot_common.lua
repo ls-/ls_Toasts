@@ -234,12 +234,6 @@ E:RegisterOptions("loot_common", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.loot_common.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		ilvl = {

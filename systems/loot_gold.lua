@@ -123,12 +123,6 @@ E:RegisterOptions("loot_gold", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.loot_gold.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		threshold = {

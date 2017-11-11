@@ -386,12 +386,6 @@ E:RegisterOptions("garrison_6_0", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.garrison_6_0.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {
@@ -437,12 +431,6 @@ E:RegisterOptions("garrison_7_0", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.garrison_7_0.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {

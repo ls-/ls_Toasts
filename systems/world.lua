@@ -337,12 +337,6 @@ E:RegisterOptions("world", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.world.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {

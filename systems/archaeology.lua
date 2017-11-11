@@ -101,12 +101,6 @@ E:RegisterOptions("archaeology", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.archaeology.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {

@@ -208,12 +208,6 @@ E:RegisterOptions("instance", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.instance.dnd = value
-
-				if value then
-					Enable()
-				else
-					Disable()
-				end
 			end
 		},
 		test = {
