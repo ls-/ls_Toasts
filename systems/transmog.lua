@@ -83,7 +83,10 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 			source_id = sourceID,
 		}
 
-		toast:HookScript("OnClick", Toast_OnClick)
+		if C.db.profile.types.transmog.left_click then
+			toast:HookScript("OnClick", Toast_OnClick)
+		end
+
 		toast:Spawn(C.db.profile.types.transmog.dnd)
 	else
 		if isAdded then
@@ -149,6 +152,7 @@ local function Test()
 end
 
 E:RegisterOptions("transmog", {
+	left_click = false,
 	enabled = true,
 	dnd = false,
 }, {
@@ -181,6 +185,19 @@ E:RegisterOptions("transmog", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.transmog.dnd = value
+			end
+		},
+		left_click = {
+			order = 3,
+			type = "toggle",
+			name = L["HANDLE_LEFT_CLICK"],
+			desc = L["COLLECTIONS_TAINT_WARNING"],
+			image = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew",
+			get = function()
+				return C.db.profile.types.collection.left_click
+			end,
+			set = function(_, value)
+				C.db.profile.types.collection.left_click = value
 			end
 		},
 		test = {

@@ -106,7 +106,10 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 			sound_file = 31578, -- SOUNDKIT.UI_EPICLOOT_TOAST
 		}
 
-		toast:HookScript("OnClick", Toast_OnClick)
+		if C.db.profile.types.collection.left_click then
+			toast:HookScript("OnClick", Toast_OnClick)
+		end
+
 		toast:Spawn(C.db.profile.types.collection.dnd)
 	else
 		if isQueued then
@@ -170,6 +173,7 @@ local function Test()
 end
 
 E:RegisterOptions("collection", {
+	left_click = false,
 	enabled = true,
 	dnd = false,
 }, {
@@ -207,6 +211,19 @@ E:RegisterOptions("collection", {
 			end,
 			set = function(_, value)
 				C.db.profile.types.collection.dnd = value
+			end
+		},
+		left_click = {
+			order = 4,
+			type = "toggle",
+			name = L["HANDLE_LEFT_CLICK"],
+			desc = L["COLLECTIONS_TAINT_WARNING"],
+			image = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew",
+			get = function()
+				return C.db.profile.types.collection.left_click
+			end,
+			set = function(_, value)
+				C.db.profile.types.collection.left_click = value
 			end
 		},
 		test = {
