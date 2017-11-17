@@ -5,9 +5,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 local hooksecurefunc = _G.hooksecurefunc
 
--- Blizz
-local GetArchaeologyRaceInfoByID = _G.GetArchaeologyRaceInfoByID
-
 -- Mine
 local function Toast_SetUp(event, researchFieldID)
 	local toast = E:GetToast()

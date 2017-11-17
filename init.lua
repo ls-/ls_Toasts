@@ -8,15 +8,7 @@ local next = _G.next
 local tonumber = _G.tonumber
 local type = _G.type
 
--- Blizz
-local CreateFrame = _G.CreateFrame
-local GetAddOnMetadata = _G.GetAddOnMetadata
-local InCombatLockdown = _G.InCombatLockdown
-local InterfaceOptions_AddCategory = _G.InterfaceOptions_AddCategory
-local InterfaceOptionsFrame_Show = _G.InterfaceOptionsFrame_Show
-
 -- Mine
-local LibStub = _G.LibStub
 local VER = tonumber(GetAddOnMetadata(addonName, "Version"):gsub("%D", ""), nil)
 
 local STRATAS = {

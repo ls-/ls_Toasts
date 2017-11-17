@@ -5,13 +5,8 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 
 -- Blizz
-local C_Timer_After = _G.C_Timer.After
-local C_TransmogCollection_GetAppearanceSourceInfo = _G.C_TransmogCollection.GetAppearanceSourceInfo
-local C_TransmogCollection_GetAppearanceSources = _G.C_TransmogCollection.GetAppearanceSources
-local C_TransmogCollection_GetCategoryAppearances = _G.C_TransmogCollection.GetCategoryAppearances
-local C_TransmogCollection_GetSourceInfo = _G.C_TransmogCollection.GetSourceInfo
-local CollectionsJournal_LoadUI = _G.CollectionsJournal_LoadUI
-local InCombatLockdown = _G.InCombatLockdown
+local C_Timer = _G.C_Timer
+local C_TransmogCollection = _G.C_TransmogCollection
 
 -- Mine
 local function Toast_OnClick(self)
@@ -29,8 +24,8 @@ local function Toast_OnClick(self)
 end
 
 local function IsAppearanceKnown(sourceID)
-	local data = C_TransmogCollection_GetSourceInfo(sourceID)
-	local sources = C_TransmogCollection_GetAppearanceSources(data.visualID)
+	local data = C_TransmogCollection.GetSourceInfo(sourceID)
+	local sources = C_TransmogCollection.GetAppearanceSources(data.visualID)
 
 	if sources then
 		for i = 1, #sources do
@@ -46,12 +41,12 @@ local function IsAppearanceKnown(sourceID)
 end
 
 local function Toast_SetUp(event, sourceID, isAdded, attempt)
-	local _, _, _, icon, _, _, link = C_TransmogCollection_GetAppearanceSourceInfo(sourceID)
+	local _, _, _, icon, _, _, link = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
 	local name
 	link, _, _, _, name = E:SanitizeLink(link)
 
 	if not link then
-		return attempt < 4 and C_Timer_After(0.25, function() Toast_SetUp(event, sourceID, isAdded, attempt + 1) end)
+		return attempt < 4 and C_Timer.After(0.25, function() Toast_SetUp(event, sourceID, isAdded, attempt + 1) end)
 	end
 
 	local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
@@ -110,7 +105,7 @@ local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt)
 		if isKnown == false then
 			Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 		elseif isKnown == nil then
-			C_Timer_After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt + 1) end)
+			C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt + 1) end)
 		end
 	end
 end
@@ -123,7 +118,7 @@ local function TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt)
 		if isKnown == false then
 			Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
 		elseif isKnown == nil then
-			C_Timer_After(0.25, function() TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt + 1) end)
+			C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt + 1) end)
 		end
 	end
 end
@@ -141,14 +136,14 @@ local function Disable()
 end
 
 local function Test()
-	local appearance = C_TransmogCollection_GetCategoryAppearances(1) and C_TransmogCollection_GetCategoryAppearances(1)[1]
-	local source = C_TransmogCollection_GetAppearanceSources(appearance.visualID) and C_TransmogCollection_GetAppearanceSources(appearance.visualID)[1]
+	local appearance = C_TransmogCollection.GetCategoryAppearances(1) and C_TransmogCollection.GetCategoryAppearances(1)[1]
+	local source = C_TransmogCollection.GetAppearanceSources(appearance.visualID) and C_TransmogCollection.GetAppearanceSources(appearance.visualID)[1]
 
 	-- added
 	Toast_SetUp("TRANSMOG_TEST", source.sourceID, true, 1)
 
 	-- removed
-	C_Timer_After(2, function() Toast_SetUp("TRANSMOG_TEST", source.sourceID, nil, 1) end )
+	C_Timer.After(2, function() Toast_SetUp("TRANSMOG_TEST", source.sourceID, nil, 1) end )
 end
 
 E:RegisterOptions("transmog", {

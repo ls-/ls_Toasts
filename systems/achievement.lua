@@ -4,12 +4,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 
--- Blizz
-local AchievementFrame_LoadUI = _G.AchievementFrame_LoadUI
-local GetAchievementInfo = _G.GetAchievementInfo
-local InCombatLockdown = _G.InCombatLockdown
-local ShowUIPanel = _G.ShowUIPanel
-
 -- Mine
 local function Toast_OnClick(self)
 	local data = self._data

@@ -6,16 +6,7 @@ local _G = getfenv(0)
 local pcall = _G.pcall
 
 -- Blizz
-local C_Scenario_GetInfo = _G.C_Scenario.GetInfo
-local C_Scenario_IsInScenario = _G.C_Scenario.IsInScenario
-local C_Scenario_TreatScenarioAsDungeon = _G.C_Scenario.TreatScenarioAsDungeon
-local GetLFGCompletionReward = _G.GetLFGCompletionReward
-local GetLFGCompletionRewardItem = _G.GetLFGCompletionRewardItem
-local GetLFGCompletionRewardItemLink = _G.GetLFGCompletionRewardItemLink
-local GetLFGDungeonInfo = _G.GetLFGDungeonInfo
-local GetMoneyString = _G.GetMoneyString
-local SetPortraitToTexture = _G.SetPortraitToTexture
-local UnitLevel = _G.UnitLevel
+local C_Scenario = _G.C_Scenario
 
 -- Mine
 local function Slot_OnEnter(self)
@@ -134,8 +125,8 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 end
 
 local function LFG_COMPLETION_REWARD()
-	if C_Scenario_IsInScenario() and not C_Scenario_TreatScenarioAsDungeon() then
-		local _, _, _, _, hasBonusStep, isBonusStepComplete, _, _, _, scenarioType = C_Scenario_GetInfo()
+	if C_Scenario.IsInScenario() and not C_Scenario.TreatScenarioAsDungeon() then
+		local _, _, _, _, hasBonusStep, isBonusStepComplete, _, _, _, scenarioType = C_Scenario.GetInfo()
 
 		if scenarioType ~= LE_SCENARIO_TYPE_LEGION_INVASION then
 			local name, _, subTypeID, textureFile, moneyBase, moneyVar, experienceBase, experienceVar, numStrangers, numItemRewards = GetLFGCompletionReward()

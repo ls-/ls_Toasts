@@ -8,22 +8,8 @@ local pcall = _G.pcall
 local select = _G.select
 
 -- Blizz
-local C_Scenario_GetInfo = _G.C_Scenario.GetInfo
-local C_TaskQuest_GetQuestInfoByQuestID = _G.C_TaskQuest.GetQuestInfoByQuestID
-local C_TaskQuest_GetQuestsForPlayerByMapID = _G.C_TaskQuest.GetQuestsForPlayerByMapID
-local GetItemInfo = _G.GetItemInfo
-local GetItemInfoInstant = _G.GetItemInfoInstant
-local GetMoneyString = _G.GetMoneyString
-local GetNumQuestLogRewardCurrencies = _G.GetNumQuestLogRewardCurrencies
-local GetProfessionInfo = _G.GetProfessionInfo
-local GetQuestLogRewardCurrencyInfo = _G.GetQuestLogRewardCurrencyInfo
-local GetQuestLogRewardMoney = _G.GetQuestLogRewardMoney
-local GetQuestLogRewardXP = _G.GetQuestLogRewardXP
-local GetQuestTagInfo = _G.GetQuestTagInfo
-local HaveQuestData = _G.HaveQuestData
-local QuestUtils_IsQuestWorldQuest = _G.QuestUtils_IsQuestWorldQuest
-local SetPortraitToTexture = _G.SetPortraitToTexture
-local UnitLevel = _G.UnitLevel
+local C_Scenario = _G.C_Scenario
+local C_TaskQuest = _G.C_TaskQuest
 
 -- Mine
 local CURRENCY_TEMPLATE = "%s|T%s:0|t"
@@ -213,7 +199,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 end
 
 local function SCENARIO_COMPLETED(questID)
-	local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, scenarioType, areaName = C_Scenario_GetInfo()
+	local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, scenarioType, areaName = C_Scenario.GetInfo()
 
 	if scenarioType == LE_SCENARIO_TYPE_LEGION_INVASION then
 		if questID then
@@ -224,7 +210,7 @@ end
 
 local function QUEST_TURNED_IN(questID)
 	if QuestUtils_IsQuestWorldQuest(questID) then
-		Toast_SetUp("QUEST_TURNED_IN", false, questID, C_TaskQuest_GetQuestInfoByQuestID(questID), GetQuestLogRewardMoney(questID), GetQuestLogRewardXP(questID), GetNumQuestLogRewardCurrencies(questID))
+		Toast_SetUp("QUEST_TURNED_IN", false, questID, C_TaskQuest.GetQuestInfoByQuestID(questID), GetQuestLogRewardMoney(questID), GetQuestLogRewardXP(questID), GetNumQuestLogRewardCurrencies(questID))
 	end
 end
 
@@ -261,28 +247,28 @@ local function Test()
 		Toast_SetUp("WORLD_TEST", true, 43301, nil, nil, nil, nil, link)
 
 		-- world quest, may not work
-		local quests = C_TaskQuest_GetQuestsForPlayerByMapID(1014)
+		local quests = C_TaskQuest.GetQuestsForPlayerByMapID(1014)
 
 		if #quests == 0 then
-			quests = C_TaskQuest_GetQuestsForPlayerByMapID(1015)
+			quests = C_TaskQuest.GetQuestsForPlayerByMapID(1015)
 
 			if #quests == 0 then
-				quests = C_TaskQuest_GetQuestsForPlayerByMapID(1017)
+				quests = C_TaskQuest.GetQuestsForPlayerByMapID(1017)
 
 				if #quests == 0 then
-					quests = C_TaskQuest_GetQuestsForPlayerByMapID(1018)
+					quests = C_TaskQuest.GetQuestsForPlayerByMapID(1018)
 
 					if #quests == 0 then
-						quests = C_TaskQuest_GetQuestsForPlayerByMapID(1021)
+						quests = C_TaskQuest.GetQuestsForPlayerByMapID(1021)
 
 						if #quests == 0 then
-							quests = C_TaskQuest_GetQuestsForPlayerByMapID(1024)
+							quests = C_TaskQuest.GetQuestsForPlayerByMapID(1024)
 
 							if #quests == 0 then
-								quests = C_TaskQuest_GetQuestsForPlayerByMapID(1033)
+								quests = C_TaskQuest.GetQuestsForPlayerByMapID(1033)
 
 								if #quests == 0 then
-									quests = C_TaskQuest_GetQuestsForPlayerByMapID(1096)
+									quests = C_TaskQuest.GetQuestsForPlayerByMapID(1096)
 								end
 							end
 						end
@@ -294,7 +280,7 @@ local function Test()
 		for _, quest in next, quests do
 			if HaveQuestData(quest.questId) then
 				if QuestUtils_IsQuestWorldQuest(quest.questId) then
-					Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest_GetQuestInfoByQuestID(quest.questId), 123456, 123456)
+					Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest.GetQuestInfoByQuestID(quest.questId), 123456, 123456)
 					Toast_SetUp("WORLD_TEST", true, quest.questId, "scenario", nil, nil, nil, link)
 
 					return

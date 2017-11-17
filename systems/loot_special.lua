@@ -8,12 +8,7 @@ local s_split = _G.string.split
 local tonumber = _G.tonumber
 
 -- Blizz
-local BattlePetToolTip_Show = _G.BattlePetToolTip_Show
-local C_Timer_After = _G.C_Timer.After
-local GetItemInfo = _G.GetItemInfo
-local GroupLootContainer_RemoveFrame = _G.GroupLootContainer_RemoveFrame
-local OpenBag = _G.OpenBag
-local UnitFactionGroup = _G.UnitFactionGroup
+local C_Timer = _G.C_Timer
 
 -- Mine
 local TITLE_DE_TEMPLATE = "%s|cff00ff00%s|r|TInterface\\Buttons\\UI-GroupLoot-DE-Up:0:0:0:0:32:32:0:32:0:31|t"
@@ -266,7 +261,7 @@ local function STORE_PRODUCT_DELIVERED(_, _, _, payloadID)
 	if link then
 		Toast_SetUp("STORE_PRODUCT_DELIVERED", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
 	else
-		return C_Timer_After(0.25, function() STORE_PRODUCT_DELIVERED(nil, nil, nil, payloadID) end)
+		return C_Timer.After(0.25, function() STORE_PRODUCT_DELIVERED(nil, nil, nil, payloadID) end)
 	end
 end
 

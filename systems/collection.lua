@@ -5,14 +5,9 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 
 -- Blizz
-local C_MountJournal_GetMountInfoByID = _G.C_MountJournal.GetMountInfoByID
-local C_PetJournal_GetPetInfoByIndex = _G.C_PetJournal.GetPetInfoByIndex
-local C_PetJournal_GetPetInfoByPetID = _G.C_PetJournal.GetPetInfoByPetID
-local C_PetJournal_GetPetStats = _G.C_PetJournal.GetPetStats
-local C_ToyBox_GetToyInfo = _G.C_ToyBox.GetToyInfo
-local CollectionsJournal_LoadUI = _G.CollectionsJournal_LoadUI
-local InCombatLockdown = _G.InCombatLockdown
-local SetCollectionsJournalShown = _G.SetCollectionsJournalShown
+local C_MountJournal = _G.C_MountJournal
+local C_PetJournal = _G.C_PetJournal
+local C_ToyBox = _G.C_ToyBox
 
 -- Mine
 local function Toast_OnClick(self)
@@ -26,25 +21,17 @@ local function Toast_OnClick(self)
 		if CollectionsJournal then
 			if data.is_mount then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS)
-
-				local name = C_MountJournal_GetMountInfoByID(data.collection_id)
-
-				if name then
-					MountJournal_SelectByMountID(data.collection_id)
-					MountJournal.searchBox:SetText(name)
-				end
+				MountJournal_SelectByMountID(data.collection_id)
 			elseif data.is_pet then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
-
-				local _, customName, _, _, _, _, _, name = C_PetJournal_GetPetInfoByPetID(data.collection_id)
-				name = customName or name
-
-				if name then
-					PetJournal_SelectPet(PetJournal, data.collection_id)
-					PetJournal.searchBox:SetText(name)
-				end
+				PetJournal_SelectPet(PetJournal, data.collection_id)
 			elseif data.is_toy then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_TOYS)
+
+				local page = ToyBox_FindPageForToyID(data.collection_id)
+				if page then
+					ToyBox.PagingFrame:SetCurrentPage(page)
+				end
 			end
 		end
 	end
@@ -60,15 +47,15 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 
 	if isNew then
 		if isMount then
-			name, _, icon = C_MountJournal_GetMountInfoByID(ID)
+			name, _, icon = C_MountJournal.GetMountInfoByID(ID)
 		elseif isPet then
 			local customName, rarity
-			_, _, _, _, rarity = C_PetJournal_GetPetStats(ID)
-			_, customName, _, _, _, _, _, name, icon = C_PetJournal_GetPetInfoByPetID(ID)
+			_, _, _, _, rarity = C_PetJournal.GetPetStats(ID)
+			_, customName, _, _, _, _, _, name, icon = C_PetJournal.GetPetInfoByPetID(ID)
 			color = ITEM_QUALITY_COLORS[(rarity or 2) - 1]
 			name = customName or name
 		elseif isToy then
-			_, name, icon = C_ToyBox_GetToyInfo(ID)
+			_, name, icon = C_ToyBox.GetToyInfo(ID)
 		end
 
 		if not name then
@@ -162,7 +149,7 @@ local function Test()
 	Toast_SetUp("MOUNT_TEST", 129, true)
 
 	-- Pet
-	local petID = C_PetJournal_GetPetInfoByIndex(1)
+	local petID = C_PetJournal.GetPetInfoByIndex(1)
 
 	if petID then
 		Toast_SetUp("PET_TEST", petID, nil, true)

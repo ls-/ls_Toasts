@@ -5,13 +5,7 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 
 -- Blizz
-local C_TradeSkillUI_GetTradeSkillLineForRecipe = _G.C_TradeSkillUI.GetTradeSkillLineForRecipe
-local C_TradeSkillUI_GetTradeSkillTexture = _G.C_TradeSkillUI.GetTradeSkillTexture
-local C_TradeSkillUI_OpenTradeSkill = _G.C_TradeSkillUI.OpenTradeSkill
-local GetSpellInfo = _G.GetSpellInfo
-local GetSpellRank = _G.GetSpellRank
-local InCombatLockdown = _G.InCombatLockdown
-local TradeSkillFrame_LoadUI = _G.TradeSkillFrame_LoadUI
+local C_TradeSkillUI = _G.C_TradeSkillUI
 
 -- Mine
 local function Toast_OnClick(self)
@@ -23,7 +17,7 @@ local function Toast_OnClick(self)
 		end
 
 		if TradeSkillFrame then
-			if C_TradeSkillUI_OpenTradeSkill(data.tradeskill_id) then
+			if C_TradeSkillUI.OpenTradeSkill(data.tradeskill_id) then
 				TradeSkillFrame:SelectRecipe(data.recipe_id)
 			end
 		end
@@ -38,7 +32,7 @@ local function Toast_OnEnter(self)
 end
 
 local function Toast_SetUp(event, recipeID)
-	local tradeSkillID = C_TradeSkillUI_GetTradeSkillLineForRecipe(recipeID)
+	local tradeSkillID = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
 
 	if tradeSkillID then
 		local recipeName = GetSpellInfo(recipeID)
@@ -59,7 +53,7 @@ local function Toast_SetUp(event, recipeID)
 			toast.Title:SetText(rank and rank > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
 			toast.Text:SetText(recipeName)
 			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-recipe")
-			toast.Icon:SetTexture(C_TradeSkillUI_GetTradeSkillTexture(tradeSkillID))
+			toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(tradeSkillID))
 			toast.IconBorder:Show()
 			toast.IconText1:SetText(rankTexture)
 			toast.IconText1BG:SetShown(not not rank)

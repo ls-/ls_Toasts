@@ -9,23 +9,7 @@ local select = _G.select
 local tonumber = _G.tonumber
 
 -- Blizz
-local C_Garrison_GetAvailableMissions = _G.C_Garrison.GetAvailableMissions
-local C_Garrison_GetBasicMissionInfo = _G.C_Garrison.GetBasicMissionInfo
-local C_Garrison_GetBuildingInfo = _G.C_Garrison.GetBuildingInfo
-local C_Garrison_GetBuildings = _G.C_Garrison.GetBuildings
-local C_Garrison_GetCompleteTalent = _G.C_Garrison.GetCompleteTalent
-local C_Garrison_GetFollowerInfo = _G.C_Garrison.GetFollowerInfo
-local C_Garrison_GetFollowerLink = _G.C_Garrison.GetFollowerLink
-local C_Garrison_GetFollowerLinkByID = _G.C_Garrison.GetFollowerLinkByID
-local C_Garrison_GetFollowers = _G.C_Garrison.GetFollowers
-local C_Garrison_GetFollowerTypeByID = _G.C_Garrison.GetFollowerTypeByID
-local C_Garrison_GetTalent = _G.C_Garrison.GetTalent
-local C_Garrison_GetTalentTreeIDsByClassID = _G.C_Garrison.GetTalentTreeIDsByClassID
-local C_Garrison_GetTalentTreeInfoForID = _G.C_Garrison.GetTalentTreeInfoForID
-local C_Garrison_IsOnGarrisonMap = _G.C_Garrison.IsOnGarrisonMap
-local GarrisonFollowerTooltip_Show = _G.GarrisonFollowerTooltip_Show
-local GetInstanceInfo = _G.GetInstanceInfo
-local UnitClass = _G.UnitClass
+local C_Garrison = _G.C_Garrison
 
 -- Mine
 local PLAYER_CLASS = select(3, UnitClass("player"))
@@ -39,7 +23,7 @@ local function GetGarrisonTypeByFollowerType(followerTypeID)
 end
 
 local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
-	local missionInfo = C_Garrison_GetBasicMissionInfo(missionID)
+	local missionInfo = C_Garrison.GetBasicMissionInfo(missionID)
 	local color = missionInfo.isRare and ITEM_QUALITY_COLORS[3] or ITEM_QUALITY_COLORS[1]
 	local level = missionInfo.iLevel == 0 and missionInfo.level or missionInfo.iLevel
 	local toast = E:GetToast()
@@ -82,7 +66,7 @@ local function GARRISON_MISSION_FINISHED(followerTypeID, missionID)
 	local _, instanceType = GetInstanceInfo()
 	local validInstance = false
 
-	if instanceType == "none" or C_Garrison_IsOnGarrisonMap() then
+	if instanceType == "none" or C_Garrison.IsOnGarrisonMap() then
 		validInstance = true
 	end
 
@@ -106,15 +90,15 @@ end
 
 local function FollowerToast_OnEnter(self)
 	if self._data then
-		local isOK, link = pcall(C_Garrison_GetFollowerLink, self._data.follower_id)
+		local isOK, link = pcall(C_Garrison.GetFollowerLink, self._data.follower_id)
 
 		if not isOK then
-			isOK, link = pcall(C_Garrison_GetFollowerLinkByID, self._data.follower_id)
+			isOK, link = pcall(C_Garrison.GetFollowerLinkByID, self._data.follower_id)
 		end
 
 		if isOK and link then
 			local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = s_split(":", link)
-			local followerType = C_Garrison_GetFollowerTypeByID(tonumber(garrisonFollowerID))
+			local followerType = C_Garrison.GetFollowerTypeByID(tonumber(garrisonFollowerID))
 
 			GarrisonFollowerTooltip_Show(tonumber(garrisonFollowerID), false, tonumber(quality), tonumber(level), 0, 0, tonumber(itemLevel), tonumber(spec1), tonumber(ability1), tonumber(ability2), tonumber(ability3), tonumber(ability4), tonumber(trait1), tonumber(trait2), tonumber(trait3), tonumber(trait4))
 
@@ -131,7 +115,7 @@ local function FollowerToast_OnEnter(self)
 end
 
 local function FollowerToast_SetUp(event, garrisonType, followerTypeID, followerID, name, texPrefix, level, quality, isUpgraded)
-	local followerInfo = C_Garrison_GetFollowerInfo(followerID)
+	local followerInfo = C_Garrison.GetFollowerInfo(followerID)
 	local followerStrings = GarrisonFollowerOptions[followerTypeID].strings
 	local upgradeTexture = LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
 	local color = ITEM_QUALITY_COLORS[quality]
@@ -223,7 +207,7 @@ end
 ------
 
 local function TalentToast_SetUp(event, talentID)
-	local talent = C_Garrison_GetTalent(talentID)
+	local talent = C_Garrison.GetTalent(talentID)
 	local toast = E:GetToast()
 
 	toast.Title:SetText(L["GARRISON_NEW_TALENT"])
@@ -242,7 +226,7 @@ end
 
 local function GARRISON_TALENT_COMPLETE(garrisonType, doAlert)
 	if doAlert then
-		TalentToast_SetUp("GARRISON_TALENT_COMPLETE", C_Garrison_GetCompleteTalent(garrisonType))
+		TalentToast_SetUp("GARRISON_TALENT_COMPLETE", C_Garrison.GetCompleteTalent(garrisonType))
 	end
 end
 
@@ -280,7 +264,7 @@ end
 
 local function TestGarrison()
 	-- follower
-	local followers = C_Garrison_GetFollowers(LE_FOLLOWER_TYPE_GARRISON_6_0)
+	local followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_6_0)
 	local follower = followers and followers[1] or nil
 
 	if follower then
@@ -288,7 +272,7 @@ local function TestGarrison()
 	end
 
 	-- ship
-	followers = C_Garrison_GetFollowers(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
+	followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
 	follower = followers and followers[1] or nil
 
 	if follower then
@@ -296,7 +280,7 @@ local function TestGarrison()
 	end
 
 	-- garrison mission
-	local missions = C_Garrison_GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0)
+	local missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0)
 	local missionID = missions and missions[1] and missions[1].missionID or nil
 
 	if missionID then
@@ -304,7 +288,7 @@ local function TestGarrison()
 	end
 
 	-- shipyard mission
-	missions = C_Garrison_GetAvailableMissions(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
+	missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
 	missionID = missions and missions[1] and missions[1].missionID or nil
 
 	if missionID then
@@ -312,17 +296,17 @@ local function TestGarrison()
 	end
 
 	-- building
-	local buildings = C_Garrison_GetBuildings(LE_GARRISON_TYPE_6_0)
+	local buildings = C_Garrison.GetBuildings(LE_GARRISON_TYPE_6_0)
 	local buildingID = buildings and buildings[1] and buildings[1].buildingID or nil
 
 	if buildingID then
-		BuildingToast_SetUp("GARRISON_BUILDING_TEST", select(2, C_Garrison_GetBuildingInfo(buildingID)))
+		BuildingToast_SetUp("GARRISON_BUILDING_TEST", select(2, C_Garrison.GetBuildingInfo(buildingID)))
 	end
 end
 
 local function TestClassHall()
 	-- champion
-	local followers = C_Garrison_GetFollowers(LE_FOLLOWER_TYPE_GARRISON_7_0)
+	local followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_7_0)
 	local follower = followers and followers[1] or nil
 
 	if follower then
@@ -330,7 +314,7 @@ local function TestClassHall()
 	end
 
 	-- mission
-	local missions = C_Garrison_GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_7_0)
+	local missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_7_0)
 	local missionID = missions and missions[1] and missions[1].missionID or nil
 
 	if missionID then
@@ -338,12 +322,12 @@ local function TestClassHall()
 	end
 
 	-- talent
-	local talentTreeIDs = C_Garrison_GetTalentTreeIDsByClassID(LE_GARRISON_TYPE_7_0, PLAYER_CLASS)
+	local talentTreeIDs = C_Garrison.GetTalentTreeIDsByClassID(LE_GARRISON_TYPE_7_0, PLAYER_CLASS)
 	local talentTreeID = talentTreeIDs and talentTreeIDs[1] or nil
 	local tree, _
 
 	if talentTreeID then
-		_, _, tree = C_Garrison_GetTalentTreeInfoForID(LE_GARRISON_TYPE_7_0, talentTreeID)
+		_, _, tree = C_Garrison.GetTalentTreeInfoForID(LE_GARRISON_TYPE_7_0, talentTreeID)
 	end
 
 	local talentID = tree and tree[1] and tree[1][1] and tree[1][1].id or nil

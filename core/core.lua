@@ -21,23 +21,8 @@ local type = _G.type
 local unpack = _G.unpack
 
 -- Blizz
-local C_Timer_NewTicker = _G.C_Timer.NewTicker
-local CanDualWield = _G.CanDualWield
-local CreateFrame = _G.CreateFrame
-local GameTooltip_ShowCompareItem = _G.GameTooltip_ShowCompareItem
-local GetContainerItemID = _G.GetContainerItemID
-local GetContainerNumSlots = _G.GetContainerNumSlots
-local GetCVarBool = _G.GetCVarBool
-local GetDetailedItemLevelInfo = _G.GetDetailedItemLevelInfo
-local GetInventoryItemID = _G.GetInventoryItemID
-local GetInventoryItemLink = _G.GetInventoryItemLink
-local GetItemInfo = _G.GetItemInfo
-local InCombatLockdown = _G.InCombatLockdown
-local IsLoggedIn = _G.IsLoggedIn
-local IsModifiedClick = _G.IsModifiedClick
-local IsUsableItem = _G.IsUsableItem
+local C_Timer = _G.C_Timer
 local Lerp = _G.Lerp
-local PlaySound = _G.PlaySoundKitID or _G.PlaySound
 
 -- Mine
 local activeToasts = {}
@@ -503,7 +488,7 @@ end)
 
 -- E:GetToast(...)
 do
-	C_Timer_NewTicker(0.05, function()
+	C_Timer.NewTicker(0.05, function()
 		for text, targetValue in next, textsToAnimate do
 			local newValue
 

@@ -8,12 +8,8 @@ local s_split = _G.string.split
 local tonumber = _G.tonumber
 
 -- Blizz
-local BattlePetToolTip_Show = _G.BattlePetToolTip_Show
-local C_PetJournal_GetPetInfoBySpeciesID = _G.C_PetJournal.GetPetInfoBySpeciesID
-local C_Timer_After = _G.C_Timer.After
-local GetItemInfo = _G.GetItemInfo
-local OpenBag = _G.OpenBag
-local UnitName = _G.UnitName
+local C_PetJournal = _G.C_PetJournal
+local C_Timer = _G.C_Timer
 
 -- Mine
 local PLAYER_NAME = UnitName("player")
@@ -62,7 +58,7 @@ local function Toast_SetUp(event, link, quantity)
 
 		if linkType == "battlepet" then
 			local _, speciesID, _, breedQuality, _ = s_split(":", originalLink)
-			name, icon = C_PetJournal_GetPetInfoBySpeciesID(speciesID)
+			name, icon = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 			quality = tonumber(breedQuality)
 		else
 			name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
@@ -163,7 +159,7 @@ local function CHAT_MSG_LOOT(message, _, _, _, target)
 		end
 	end
 
-	C_Timer_After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
+	C_Timer.After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
 end
 
 local function Enable()
