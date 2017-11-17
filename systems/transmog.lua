@@ -189,10 +189,10 @@ E:RegisterOptions("transmog", {
 			desc = L["COLLECTIONS_TAINT_WARNING"],
 			image = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew",
 			get = function()
-				return C.db.profile.types.collection.left_click
+				return C.db.profile.types.transmog.left_click
 			end,
 			set = function(_, value)
-				C.db.profile.types.collection.left_click = value
+				C.db.profile.types.transmog.left_click = value
 			end
 		},
 		test = {
