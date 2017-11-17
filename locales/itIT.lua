@@ -6,4 +6,4 @@ local L = addonTable.L
 -- Lua
 local _G = getfenv(0)
 
-if _G.GetLocale() ~= "itIT" then return end
+if GetLocale() ~= "itIT" then return end

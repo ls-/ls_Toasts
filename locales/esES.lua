@@ -6,7 +6,7 @@ local L = addonTable.L
 -- Lua
 local _G = getfenv(0)
 
-if _G.GetLocale() ~= "esES" then return end
+if GetLocale() ~= "esES" then return end
 
 L["ANCHOR"] = "Marco Toast"
 L["ANCHOR_FRAME"] = "Marco de anclaje"

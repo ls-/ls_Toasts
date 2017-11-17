@@ -6,7 +6,7 @@ local L = addonTable.L
 -- Lua
 local _G = getfenv(0)
 
-if _G.GetLocale() ~= "deDE" then return end
+if GetLocale() ~= "deDE" then return end
 
 L["ANCHOR"] = "Anker der Benachrichtigung"
 L["ANCHOR_FRAME"] = "Ankerrahmen"

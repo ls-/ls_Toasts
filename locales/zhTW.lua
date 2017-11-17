@@ -6,7 +6,7 @@ local L = addonTable.L
 -- Lua
 local _G = getfenv(0)
 
-if _G.GetLocale() ~= "zhTW" then return end
+if GetLocale() ~= "zhTW" then return end
 
 L["ANCHOR"] = "通知定位點"
 L["ANCHOR_FRAME"] = "定位框架"

@@ -6,7 +6,7 @@ local L = addonTable.L
 -- Lua
 local _G = getfenv(0)
 
-if _G.GetLocale() ~= "ruRU" then return end
+if GetLocale() ~= "ruRU" then return end
 
 L["ANCHOR"] = "Крепление уведомления"
 L["ANCHOR_FRAME"] = "Фрейм крепления"

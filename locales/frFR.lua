@@ -6,7 +6,7 @@ local L = addonTable.L
 -- Lua
 local _G = getfenv(0)
 
-if _G.GetLocale() ~= "frFR" then return end
+if GetLocale() ~= "frFR" then return end
 
 L["ANCHOR"] = "Point d'attache des 'Toast' "
 L["ANCHOR_FRAME"] = "Point d'attache"

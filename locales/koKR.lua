@@ -6,7 +6,7 @@ local L = addonTable.L
 -- Lua
 local _G = getfenv(0)
 
-if _G.GetLocale() ~= "koKR" then return end
+if GetLocale() ~= "koKR" then return end
 
 L["ANCHOR"] = "알림창 고정기"
 L["ANCHOR_FRAME"] = "고정기 창"
