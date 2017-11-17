@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 70300.05
+
+- Fixed DND option. Previously it's disabling toast group entirely;
+- Re-added click handler to collection toasts;
+- Locked collection and transmog toasts' left click handling behind config option. Both may cause UI errors in combat if enabled, but people like being able to click them regardless;
+- Updated German translation. Translated by pas06@Curse.
+
 ## Version 70300.04
 
 - Removed click handler from collection toasts. It taints Blizz code too much;
