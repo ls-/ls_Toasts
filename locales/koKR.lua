@@ -1,4 +1,4 @@
--- Contributors: WetU@GitHub, yuk6196@Curse
+-- Contributors: WetU@GitHub, yuk6196@Curse, next96@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -11,7 +11,7 @@ if GetLocale() ~= "koKR" then return end
 L["ANCHOR"] = "알림창 고정기"
 L["ANCHOR_FRAME"] = "고정기 창"
 L["BORDER"] = "테두리"
--- L["COLLECTIONS_TAINT_WARNING"] = "Enabling this option may cause errors when opening \"Collections\" panel in combat."
+L["COLLECTIONS_TAINT_WARNING"] = "이 설정을 사용하는 경우 전투중 \"수집창\"을 열게 되면 오류가 발생합니다."
 L["COLORS"] = "색상"
 L["COPPER_THRESHOLD"] = "코퍼 제한"
 L["COPPER_THRESHOLD_DESC"] = "알림창을 만들 최소 코퍼 금액입니다."
@@ -23,7 +23,7 @@ L["GROWTH_DIR_DOWN"] = "아래로"
 L["GROWTH_DIR_LEFT"] = "왼쪽으로"
 L["GROWTH_DIR_RIGHT"] = "오른쪽으로"
 L["GROWTH_DIR_UP"] = "위로"
--- L["HANDLE_LEFT_CLICK"] = "Handle Left Click"
+L["HANDLE_LEFT_CLICK"] = "왼쪽 클릭으로 조정"
 L["ICON_BORDER"] = "아이콘 테두리"
 L["NAME"] = "이름"
 L["OPEN_CONFIG"] = "설정 열기"
