@@ -273,7 +273,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						order = 12,
 						type = "range",
 						name = L["FADE_OUT_DELAY"],
-						min = 0.8, max = 6, step = 0.4,
+						min = 0.8, max = 10, step = 0.4,
 						get = function()
 							return C.db.profile.fadeout_delay
 						end,
