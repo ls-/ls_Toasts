@@ -576,6 +576,7 @@ do
 		GameTooltip:SetPoint(p, self, rP, x, y)
 
 		self.AnimOut:Stop()
+		self:SetAlpha(1)
 
 		E:RegisterEvent("MODIFIER_STATE_CHANGED", MODIFIER_STATE_CHANGED)
 	end
@@ -680,6 +681,7 @@ do
 
 	local function RecycleToast(self)
 		self:ClearAllPoints()
+		self:SetAlpha(1)
 		self:Hide()
 
 		self:SetScript("OnClick", Toast_OnClick)
