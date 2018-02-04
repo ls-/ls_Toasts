@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 70300.06
+
+- Improved compatibility with other addons that override UI elements' alpha, e.g., Immersion;
+- Increased max fade-out delay to 10 seconds;
+- Fixed "Handle Left Click" option for transmog toasts;
+- Updated Korean translation. Translated by next96@Curse;
+- Updated Traditional Chinese translation. Translated by gaspy10@Curse.
+
 ## Version 70300.05
 
 - Fixed DND option. Previously it's disabling toast group entirely;
