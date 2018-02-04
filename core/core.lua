@@ -981,7 +981,7 @@ do
 		do
 			local ag = toast:CreateAnimationGroup()
 			ag:SetScript("OnPlay", ToastAnimIn_OnPlay)
-			ag:SetToFinalAlpha(1)
+			ag:SetToFinalAlpha(true)
 			toast.AnimIn = ag
 
 			local anim = ag:CreateAnimation("Alpha")
