@@ -343,7 +343,7 @@ local function toast_Recycle(self)
 	self.AnimArrows:Stop()
 	self.AnimIn:Stop()
 	self.AnimOut:Stop()
-	self.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-default")
+	self.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default")
 	self.Bonus:Hide()
 	self.Border:SetVertexColor(1, 1, 1)
 	self.Dragon:Hide()
@@ -408,12 +408,12 @@ local function ConstructToast()
 
 	local bg = toast:CreateTexture(nil, "BACKGROUND", nil, -8)
 	bg:SetAllPoints()
-	bg:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-default")
+	bg:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default")
 	bg:SetTexCoord(1 / 256, 225 / 256, 1 / 64, 49 / 64)
 	toast.BG = bg
 
 	local border = createBorder(toast, "BACKGROUND", 1)
-	border:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-border")
+	border:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-border")
 	border:SetSize(16)
 	border:SetOffset(-6)
 	toast.Border = border
@@ -438,7 +438,7 @@ local function ConstructToast()
 	local textBG = toast:CreateTexture(nil, "BACKGROUND", nil, 1)
 	textBG:SetPoint("TOPLEFT", 50, -2)
 	textBG:SetPoint("BOTTOMRIGHT", -2, 2)
-	textBG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-text-bg")
+	textBG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-text-bg")
 	textBG:SetTexCoord(1 / 256, 175 / 256, 1 / 64, 45 / 64)
 	textBG:SetVertexColor(0, 0, 0)
 	toast.TextBG = textBG
@@ -477,7 +477,7 @@ local function ConstructToast()
 	toast.IconHL = iconHL
 
 	local iconBorder = createBorder(iconParent, "BACKGROUND", 5)
-	iconBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\icon-border")
+	iconBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\icon-border")
 	iconBorder:SetSize(16)
 	iconBorder:SetOffset(-4)
 	iconBorder:Hide()
@@ -702,7 +702,7 @@ local function ConstructToast()
 
 		local sBorder = slot:CreateTexture(nil, "BORDER")
 		sBorder:SetAllPoints()
-		sBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\slot-border")
+		sBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\slot-border")
 		sBorder:SetTexCoord(28 / 128, 100 / 128, 28 / 128, 100 / 128)
 		slot.Border = sBorder
 

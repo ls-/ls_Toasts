@@ -111,7 +111,7 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 	end
 
 	toast.Text:SetText(name)
-	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-dungeon")
+	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-dungeon")
 	toast.Icon:SetTexture(textureFile or "Interface\\LFGFrame\\LFGIcon-Dungeon")
 	toast.IconBorder:Show()
 

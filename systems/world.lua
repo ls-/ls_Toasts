@@ -123,7 +123,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			end
 
 			toast.Title:SetText(L["SCENARIO_INVASION_COMPLETED"])
-			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legion")
+			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legion")
 			toast.Icon:SetTexture("Interface\\Icons\\Ability_Warlock_DemonicPower")
 
 			soundFile = 31754 -- SOUNDKIT.UI_SCENARIO_ENDING
@@ -152,7 +152,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			end
 
 			toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])
-			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-worldquest")
+			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-worldquest")
 
 			soundFile = 73277 -- SOUNDKIT.UI_WORLDQUEST_COMPLETE
 		end

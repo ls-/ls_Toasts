@@ -16,7 +16,7 @@ local function Toast_SetUp(event, researchFieldID)
 
 	toast.Title:SetText(L["DIGSITE_COMPLETED"])
 	toast.Text:SetText(raceName)
-	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-archaeology")
+	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-archaeology")
 	toast.Icon:SetPoint("TOPLEFT", 7, -3)
 	toast.Icon:SetSize(76, 76)
 	toast.Icon:SetTexture(raceTexture)

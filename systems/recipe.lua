@@ -52,7 +52,7 @@ local function Toast_SetUp(event, recipeID)
 
 			toast.Title:SetText(rank and rank > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
 			toast.Text:SetText(recipeName)
-			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-recipe")
+			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-recipe")
 			toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(tradeSkillID))
 			toast.IconBorder:Show()
 			toast.IconText1:SetText(rankTexture)

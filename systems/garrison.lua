@@ -141,7 +141,7 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 
 	if isUpgraded then
 		toast.Title:SetText(followerStrings.FOLLOWER_ADDED_UPGRADED_TOAST)
-		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
+		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-upgrade")
 
 		for i = 1, 5 do
 			toast["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)

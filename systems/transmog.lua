@@ -67,7 +67,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		end
 
 		toast.Text:SetText(name)
-		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-transmog")
+		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-transmog")
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()
 

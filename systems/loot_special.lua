@@ -59,7 +59,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 					toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
 					if factionGroup then
-						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-"..factionGroup)
+						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-"..factionGroup)
 					end
 
 					if isPersonal or lessAwesome then
@@ -85,14 +85,14 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 							toast["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)
 						end
 
-						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-upgrade")
+						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-upgrade")
 					end
 
 					if isLegendary then
 						title = L["ITEM_LEGENDARY"]
 						soundFile = 63971 -- SOUNDKIT.UI_LEGENDARY_LOOT_TOAST
 
-						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-legendary")
+						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legendary")
 						toast.Dragon:Show()
 					end
 
@@ -100,7 +100,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 						title = L["BLIZZARD_STORE_PURCHASE_DELIVERED"]
 						soundFile = 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
 
-						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-store")
+						toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-store")
 					end
 
 					if rollType == LOOT_ROLL_TYPE_NEED then
@@ -185,7 +185,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 
 		if isNew then
 			if factionGroup then
-				toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-bg-"..factionGroup)
+				toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-"..factionGroup)
 			end
 
 			toast.Title:SetText(L["YOU_RECEIVED"])
