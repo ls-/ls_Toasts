@@ -228,59 +228,6 @@ do
 		["INVTYPE_THROWN"] = {INVSLOT_RANGED},
 	}
 
-	-- TODO: Remove it, when it's re-enabled by Blizzard
-	function E.IsItemUpgrade(_, itemLink)
-		if not IsEquippableItem(itemLink) then
-			return false
-		end
-
-		local _, _, _, _, _, _, _, _, itemEquipLoc = GetItemInfo(itemLink)
-		local itemLevel = GetDetailedItemLevelInfo(itemLink)
-		local slot1, slot2 = unpack(slots[itemEquipLoc] or {})
-
-		if itemLevel then
-			if slot1 then
-				local itemLinkInSlot1 = GetInventoryItemLink("player", slot1)
-
-				if itemLinkInSlot1 then
-					local itemLevelInSlot1 = GetDetailedItemLevelInfo(itemLinkInSlot1)
-
-					if itemLevelInSlot1 and itemLevel > itemLevelInSlot1 then
-						return true
-					end
-				else
-					-- Make sure that slot is empty
-					if not GetInventoryItemID("player", slot1) then
-						return true
-					end
-				end
-			end
-
-			if slot2 then
-				local isSlot2Equippable = itemEquipLoc ~= "INVTYPE_WEAPON" and true or CanDualWield()
-
-				if isSlot2Equippable then
-					local itemLinkInSlot2 = GetInventoryItemLink("player", slot2)
-
-					if itemLinkInSlot2 then
-						local itemLevelInSlot2 = GetDetailedItemLevelInfo(itemLinkInSlot2)
-
-						if itemLevelInSlot2 and itemLevel > itemLevelInSlot2 then
-							return true
-						end
-					else
-						-- Make sure that slot is empty
-						if not GetInventoryItemID("player", slot2) then
-							return true
-						end
-					end
-				end
-			end
-		end
-
-		return false
-	end
-
 	function E.GetItemLevel(_, itemLink)
 		local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, itemSubClassID = GetItemInfo(itemLink)
 
@@ -714,7 +661,6 @@ do
 		self.Text.PostSetAnimatedValue = nil
 		self.TextBG:SetVertexColor(0, 0, 0)
 		self.Title:SetText("")
-		self.UpgradeIcon:Hide()
 
 		for i = 1, 5 do
 			self["Slot"..i]:Hide()
@@ -837,12 +783,6 @@ do
 		skull:SetPoint("TOPRIGHT", icon, "TOPRIGHT", -2, -2)
 		skull:Hide()
 		toast.Skull = skull
-
-		local upgradeIcon = toast:CreateTexture(nil, "ARTWORK", nil, 3)
-		upgradeIcon:SetAtlas("bags-greenarrow", true)
-		upgradeIcon:SetPoint("TOPLEFT", icon, "TOPLEFT", 2, -2)
-		upgradeIcon:Hide()
-		toast.UpgradeIcon = upgradeIcon
 
 		do
 			local ag = toast:CreateAnimationGroup()

@@ -136,7 +136,6 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 					toast.Icon:SetTexture(icon)
 					toast.IconBorder:Show()
 					toast.IconText1:SetAnimatedValue(quantity, true)
-					toast.UpgradeIcon:SetShown(E:IsItemUpgrade(originalLink))
 
 					toast._data = {
 						count = quantity,
