@@ -413,7 +413,7 @@ local function ConstructToast()
 	toast.BG = bg
 
 	local border = createBorder(toast, "BACKGROUND", 1)
-	border:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\border-thick")
+	border:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\toast-border")
 	border:SetSize(16)
 	border:SetOffset(-6)
 	toast.Border = border
@@ -477,7 +477,7 @@ local function ConstructToast()
 	toast.IconHL = iconHL
 
 	local iconBorder = createBorder(iconParent, "BACKGROUND", 5)
-	iconBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\border-thin")
+	iconBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\icon-border")
 	iconBorder:SetSize(16)
 	iconBorder:SetOffset(-4)
 	iconBorder:Hide()
