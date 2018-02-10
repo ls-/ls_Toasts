@@ -681,7 +681,7 @@ local function ConstructToast()
 	-- .Slot1, .Slot2, .Slot3, .Slot4, .Slot5
 	for i = 1, 5 do
 		local slot = CreateFrame("Frame", nil, toast)
-		slot:SetSize(30, 30)
+		slot:SetSize(32, 32)
 		slot:SetScript("OnEnter", slot_OnEnter)
 		slot:SetScript("OnLeave", slot_OnLeave)
 		slot:SetScript("OnHide", slot_OnHide)
@@ -691,23 +691,23 @@ local function ConstructToast()
 
 		local sMask = slot:CreateMaskTexture()
 		sMask:SetTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMaskSmall", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
-		sMask:SetPoint("TOPLEFT", 5, -5)
-		sMask:SetPoint("BOTTOMRIGHT", -5, 5)
+		sMask:SetPoint("TOPLEFT", 6, -6)
+		sMask:SetPoint("BOTTOMRIGHT", -6, 6)
 
 		local sIcon = slot:CreateTexture(nil, "BACKGROUND")
-		sIcon:SetPoint("TOPLEFT", 4, -4)
-		sIcon:SetPoint("BOTTOMRIGHT", -4, 4)
+		sIcon:SetPoint("TOPLEFT", 5, -5)
+		sIcon:SetPoint("BOTTOMRIGHT", -5, 5)
 		sIcon:AddMaskTexture(sMask)
 		slot.Icon = sIcon
 
 		local sBorder = slot:CreateTexture(nil, "BORDER")
 		sBorder:SetAllPoints()
-		sBorder:SetTexture("Interface\\LFGFrame\\UI-LFG-ICON-REWARDRING")
-		sBorder:SetTexCoord(0 / 64, 40 / 64, 0 / 64, 40 / 64)
+		sBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\media\\slot-border")
+		sBorder:SetTexCoord(28 / 128, 100 / 128, 28 / 128, 100 / 128)
 		slot.Border = sBorder
 
 		if i == 1 then
-			slot:SetPoint("TOPRIGHT", -2, 15)
+			slot:SetPoint("TOPRIGHT", -2, 16)
 		else
 			slot:SetPoint("RIGHT", toast["Slot"..(i - 1)], "LEFT", -2 , 0)
 		end
