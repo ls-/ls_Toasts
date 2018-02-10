@@ -22,8 +22,8 @@ D.profile = {
 	point = {
 		p = "TOPLEFT",
 		rP = "TOPLEFT",
-		x = 24,
-		y = -12,
+		x = 26,
+		y = -14,
 	},
 	types = {},
 }
