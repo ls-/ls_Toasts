@@ -230,7 +230,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						order = 3,
 						type = "select",
 						name = L["SKIN"],
-						values = E.GetAllSkins,
+						values = E.GetSkinList,
 						get = function()
 							return C.db.profile.skin
 						end,

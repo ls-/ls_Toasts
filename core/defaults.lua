@@ -10,7 +10,7 @@ D.profile = {
 	strata = "DIALOG",
 	fadeout_delay = 2.8,
 	growth_direction = "DOWN",
-	skin = "Default",
+	skin = "default",
 	sfx = {
 		enabled = true,
 	},

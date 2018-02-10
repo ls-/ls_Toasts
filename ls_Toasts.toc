@@ -8,5 +8,6 @@
 embeds\_embeds.xml
 locales\_locales.xml
 core\_core.xml
+skins\_skins.xml
 systems\_systems.xml
 init.lua

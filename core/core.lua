@@ -3,49 +3,19 @@ local C, L = addonTable.C, addonTable.L
 
 -- Lua
 local _G = getfenv(0)
-local debugstack = _G.debugstack
 local error = _G.error
 local next = _G.next
 local s_format = _G.string.format
 local s_match = _G.string.match
 local s_split = _G.string.split
-local setmetatable = _G.setmetatable
 local t_concat = _G.table.concat
 local t_remove = _G.table.remove
 local tonumber = _G.tonumber
 local type = _G.type
-local unpack = _G.unpack
 
 -- Mine
-local _E, E = {}, {}
+local E = {}
 addonTable.E = E
-
-setmetatable(E, {
-	__index = function(_, k)
-		return _E[k]
-	end,
-	__newindex = function(_, k, v)
-		if type(v) ~= "function" then
-			return
-		end
-
-		if k ~= "SkinToast" then
-			if not _E[k] then
-				_E[k] = v
-			end
-		else
-			local name = debugstack(2, 2, 0):match("[Aa.]?[Dd.]?[Dd.]?[Oo.]?[Nn.][Ss.]?\\(.+)\\")
-
-			if name then
-				name = name:gsub("_", " "):gsub("[^%w%s]", "")
-			else
-				name = "Skin"..(_E:GetNumSkins() + 1)
-			end
-
-			_E:RegisterSkin(name, function(...) v(_, ...) end)
-		end
-	end,
-})
 
 _G[addonName] = {
 	[1] = E,
