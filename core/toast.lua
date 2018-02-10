@@ -344,6 +344,9 @@ local function toast_Recycle(self)
 	self.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default")
 	self.Bonus:Hide()
 	self.Dragon:Hide()
+	self.Icon:ClearAllPoints()
+	self.Icon:SetPoint("TOPLEFT", 0, 0)
+	self.Icon:SetSize(42, 42)
 	self.IconBorder:Hide()
 	self.IconHL:Hide()
 	self.IconText1:SetText("")
@@ -461,7 +464,8 @@ local function ConstructToast()
 
 	local icon = iconParent:CreateTexture(nil, "BACKGROUND", nil, 2)
 	-- icon:SetTexCoord(0.0625, 0.9375, 0.0625, 0.9375)
-	icon:SetAllPoints()
+	icon:SetPoint("TOPLEFT", 0, 0)
+	icon:SetSize(42, 42)
 	toast.Icon = icon
 
 	local iconHL = iconParent:CreateTexture(nil, "BACKGROUND", nil, 3)
@@ -616,7 +620,6 @@ local function ConstructToast()
 	-- .AnimIn, .AnimOut
 	do
 		local ag = toast:CreateAnimationGroup()
-		-- ag:SetScript("OnPlay", toastAnimIn_OnPlay)
 		ag:SetScript("OnFinished", toastAnimIn_OnFinished)
 		ag:SetToFinalAlpha(true)
 		toast.AnimIn = ag
