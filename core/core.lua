@@ -230,7 +230,7 @@ do
 
 	-- TODO: Remove it, when it's re-enabled by Blizzard
 	function E.IsItemUpgrade(_, itemLink)
-		if not IsUsableItem(itemLink) then
+		if not IsEquippableItem(itemLink) then
 			return false
 		end
 
