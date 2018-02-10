@@ -43,6 +43,9 @@ local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 	end
 
 	toast.Text:SetText(missionInfo.name)
+	toast.Icon:SetPoint("TOPLEFT", -1, 1)
+	toast.Icon:SetSize(44, 44)
+	toast.Icon:SetTexCoord(0, 1, 0, 1)
 	toast.Icon:SetAtlas(missionInfo.typeAtlas, false)
 	toast.IconText1:SetText(level)
 
@@ -122,26 +125,28 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 	local toast = E:GetToast()
 
 	if followerTypeID == LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
-		toast.Icon:SetSize(84, 44)
-		toast.Icon:SetAtlas(texPrefix.."-List", false)
-		toast.IconText1:SetText("")
+		toast.Icon:SetPoint("TOPLEFT", -2, -1)
+		toast.Icon:SetSize(46, 40)
+		toast.Icon:SetTexCoord(0, 1, 0, 1)
+		toast.Icon:SetAtlas(texPrefix.."-Portrait", false)
 	else
 		local portrait
-
 		if followerInfo.portraitIconID and followerInfo.portraitIconID ~= 0 then
 			portrait = followerInfo.portraitIconID
 		else
 			portrait = "Interface\\Garrison\\Portraits\\FollowerPortrait_NoPortrait"
 		end
 
-		toast.Icon:SetSize(44, 44)
 		toast.Icon:SetTexture(portrait)
+		toast.Icon:SetTexCoord(0, 1, 0, 1)
 		toast.IconText1:SetText(level)
 	end
 
 	if isUpgraded then
+		local data = E.GetSkin()
+
 		toast.Title:SetText(followerStrings.FOLLOWER_ADDED_UPGRADED_TOAST)
-		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-upgrade")
+		toast.BG:SetTexture(data.bg.upgrade)
 
 		for i = 1, 5 do
 			toast["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)

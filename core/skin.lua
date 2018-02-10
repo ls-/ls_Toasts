@@ -3,13 +3,31 @@ local E, C = addonTable.E, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
-local setmetatable = _G.setmetatable
+local next = _G.next
 local type = _G.type
 local unpack = _G.unpack
 
 -- Mine
 local skins = {}
 local skinList = {}
+
+local function mergeTable(src, dest)
+	if type(dest) ~= "table" then
+		dest = {}
+	end
+
+	for k, v in next, src do
+		if type(v) == "table" then
+			dest[k] = mergeTable(v, dest[k])
+		else
+			if dest[k] == nil then
+				dest[k] = v
+			end
+		end
+	end
+
+	return dest
+end
 
 local function skinToast(toast)
 	local data = skins[C.db.profile.skin] or skins["default"]
@@ -24,6 +42,11 @@ local function skinToast(toast)
 	border:SetVertexColor(unpack(data.border.color))
 	border:SetSize(data.border.size)
 	border:SetOffset(data.border.offset)
+
+	-- .BG
+	local bg = toast.BG
+	bg:SetDesaturated(data.bg.desaturated)
+	bg:SetTexture(data.bg.default)
 
 	-- .Title
 	local title = toast.Title
@@ -115,7 +138,12 @@ local function resetToast(toast)
 	-- local border = toast.Border
 	toast.Border:SetVertexColor(unpack(data.border.color))
 
-		-- .Title
+	-- .BG
+	-- local bg = toast.BG
+	toast.BG:SetDesaturated(data.bg.desaturated)
+	toast.BG:SetTexture(data.bg.default)
+
+	-- .Title
 	-- local title = toast.Title
 	toast.Title:SetVertexColor(unpack(data.title.color))
 	-- .Text
@@ -163,7 +191,7 @@ function E.RegisterSkin(_, id, data)
 	local template = data.template or "default"
 	if id ~= "default" then
 		if skins[template] then
-			setmetatable(data, {__index = skins[template]})
+			mergeTable(skins[template], data)
 		else
 			error("ivalid template ref", 2)
 			return
@@ -174,18 +202,22 @@ function E.RegisterSkin(_, id, data)
 	skinList[id] = data.name
 end
 
+function E.GetSkin()
+	return skins[C.db.profile.skin] or skins["default"]
+end
+
 function E.SetSkin(_, id)
 	if type(id) ~= "string" then
 		error("invalid id", 2)
 		return
-	elseif skins[id] then
+	elseif not skins[id] then
 		error("no skin", 2)
 		return
 	end
 
 	C.db.profile.skin = id
 
-	-- E:FlushToastsCache()
+	-- reskin already created toasts here
 
 	return true
 end

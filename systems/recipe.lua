@@ -39,6 +39,7 @@ local function Toast_SetUp(event, recipeID)
 
 		if recipeName then
 			local toast = E:GetToast()
+			local data = E:GetSkin()
 			local rank = GetSpellRank(recipeID)
 			local rankTexture = ""
 
@@ -52,7 +53,7 @@ local function Toast_SetUp(event, recipeID)
 
 			toast.Title:SetText(rank and rank > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
 			toast.Text:SetText(recipeName)
-			toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-recipe")
+			toast.BG:SetTexture(data.bg.recipe)
 			toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(tradeSkillID))
 			toast.IconBorder:Show()
 			toast.IconText1:SetText(rankTexture)

@@ -46,6 +46,8 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 	local color, name, icon, _
 
 	if isNew then
+		local data = E.GetSkin()
+
 		if isMount then
 			name, _, icon = C_MountJournal.GetMountInfoByID(ID)
 		elseif isPet then
@@ -78,7 +80,7 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 
 		toast.Title:SetText(L["YOU_EARNED"])
 		toast.Text:SetText(name)
-		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-collection")
+		toast.BG:SetTexture(data.bg.collection)
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()
 		toast.IconText1:SetAnimatedValue(1, true)

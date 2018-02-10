@@ -29,6 +29,7 @@ end
 
 local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpReward, numItemRewards, isScenario, isScenarioBonusComplete)
 	local toast = E:GetToast()
+	local data = E.GetSkin()
 	local usedSlots = 0
 	local soundFile
 
@@ -93,7 +94,7 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 	end
 
 	if isScenario then
-		if isScenarioBonusComplete then
+		if isScenarioBonusComplete and not toast.Bonus.isHidden then
 			toast.Bonus:Show()
 		end
 
@@ -101,7 +102,7 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 
 		soundFile = 31754 -- SOUNDKIT.UI_SCENARIO_ENDING
 	else
-		if subTypeID == LFG_SUBTYPEID_HEROIC then
+		if subTypeID == LFG_SUBTYPEID_HEROIC and not toast.Skull.isHidden then
 			toast.Skull:Show()
 		end
 
@@ -111,7 +112,7 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 	end
 
 	toast.Text:SetText(name)
-	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-dungeon")
+	toast.BG:SetTexture(data.bg.dungeon)
 	toast.Icon:SetTexture(textureFile or "Interface\\LFGFrame\\LFGIcon-Dungeon")
 	toast.IconBorder:Show()
 

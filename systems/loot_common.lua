@@ -91,11 +91,14 @@ local function Toast_SetUp(event, link, quantity)
 				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 			end
 
+			if not toast.IconHL.isHidden then
+				toast.IconHL:SetShown(isQuestItem)
+			end
+
 			toast.Title:SetText(L["YOU_RECEIVED"])
 			toast.Text:SetText(name)
 			toast.Icon:SetTexture(icon)
 			toast.IconBorder:Show()
-			toast.IconHL:SetShown(isQuestItem)
 			toast.IconText1:SetAnimatedValue(quantity, true)
 
 			toast._data = {

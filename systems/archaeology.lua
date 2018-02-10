@@ -9,6 +9,7 @@ local hooksecurefunc = _G.hooksecurefunc
 local function Toast_SetUp(event, researchFieldID)
 	local toast = E:GetToast()
 	local raceName, raceTexture	= GetArchaeologyRaceInfoByID(researchFieldID)
+	local data = E:GetSkin()
 
 	if C.db.profile.colors.border then
 		toast.Border:SetVertexColor(0.9, 0.4, 0.1)
@@ -16,10 +17,11 @@ local function Toast_SetUp(event, researchFieldID)
 
 	toast.Title:SetText(L["DIGSITE_COMPLETED"])
 	toast.Text:SetText(raceName)
-	toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-archaeology")
-	toast.Icon:SetPoint("TOPLEFT", 7, -3)
-	toast.Icon:SetSize(76, 76)
+	toast.BG:SetTexture(data.bg.archaeology)
+	toast.Icon:SetPoint("TOPLEFT", 1, 3)
+	toast.Icon:SetSize(40, 48)
 	toast.Icon:SetTexture(raceTexture)
+	toast.Icon:SetTexCoord(0 / 128, 74 / 128, 0 / 128, 88 / 128)
 
 	toast._data = {
 		event = event,
@@ -62,7 +64,7 @@ local function Disable()
 end
 
 local function Test()
-	Toast_SetUp("ARCHAEOLOGY_TEST", 408)
+	Toast_SetUp("ARCHAEOLOGY_TEST", 2)
 end
 
 E:RegisterOptions("archaeology", {

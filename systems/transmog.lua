@@ -52,6 +52,8 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 	local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
 
 	if isNew then
+		local data = E:GetSkin()
+
 		if isAdded then
 			toast.Title:SetText(L["TRANSMOG_ADDED"])
 		else
@@ -67,7 +69,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		end
 
 		toast.Text:SetText(name)
-		toast.BG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-transmog")
+		toast.BG:SetTexture(data.bg.transmog)
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()
 
