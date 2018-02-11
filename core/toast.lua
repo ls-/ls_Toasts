@@ -413,8 +413,8 @@ local function ConstructToast()
 	-- border:SetOffset(-6)
 	toast.Border = border
 
-	-- local title = toast:CreateFontString(nil, "ARTWORK")
-	local title = toast:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	local title = toast:CreateFontString(nil, "ARTWORK")
+	-- local title = toast:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetPoint("TOPLEFT", 50, -2)
 	title:SetPoint("BOTTOMRIGHT", toast, "TOPRIGHT", -2, -22)
 	-- title:SetJustifyH("CENTER")
@@ -422,8 +422,8 @@ local function ConstructToast()
 	-- title:SetWordWrap(false)
 	toast.Title = title
 
-	-- local text = toast:CreateFontString(nil, "ARTWORK")
-	local text = toast:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	local text = toast:CreateFontString(nil, "ARTWORK")
+	-- local text = toast:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 	text:SetPoint("BOTTOMLEFT", 50, 2)
 	text:SetPoint("TOPRIGHT", toast, "BOTTOMRIGHT", -2, 22)
 	-- text:SetJustifyH("CENTER")
@@ -481,8 +481,8 @@ local function ConstructToast()
 	iconBorder:Hide()
 	toast.IconBorder = iconBorder
 
-	-- local iconText1 = iconParent:CreateFontString(nil, "ARTWORK")
-	local iconText1 = iconParent:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
+	local iconText1 = iconParent:CreateFontString(nil, "ARTWORK")
+	-- local iconText1 = iconParent:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
 	-- iconText1:SetPoint("BOTTOMRIGHT", 0, 1)
 	-- iconText1:SetJustifyH("RIGHT")
 	iconText1.SetAnimatedValue = text_SetAnimatedValue
@@ -496,8 +496,8 @@ local function ConstructToast()
 	iconText1BG:Hide()
 	toast.IconText1BG = iconText1BG
 
-	-- local iconText2 = iconParent:CreateFontString(nil, "ARTWORK")
-	local iconText2 = iconParent:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
+	local iconText2 = iconParent:CreateFontString(nil, "ARTWORK")
+	-- local iconText2 = iconParent:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
 	-- iconText2:SetPoint("BOTTOMRIGHT", iconText1, "TOPRIGHT", 0, 2)
 	-- iconText2:SetJustifyH("RIGHT")
 	iconText2:SetAlpha(0)

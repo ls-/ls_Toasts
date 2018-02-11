@@ -8,6 +8,7 @@ local type = _G.type
 local unpack = _G.unpack
 
 -- Mine
+local LSM = LibStub("LibSharedMedia-3.0")
 local skins = {}
 local skinList = {}
 
@@ -31,6 +32,8 @@ end
 
 local function skinToast(toast)
 	local data = skins[C.db.profile.skin] or skins["default"]
+	local fontPath = LSM:Fetch("font", C.db.profile.font.name)
+	local fontSize = C.db.profile.font.size
 
 	-- .Border
 	local border = toast.Border
@@ -50,19 +53,21 @@ local function skinToast(toast)
 
 	-- .Title
 	local title = toast.Title
-	title:SetFontObject(data.title.font_object)
+	title:SetFont(fontPath, fontSize, data.title.flags)
 	title:SetVertexColor(unpack(data.title.color))
 	title:SetJustifyH("CENTER")
 	title:SetJustifyV("MIDDLE")
 	title:SetWordWrap(false)
+	title:SetShadowOffset(data.title.shadow and 1 or 0, data.title.shadow and -1 or 0)
 
 	-- .Text
 	local text = toast.Text
-	text:SetFontObject(data.text.font_object)
+	text:SetFont(fontPath, fontSize, data.text.flags)
 	text:SetVertexColor(unpack(data.text.color))
 	text:SetJustifyH("CENTER")
 	text:SetJustifyV("MIDDLE")
 	text:SetWordWrap(false)
+	text:SetShadowOffset(data.text.shadow and 1 or 0, data.text.shadow and -1 or 0)
 
 	-- .Bonus
 	local bonus = toast.Bonus
@@ -103,17 +108,19 @@ local function skinToast(toast)
 
 	-- .IconText1
 	local iconText1 = toast.IconText1
-	iconText1:SetFontObject(data.icon_text_1.font_object)
+	iconText1:SetFont(fontPath, fontSize, data.icon_text_1.flags)
 	iconText1:SetVertexColor(unpack(data.icon_text_1.color))
 	iconText1:SetPoint("BOTTOMRIGHT", 0, 1)
 	iconText1:SetJustifyH("RIGHT")
+	iconText1:SetShadowOffset(data.icon_text_1.shadow and 1 or 0, data.icon_text_1.shadow and -1 or 0)
 
 	-- .IconText1
 	local iconText2 = toast.IconText2
-	iconText2:SetFontObject(data.icon_text_2.font_object)
+	iconText2:SetFont(fontPath, fontSize, data.icon_text_2.flags)
 	iconText2:SetVertexColor(unpack(data.icon_text_2.color))
 	iconText2:SetPoint("BOTTOMRIGHT", iconText1, "TOPRIGHT", 0, 2)
 	iconText2:SetJustifyH("RIGHT")
+	iconText2:SetShadowOffset(data.icon_text_2.shadow and 1 or 0, data.icon_text_2.shadow and -1 or 0)
 
 	-- .Skull
 	local skull = toast.Skull

@@ -11,6 +11,10 @@ D.profile = {
 	fadeout_delay = 2.8,
 	growth_direction = "DOWN",
 	skin = "default",
+	font = {
+		-- name = nil,
+		size = 12,
+	},
 	sfx = {
 		enabled = true,
 	},

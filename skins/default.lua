@@ -14,12 +14,14 @@ E:RegisterSkin("default", {
 		color = {1, 1, 1},
 	},
 	title = {
-		font_object = "GameFontNormal",
 		color = {1, 0.82, 0},
+		flags = "",
+		shadow = true,
 	},
 	text = {
-		font_object = "GameFontNormal",
 		color = {1, 1, 1},
+		flags = "",
+		shadow = true,
 	},
 	bonus = {
 		hidden = false,
@@ -42,12 +44,14 @@ E:RegisterSkin("default", {
 		hidden = false,
 	},
 	icon_text_1 = {
-		font_object = "GameFontNormalOutline",
-		color = {1, 1, 1}
+		color = {1, 1, 1},
+		flags = "THINOUTLINE",
+		shadow = true,
 	},
 	icon_text_2 = {
-		font_object = "GameFontNormalOutline",
-		color = {1, 1, 1}
+		color = {1, 1, 1},
+		flags = "THINOUTLINE",
+		shadow = false,
 	},
 	skull = {
 		hidden = false,
