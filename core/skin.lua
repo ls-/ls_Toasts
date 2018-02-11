@@ -92,7 +92,7 @@ end
 
 function E.ApplySkin(_, toast)
 	local skin = skins[C.db.profile.skin] or skins["default"]
-	local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
+	local fontPath = E:GetLSM():Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
 
 	-- .Border

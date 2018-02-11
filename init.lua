@@ -356,7 +356,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 								dialogControl = "LSM30_Font",
 								values = AceGUIWidgetLSMlists.font,
 								get = function()
-									return LibStub("LibSharedMedia-3.0"):IsValid("font", C.db.profile.font.name) and C.db.profile.font.name or LibStub("LibSharedMedia-3.0"):GetDefault("font")
+									return E:GetLSM():IsValid("font", C.db.profile.font.name) and C.db.profile.font.name or E:GetLSM():GetDefault("font")
 								end,
 								set = function(_, value)
 									C.db.profile.font.name = value
