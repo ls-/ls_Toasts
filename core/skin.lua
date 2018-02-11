@@ -30,7 +30,7 @@ local function mergeTable(src, dest)
 	return dest
 end
 
-local function skinToast(toast)
+local function applySkin(toast)
 	local data = skins[C.db.profile.skin] or skins["default"]
 	local fontPath = LSM:Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
@@ -70,16 +70,13 @@ local function skinToast(toast)
 	text:SetShadowOffset(data.text.shadow and 1 or 0, data.text.shadow and -1 or 0)
 
 	-- .Bonus
-	local bonus = toast.Bonus
-	bonus.isHidden = data.bonus.hidden
+	toast.Bonus.isHidden = data.bonus.hidden
 
 	-- .Dragon
-	local dragon = toast.Dragon
-	dragon.isHidden = data.dragon.hidden
+	toast.Dragon.isHidden = data.dragon.hidden
 
 	-- .Icon
-	local icon = toast.Icon
-	icon:SetTexCoord(unpack(data.icon.tex_coords))
+	toast.Icon:SetTexCoord(unpack(data.icon.tex_coords))
 
 	-- .IconBorder
 	local iconBorder = toast.IconBorder
@@ -123,8 +120,7 @@ local function skinToast(toast)
 	iconText2:SetShadowOffset(data.icon_text_2.shadow and 1 or 0, data.icon_text_2.shadow and -1 or 0)
 
 	-- .Skull
-	local skull = toast.Skull
-	skull.isHidden = data.skull.hidden
+	toast.Skull.isHidden = data.skull.hidden
 
 	for i = 1, 5 do
 		local slot = toast["Slot"..i]
@@ -138,11 +134,10 @@ local function skinToast(toast)
 	end
 end
 
-local function resetToast(toast)
+local function resetSkin(toast)
 	local data = skins[C.db.profile.skin] or skins["default"]
 
 	-- .Border
-	-- local border = toast.Border
 	toast.Border:SetVertexColor(unpack(data.border.color))
 
 	-- .BG
@@ -151,32 +146,25 @@ local function resetToast(toast)
 	toast.BG:SetTexture(data.bg.default)
 
 	-- .Title
-	-- local title = toast.Title
 	toast.Title:SetVertexColor(unpack(data.title.color))
 	-- .Text
-	-- local text = toast.Text
 	toast.Text:SetVertexColor(unpack(data.text.color))
 
 	-- .Icon
-	-- local icon = toast.Icon
 	toast.Icon:SetTexCoord(unpack(data.icon.tex_coords))
 
 	-- .IconBorder
-	-- local iconBorder = toast.IconBorder
 	toast.IconBorder:SetVertexColor(unpack(data.icon_border.color))
 
 	-- .IconHL
-	-- local iconHL = toast.IconHL
 	if not toast.IconHL.isHidden then
 		toast.IconHL:SetTexCoord(unpack(data.icon_highlight.tex_coords))
 	end
 
 	-- .IconText1
-	-- local iconText1 = toast.IconText1
 	toast.IconText1:SetVertexColor(unpack(data.icon_text_1.color))
 
 	-- .IconText1
-	-- local iconText2 = toast.IconText2
 	toast.IconText2:SetVertexColor(unpack(data.icon_text_2.color))
 end
 
@@ -234,9 +222,9 @@ function E.GetSkinList()
 end
 
 function E.ApplySkin(_, toast)
-	skinToast(toast)
+	applySkin(toast)
 end
 
 function E.ResetSkin(_, toast)
-	resetToast(toast)
+	resetSkin(toast)
 end
