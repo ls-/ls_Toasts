@@ -58,6 +58,12 @@ function E.RegisterSkin(_, id, data)
 	skinList[id] = data.name
 end
 
+function E.CheckResetDefaultSkin()
+	if not skins[C.db.profile.skin] then
+		C.db.profile.skin = "default"
+	end
+end
+
 function E.GetSkinList()
 	return skinList
 end

@@ -413,6 +413,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		E:UpdateOptions()
 		E:GetAnchorFrame():Refresh()
 		E:EnableAllSystems()
+		E:CheckResetDefaultSkin()
 
 		local panel = CreateFrame("Frame", "LSTConfigPanel", InterfaceOptionsFramePanelContainer)
 		panel.name = L["LS_TOASTS"]
