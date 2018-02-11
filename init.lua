@@ -341,6 +341,24 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 									C.db.profile.colors.icon_border = value
 								end
 							},
+							threshold = {
+								order = 4,
+								type = "select",
+								name = L["RARITY_THRESHOLD"],
+								values = {
+									[1] = ITEM_QUALITY_COLORS[1].hex..ITEM_QUALITY1_DESC.."|r",
+									[2] = ITEM_QUALITY_COLORS[2].hex..ITEM_QUALITY2_DESC.."|r",
+									[3] = ITEM_QUALITY_COLORS[3].hex..ITEM_QUALITY3_DESC.."|r",
+									[4] = ITEM_QUALITY_COLORS[4].hex..ITEM_QUALITY4_DESC.."|r",
+									[5] = ITEM_QUALITY_COLORS[5].hex..ITEM_QUALITY5_DESC.."|r",
+								},
+								get = function()
+									return C.db.profile.colors.threshold
+								end,
+								set = function(_, value)
+									C.db.profile.colors.threshold = value
+								end,
+							},
 						}
 					},
 					font = {

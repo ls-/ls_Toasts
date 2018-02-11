@@ -48,15 +48,16 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 
 	if isNew then
 		local skin = E:GetSkin()
-		local color, name, icon, _
+		local color, name, icon, rarity, _
 
 		if isMount then
 			name, _, icon = C_MountJournal.GetMountInfoByID(ID)
 		elseif isPet then
-			local customName, rarity
+			local customName
 			_, _, _, _, rarity = C_PetJournal.GetPetStats(ID)
 			_, customName, _, _, _, _, _, name, icon = C_PetJournal.GetPetInfoByPetID(ID)
-			color = ITEM_QUALITY_COLORS[(rarity or 2) - 1]
+			rarity = (rarity or 2) - 1
+			color = ITEM_QUALITY_COLORS[rarity]
 			name = customName or name
 		elseif isToy then
 			_, name, icon = C_ToyBox.GetToyInfo(ID)
@@ -68,16 +69,18 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 
 		toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
-		if color and C.db.profile.colors.name then
-			toast.Text:SetTextColor(color.r, color.g, color.b)
-		end
+		if rarity and rarity >= C.db.profile.colors.threshold then
+			if color and C.db.profile.colors.name then
+				toast.Text:SetTextColor(color.r, color.g, color.b)
+			end
 
-		if color and C.db.profile.colors.border then
-			toast.Border:SetVertexColor(color.r, color.g, color.b)
-		end
+			if color and C.db.profile.colors.border then
+				toast.Border:SetVertexColor(color.r, color.g, color.b)
+			end
 
-		if color and C.db.profile.colors.icon_border then
-			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+			if color and C.db.profile.colors.icon_border then
+				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+			end
 		end
 
 		if type(skin.bg.collection) == "table" then

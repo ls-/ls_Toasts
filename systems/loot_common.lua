@@ -71,8 +71,18 @@ local function Toast_SetUp(event, link, quantity)
 
 			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
-			if C.db.profile.colors.name then
-				name = color.hex..name.."|r"
+			if quality >= C.db.profile.colors.threshold then
+				if C.db.profile.colors.name then
+					name = color.hex..name.."|r"
+				end
+
+				if C.db.profile.colors.border then
+					toast.Border:SetVertexColor(color.r, color.g, color.b)
+				end
+
+				if C.db.profile.colors.icon_border then
+					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+				end
 			end
 
 			if C.db.profile.types.loot_common.ilvl then
@@ -81,14 +91,6 @@ local function Toast_SetUp(event, link, quantity)
 				if iLevel > 0 then
 					name = "["..color.hex..iLevel.."|r] "..name
 				end
-			end
-
-			if C.db.profile.colors.border then
-				toast.Border:SetVertexColor(color.r, color.g, color.b)
-			end
-
-			if C.db.profile.colors.icon_border then
-				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 			end
 
 			if not toast.IconHL.isHidden then

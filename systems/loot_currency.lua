@@ -20,16 +20,18 @@ local function Toast_SetUp(event, link, quantity)
 		local name, _, icon, _, _, _, _, quality = GetCurrencyInfo(link)
 		local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 
-		if C.db.profile.colors.name then
-			toast.Text:SetTextColor(color.r, color.g, color.b)
-		end
+		if quality >= C.db.profile.colors.threshold then
+			if C.db.profile.colors.name then
+				toast.Text:SetTextColor(color.r, color.g, color.b)
+			end
 
-		if C.db.profile.colors.border then
-			toast.Border:SetVertexColor(color.r, color.g, color.b)
-		end
+			if C.db.profile.colors.border then
+				toast.Border:SetVertexColor(color.r, color.g, color.b)
+			end
 
-		if C.db.profile.colors.icon_border then
-			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+			if C.db.profile.colors.icon_border then
+				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+			end
 		end
 
 		toast.Title:SetText(L["YOU_RECEIVED"])

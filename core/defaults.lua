@@ -22,6 +22,7 @@ D.profile = {
 		name = false,
 		border = true,
 		icon_border = true,
+		threshold = 1,
 	},
 	point = {
 		p = "TOPLEFT",

@@ -26,7 +26,8 @@ end
 
 local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 	local missionInfo = C_Garrison.GetBasicMissionInfo(missionID)
-	local color = missionInfo.isRare and ITEM_QUALITY_COLORS[3] or ITEM_QUALITY_COLORS[1]
+	local rarity = missionInfo.isRare and 3 or 1
+	local color = ITEM_QUALITY_COLORS[rarity]
 	local level = missionInfo.iLevel == 0 and missionInfo.level or missionInfo.iLevel
 	local toast = E:GetToast()
 
@@ -36,12 +37,14 @@ local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 		toast.Title:SetText(L["GARRISON_MISSION_COMPLETED"])
 	end
 
-	if C.db.profile.colors.name then
-		toast.Text:SetTextColor(color.r, color.g, color.b)
-	end
+	if rarity >= C.db.profile.colors.threshold then
+		if C.db.profile.colors.name then
+			toast.Text:SetTextColor(color.r, color.g, color.b)
+		end
 
-	if C.db.profile.colors.border then
-		toast.Border:SetVertexColor(color.r, color.g, color.b)
+		if C.db.profile.colors.border then
+			toast.Border:SetVertexColor(color.r, color.g, color.b)
+		end
 	end
 
 	toast.Text:SetText(missionInfo.name)
@@ -161,12 +164,14 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 		toast.Title:SetText(followerStrings.FOLLOWER_ADDED_TOAST)
 	end
 
-	if C.db.profile.colors.name then
-		toast.Text:SetTextColor(color.r, color.g, color.b)
-	end
+	if quality >= C.db.profile.colors.threshold then
+		if C.db.profile.colors.name then
+			toast.Text:SetTextColor(color.r, color.g, color.b)
+		end
 
-	if C.db.profile.colors.border then
-		toast.Border:SetVertexColor(color.r, color.g, color.b)
+		if C.db.profile.colors.border then
+			toast.Border:SetVertexColor(color.r, color.g, color.b)
+		end
 	end
 
 	toast.Text:SetText(name)

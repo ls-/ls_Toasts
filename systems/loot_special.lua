@@ -133,8 +133,18 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 						title = TITLE_DE_TEMPLATE:format(title, roll)
 					end
 
-					if C.db.profile.colors.name then
-						name = color.hex..name.."|r"
+					if quality >= C.db.profile.colors.threshold then
+						if C.db.profile.colors.name then
+							name = color.hex..name.."|r"
+						end
+
+						if C.db.profile.colors.border then
+							toast.Border:SetVertexColor(color.r, color.g, color.b)
+						end
+
+						if C.db.profile.colors.icon_border then
+							toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+						end
 					end
 
 					if C.db.profile.types.loot_special.ilvl then
@@ -143,14 +153,6 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 						if iLevel > 0 then
 							name = "["..color.hex..iLevel.."|r] "..name
 						end
-					end
-
-					if C.db.profile.colors.border then
-						toast.Border:SetVertexColor(color.r, color.g, color.b)
-					end
-
-					if C.db.profile.colors.icon_border then
-						toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 					end
 
 					toast.Title:SetText(title)
@@ -449,7 +451,7 @@ E:RegisterOptions("loot_special", {
 				return C.db.profile.types.loot_special.threshold
 			end,
 			set = function(_, value)
-					C.db.profile.types.loot_special.threshold = value
+				C.db.profile.types.loot_special.threshold = value
 			end,
 		},
 		test = {

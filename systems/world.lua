@@ -151,12 +151,14 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 				toast.Icon:SetTexture("Interface\\Icons\\Achievement_Quests_Completed_TwilightHighlands")
 			end
 
-			if C.db.profile.colors.border then
-				toast.Border:SetVertexColor(color.r, color.g, color.b)
-			end
+			if rarity >= C.db.profile.colors.threshold then
+				if C.db.profile.colors.border then
+					toast.Border:SetVertexColor(color.r, color.g, color.b)
+				end
 
-			if C.db.profile.colors.icon_border then
-				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+				if C.db.profile.colors.icon_border then
+					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+				end
 			end
 
 			if type(skin.bg.worldquest) == "table" then
