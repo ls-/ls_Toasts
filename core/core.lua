@@ -75,14 +75,6 @@ do
 	end
 end
 
----------
--- LSM --
----------
-
-function E.GetLSM()
-	return LibStub("LibSharedMedia-3.0")
-end
-
 -------------
 -- HELPERS --
 -------------
