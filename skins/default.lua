@@ -46,7 +46,7 @@ E:RegisterSkin("default", {
 	icon_text_1 = {
 		color = {1, 1, 1},
 		flags = "THINOUTLINE",
-		shadow = true,
+		shadow = false,
 	},
 	icon_text_2 = {
 		color = {1, 1, 1},
