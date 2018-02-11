@@ -280,7 +280,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						set = function(_, value)
 							C.db.profile.fadeout_delay = value
 
-							E:UpdateFadeOutDelay(value)
+							E:UpdateFadeOutDelay()
 						end,
 					},
 					growth_dir = {
