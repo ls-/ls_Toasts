@@ -7,6 +7,8 @@ local pcall = _G.pcall
 local s_split = _G.string.split
 local select = _G.select
 local tonumber = _G.tonumber
+local type = _G.type
+local unpack = _G.unpack
 
 -- Blizz
 local C_Garrison = _G.C_Garrison
@@ -123,6 +125,7 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 	local upgradeTexture = LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
 	local color = ITEM_QUALITY_COLORS[quality]
 	local toast = E:GetToast()
+	local skin = E:GetSkin()
 
 	if followerTypeID == LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
 		toast.Icon:SetPoint("TOPLEFT", -2, -1)
@@ -143,10 +146,13 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 	end
 
 	if isUpgraded then
-		local data = E.GetSkin()
+		if type(skin.bg.upgrade) == "table" then
+			toast.BG:SetColorTexture(unpack(skin.bg.upgrade))
+		else
+			toast.BG:SetTexture(skin.bg.upgrade)
+		end
 
 		toast.Title:SetText(followerStrings.FOLLOWER_ADDED_UPGRADED_TOAST)
-		toast.BG:SetTexture(data.bg.upgrade)
 
 		for i = 1, 5 do
 			toast["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)

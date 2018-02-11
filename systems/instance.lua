@@ -4,6 +4,8 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 local pcall = _G.pcall
+local type = _G.type
+local unpack = _G.unpack
 
 -- Blizz
 local C_Scenario = _G.C_Scenario
@@ -29,7 +31,7 @@ end
 
 local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpReward, numItemRewards, isScenario, isScenarioBonusComplete)
 	local toast = E:GetToast()
-	local data = E.GetSkin()
+	local skin = E:GetSkin()
 	local usedSlots = 0
 	local soundFile
 
@@ -111,8 +113,13 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 		soundFile = 17316 -- SOUNDKIT.LFG_REWARDS
 	end
 
+	if type(skin.bg.dungeon) == "table" then
+		toast.BG:SetColorTexture(unpack(skin.bg.dungeon))
+	else
+		toast.BG:SetTexture(skin.bg.dungeon)
+	end
+
 	toast.Text:SetText(name)
-	toast.BG:SetTexture(data.bg.dungeon)
 	toast.Icon:SetTexture(textureFile or "Interface\\LFGFrame\\LFGIcon-Dungeon")
 	toast.IconBorder:Show()
 

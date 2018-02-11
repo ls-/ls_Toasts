@@ -3,6 +3,8 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local type = _G.type
+local unpack = _G.unpack
 
 -- Blizz
 local C_Timer = _G.C_Timer
@@ -52,7 +54,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 	local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
 
 	if isNew then
-		local data = E:GetSkin()
+		local skin = E:GetSkin()
 
 		if isAdded then
 			toast.Title:SetText(L["TRANSMOG_ADDED"])
@@ -68,8 +70,13 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 			toast.IconBorder:SetVertexColor(1, 0.5, 1)
 		end
 
+		if type(skin.bg.transmog) == "table" then
+			toast.BG:SetColorTexture(unpack(skin.bg.transmog))
+		else
+			toast.BG:SetTexture(skin.bg.transmog)
+		end
+
 		toast.Text:SetText(name)
-		toast.BG:SetTexture(data.bg.transmog)
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()
 

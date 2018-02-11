@@ -3,6 +3,8 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local type = _G.type
+local unpack = _G.unpack
 
 -- Blizz
 local C_MountJournal = _G.C_MountJournal
@@ -43,10 +45,10 @@ end
 
 local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 	local toast, isNew, isQueued = E:GetToast(event, "collection_id", ID)
-	local color, name, icon, _
 
 	if isNew then
-		local data = E.GetSkin()
+		local skin = E:GetSkin()
+		local color, name, icon, _
 
 		if isMount then
 			name, _, icon = C_MountJournal.GetMountInfoByID(ID)
@@ -78,9 +80,14 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 			toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 		end
 
+		if type(skin.bg.collection) == "table" then
+			toast.BG:SetColorTexture(unpack(skin.bg.collection))
+		else
+			toast.BG:SetTexture(skin.bg.collection)
+		end
+
 		toast.Title:SetText(L["YOU_EARNED"])
 		toast.Text:SetText(name)
-		toast.BG:SetTexture(data.bg.collection)
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()
 		toast.IconText1:SetAnimatedValue(1, true)

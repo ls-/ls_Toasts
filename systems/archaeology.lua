@@ -4,20 +4,27 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 local hooksecurefunc = _G.hooksecurefunc
+local type = _G.type
+local unpack = _G.unpack
 
 -- Mine
 local function Toast_SetUp(event, researchFieldID)
 	local toast = E:GetToast()
-	local raceName, raceTexture	= GetArchaeologyRaceInfoByID(researchFieldID)
-	local data = E:GetSkin()
+	local skin = E:GetSkin()
+	local raceName, raceTexture = GetArchaeologyRaceInfoByID(researchFieldID)
 
 	if C.db.profile.colors.border then
 		toast.Border:SetVertexColor(0.9, 0.4, 0.1)
 	end
 
+	if type(skin.bg.archaeology) == "table" then
+		toast.BG:SetColorTexture(unpack(skin.bg.archaeology))
+	else
+		toast.BG:SetTexture(skin.bg.archaeology)
+	end
+
 	toast.Title:SetText(L["DIGSITE_COMPLETED"])
 	toast.Text:SetText(raceName)
-	toast.BG:SetTexture(data.bg.archaeology)
 	toast.Icon:SetPoint("TOPLEFT", 1, 3)
 	toast.Icon:SetSize(40, 48)
 	toast.Icon:SetTexture(raceTexture)
