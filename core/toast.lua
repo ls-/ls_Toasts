@@ -447,15 +447,6 @@ local function ConstructToast()
 	bonus:Hide()
 	toast.Bonus = bonus
 
-	local dragon = toast:CreateTexture(nil, "BACKGROUND", nil, 2)
-	dragon:SetPoint("TOPLEFT", -25, 16)
-	dragon:SetSize(84, 84)
-	dragon:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Dragon")
-	dragon:SetDesaturated(true)
-	dragon:SetVertexColor(ITEM_QUALITY_COLORS[5].r, ITEM_QUALITY_COLORS[5].g, ITEM_QUALITY_COLORS[5].b)
-	dragon:Hide()
-	toast.Dragon = dragon
-
 	local iconParent = CreateFrame("Frame", nil, toast)
 	iconParent:SetFrameLevel(toast:GetFrameLevel() + 1)
 	iconParent:SetSize(42, 42)
@@ -481,6 +472,15 @@ local function ConstructToast()
 	-- iconBorder:SetOffset(-4)
 	iconBorder:Hide()
 	toast.IconBorder = iconBorder
+
+	local dragon = iconParent:CreateTexture(nil, "BACKGROUND", nil, 6)
+	dragon:SetPoint("TOPLEFT", toast, "TOPLEFT", -25, 16)
+	dragon:SetSize(83, 83)
+	dragon:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Dragon")
+	dragon:SetDesaturated(true)
+	dragon:SetVertexColor(1, 0.6, 0)
+	dragon:Hide()
+	toast.Dragon = dragon
 
 	local iconText1 = iconParent:CreateFontString(nil, "ARTWORK")
 	-- local iconText1 = iconParent:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
