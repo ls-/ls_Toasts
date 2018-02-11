@@ -30,74 +30,94 @@ local function mergeTable(src, dest)
 	return dest
 end
 
+local function updateFonts(toast)
+	local skin = skins[C.db.profile.skin] or skins["default"]
+	local fontPath = LSM:Fetch("font", C.db.profile.font.name)
+	local fontSize = C.db.profile.font.size
+
+	-- .Title
+	toast.Title:SetFont(fontPath, fontSize, skin.title.flags)
+
+	-- .Text
+	toast.Text:SetFont(fontPath, fontSize, skin.text.flags)
+
+	-- .IconText1
+	toast.IconText1:SetFont(fontPath, fontSize, skin.icon_text_1.flags)
+
+	-- .IconText2
+	toast.IconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags)
+end
+
 local function applySkin(toast)
-	local data = skins[C.db.profile.skin] or skins["default"]
+	local skin = skins[C.db.profile.skin] or skins["default"]
 	local fontPath = LSM:Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
 
 	-- .Border
 	local border = toast.Border
-	if type(data.border.texture) == "table" then
-		border:SetColorTexture(unpack(data.border.texture))
+	if type(skin.border.texture) == "table" then
+		border:SetColorTexture(unpack(skin.border.texture))
 	else
-		border:SetTexture(data.border.texture)
+		border:SetTexture(skin.border.texture)
 	end
-	border:SetVertexColor(unpack(data.border.color))
-	border:SetSize(data.border.size)
-	border:SetOffset(data.border.offset)
+	border:SetVertexColor(unpack(skin.border.color))
+	border:SetSize(skin.border.size)
+	border:SetOffset(skin.border.offset)
 
 	-- .BG
-	local bg = toast.BG
-	bg:SetDesaturated(data.bg.desaturated)
-	bg:SetTexture(data.bg.default)
+	if type(skin.bg.default) == "table" then
+		toast.BG:SetColorTexture(unpack(skin.bg.default))
+	else
+		toast.BG:SetTexture(skin.bg.default)
+	end
 
 	-- .Title
 	local title = toast.Title
-	title:SetFont(fontPath, fontSize, data.title.flags)
-	title:SetVertexColor(unpack(data.title.color))
+	title:SetFont(fontPath, fontSize, skin.title.flags)
+	title:SetVertexColor(unpack(skin.title.color))
 	title:SetJustifyH("CENTER")
 	title:SetJustifyV("MIDDLE")
 	title:SetWordWrap(false)
-	title:SetShadowOffset(data.title.shadow and 1 or 0, data.title.shadow and -1 or 0)
+	title:SetShadowOffset(skin.title.shadow and 1 or 0, skin.title.shadow and -1 or 0)
 
 	-- .Text
 	local text = toast.Text
-	text:SetFont(fontPath, fontSize, data.text.flags)
-	text:SetVertexColor(unpack(data.text.color))
+	text:SetFont(fontPath, fontSize, skin.text.flags)
+	text:SetVertexColor(unpack(skin.text.color))
 	text:SetJustifyH("CENTER")
 	text:SetJustifyV("MIDDLE")
 	text:SetWordWrap(false)
-	text:SetShadowOffset(data.text.shadow and 1 or 0, data.text.shadow and -1 or 0)
+	text:SetShadowOffset(skin.text.shadow and 1 or 0, skin.text.shadow and -1 or 0)
 
 	-- .Bonus
-	toast.Bonus.isHidden = data.bonus.hidden
+	toast.Bonus.isHidden = skin.bonus.hidden
 
 	-- .Dragon
-	toast.Dragon.isHidden = data.dragon.hidden
+	toast.Dragon.isHidden = skin.dragon.hidden
 
 	-- .Icon
-	toast.Icon:SetTexCoord(unpack(data.icon.tex_coords))
+	toast.Icon:SetTexCoord(unpack(skin.icon.tex_coords))
 
 	-- .IconBorder
 	local iconBorder = toast.IconBorder
-	if type(data.icon_border.texture) == "table" then
-		iconBorder:SetColorTexture(unpack(data.icon_border.texture))
+	if type(skin.icon_border.texture) == "table" then
+		iconBorder:SetColorTexture(unpack(skin.icon_border.texture))
 	else
-		iconBorder:SetTexture(data.icon_border.texture)
+		iconBorder:SetTexture(skin.icon_border.texture)
 	end
-	iconBorder:SetVertexColor(unpack(data.icon_border.color))
-	iconBorder:SetSize(data.icon_border.size)
-	iconBorder:SetOffset(data.icon_border.offset)
+	iconBorder:SetVertexColor(unpack(skin.icon_border.color))
+	iconBorder:SetSize(skin.icon_border.size)
+	iconBorder:SetOffset(skin.icon_border.offset)
 
 	-- .IconHL
 	local iconHL = toast.IconHL
-	if not data.icon_highlight.hidden then
-		if type(data.icon_highlight.texture) == "table" then
-			iconHL:SetColorTexture(unpack(data.icon_highlight.texture))
+	if not skin.icon_highlight.hidden then
+		if type(skin.icon_highlight.texture) == "table" then
+			iconHL:SetColorTexture(unpack(skin.icon_highlight.texture))
 		else
-			iconHL:SetTexture(data.icon_highlight.texture)
+			iconHL:SetTexture(skin.icon_highlight.texture)
 		end
-		iconHL:SetTexCoord(unpack(data.icon_highlight.tex_coords))
+		iconHL:SetTexCoord(unpack(skin.icon_highlight.tex_coords))
 		iconHL.isHidden = false
 	else
 		iconHL.isHidden = true
@@ -105,67 +125,69 @@ local function applySkin(toast)
 
 	-- .IconText1
 	local iconText1 = toast.IconText1
-	iconText1:SetFont(fontPath, fontSize, data.icon_text_1.flags)
-	iconText1:SetVertexColor(unpack(data.icon_text_1.color))
+	iconText1:SetFont(fontPath, fontSize, skin.icon_text_1.flags)
+	iconText1:SetVertexColor(unpack(skin.icon_text_1.color))
 	iconText1:SetPoint("BOTTOMRIGHT", 0, 1)
 	iconText1:SetJustifyH("RIGHT")
-	iconText1:SetShadowOffset(data.icon_text_1.shadow and 1 or 0, data.icon_text_1.shadow and -1 or 0)
+	iconText1:SetShadowOffset(skin.icon_text_1.shadow and 1 or 0, skin.icon_text_1.shadow and -1 or 0)
 
 	-- .IconText1
 	local iconText2 = toast.IconText2
-	iconText2:SetFont(fontPath, fontSize, data.icon_text_2.flags)
-	iconText2:SetVertexColor(unpack(data.icon_text_2.color))
+	iconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags)
+	iconText2:SetVertexColor(unpack(skin.icon_text_2.color))
 	iconText2:SetPoint("BOTTOMRIGHT", iconText1, "TOPRIGHT", 0, 2)
 	iconText2:SetJustifyH("RIGHT")
-	iconText2:SetShadowOffset(data.icon_text_2.shadow and 1 or 0, data.icon_text_2.shadow and -1 or 0)
+	iconText2:SetShadowOffset(skin.icon_text_2.shadow and 1 or 0, skin.icon_text_2.shadow and -1 or 0)
 
 	-- .Skull
-	toast.Skull.isHidden = data.skull.hidden
+	toast.Skull.isHidden = skin.skull.hidden
 
 	for i = 1, 5 do
 		local slot = toast["Slot"..i]
 
 		-- .Mask
-		slot.Mask:SetTexture(data.slot.mask, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+		slot.Mask:SetTexture(skin.slot.mask, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
 
 		-- .Border
-		slot.Border:SetTexture(data.slot.texture)
-		slot.Border:SetTexCoord(unpack(data.slot.tex_coords))
+		slot.Border:SetTexture(skin.slot.texture)
+		slot.Border:SetTexCoord(unpack(skin.slot.tex_coords))
 	end
 end
 
 local function resetSkin(toast)
-	local data = skins[C.db.profile.skin] or skins["default"]
+	local skin = skins[C.db.profile.skin] or skins["default"]
 
 	-- .Border
-	toast.Border:SetVertexColor(unpack(data.border.color))
+	toast.Border:SetVertexColor(unpack(skin.border.color))
 
 	-- .BG
-	-- local bg = toast.BG
-	toast.BG:SetDesaturated(data.bg.desaturated)
-	toast.BG:SetTexture(data.bg.default)
+	if type(skin.bg.default) == "table" then
+		toast.BG:SetColorTexture(unpack(skin.bg.default))
+	else
+		toast.BG:SetTexture(skin.bg.default)
+	end
 
 	-- .Title
-	toast.Title:SetVertexColor(unpack(data.title.color))
+	toast.Title:SetVertexColor(unpack(skin.title.color))
 	-- .Text
-	toast.Text:SetVertexColor(unpack(data.text.color))
+	toast.Text:SetVertexColor(unpack(skin.text.color))
 
 	-- .Icon
-	toast.Icon:SetTexCoord(unpack(data.icon.tex_coords))
+	toast.Icon:SetTexCoord(unpack(skin.icon.tex_coords))
 
 	-- .IconBorder
-	toast.IconBorder:SetVertexColor(unpack(data.icon_border.color))
+	toast.IconBorder:SetVertexColor(unpack(skin.icon_border.color))
 
 	-- .IconHL
 	if not toast.IconHL.isHidden then
-		toast.IconHL:SetTexCoord(unpack(data.icon_highlight.tex_coords))
+		toast.IconHL:SetTexCoord(unpack(skin.icon_highlight.tex_coords))
 	end
 
 	-- .IconText1
-	toast.IconText1:SetVertexColor(unpack(data.icon_text_1.color))
+	toast.IconText1:SetVertexColor(unpack(skin.icon_text_1.color))
 
 	-- .IconText1
-	toast.IconText2:SetVertexColor(unpack(data.icon_text_2.color))
+	toast.IconText2:SetVertexColor(unpack(skin.icon_text_2.color))
 end
 
 function E.RegisterSkin(_, id, data)

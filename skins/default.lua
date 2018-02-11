@@ -8,10 +8,10 @@ local _G = getfenv(0)
 E:RegisterSkin("default", {
 	name = "Default",
 	border = {
-		size = 16,
-		offset = -6,
-		texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-border",
 		color = {1, 1, 1},
+		offset = -6,
+		size = 16,
+		texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-border",
 	},
 	title = {
 		color = {1, 0.82, 0},
@@ -33,15 +33,15 @@ E:RegisterSkin("default", {
 		tex_coords = {4 / 64, 60 / 64, 4 / 64, 60 / 64},
 	},
 	icon_border = {
-		size = 16,
-		offset = -4,
-		texture = "Interface\\AddOns\\ls_Toasts\\assets\\icon-border",
 		color = {1, 1, 1},
+		offset = -4,
+		size = 16,
+		texture = "Interface\\AddOns\\ls_Toasts\\assets\\icon-border",
 	},
 	icon_highlight = {
-		texture = "Interface\\ContainerFrame\\UI-Icon-QuestBorder",
-		tex_coords = {4 / 64, 60 / 64, 4 / 64, 60 / 64},
 		hidden = false,
+		tex_coords = {4 / 64, 60 / 64, 4 / 64, 60 / 64},
+		texture = "Interface\\ContainerFrame\\UI-Icon-QuestBorder",
 	},
 	icon_text_1 = {
 		color = {1, 1, 1},
@@ -58,11 +58,10 @@ E:RegisterSkin("default", {
 	},
 	slot = {
 		mask = "Interface\\CHARACTERFRAME\\TempPortraitAlphaMaskSmall",
-		texture = "Interface\\AddOns\\ls_Toasts\\assets\\slot-border",
 		tex_coords = {28 / 128, 100 / 128, 28 / 128, 100 / 128},
+		texture = "Interface\\AddOns\\ls_Toasts\\assets\\slot-border",
 	},
 	bg = {
-		desaturated = false,
 		alliance = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-alliance",
 		archaeology = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-archaeology",
 		collection = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-collection",
