@@ -347,7 +347,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						order = 21,
 						type = "group",
 						guiInline = true,
-						name = L["FONT"],
+						name = L["FONTS"],
 						args = {
 							name = {
 								order = 1,
