@@ -8,7 +8,6 @@ local type = _G.type
 local unpack = _G.unpack
 
 -- Mine
-local LSM = LibStub("LibSharedMedia-3.0")
 local skins = {}
 local skinList = {}
 
@@ -30,27 +29,64 @@ local function mergeTable(src, dest)
 	return dest
 end
 
-local function updateFonts(toast)
-	local skin = skins[C.db.profile.skin] or skins["default"]
-	local fontPath = LSM:Fetch("font", C.db.profile.font.name)
-	local fontSize = C.db.profile.font.size
+function E.RegisterSkin(_, id, data)
+	if type(id) ~= "string" then
+		error("invalid id", 2)
+		return
+	elseif skins[id] then
+		error("id taken", 2)
+		return
+	elseif type(data) ~= "table" then
+		error("invalid data", 2)
+		return
+	elseif type(data.name) ~= "string" then
+		error("invalid name", 2)
+		return
+	end
 
-	-- .Title
-	toast.Title:SetFont(fontPath, fontSize, skin.title.flags)
+	local template = data.template or "default"
+	if id ~= "default" then
+		if skins[template] then
+			mergeTable(skins[template], data)
+		else
+			error("invalid template ref", 2)
+			return
+		end
+	end
 
-	-- .Text
-	toast.Text:SetFont(fontPath, fontSize, skin.text.flags)
-
-	-- .IconText1
-	toast.IconText1:SetFont(fontPath, fontSize, skin.icon_text_1.flags)
-
-	-- .IconText2
-	toast.IconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags)
+	skins[id] = data
+	skinList[id] = data.name
 end
 
-local function applySkin(toast)
+function E.GetSkinList()
+	return skinList
+end
+
+function E.GetSkin()
+	return skins[C.db.profile.skin] or skins["default"]
+end
+
+function E.SetSkin(_, id)
+	if type(id) ~= "string" then
+		error("invalid id", 2)
+		return
+	elseif not skins[id] then
+		error("no skin", 2)
+		return
+	end
+
+	C.db.profile.skin = id
+
+	for _, toast in next, E:GetToasts() do
+		E:ApplySkin(toast)
+	end
+
+	return true
+end
+
+function E.ApplySkin(_, toast)
 	local skin = skins[C.db.profile.skin] or skins["default"]
-	local fontPath = LSM:Fetch("font", C.db.profile.font.name)
+	local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
 
 	-- .Border
@@ -154,7 +190,7 @@ local function applySkin(toast)
 	end
 end
 
-local function resetSkin(toast)
+function E.ResetSkin(_, toast)
 	local skin = skins[C.db.profile.skin] or skins["default"]
 
 	-- .Border
@@ -188,65 +224,4 @@ local function resetSkin(toast)
 
 	-- .IconText1
 	toast.IconText2:SetVertexColor(unpack(skin.icon_text_2.color))
-end
-
-function E.RegisterSkin(_, id, data)
-	if type(id) ~= "string" then
-		error("invalid id", 2)
-		return
-	elseif skins[id] then
-		error("id taken", 2)
-		return
-	elseif type(data) ~= "table" then
-		error("invalid data", 2)
-		return
-	elseif type(data.name) ~= "string" then
-		error("invalid name", 2)
-		return
-	end
-
-	local template = data.template or "default"
-	if id ~= "default" then
-		if skins[template] then
-			mergeTable(skins[template], data)
-		else
-			error("ivalid template ref", 2)
-			return
-		end
-	end
-
-	skins[id] = data
-	skinList[id] = data.name
-end
-
-function E.GetSkin()
-	return skins[C.db.profile.skin] or skins["default"]
-end
-
-function E.SetSkin(_, id)
-	if type(id) ~= "string" then
-		error("invalid id", 2)
-		return
-	elseif not skins[id] then
-		error("no skin", 2)
-		return
-	end
-
-	C.db.profile.skin = id
-
-	-- reskin already created toasts here
-
-	return true
-end
-
-function E.GetSkinList()
-	return skinList
-end
-
-function E.ApplySkin(_, toast)
-	applySkin(toast)
-end
-
-function E.ResetSkin(_, toast)
-	resetSkin(toast)
 end

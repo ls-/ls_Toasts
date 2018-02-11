@@ -223,7 +223,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 							value = STRATAS[value]
 							C.db.profile.strata = value
 
-							E:UpdateStrata(value)
+							E:UpdateStrata()
 						end,
 					},
 					skin = {
@@ -266,7 +266,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						set = function(_, value)
 							C.db.profile.scale = value
 
-							E:UpdateScale(value)
+							E:UpdateScale()
 						end,
 					},
 					delay = {
@@ -342,6 +342,43 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 								end
 							},
 						}
+					},
+					font = {
+						order = 21,
+						type = "group",
+						guiInline = true,
+						name = L["FONT"],
+						args = {
+							name = {
+								order = 1,
+								type = "select",
+								name = L["NAME"],
+								dialogControl = "LSM30_Font",
+								values = AceGUIWidgetLSMlists.font,
+								get = function()
+									return C.db.profile.font.name or LibStub("LibSharedMedia-3.0"):GetDefault("font")
+								end,
+								set = function(_, value)
+									C.db.profile.font.name = value
+
+									E:UpdateFont()
+								end
+							},
+							size = {
+								order = 2,
+								type = "range",
+								name = L["SIZE"],
+								min = 10, max = 20, step = 1,
+								get = function()
+									return C.db.profile.font.size
+								end,
+								set = function(_, value)
+									C.db.profile.font.size = value
+
+									E:UpdateFont()
+								end,
+							},
+						},
 					},
 				},
 			},

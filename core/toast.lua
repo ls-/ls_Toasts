@@ -17,6 +17,7 @@ local Lerp = _G.Lerp
 local activeToasts = {}
 local createdToasts = {}
 local queuedToasts = {}
+local toasts = {}
 
 local ARROWS_CFG = {
 	[1] = {delay = 0,	x = 0},
@@ -718,6 +719,8 @@ local function ConstructToast()
 
 	E:ApplySkin(toast)
 
+	t_insert(toasts, toast)
+
 	return toast
 end
 
@@ -786,46 +789,52 @@ function E.GetCreatedToasts()
 	return createdToasts
 end
 
-function E.UpdateScale(_, value)
-	E:GetAnchorFrame():SetSize(224 * value, 48 * value)
+function E.GetToasts()
+	return toasts
+end
 
-	for _, toast in next, queuedToasts do
-		toast:SetScale(value)
-	end
+function E.UpdateScale()
+	local scale = C.db.profile.scale
 
-	for _, toast in next, activeToasts do
-		toast:SetScale(value)
-	end
+	E:GetAnchorFrame():SetSize(224 * scale, 48 * scale)
 
-	for _, toast in next, createdToasts do
-		toast:SetScale(value)
+	for _, toast in next, toasts do
+		toast:SetScale(scale)
 	end
 end
 
-function E.UpdateFadeOutDelay(_, value)
-	for _, toast in next, queuedToasts do
-		toast.AnimOut.Anim:SetStartDelay(value)
-	end
+function E.UpdateFadeOutDelay()
+	local delay = C.db.profile.fadeout_delay
 
-	for _, toast in next, activeToasts do
-		toast.AnimOut.Anim:SetStartDelay(value)
-	end
-
-	for _, toast in next, createdToasts do
-		toast.AnimOut.Anim:SetStartDelay(value)
+	for _, toast in next, toasts do
+		toast.AnimOut.Anim:SetStartDelay(delay)
 	end
 end
 
-function E.UpdateStrata(_, value)
-	for _, toast in next, queuedToasts do
-		toast:SetFrameStrata(value)
-	end
+function E.UpdateStrata()
+	local strata = C.db.profile.strata
 
-	for _, toast in next, activeToasts do
-		toast:SetFrameStrata(value)
+	for _, toast in next, toasts do
+		toast:SetFrameStrata(strata)
 	end
+end
 
-	for _, toast in next, createdToasts do
-		toast:SetFrameStrata(value)
+function E.UpdateFont()
+	local skin = E:GetSkin()
+	local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
+	local fontSize = C.db.profile.font.size
+
+	for _, toast in next, toasts do
+		-- .Title
+		toast.Title:SetFont(fontPath, fontSize, skin.title.flags)
+
+		-- .Text
+		toast.Text:SetFont(fontPath, fontSize, skin.text.flags)
+
+		-- .IconText1
+		toast.IconText1:SetFont(fontPath, fontSize, skin.icon_text_1.flags)
+
+		-- .IconText2
+		toast.IconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags)
 	end
 end
