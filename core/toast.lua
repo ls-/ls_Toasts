@@ -478,7 +478,7 @@ local function ConstructToast()
 	dragon:SetSize(83, 83)
 	dragon:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Gold-Dragon")
 	dragon:SetDesaturated(true)
-	dragon:SetVertexColor(1, 0.6, 0)
+	dragon:SetVertexColor(1, 0.625, 0)
 	dragon:Hide()
 	toast.Dragon = dragon
 
