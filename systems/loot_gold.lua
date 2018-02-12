@@ -37,8 +37,11 @@ local function Toast_SetUp(event, quantity)
 			toast._data = {
 				event = event,
 				count = quantity,
-				sound_file = 865, -- SOUNDKIT.IG_BACKPACK_COIN_OK
 			}
+
+			if C.db.profile.types.loot_gold.sfx then
+				toast._data.sound_file = 865 -- SOUNDKIT.IG_BACKPACK_COIN_OK
+			end
 
 			toast:Spawn(C.db.profile.types.loot_gold.dnd)
 		else
@@ -88,17 +91,21 @@ end
 E:RegisterOptions("loot_gold", {
 	enabled = true,
 	dnd = false,
+	sfx = true,
 	threshold = 1,
 }, {
 	name = L["TYPE_LOOT_GOLD"],
+	get = function(info)
+		return C.db.profile.types.loot_gold[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.loot_gold[info[#info]] = value
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.loot_gold.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.loot_gold.enabled = value
 
@@ -114,15 +121,14 @@ E:RegisterOptions("loot_gold", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.loot_gold.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.loot_gold.dnd = value
-			end
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		threshold = {
-			order = 3,
+			order = 4,
 			type = "input",
 			name = L["COPPER_THRESHOLD"],
 			desc = L["COPPER_THRESHOLD_DESC"],

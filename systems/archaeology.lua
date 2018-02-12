@@ -32,8 +32,11 @@ local function Toast_SetUp(event, researchFieldID)
 
 	toast._data = {
 		event = event,
-		sound_file = 38326, -- SOUNDKIT.UI_DIG_SITE_COMPLETION_TOAST
 	}
+
+	if C.db.profile.types.archaeology.sfx then
+		toast._data.sound_file = 38326 -- SOUNDKIT.UI_DIG_SITE_COMPLETION_TOAST
+	end
 
 	toast:Spawn(C.db.profile.types.archaeology.dnd)
 end
@@ -77,16 +80,20 @@ end
 E:RegisterOptions("archaeology", {
 	enabled = true,
 	dnd = false,
+	sfx = true,
 }, {
 	name = L["TYPE_ARCHAEOLOGY"],
+	get = function(info)
+		return C.db.profile.types.archaeology[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.archaeology[info[#info]] = value
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.archaeology.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.archaeology.enabled = value
 
@@ -102,12 +109,11 @@ E:RegisterOptions("archaeology", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.archaeology.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.archaeology.dnd = value
-			end
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		test = {
 			type = "execute",

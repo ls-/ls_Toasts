@@ -178,9 +178,12 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 		toast._data = {
 			event = event,
 			quest_id = questID,
-			sound_file = soundFile,
 			used_slots = usedSlots,
 		}
+
+		if C.db.profile.types.world.sfx then
+			toast._data.sound_file = soundFile
+		end
 
 		toast:Spawn(C.db.profile.types.world.dnd)
 	else
@@ -308,16 +311,20 @@ end
 E:RegisterOptions("world", {
 	enabled = true,
 	dnd = false,
+	sfx = true,
 }, {
 	name = L["TYPE_WORLD_QUEST"],
+	get = function(info)
+		return C.db.profile.types.world[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.world[info[#info]] = value
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.world.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.world.enabled = value
 
@@ -333,12 +340,11 @@ E:RegisterOptions("world", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.world.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.world.dnd = value
-			end
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		test = {
 			type = "execute",

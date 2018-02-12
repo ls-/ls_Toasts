@@ -167,9 +167,12 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 						item_id = itemID,
 						link = sanitizedLink,
 						show_arrows = isUpgraded,
-						sound_file = soundFile,
 						tooltip_link = originalLink,
 					}
+
+					if C.db.profile.types.loot_special.sfx then
+						toast._data.sound_file = soundFile
+					end
 
 					toast:HookScript("OnClick", Toast_OnClick)
 					toast:HookScript("OnEnter", Toast_OnEnter)
@@ -228,8 +231,11 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 				count = quantity,
 				event = event,
 				is_honor = true,
-				sound_file = 31578, -- SOUNDKIT.UI_EPICLOOT_TOAST
 			}
+
+			if C.db.profile.types.loot_special.sfx then
+				toast._data.sound_file = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			end
 
 			toast:Spawn(C.db.profile.types.loot_special.dnd)
 		else
@@ -385,10 +391,17 @@ end
 E:RegisterOptions("loot_special", {
 	enabled = true,
 	dnd = false,
-	threshold = 1,
+	sfx = true,
 	ilvl = true,
+	threshold = 1,
 }, {
 	name = L["TYPE_LOOT_SPECIAL"],
+	get = function(info)
+		return C.db.profile.types.loot_special[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.loot_special[info[#info]] = value
+	end,
 	args = {
 		desc = {
 			order = 1,
@@ -399,9 +412,6 @@ E:RegisterOptions("loot_special", {
 			order = 2,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.loot_special.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.loot_special.enabled = value
 
@@ -417,24 +427,17 @@ E:RegisterOptions("loot_special", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.loot_special.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.loot_special.dnd = value
-			end
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		ilvl = {
-			order = 4,
+			order = 5,
 			type = "toggle",
 			name = L["SHOW_ILVL"],
 			desc = L["SHOW_ILVL_DESC"],
-			get = function()
-				return C.db.profile.types.loot_special.ilvl
-			end,
-			set = function(_, value)
-				C.db.profile.types.loot_special.ilvl = value
-			end
 		},
 		threshold = {
 			order = 5,
@@ -447,12 +450,6 @@ E:RegisterOptions("loot_special", {
 				[4] = ITEM_QUALITY_COLORS[4].hex..ITEM_QUALITY4_DESC.."|r",
 				[5] = ITEM_QUALITY_COLORS[5].hex..ITEM_QUALITY5_DESC.."|r",
 			},
-			get = function()
-				return C.db.profile.types.loot_special.threshold
-			end,
-			set = function(_, value)
-				C.db.profile.types.loot_special.threshold = value
-			end,
 		},
 		test = {
 			type = "execute",

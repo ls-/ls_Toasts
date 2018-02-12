@@ -125,9 +125,12 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 
 	toast._data = {
 		event = event,
-		sound_file = soundFile,
 		used_slots = usedSlots,
 	}
+
+	if C.db.profile.types.instance.sfx then
+		toast._data.sound_file = soundFile
+	end
 
 	toast:Spawn(C.db.profile.types.instance.dnd)
 end
@@ -177,16 +180,20 @@ end
 E:RegisterOptions("instance", {
 	enabled = true,
 	dnd = false,
+	sfx = true,
 }, {
 	name = L["TYPE_DUNGEON"],
+	get = function(info)
+		return C.db.profile.types.instance[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.instance[info[#info]] = value
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.instance.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.instance.enabled = value
 
@@ -202,12 +209,11 @@ E:RegisterOptions("instance", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.instance.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.instance.dnd = value
-			end
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		test = {
 			type = "execute",

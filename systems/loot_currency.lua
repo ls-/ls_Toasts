@@ -44,9 +44,12 @@ local function Toast_SetUp(event, link, quantity)
 			event = event,
 			count = quantity,
 			link = sanitizedLink,
-			sound_file = 31578, -- SOUNDKIT.UI_EPICLOOT_TOAST
 			tooltip_link = originalLink,
 		}
+
+		if C.db.profile.types.loot_currency.sfx then
+			toast._data.sound_file = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+		end
 
 		toast:HookScript("OnEnter", Toast_OnEnter)
 		toast:Spawn(C.db.profile.types.loot_currency.dnd)
@@ -110,16 +113,20 @@ end
 E:RegisterOptions("loot_currency", {
 	enabled = true,
 	dnd = false,
+	sfx = true,
 }, {
 	name = L["TYPE_LOOT_CURRENCY"],
+	get = function(info)
+		return C.db.profile.types.loot_currency[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.loot_currency[info[#info]] = value
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.loot_currency.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.loot_currency.enabled = value
 
@@ -135,12 +142,11 @@ E:RegisterOptions("loot_currency", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.loot_currency.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.loot_currency.dnd = value
-			end
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		test = {
 			type = "execute",

@@ -102,8 +102,11 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 			is_mount = isMount,
 			is_pet = isPet,
 			is_toy = isToy,
-			sound_file = 31578, -- SOUNDKIT.UI_EPICLOOT_TOAST
 		}
+
+		if C.db.profile.types.collection.sfx then
+			toast._data.sound_file = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+		end
 
 		if C.db.profile.types.collection.left_click then
 			toast:HookScript("OnClick", Toast_OnClick)
@@ -172,11 +175,18 @@ local function Test()
 end
 
 E:RegisterOptions("collection", {
-	left_click = false,
 	enabled = true,
 	dnd = false,
+	sfx = true,
+	left_click = false,
 }, {
 	name = L["TYPE_COLLECTION"],
+	get = function(info)
+		return C.db.profile.types.collection[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.collection[info[#info]] = value
+	end,
 	args = {
 		desc = {
 			order = 1,
@@ -187,9 +197,6 @@ E:RegisterOptions("collection", {
 			order = 2,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.collection.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.collection.enabled = value
 
@@ -205,25 +212,18 @@ E:RegisterOptions("collection", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.collection.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.collection.dnd = value
-			end
+		},
+		sfx = {
+			order = 4,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		left_click = {
-			order = 4,
+			order = 5,
 			type = "toggle",
 			name = L["HANDLE_LEFT_CLICK"],
 			desc = L["COLLECTIONS_TAINT_WARNING"],
 			image = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew",
-			get = function()
-				return C.db.profile.types.collection.left_click
-			end,
-			set = function(_, value)
-				C.db.profile.types.collection.left_click = value
-			end
 		},
 		test = {
 			type = "execute",

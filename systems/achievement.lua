@@ -93,14 +93,17 @@ E:RegisterOptions("achievement", {
 	dnd = false,
 }, {
 	name = L["TYPE_ACHIEVEMENT"],
+	get = function(info)
+		return C.db.profile.types.achievement[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.achievement[info[#info]] = value
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.achievement.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.achievement.enabled = value
 
@@ -116,12 +119,6 @@ E:RegisterOptions("achievement", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.achievement.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.achievement.dnd = value
-			end
 		},
 		test = {
 			type = "execute",

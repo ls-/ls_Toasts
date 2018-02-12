@@ -15,9 +15,6 @@ D.profile = {
 		-- name = nil,
 		size = 12,
 	},
-	sfx = {
-		enabled = true,
-	},
 	colors = {
 		name = false,
 		border = true,

@@ -234,10 +234,8 @@ local function MODIFIER_STATE_CHANGED()
 end
 
 local function toast_OnShow(self)
-	local soundFile = self._data.sound_file
-
-	if soundFile and C.db.profile.sfx.enabled then
-		PlaySound(soundFile)
+	if self._data.sound_file then
+		PlaySound(self._data.sound_file)
 	end
 
 	self.AnimIn:Play()

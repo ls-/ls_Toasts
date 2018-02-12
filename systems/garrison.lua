@@ -57,8 +57,12 @@ local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 	toast._data = {
 		event = event,
 		mission_id = missionID,
-		sound_file = 44294, -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
 	}
+
+	if (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx)
+	or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.sfx) then
+		toast._data.sound_file = 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
+	end
 
 	toast:Spawn((garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
 end
@@ -180,8 +184,12 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 		event = event,
 		follower_id = followerID,
 		show_arrows = isUpgraded,
-		sound_file = 44296, -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
 	}
+
+	if (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx)
+	or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.sfx) then
+		toast._data.sound_file = 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
+	end
 
 	toast:HookScript("OnEnter", FollowerToast_OnEnter)
 	toast:Spawn((garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
@@ -210,8 +218,11 @@ local function BuildingToast_SetUp(event, buildingName)
 
 	toast._data = {
 		event = event,
-		sound_file = 44295, -- SOUNDKIT.UI_GARRISON_TOAST_BUILDING_COMPLETE
 	}
+
+	if C.db.profile.types.garrison_6_0.sfx then
+		toast._data.sound_file = 44295 -- SOUNDKIT.UI_GARRISON_TOAST_BUILDING_COMPLETE
+	end
 
 	toast:Spawn(C.db.profile.types.garrison_6_0.dnd)
 end
@@ -233,9 +244,12 @@ local function TalentToast_SetUp(event, talentID)
 
 	toast._data = {
 		event = event,
-		sound_file = 73280, -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
 		talend_id = talentID,
 	}
+
+	if C.db.profile.types.garrison_7_0.sfx then
+		toast._data.sound_file = 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
+	end
 
 	toast:Spawn(C.db.profile.types.garrison_7_0.dnd)
 end
@@ -356,16 +370,20 @@ end
 E:RegisterOptions("garrison_6_0", {
 	enabled = false,
 	dnd = true,
+	sfx = true,
 }, {
 	name = L["TYPE_GARRISON"],
+	get = function(info)
+		return C.db.profile.types.garrison_6_0[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.garrison_6_0[info[#info]] = value
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.garrison_6_0.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.garrison_6_0.enabled = value
 
@@ -381,12 +399,11 @@ E:RegisterOptions("garrison_6_0", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.garrison_6_0.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.garrison_6_0.dnd = value
-			end
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		test = {
 			type = "execute",
@@ -401,16 +418,20 @@ E:RegisterOptions("garrison_6_0", {
 E:RegisterOptions("garrison_7_0", {
 	enabled = true,
 	dnd = true,
+	sfx = true,
 }, {
 	name = L["TYPE_CLASS_HALL"],
+	get = function(info)
+		return C.db.profile.types.garrison_7_0[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.garrison_7_0[info[#info]] = value
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.garrison_7_0.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.garrison_7_0.enabled = value
 
@@ -426,12 +447,11 @@ E:RegisterOptions("garrison_7_0", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.garrison_7_0.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.garrison_7_0.dnd = value
-			end
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		test = {
 			type = "execute",

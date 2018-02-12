@@ -69,9 +69,12 @@ local function Toast_SetUp(event, recipeID)
 			toast._data = {
 				event = event,
 				recipe_id = recipeID,
-				sound_file = 73919, -- SOUNDKIT.UI_PROFESSIONS_NEW_RECIPE_LEARNED_TOAST
 				tradeskill_id = tradeSkillID,
 			}
+
+			if C.db.profile.types.recipe.sfx then
+				toast._data.sound_file = 73919 -- SOUNDKIT.UI_PROFESSIONS_NEW_RECIPE_LEARNED_TOAST
+			end
 
 			toast:HookScript("OnClick", Toast_OnClick)
 			toast:HookScript("OnEnter", Toast_OnEnter)
@@ -105,16 +108,20 @@ end
 E:RegisterOptions("recipe", {
 	enabled = true,
 	dnd = false,
+	sfx = true,
 }, {
 	name = L["TYPE_RECIPE"],
+	get = function(info)
+		return C.db.profile.types.recipe[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.recipe[info[#info]] = value
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
-			get = function()
-				return C.db.profile.types.recipe.enabled
-			end,
 			set = function(_, value)
 				C.db.profile.types.recipe.enabled = value
 
@@ -130,12 +137,11 @@ E:RegisterOptions("recipe", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
-			get = function()
-				return C.db.profile.types.recipe.dnd
-			end,
-			set = function(_, value)
-				C.db.profile.types.recipe.dnd = value
-			end
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
 		},
 		test = {
 			type = "execute",

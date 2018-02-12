@@ -200,19 +200,8 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				type = "group",
 				name = L["GENERAL"],
 				args = {
-					sfx = {
-						order = 1,
-						type = "toggle",
-						name = L["ENABLE_SOUND"],
-						get = function()
-							return C.db.profile.sfx.enabled
-						end,
-						set = function(_, value)
-							C.db.profile.sfx.enabled = value
-						end
-					},
 					strata = {
-						order = 2,
+						order = 1,
 						type = "select",
 						name = L["STRATA"],
 						values = STRATAS,
@@ -227,7 +216,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						end,
 					},
 					skin = {
-						order = 3,
+						order = 2,
 						type = "select",
 						name = L["SKIN"],
 						values = E.GetSkinList,
