@@ -4,6 +4,8 @@ local E, C, L = addonTable.E, addonTable.C, addonTable.L
 -- Lua
 local _G = getfenv(0)
 local m_floor = _G.math.floor
+local next = _G.next
+local s_upper = _G.string.upper
 
 -- Mine
 local function calculatePosition(self)
@@ -42,11 +44,11 @@ anchorFrame:SetClampRectInsets(-26, 14, 14, -14)
 anchorFrame:SetToplevel(true)
 anchorFrame:RegisterForDrag("LeftButton")
 anchorFrame:SetFrameStrata("DIALOG")
+anchorFrame:Hide()
 
 local texture = anchorFrame:CreateTexture(nil, "BACKGROUND")
 texture:SetColorTexture(0.1, 0.1, 0.1, 0.9)
 texture:SetAllPoints()
-texture:Hide()
 anchorFrame.BG = texture
 
 local text = anchorFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
@@ -54,42 +56,59 @@ text:SetAllPoints()
 text:SetJustifyH("CENTER")
 text:SetJustifyV("MIDDLE")
 text:SetText(L["ANCHOR"])
-text:Hide()
 anchorFrame.Text = text
 
-anchorFrame.Enable = function(self)
-	self:EnableMouse(true)
-	self.BG:Show()
-	self.Text:Show()
-end
-
-anchorFrame.Disable = function(self)
-	self:EnableMouse(false)
-	self.BG:Hide()
-	self.Text:Hide()
-end
-
-anchorFrame.Toggle = function(self)
-	if self:IsMouseEnabled() then
-		self:Disable()
+function anchorFrame:Toggle()
+	if self:IsShown() then
+		self:Hide()
 	else
-		self:Enable()
+		self:Show()
 	end
 end
 
-anchorFrame.Refresh = function(self)
+function anchorFrame:Refresh()
 	self:SetMovable(true)
 	self:ClearAllPoints()
 	self:SetSize(224 * C.db.profile.scale, 48 * C.db.profile.scale)
 	self:SetPoint(C.db.profile.point.p, "UIParent", C.db.profile.point.rP, C.db.profile.point.x, C.db.profile.point.y)
 end
 
-anchorFrame.StartDrag = function(self)
-	self:StartMoving()
+local function onEnter()
+	local p, _, x, y = calculatePosition(anchorFrame)
+
+	GameTooltip:SetOwner(anchorFrame, "ANCHOR_CURSOR")
+	GameTooltip:AddLine(L["COORDS"])
+	GameTooltip:AddLine("|cffffd100P:|r "..p..", |cffffd100X:|r "..x..", |cffffd100Y:|r "..y, 1, 1, 1)
+	GameTooltip:Show()
 end
 
-anchorFrame.StopDrag = function(self)
+local function onLeave()
+	GameTooltip:Hide()
+end
+
+local function onUpdate(self, elapsed)
+	self.elapsed = (self.elapsed or 0) + elapsed
+
+	if self.elapsed > 0.1 then
+		if GameTooltip:IsOwned(self) then
+			onEnter(self)
+		end
+
+		self.elapsed = 0
+	end
+end
+
+anchorFrame:SetScript("OnEnter", onEnter)
+anchorFrame:SetScript("OnLeave", onLeave)
+
+anchorFrame:SetScript("OnDragStart", function(self)
+	self:StartMoving()
+	self:SetScript("OnUpdate", onUpdate)
+end)
+
+anchorFrame:SetScript("OnDragStop", function(self)
 	self:StopMovingOrSizing()
+	self:SetScript("OnUpdate", nil)
 
 	local p, rP, x, y = calculatePosition(self)
 
@@ -97,10 +116,64 @@ anchorFrame.StopDrag = function(self)
 	self:SetPoint(p, "UIParent", rP, x, y)
 
 	C.db.profile.point = {p = p, rP = rP, x = x, y = y}
+end)
+
+local buttons = {
+	Up = {
+		point1 = {"TOPLEFT", "TOPLEFT", 12, 0},
+		point2 = {"BOTTOMRIGHT", "TOPRIGHT", -12, -12},
+		offset_x = 0,
+		offset_y = 1,
+	},
+	Down = {
+		point1 = {"BOTTOMLEFT", "BOTTOMLEFT", 12, 0},
+		point2 = {"TOPRIGHT", "BOTTOMRIGHT", -12, 12},
+		offset_x = 0,
+		offset_y = -1,
+	},
+	Left = {
+		point1 = {"TOPLEFT", "TOPLEFT", 0, -12},
+		point2 = {"BOTTOMRIGHT", "BOTTOMLEFT", 12, 12},
+		offset_x = -1,
+		offset_y = 0,
+	},
+	Right = {
+		point1 = {"TOPRIGHT", "TOPRIGHT", 0, -12},
+		point2 = {"BOTTOMLEFT", "BOTTOMRIGHT", -12, 12},
+		offset_x = 1,
+		offset_y = 0,
+	},
+}
+
+local function button_OnClick(self)
+	local p, rP, x, y = calculatePosition(anchorFrame)
+
+	anchorFrame:ClearAllPoints()
+	anchorFrame:SetPoint(p, "UIParent", rP, x + self.offset_x, y + self.offset_y)
+
+	p, rP, x, y = calculatePosition(anchorFrame)
+	C.db.profile.point = {p = p, rP = rP, x = x, y = y}
+
+	onEnter()
 end
 
-anchorFrame:SetScript("OnDragStart", anchorFrame.StartDrag)
-anchorFrame:SetScript("OnDragStop", anchorFrame.StopDrag)
+for dir, data in next, buttons do
+	local button = CreateFrame("Button", "$parentButton"..dir, anchorFrame, "UIPanelSquareButton")
+	button:GetHighlightTexture():SetColorTexture(0.4, 0.4, 0.4, 0.8)
+	button:GetNormalTexture():SetColorTexture(0.2, 0.2, 0.2, 0.8)
+	button:GetPushedTexture():SetColorTexture(0.1, 0.1, 0.1, 0.8)
+	button:SetSize(0, 0)
+	button:SetPoint(data.point1[1], anchorFrame, data.point1[2], data.point1[3], data.point1[4])
+	button:SetPoint(data.point2[1], anchorFrame, data.point2[2], data.point2[3], data.point2[4])
+	button:SetScript("OnClick", button_OnClick)
+	button:SetScript("OnEnter", onEnter)
+	button:SetScript("OnLeave", onLeave)
+
+	button.offset_x = data.offset_x
+	button.offset_y = data.offset_y
+
+	SquareButton_SetIcon(button, s_upper(dir))
+end
 
 function E.GetAnchorFrame()
 	return anchorFrame
