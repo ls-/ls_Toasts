@@ -3,6 +3,7 @@ local E, C = addonTable.E, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local error = _G.error
 local next = _G.next
 local type = _G.type
 local unpack = _G.unpack
@@ -31,16 +32,16 @@ end
 
 function E.RegisterSkin(_, id, data)
 	if type(id) ~= "string" then
-		error("invalid id", 2)
+		error("invalid skin id", 2)
 		return
 	elseif skins[id] then
-		error("id taken", 2)
+		error("skin id taken", 2)
 		return
 	elseif type(data) ~= "table" then
-		error("invalid data", 2)
+		error("invalid skin data", 2)
 		return
 	elseif type(data.name) ~= "string" then
-		error("invalid name", 2)
+		error("invalid skin name", 2)
 		return
 	end
 
@@ -49,7 +50,7 @@ function E.RegisterSkin(_, id, data)
 		if skins[template] then
 			mergeTable(skins[template], data)
 		else
-			error("invalid template ref", 2)
+			error("invalid skin template ref", 2)
 			return
 		end
 	end
