@@ -67,7 +67,7 @@ local function GARRISON_MISSION_FINISHED(followerTypeID, missionID)
 	local garrisonType = GetGarrisonTypeByFollowerType(followerTypeID)
 
 	if (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
-		or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
+	or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
 		return
 	end
 
@@ -87,7 +87,7 @@ local function GARRISON_RANDOM_MISSION_ADDED(followerTypeID, missionID)
 	local garrisonType = GetGarrisonTypeByFollowerType(followerTypeID)
 
 	if (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
-		or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
+	or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
 		return
 	end
 
@@ -191,7 +191,7 @@ local function GARRISON_FOLLOWER_ADDED(followerID, name, _, level, quality, isUp
 	local garrisonType = GetGarrisonTypeByFollowerType(followerTypeID)
 
 	if (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
-		or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
+	or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
 		return
 	end
 
