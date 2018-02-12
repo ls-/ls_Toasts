@@ -3,6 +3,7 @@ local E, C = addonTable.E, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local error = _G.error
 local next = _G.next
 local type = _G.type
 
@@ -10,29 +11,34 @@ local type = _G.type
 local systems = {}
 local function dummy() end
 
-function E.RegisterSystem(_, name, enableFunc, disableFunc, testFunc)
-	if not name then
-		return false, "no_name"
-	elseif systems[name] then
-		return false, "name_taken"
-	elseif not enableFunc then
-		return false, "no_enabler"
-	elseif not disableFunc then
-		return false, "no_disabler"
+function E.RegisterSystem(_, id, enableFunc, disableFunc, testFunc)
+	if type(id) ~= "string" then
+		error("invalid system id", 2)
+		return
+	elseif systems[id] then
+		error("system id taken", 2)
+		return
+	elseif type(enableFunc) ~= "function" then
+		error("invalid enable func", 2)
+		return
+	elseif type(disableFunc) ~= "function" then
+		error("invalid disable func", 2)
+		return
+	elseif type(testFunc) ~= "function" and type(testFunc) ~= "nil" then
+		error("invalid test func", 2)
+		return
 	end
 
-	systems[name] = {
+	systems[id] = {
 		Enable = enableFunc,
 		Disable = disableFunc,
 		Test = testFunc or dummy,
 		isEnabled = false,
 	}
-
-	return true
 end
 
-function E.EnableSystem(_, name)
-	local system = systems[name]
+function E.EnableSystem(_, id)
+	local system = systems[id]
 
 	if system and not system.isEnabled then
 		system:Enable()
@@ -41,8 +47,8 @@ function E.EnableSystem(_, name)
 	end
 end
 
-function E.DisableSystem(_, name)
-	local system = systems[name]
+function E.DisableSystem(_, id)
+	local system = systems[id]
 
 	if system and system.isEnabled then
 		system:Disable()
@@ -51,9 +57,9 @@ function E.DisableSystem(_, name)
 	end
 end
 
-function E.TestSystem(_, name)
-	if systems[name] then
-		systems[name]:Test()
+function E.TestSystem(_, id)
+	if systems[id] then
+		systems[id]:Test()
 	end
 end
 
@@ -105,33 +111,39 @@ local function updateTable(src, dest)
 	return dest
 end
 
-function E.RegisterOptions(_, name, dbTable, optionsTable)
-	if not name then
-		return false, "no_name"
-	elseif db[name] then
-		return false, "name_taken"
-	elseif not dbTable then
-		return false, "no_cfg_table"
+function E.RegisterOptions(_, id, dbTable, optionsTable)
+	if type(id) ~= "string" then
+		error("invalid config id", 2)
+		return
+	elseif db[id] then
+		error("options id taken", 2)
+		return
+	elseif type(dbTable) ~= "table" then
+		error("invalid config table", 2)
+		return
+	elseif type(optionsTable) ~= "table" and type(optionsTable) ~= "nil" then
+		error("invalid options table", 2)
+		return
 	end
 
-	db[name] = dbTable
+	db[id] = dbTable
 
 	if IsLoggedIn() then
-		C.db.profile.types[name] = {}
-		updateTable(db[name], C.db.profile.types[name])
+		C.db.profile.types[id] = {}
+		updateTable(db[id], C.db.profile.types[id])
 	end
 
 	if optionsTable then
-		options[name] = optionsTable
-		options[name].guiInline = true
-		options[name].order = order
-		options[name].type = "group"
+		options[id] = optionsTable
+		options[id].guiInline = true
+		options[id].order = order
+		options[id].type = "group"
 
 		order = order + 1
 
 		if IsLoggedIn() then
-			C.options.args.types.args[name] = {}
-			updateTable(options[name], C.options.args.types.args[name])
+			C.options.args.types.args[id] = {}
+			updateTable(options[id], C.options.args.types.args[id])
 		end
 	end
 end
