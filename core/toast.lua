@@ -421,7 +421,7 @@ local function constructToast()
 	local textBG = toast:CreateTexture(nil, "BACKGROUND", nil, 1)
 	textBG:SetPoint("TOPLEFT", 50, -2)
 	textBG:SetPoint("BOTTOMRIGHT", -2, 2)
-	textBG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-text-bg")
+	textBG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\text-bg")
 	textBG:SetTexCoord(1 / 256, 173 / 256, 1 / 64, 45 / 64)
 	textBG:SetVertexColor(0, 0, 0)
 	toast.TextBG = textBG
