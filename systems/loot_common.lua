@@ -43,14 +43,14 @@ local function Toast_SetUp(event, link, quantity)
 	local toast, isNew, isQueued
 
 	-- Check if there's a toast for this item from another event
-	toast, isQueued = E:FindToast(nil, "link", sanitizedLink)
+	toast, isQueued = E:FindToast(nil, "item_id", itemID)
 
 	if toast then
 		if toast._data.event ~= event then
 			return
 		end
 	else
-		toast, isNew, isQueued = E:GetToast()
+		toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
 	end
 
 	if isNew then
