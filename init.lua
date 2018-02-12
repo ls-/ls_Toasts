@@ -6,7 +6,6 @@ local _G = getfenv(0)
 local hooksecurefunc = _G.hooksecurefunc
 local next = _G.next
 local tonumber = _G.tonumber
-local type = _G.type
 
 -- Mine
 local VER = tonumber(GetAddOnMetadata(addonName, "Version"):gsub("%D", ""), nil)
@@ -52,130 +51,35 @@ local BLACKLISTED_EVENTS = {
 	TOYS_UPDATED = true,
 }
 
+local function updateCallback()
+	E:UpdateDB()
+	E:DisableAllSystems()
+	E:EnableAllSystems()
+end
+
+local function shutdownCallback()
+	C.db.profile.version = VER
+end
+
 E:RegisterEvent("ADDON_LOADED", function(arg1)
 	if arg1 ~= addonName then
 		return
 	end
 
-	local function CopyTable(src, dest)
-		if type(dest) ~= "table" then
-			dest = {}
-		end
-
-		for k, v in next, src do
-			if type(v) == "table" then
-				dest[k] = CopyTable(v, dest[k])
-			else
-				dest[k] = v
-			end
-		end
-
-		return dest
-	end
-
-	local function UpdateAll()
-		E:UpdateDB()
-		E:DisableAllSystems()
-		E:EnableAllSystems()
-	end
-
 	C.db = LibStub("AceDB-3.0"):New("LS_TOASTS_GLOBAL_CONFIG", D, true)
-	C.db:RegisterCallback("OnProfileChanged", UpdateAll)
-	C.db:RegisterCallback("OnProfileCopied", UpdateAll)
-	C.db:RegisterCallback("OnProfileReset", UpdateAll)
-
-	C.db:RegisterCallback("OnProfileShutdown", function()
-		C.db.profile.version = VER
-	end)
-
-	C.db:RegisterCallback("OnDatabaseShutdown", function()
-		C.db.profile.version = VER
-	end)
-
-	-- converter
-	local profile = C.db:GetCurrentProfile()
-
-	if LS_TOASTS_CFG_GLOBAL then
-		for name, data in next, LS_TOASTS_CFG_GLOBAL do
-			if type(data) == "table" then
-				if data.sfx_enabled ~= nil then
-					data.sfx = {
-						enabled = data.sfx_enabled
-					}
-					data.sfx_enabled = nil
-				end
-
-				if data.colored_names_enabled ~= nil then
-					data.colors = {
-						enabled = data.colored_names_enabled
-					}
-
-					data.colored_names_enabled = nil
-				end
-
-				if data.type then
-					data.types = data.type
-					data.type = nil
-				end
-
-				-- Do not convert point
-				data.point = nil
-				data.version = nil
-
-				-- Ignore stuff from REALLY old configs
-				data.achievement_enabled = nil
-				data.archaeology_enabled = nil
-				data.garrison_6_0_enabled = nil
-				data.garrison_7_0_enabled = nil
-				data.instance_enabled = nil
-				data.loot_common_enabled = nil
-				data.loot_common_quality_threshold = nil
-				data.loot_currency_enabled = nil
-				data.loot_special_enabled = nil
-				data.recipe_enabled = nil
-				data.transmog_enabled = nil
-				data.world_enabled = nil
-				data.dnd = nil
-
-				if name == profile then
-					CopyTable(data, C.db.profile)
-				else
-					if not LS_TOASTS_GLOBAL_CONFIG.profiles then
-						LS_TOASTS_GLOBAL_CONFIG.profiles = {}
-					elseif not LS_TOASTS_GLOBAL_CONFIG.profiles[name] then
-						LS_TOASTS_GLOBAL_CONFIG.profiles[name] = {}
-					end
-
-					CopyTable(data, LS_TOASTS_GLOBAL_CONFIG.profiles[name])
-				end
-			end
-
-			LS_TOASTS_CFG_GLOBAL[name] = nil
-		end
-
-		LS_TOASTS_CFG_GLOBAL = nil
-	end
+	C.db:RegisterCallback("OnProfileChanged", updateCallback)
+	C.db:RegisterCallback("OnProfileCopied", updateCallback)
+	C.db:RegisterCallback("OnProfileReset", updateCallback)
+	C.db:RegisterCallback("OnProfileShutdown", shutdownCallback)
+	C.db:RegisterCallback("OnDatabaseShutdown", shutdownCallback)
 
 	-- cleanup
 	LS_TOASTS_CFG = nil
+	LS_TOASTS_CFG_GLOBAL = nil
 
-	-- jic old stuff was accidentally copied
-	if LS_TOASTS_GLOBAL_CONFIG and LS_TOASTS_GLOBAL_CONFIG.profiles then
-		for _, data in next, LS_TOASTS_GLOBAL_CONFIG.profiles do
-			data.achievement_enabled = nil
-			data.archaeology_enabled = nil
-			data.garrison_6_0_enabled = nil
-			data.garrison_7_0_enabled = nil
-			data.instance_enabled = nil
-			data.loot_common_enabled = nil
-			data.loot_common_quality_threshold = nil
-			data.loot_currency_enabled = nil
-			data.loot_special_enabled = nil
-			data.recipe_enabled = nil
-			data.transmog_enabled = nil
-			data.world_enabled = nil
-			data.dnd = nil
-		end
+	-- ->70300.07
+	if not C.db.profile.version or C.db.profile.version < 7030007 then
+		C.db.profile.sfx = nil
 	end
 
 	C.options = {
