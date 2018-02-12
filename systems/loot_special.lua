@@ -84,18 +84,18 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 							toast["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)
 						end
 
-						if type(skin.bg.upgrade) == "table" then
-							toast.BG:SetColorTexture(unpack(skin.bg.upgrade))
+						if type(skin.bg.upgrade.texture) == "table" then
+							toast.BG:SetColorTexture(unpack(skin.bg.upgrade.texture))
 						else
-							toast.BG:SetTexture(skin.bg.upgrade)
+							toast.BG:SetTexture(skin.bg.upgrade.texture)
 						end
 					end
 
 					if factionGroup then
-						if type(skin.bg[s_lower(factionGroup)]) == "table" then
-							toast.BG:SetColorTexture(unpack(skin.bg[s_lower(factionGroup)]))
+						if type(skin.bg[s_lower(factionGroup)].texture) == "table" then
+							toast.BG:SetColorTexture(unpack(skin.bg[s_lower(factionGroup)].texture))
 						else
-							toast.BG:SetTexture(skin.bg[s_lower(factionGroup)])
+							toast.BG:SetTexture(skin.bg[s_lower(factionGroup)].texture)
 						end
 					end
 
@@ -103,10 +103,10 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 						title = L["ITEM_LEGENDARY"]
 						soundFile = 63971 -- SOUNDKIT.UI_LEGENDARY_LOOT_TOAST
 
-						if type(skin.bg.legendary) == "table" then
-							toast.BG:SetColorTexture(unpack(skin.bg.legendary))
+						if type(skin.bg.legendary.texture) == "table" then
+							toast.BG:SetColorTexture(unpack(skin.bg.legendary.texture))
 						else
-							toast.BG:SetTexture(skin.bg.legendary)
+							toast.BG:SetTexture(skin.bg.legendary.texture)
 						end
 
 						if not toast.Dragon.isHidden then
@@ -118,10 +118,10 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 						title = L["BLIZZARD_STORE_PURCHASE_DELIVERED"]
 						soundFile = 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
 
-						if type(skin.bg.store) == "table" then
-							toast.BG:SetColorTexture(unpack(skin.bg.store))
+						if type(skin.bg.store.texture) == "table" then
+							toast.BG:SetColorTexture(unpack(skin.bg.store.texture))
 						else
-							toast.BG:SetTexture(skin.bg.store)
+							toast.BG:SetTexture(skin.bg.store.texture)
 						end
 					end
 
@@ -214,10 +214,10 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 			local skin = E:GetSkin()
 
 			if factionGroup then
-				if type(skin.bg[s_lower(factionGroup)]) == "table" then
-					toast.BG:SetColorTexture(unpack(skin.bg[s_lower(factionGroup)]))
+				if type(skin.bg[s_lower(factionGroup)].texture) == "table" then
+					toast.BG:SetColorTexture(unpack(skin.bg[s_lower(factionGroup)].texture))
 				else
-					toast.BG:SetTexture(skin.bg[s_lower(factionGroup)])
+					toast.BG:SetTexture(skin.bg[s_lower(factionGroup)].texture)
 				end
 			end
 

@@ -53,10 +53,10 @@ local function Toast_SetUp(event, recipeID)
 				rankTexture = "|TInterface\\LootFrame\\toast-star-3:12:36:0:0:64:32:0:64:0:21|t"
 			end
 
-			if type(skin.bg.recipe) == "table" then
-				toast.BG:SetColorTexture(unpack(skin.bg.recipe))
+			if type(skin.bg.recipe.texture) == "table" then
+				toast.BG:SetColorTexture(unpack(skin.bg.recipe.texture))
 			else
-				toast.BG:SetTexture(skin.bg.recipe)
+				toast.BG:SetTexture(skin.bg.recipe.texture)
 			end
 
 			toast.Title:SetText(rank and rank > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])

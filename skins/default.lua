@@ -62,18 +62,44 @@ E:RegisterSkin("default", {
 		texture = "Interface\\AddOns\\ls_Toasts\\assets\\slot-border",
 	},
 	bg = {
-		alliance = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-alliance",
-		archaeology = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-archaeology",
-		collection = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-collection",
-		default = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default",
-		dungeon = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-dungeon",
-		horde = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-horde",
-		legendary = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legendary",
-		legion = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legion",
-		recipe = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-recipe",
-		store = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-store",
-		transmog = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-transmog",
-		upgrade = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-upgrade",
-		worldquest = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-worldquest",
+		alliance = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-alliance",
+		},
+		archaeology = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-archaeology",
+		},
+		collection = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-collection",
+		},
+		default = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default",
+		},
+		dungeon = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-dungeon",
+		},
+		horde = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-horde",
+		},
+		legendary = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legendary",
+		},
+		legion = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legion",
+		},
+		recipe = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-recipe",
+		},
+		store = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-store",
+		},
+		transmog = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-transmog",
+		},
+		upgrade = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-upgrade",
+		},
+		worldquest = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-worldquest",
+		},
 	},
 })

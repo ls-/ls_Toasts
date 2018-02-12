@@ -70,10 +70,10 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 			toast.IconBorder:SetVertexColor(1, 0.5, 1)
 		end
 
-		if type(skin.bg.transmog) == "table" then
-			toast.BG:SetColorTexture(unpack(skin.bg.transmog))
+		if type(skin.bg.transmog.texture) == "table" then
+			toast.BG:SetColorTexture(unpack(skin.bg.transmog.texture))
 		else
-			toast.BG:SetTexture(skin.bg.transmog)
+			toast.BG:SetTexture(skin.bg.transmog.texture)
 		end
 
 		toast.Text:SetText(name)

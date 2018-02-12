@@ -125,10 +125,10 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 				toast.IconBorder:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
 			end
 
-			if type(skin.bg.legion) == "table" then
-				toast.BG:SetColorTexture(unpack(skin.bg.legion))
+			if type(skin.bg.legion.texture) == "table" then
+				toast.BG:SetColorTexture(unpack(skin.bg.legion.texture))
 			else
-				toast.BG:SetTexture(skin.bg.legion)
+				toast.BG:SetTexture(skin.bg.legion.texture)
 			end
 
 			toast.Title:SetText(L["SCENARIO_INVASION_COMPLETED"])
@@ -161,10 +161,10 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 				end
 			end
 
-			if type(skin.bg.worldquest) == "table" then
-				toast.BG:SetColorTexture(unpack(skin.bg.worldquest))
+			if type(skin.bg.worldquest.texture) == "table" then
+				toast.BG:SetColorTexture(unpack(skin.bg.worldquest.texture))
 			else
-				toast.BG:SetTexture(skin.bg.worldquest)
+				toast.BG:SetTexture(skin.bg.worldquest.texture)
 			end
 
 			toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])

@@ -17,10 +17,10 @@ local function Toast_SetUp(event, researchFieldID)
 		toast.Border:SetVertexColor(0.9, 0.4, 0.1)
 	end
 
-	if type(skin.bg.archaeology) == "table" then
-		toast.BG:SetColorTexture(unpack(skin.bg.archaeology))
+	if type(skin.bg.archaeology.texture) == "table" then
+		toast.BG:SetColorTexture(unpack(skin.bg.archaeology.texture))
 	else
-		toast.BG:SetTexture(skin.bg.archaeology)
+		toast.BG:SetTexture(skin.bg.archaeology.texture)
 	end
 
 	toast.Title:SetText(L["DIGSITE_COMPLETED"])

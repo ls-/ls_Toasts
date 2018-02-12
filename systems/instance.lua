@@ -113,10 +113,10 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 		soundFile = 17316 -- SOUNDKIT.LFG_REWARDS
 	end
 
-	if type(skin.bg.dungeon) == "table" then
-		toast.BG:SetColorTexture(unpack(skin.bg.dungeon))
+	if type(skin.bg.dungeon.texture) == "table" then
+		toast.BG:SetColorTexture(unpack(skin.bg.dungeon.texture))
 	else
-		toast.BG:SetTexture(skin.bg.dungeon)
+		toast.BG:SetTexture(skin.bg.dungeon.texture)
 	end
 
 	toast.Text:SetText(name)

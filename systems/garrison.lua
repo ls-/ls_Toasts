@@ -153,10 +153,10 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 	end
 
 	if isUpgraded then
-		if type(skin.bg.upgrade) == "table" then
-			toast.BG:SetColorTexture(unpack(skin.bg.upgrade))
+		if type(skin.bg.upgrade.texture) == "table" then
+			toast.BG:SetColorTexture(unpack(skin.bg.upgrade.texture))
 		else
-			toast.BG:SetTexture(skin.bg.upgrade)
+			toast.BG:SetTexture(skin.bg.upgrade.texture)
 		end
 
 		toast.Title:SetText(followerStrings.FOLLOWER_ADDED_UPGRADED_TOAST)

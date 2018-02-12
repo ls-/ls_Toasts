@@ -83,10 +83,10 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 			end
 		end
 
-		if type(skin.bg.collection) == "table" then
-			toast.BG:SetColorTexture(unpack(skin.bg.collection))
+		if type(skin.bg.collection.texture) == "table" then
+			toast.BG:SetColorTexture(unpack(skin.bg.collection.texture))
 		else
-			toast.BG:SetTexture(skin.bg.collection)
+			toast.BG:SetTexture(skin.bg.collection.texture)
 		end
 
 		toast.Title:SetText(L["YOU_EARNED"])

@@ -108,10 +108,10 @@ function E.ApplySkin(_, toast)
 	border:SetOffset(skin.border.offset)
 
 	-- .BG
-	if type(skin.bg.default) == "table" then
-		toast.BG:SetColorTexture(unpack(skin.bg.default))
+	if type(skin.bg.default.texture) == "table" then
+		toast.BG:SetColorTexture(unpack(skin.bg.default.texture))
 	else
-		toast.BG:SetTexture(skin.bg.default)
+		toast.BG:SetTexture(skin.bg.default.texture)
 	end
 
 	-- .Title
@@ -204,10 +204,10 @@ function E.ResetSkin(_, toast)
 	toast.Border:SetVertexColor(unpack(skin.border.color))
 
 	-- .BG
-	if type(skin.bg.default) == "table" then
-		toast.BG:SetColorTexture(unpack(skin.bg.default))
+	if type(skin.bg.default.texture) == "table" then
+		toast.BG:SetColorTexture(unpack(skin.bg.default.texture))
 	else
-		toast.BG:SetTexture(skin.bg.default)
+		toast.BG:SetTexture(skin.bg.default.texture)
 	end
 
 	-- .Title

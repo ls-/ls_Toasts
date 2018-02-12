@@ -28,18 +28,44 @@ E:RegisterSkin("elv-no-art", {
 	name = "ElvUI (No Artwork)",
 	template = "elv",
 	bg = {
-		alliance = {0.06, 0.06, 0.06, 0.8},
-		archaeology = {0.06, 0.06, 0.06, 0.8},
-		collection = {0.06, 0.06, 0.06, 0.8},
-		default = {0.06, 0.06, 0.06, 0.8},
-		dungeon = {0.06, 0.06, 0.06, 0.8},
-		horde = {0.06, 0.06, 0.06, 0.8},
-		legendary = {0.06, 0.06, 0.06, 0.8},
-		legion = {0.06, 0.06, 0.06, 0.8},
-		recipe = {0.06, 0.06, 0.06, 0.8},
-		store = {0.06, 0.06, 0.06, 0.8},
-		transmog = {0.06, 0.06, 0.06, 0.8},
-		upgrade = {0.06, 0.06, 0.06, 0.8},
-		worldquest = {0.06, 0.06, 0.06, 0.8},
+		alliance = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		archaeology = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		collection = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		default = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		dungeon = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		horde = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		legendary = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		legion = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		recipe = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		store = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		transmog = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		upgrade = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+		worldquest = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
 	},
 })
