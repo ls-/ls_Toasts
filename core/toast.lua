@@ -219,7 +219,6 @@ end
 
 -- Base Toast
 local num = 0
-
 local function getToastName()
 	num = num + 1
 	return "LSToast"..num
