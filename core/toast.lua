@@ -387,7 +387,7 @@ local function toast_Recycle(self)
 	E:RefreshQueue()
 end
 
-local function ConstructToast()
+local function constructToast()
 	local toast = CreateFrame("Button", getToastName(), UIParent)
 	toast:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	toast:Hide()
@@ -401,32 +401,20 @@ local function ConstructToast()
 
 	local bg = toast:CreateTexture(nil, "BACKGROUND", nil, -8)
 	bg:SetAllPoints()
-	-- bg:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default")
 	bg:SetTexCoord(1 / 256, 225 / 256, 1 / 64, 49 / 64)
 	toast.BG = bg
 
 	local border = createBorder(toast, "BACKGROUND", 1)
-	-- border:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-border")
-	-- border:SetSize(16)
-	-- border:SetOffset(-6)
 	toast.Border = border
 
 	local title = toast:CreateFontString(nil, "ARTWORK")
-	-- local title = toast:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetPoint("TOPLEFT", 50, -2)
 	title:SetPoint("BOTTOMRIGHT", toast, "TOPRIGHT", -2, -22)
-	-- title:SetJustifyH("CENTER")
-	-- title:SetJustifyV("MIDDLE")
-	-- title:SetWordWrap(false)
 	toast.Title = title
 
 	local text = toast:CreateFontString(nil, "ARTWORK")
-	-- local text = toast:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 	text:SetPoint("BOTTOMLEFT", 50, 2)
 	text:SetPoint("TOPRIGHT", toast, "BOTTOMRIGHT", -2, 22)
-	-- text:SetJustifyH("CENTER")
-	-- text:SetJustifyV("MIDDLE")
-	-- text:SetWordWrap(false)
 	text.SetAnimatedValue = text_SetAnimatedValue
 	toast.Text = text
 
@@ -451,22 +439,16 @@ local function ConstructToast()
 	toast.IconParent = iconParent
 
 	local icon = iconParent:CreateTexture(nil, "BACKGROUND", nil, 2)
-	-- icon:SetTexCoord(0.0625, 0.9375, 0.0625, 0.9375)
 	icon:SetPoint("TOPLEFT", 0, 0)
 	icon:SetSize(42, 42)
 	toast.Icon = icon
 
 	local iconHL = iconParent:CreateTexture(nil, "BACKGROUND", nil, 3)
 	iconHL:SetAllPoints()
-	-- iconHL:SetTexture("Interface\\ContainerFrame\\UI-Icon-QuestBorder")
-	-- iconHL:SetTexCoord(0.0625, 0.9375, 0.0625, 0.9375)
 	iconHL:Hide()
 	toast.IconHL = iconHL
 
 	local iconBorder = createBorder(iconParent, "BACKGROUND", 5)
-	-- iconBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\icon-border")
-	-- iconBorder:SetSize(16)
-	-- iconBorder:SetOffset(-4)
 	iconBorder:Hide()
 	toast.IconBorder = iconBorder
 
@@ -480,9 +462,6 @@ local function ConstructToast()
 	toast.Dragon = dragon
 
 	local iconText1 = iconParent:CreateFontString(nil, "ARTWORK")
-	-- local iconText1 = iconParent:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
-	-- iconText1:SetPoint("BOTTOMRIGHT", 0, 1)
-	-- iconText1:SetJustifyH("RIGHT")
 	iconText1.SetAnimatedValue = text_SetAnimatedValue
 	toast.IconText1 = iconText1
 
@@ -495,9 +474,6 @@ local function ConstructToast()
 	toast.IconText1BG = iconText1BG
 
 	local iconText2 = iconParent:CreateFontString(nil, "ARTWORK")
-	-- local iconText2 = iconParent:CreateFontString(nil, "ARTWORK", "GameFontHighlightOutline")
-	-- iconText2:SetPoint("BOTTOMRIGHT", iconText1, "TOPRIGHT", 0, 2)
-	-- iconText2:SetJustifyH("RIGHT")
 	iconText2:SetAlpha(0)
 	iconText2.SetAnimatedValue = text_SetAnimatedValue
 	toast.IconText2 = iconText2
@@ -687,7 +663,6 @@ local function ConstructToast()
 		toast["Slot"..i] = slot
 
 		local sMask = slot:CreateMaskTexture()
-		-- sMask:SetTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMaskSmall", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
 		sMask:SetPoint("TOPLEFT", 6, -6)
 		sMask:SetPoint("BOTTOMRIGHT", -6, 6)
 		slot.Mask = sMask
@@ -700,8 +675,6 @@ local function ConstructToast()
 
 		local sBorder = slot:CreateTexture(nil, "BORDER")
 		sBorder:SetAllPoints()
-		-- sBorder:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\slot-border")
-		-- sBorder:SetTexCoord(28 / 128, 100 / 128, 28 / 128, 100 / 128)
 		slot.Border = sBorder
 
 		if i == 1 then
@@ -747,7 +720,7 @@ function E.GetToast(_, toastEvent, dataType, dataValue)
 		toast = t_remove(createdToasts, 1)
 
 		if not toast then
-			toast = ConstructToast()
+			toast = constructToast()
 		end
 
 		isNew = true
