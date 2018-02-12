@@ -60,7 +60,7 @@ local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 		sound_file = 44294, -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
 	}
 
-	toast:Spawn(garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd or C.db.profile.types.garrison_6_0.dnd)
+	toast:Spawn((garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
 end
 
 local function GARRISON_MISSION_FINISHED(followerTypeID, missionID)
@@ -184,7 +184,7 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 	}
 
 	toast:HookScript("OnEnter", FollowerToast_OnEnter)
-	toast:Spawn(garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd or C.db.profile.types.garrison_6_0.dnd)
+	toast:Spawn((garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
 end
 
 local function GARRISON_FOLLOWER_ADDED(followerID, name, _, level, quality, isUpgraded, texPrefix, followerTypeID)
