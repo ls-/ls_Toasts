@@ -7,7 +7,7 @@ Replacement for default alert system. Better toasts, cheers!
 ## Download
 
 - [WoWInterface](http://www.wowinterface.com/downloads/info24123.html)
-- [Curse](http://mods.curse.com/addons/wow/ls-toasts)
+- [Curse](https://www.curseforge.com/wow/addons/ls-toasts)
 
 ## Features
 
@@ -20,30 +20,6 @@ Replacement for default alert system. Better toasts, cheers!
 - Install it;
 - _(Optional)_ Configure it;
 - Done.
-
-## How to Mod
-
-If you're a UI developer, you may want to reskin my toasts. To create a skin you need to do the following:
-
-```Lua
-local toast_F = ls_Toasts[1]
-
-toast_F:RegisterSkin("skin_name", function(toast)
-  -- do something here
-end)
-```
-
-This function is called after colours, textures and texts are set, but before toast is shown. Toast and its type are passed as arguments.
-
-If you want to activate your skin right away, add this line to your code:
-
-```Lua
-toast_F:SetSkin("skin_name")
-```
-
-Skin activation is optional, users can switch skins via in-game config.
-
-**Note:** For toast's structure see `ConstructToast` function in `core.lua`.
 
 ## Feedback and Feature Requests
 
