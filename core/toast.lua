@@ -390,14 +390,15 @@ end
 local function constructToast()
 	local toast = CreateFrame("Button", getToastName(), UIParent)
 	toast:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+	toast:SetFlattensRenderLayers(true)
+	toast:SetFrameStrata(C.db.profile.strata)
+	toast:SetScale(C.db.profile.scale)
+	toast:SetSize(224, 48)
 	toast:Hide()
 	toast:SetScript("OnShow", toast_OnShow)
 	toast:SetScript("OnClick", toast_OnClick)
 	toast:SetScript("OnEnter", toast_OnEnter)
 	toast:SetScript("OnLeave", toast_OnLeave)
-	toast:SetSize(224, 48)
-	toast:SetScale(C.db.profile.scale)
-	toast:SetFrameStrata(C.db.profile.strata)
 
 	local bg = toast:CreateTexture(nil, "BACKGROUND", nil, -8)
 	bg:SetAllPoints()
@@ -433,9 +434,10 @@ local function constructToast()
 	toast.Bonus = bonus
 
 	local iconParent = CreateFrame("Frame", nil, toast)
+	iconParent:SetFlattensRenderLayers(true)
 	iconParent:SetFrameLevel(toast:GetFrameLevel() + 1)
-	iconParent:SetSize(42, 42)
 	iconParent:SetPoint("TOPLEFT", 3, -3)
+	iconParent:SetSize(42, 42)
 	toast.IconParent = iconParent
 
 	local icon = iconParent:CreateTexture(nil, "BACKGROUND", nil, 2)
@@ -569,6 +571,7 @@ local function constructToast()
 	end
 
 	local glowParent = CreateFrame("Frame", nil, toast)
+	glowParent:SetFlattensRenderLayers(true)
 	glowParent:SetFrameLevel(toast:GetFrameLevel() + 2)
 	glowParent:SetAllPoints()
 
@@ -654,12 +657,13 @@ local function constructToast()
 	-- .Slot1, .Slot2, .Slot3, .Slot4, .Slot5
 	for i = 1, 5 do
 		local slot = CreateFrame("Frame", nil, toast)
+		slot:SetFlattensRenderLayers(true)
+		slot:SetFrameLevel(toast:GetFrameLevel() + 3)
 		slot:SetSize(32, 32)
+		slot:Hide()
 		slot:SetScript("OnEnter", slot_OnEnter)
 		slot:SetScript("OnLeave", slot_OnLeave)
 		slot:SetScript("OnHide", slot_OnHide)
-		slot:SetFrameLevel(toast:GetFrameLevel() + 3)
-		slot:Hide()
 		toast["Slot"..i] = slot
 
 		local sMask = slot:CreateMaskTexture()
