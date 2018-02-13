@@ -440,7 +440,7 @@ E:RegisterOptions("loot_special", {
 			desc = L["SHOW_ILVL_DESC"],
 		},
 		threshold = {
-			order = 5,
+			order = 6,
 			type = "select",
 			name = L["LOOT_THRESHOLD"],
 			values = {
