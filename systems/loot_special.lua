@@ -373,8 +373,9 @@ local function Test()
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, true, nil, nil, nil, true, 2)
 	end
-	-- legendary, Sephuz's Secret
-	_, link = GetItemInfo(132452)
+
+	-- legendary, Aman'Thul's Vision
+	_, link = GetItemInfo("item:154172::::::::110:64:::1:3571:::")
 
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, true)
