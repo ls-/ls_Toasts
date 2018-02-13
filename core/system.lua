@@ -5,6 +5,7 @@ local E, C = addonTable.E, addonTable.C
 local _G = getfenv(0)
 local error = _G.error
 local next = _G.next
+local s_format = _G.string.format
 local type = _G.type
 
 -- Mine
@@ -13,19 +14,19 @@ local function dummy() end
 
 function E.RegisterSystem(_, id, enableFunc, disableFunc, testFunc)
 	if type(id) ~= "string" then
-		error("invalid system id", 2)
+		error(s_format("Invalid argument #1 to 'RegisterSystem' method, expected a string, got a '%s'", type(id)), 2)
 		return
 	elseif systems[id] then
-		error("system id taken", 2)
+		error(s_format("Invalid argument #1 to 'RegisterSystem' method, '%s' id is already taken", id), 2)
 		return
 	elseif type(enableFunc) ~= "function" then
-		error("invalid enable func", 2)
+		error(s_format("Invalid argument #2 to 'RegisterSystem' method, expected a function, got a '%s'", type(enableFunc)), 2)
 		return
 	elseif type(disableFunc) ~= "function" then
-		error("invalid disable func", 2)
+		error(s_format("Invalid argument #3 to 'RegisterSystem' method, expected a function, got a '%s'", type(disableFunc)), 2)
 		return
 	elseif type(testFunc) ~= "function" and type(testFunc) ~= "nil" then
-		error("invalid test func", 2)
+		error(s_format("Invalid argument #3 to 'RegisterSystem' method, expected a function or nil, got a '%s'", type(testFunc)), 2)
 		return
 	end
 
@@ -113,16 +114,16 @@ end
 
 function E.RegisterOptions(_, id, dbTable, optionsTable)
 	if type(id) ~= "string" then
-		error("invalid config id", 2)
+		error(s_format("Invalid argument #1 to 'RegisterOptions' method, expected a string, got a '%s'", type(id)), 2)
 		return
 	elseif db[id] then
-		error("options id taken", 2)
+		error(s_format("Invalid argument #1 to 'RegisterOptions' method, '%s' id is already taken", id), 2)
 		return
 	elseif type(dbTable) ~= "table" then
-		error("invalid config table", 2)
+		error(s_format("Invalid argument #2 to 'RegisterOptions' method, expected a table, got a '%s'", type(dbTable)), 2)
 		return
 	elseif type(optionsTable) ~= "table" and type(optionsTable) ~= "nil" then
-		error("invalid options table", 2)
+		error(s_format("Invalid argument #3 to 'RegisterOptions' method, expected a table or nil, got a '%s'", type(optionsTable)), 2)
 		return
 	end
 

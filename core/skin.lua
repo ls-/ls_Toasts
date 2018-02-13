@@ -5,6 +5,7 @@ local E, C = addonTable.E, addonTable.C
 local _G = getfenv(0)
 local error = _G.error
 local next = _G.next
+local s_format = _G.string.format
 local type = _G.type
 local unpack = _G.unpack
 
@@ -32,16 +33,16 @@ end
 
 function E.RegisterSkin(_, id, data)
 	if type(id) ~= "string" then
-		error("invalid skin id", 2)
+		error(s_format("Invalid argument #1 to 'RegisterSkin' method, expected a string, got a '%s'", type(id)), 2)
 		return
 	elseif skins[id] then
-		error("skin id taken", 2)
+		error(s_format("Invalid argument #1 to 'RegisterSkin' method, '%s' id is already taken", id), 2)
 		return
 	elseif type(data) ~= "table" then
-		error("invalid skin data", 2)
+		error(s_format("Invalid argument #2 to 'RegisterSkin' method, expected a table, got a '%s'", type(data)), 2)
 		return
 	elseif type(data.name) ~= "string" then
-		error("invalid skin name", 2)
+		error(s_format("Invalid skin name, expected a string, got a '%s'", type(data.name)), 2)
 		return
 	end
 
@@ -50,7 +51,7 @@ function E.RegisterSkin(_, id, data)
 		if skins[template] then
 			mergeTable(skins[template], data)
 		else
-			error("invalid skin template ref", 2)
+			error(s_format("Invalid template reference, skin '%s' doesn't exist", template), 2)
 			return
 		end
 	end
@@ -75,10 +76,10 @@ end
 
 function E.SetSkin(_, id)
 	if type(id) ~= "string" then
-		error("invalid id", 2)
+		error(s_format("Invalid argument to 'SetSkin' method, expected a string, got a '%s'", type(id)), 2)
 		return
 	elseif not skins[id] then
-		error("no skin", 2)
+		error(s_format("Invalid skin reference, skin '%s' doesn't exist", id), 2)
 		return
 	end
 
