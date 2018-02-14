@@ -41,22 +41,22 @@ local function border_SetOffset(self, offset)
 end
 
 local function border_SetTexture(self, texture)
-	self.calcTile = true
+	if type(texture) == "table" then
+		self.calcTile = false
 
-	for i, v in next, sections do
-		if i > 4 then
-			self[v]:SetTexture(texture, "REPEAT", "REPEAT")
-		else
-			self[v]:SetTexture(texture)
+		for _, v in next, sections do
+			self[v]:SetColorTexture(unpack(texture))
 		end
-	end
-end
+	else
+		self.calcTile = true
 
-local function border_SetColorTexture(self, r, g, b, a)
-	self.calcTile = false
-
-	for _, v in next, sections do
-		self[v]:SetColorTexture(r, g, b, a)
+		for i, v in next, sections do
+			if i > 4 then
+				self[v]:SetTexture(texture, "REPEAT", "REPEAT")
+			else
+				self[v]:SetTexture(texture)
+			end
+		end
 	end
 end
 
@@ -132,7 +132,6 @@ local function createBorder(self, drawLayer, drawSubLevel)
 	border.RIGHT:SetPoint("BOTTOMRIGHT", border.BOTTOMRIGHT, "TOPRIGHT", 0, 0)
 
 	border.Hide = border_Hide
-	border.SetColorTexture = border_SetColorTexture
 	border.SetOffset = border_SetOffset
 	border.SetSize = border_SetSize
 	border.SetTexture = border_SetTexture

@@ -99,11 +99,7 @@ function E.ApplySkin(_, toast)
 
 	-- .Border
 	local border = toast.Border
-	if type(skin.border.texture) == "table" then
-		border:SetColorTexture(unpack(skin.border.texture))
-	else
-		border:SetTexture(skin.border.texture)
-	end
+	border:SetTexture(skin.border.texture)
 	border:SetVertexColor(unpack(skin.border.color))
 	border:SetSize(skin.border.size)
 	border:SetOffset(skin.border.offset)
@@ -140,11 +136,7 @@ function E.ApplySkin(_, toast)
 
 	-- .IconBorder
 	local iconBorder = toast.IconBorder
-	if type(skin.icon_border.texture) == "table" then
-		iconBorder:SetColorTexture(unpack(skin.icon_border.texture))
-	else
-		iconBorder:SetTexture(skin.icon_border.texture)
-	end
+	iconBorder:SetTexture(skin.icon_border.texture)
 	iconBorder:SetVertexColor(unpack(skin.icon_border.color))
 	iconBorder:SetSize(skin.icon_border.size)
 	iconBorder:SetOffset(skin.icon_border.offset)
