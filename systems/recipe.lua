@@ -3,8 +3,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
-local type = _G.type
-local unpack = _G.unpack
 
 -- Blizz
 local C_TradeSkillUI = _G.C_TradeSkillUI
@@ -41,7 +39,6 @@ local function Toast_SetUp(event, recipeID)
 
 		if recipeName then
 			local toast = E:GetToast()
-			local skin = E:GetSkin()
 			local rank = GetSpellRank(recipeID)
 			local rankTexture = ""
 
@@ -53,12 +50,7 @@ local function Toast_SetUp(event, recipeID)
 				rankTexture = "|TInterface\\LootFrame\\toast-star-3:12:36:0:0:64:32:0:64:0:21|t"
 			end
 
-			if type(skin.bg.recipe.texture) == "table" then
-				toast.BG:SetColorTexture(unpack(skin.bg.recipe.texture))
-			else
-				toast.BG:SetTexture(skin.bg.recipe.texture)
-			end
-
+			toast:SetBackground("recipe")
 			toast.Title:SetText(rank and rank > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
 			toast.Text:SetText(recipeName)
 			toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(tradeSkillID))

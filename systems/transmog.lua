@@ -3,8 +3,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
-local type = _G.type
-local unpack = _G.unpack
 
 -- Blizz
 local C_Timer = _G.C_Timer
@@ -70,12 +68,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 			toast.IconBorder:SetVertexColor(1, 0.5, 1)
 		end
 
-		if type(skin.bg.transmog.texture) == "table" then
-			toast.BG:SetColorTexture(unpack(skin.bg.transmog.texture))
-		else
-			toast.BG:SetTexture(skin.bg.transmog.texture)
-		end
-
+		toast:SetBackground("transmog")
 		toast.Text:SetText(name)
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()

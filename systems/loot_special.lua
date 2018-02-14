@@ -7,8 +7,6 @@ local m_random = _G.math.random
 local s_lower = _G.string.lower
 local s_split = _G.string.split
 local tonumber = _G.tonumber
-local type = _G.type
-local unpack = _G.unpack
 
 -- Blizz
 local C_Timer = _G.C_Timer
@@ -51,13 +49,13 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 			local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
 
 			if isNew then
-				local skin = E:GetSkin()
 				local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(originalLink)
 
 				if quality >= C.db.profile.types.loot_special.threshold and quality <= 5 then
 					local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 					local title = L["YOU_WON"]
 					local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+					local bgTexture
 
 					toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
@@ -77,37 +75,23 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 						end
 
 						soundFile = 51561 -- SOUNDKIT.UI_WARFORGED_ITEM_LOOT_TOAST
+						bgTexture = "upgrade"
 
 						local upgradeTexture = LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
 
 						for i = 1, 5 do
 							toast["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)
 						end
-
-						if type(skin.bg.upgrade.texture) == "table" then
-							toast.BG:SetColorTexture(unpack(skin.bg.upgrade.texture))
-						else
-							toast.BG:SetTexture(skin.bg.upgrade.texture)
-						end
 					end
 
 					if factionGroup then
-						if type(skin.bg[s_lower(factionGroup)].texture) == "table" then
-							toast.BG:SetColorTexture(unpack(skin.bg[s_lower(factionGroup)].texture))
-						else
-							toast.BG:SetTexture(skin.bg[s_lower(factionGroup)].texture)
-						end
+						bgTexture = s_lower(factionGroup)
 					end
 
 					if isLegendary then
 						title = L["ITEM_LEGENDARY"]
 						soundFile = 63971 -- SOUNDKIT.UI_LEGENDARY_LOOT_TOAST
-
-						if type(skin.bg.legendary.texture) == "table" then
-							toast.BG:SetColorTexture(unpack(skin.bg.legendary.texture))
-						else
-							toast.BG:SetTexture(skin.bg.legendary.texture)
-						end
+						bgTexture = "legendary"
 
 						if not toast.Dragon.isHidden then
 							toast.Dragon:Show()
@@ -117,12 +101,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 					if isStorePurchase then
 						title = L["BLIZZARD_STORE_PURCHASE_DELIVERED"]
 						soundFile = 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
-
-						if type(skin.bg.store.texture) == "table" then
-							toast.BG:SetColorTexture(unpack(skin.bg.store.texture))
-						else
-							toast.BG:SetTexture(skin.bg.store.texture)
-						end
+						bgTexture = "store"
 					end
 
 					if rollType == LOOT_ROLL_TYPE_NEED then
@@ -153,6 +132,10 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 						if iLevel > 0 then
 							name = "["..color.hex..iLevel.."|r] "..name
 						end
+					end
+
+					if bgTexture then
+						toast:SetBackground(bgTexture)
 					end
 
 					toast.Title:SetText(title)
@@ -211,14 +194,8 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 		local toast, isNew, isQueued = E:GetToast(event, "is_honor", true)
 
 		if isNew then
-			local skin = E:GetSkin()
-
 			if factionGroup then
-				if type(skin.bg[s_lower(factionGroup)].texture) == "table" then
-					toast.BG:SetColorTexture(unpack(skin.bg[s_lower(factionGroup)].texture))
-				else
-					toast.BG:SetTexture(skin.bg[s_lower(factionGroup)].texture)
-				end
+				toast:SetBackground(s_lower(factionGroup))
 			end
 
 			toast.Title:SetText(L["YOU_RECEIVED"])

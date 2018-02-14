@@ -9,6 +9,8 @@ local next = _G.next
 local t_insert = _G.table.insert
 local t_remove = _G.table.remove
 local t_wipe = _G.table.wipe
+local type = _G.type
+local unpack = _G.unpack
 
 -- Blizz
 local Lerp = _G.Lerp
@@ -387,6 +389,16 @@ local function toast_Recycle(self)
 	E:RefreshQueue()
 end
 
+local function toast_SetBackground(self, id)
+	local skin = E:GetSkin()
+
+	if type(skin.bg[id].texture) == "table" then
+		self.BG:SetColorTexture(unpack(skin.bg[id].texture))
+	else
+		self.BG:SetTexture(skin.bg[id].texture)
+	end
+end
+
 local function constructToast()
 	local toast = CreateFrame("Button", getToastName(), UIParent)
 	toast:RegisterForClicks("LeftButtonUp", "RightButtonUp")
@@ -690,6 +702,7 @@ local function constructToast()
 
 	toast.Recycle = toast_Recycle
 	toast.Spawn = toast_Spawn
+	toast.SetBackground = toast_SetBackground
 
 	E:ApplySkin(toast)
 

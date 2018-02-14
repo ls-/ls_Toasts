@@ -6,8 +6,6 @@ local _G = getfenv(0)
 local next = _G.next
 local pcall = _G.pcall
 local select = _G.select
-local type = _G.type
-local unpack = _G.unpack
 
 -- Blizz
 local C_Scenario = _G.C_Scenario
@@ -125,12 +123,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 				toast.IconBorder:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
 			end
 
-			if type(skin.bg.legion.texture) == "table" then
-				toast.BG:SetColorTexture(unpack(skin.bg.legion.texture))
-			else
-				toast.BG:SetTexture(skin.bg.legion.texture)
-			end
-
+			toast:SetBackground("legion")
 			toast.Title:SetText(L["SCENARIO_INVASION_COMPLETED"])
 			toast.Icon:SetTexture("Interface\\Icons\\Ability_Warlock_DemonicPower")
 
@@ -161,12 +154,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 				end
 			end
 
-			if type(skin.bg.worldquest.texture) == "table" then
-				toast.BG:SetColorTexture(unpack(skin.bg.worldquest.texture))
-			else
-				toast.BG:SetTexture(skin.bg.worldquest.texture)
-			end
-
+			toast:SetBackground("worldquest")
 			toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])
 
 			soundFile = 73277 -- SOUNDKIT.UI_WORLDQUEST_COMPLETE
