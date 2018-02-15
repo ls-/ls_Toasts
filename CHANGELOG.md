@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Version 70300.07
+
+- Reworked skin engine. Added new toast and icon border textures. Added two basic ElvUI-like skins;
+- Reworked sound controls. Now each toast group has its own SFX toggle;
+- Embedded LibSharedMedia. Added font and font size controls;
+- Added buttons for 1px adjustment to toast anchor frame;
+- Added rarity threshold control for border and text colouring;
+- Fixed issue which caused loot toast duplicates to appear;
+- Updated Russian translation.
+
+NOTE: You'll have to restart WoW client to make things work after the update.
+
 ## Version 70300.06
 
 - Improved compatibility with other addons that override UI elements' alpha, e.g., Immersion;
