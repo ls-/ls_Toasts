@@ -27,6 +27,12 @@ E:RegisterSkin("elv", {
 E:RegisterSkin("elv-no-art", {
 	name = "ElvUI (No Artwork)",
 	template = "elv",
+	dragon = {
+		hidden = true,
+	},
+	icon_highlight = {
+		hidden = true,
+	},
 	bg = {
 		alliance = {
 			texture = {0.06, 0.06, 0.06, 0.8},
