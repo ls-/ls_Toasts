@@ -29,12 +29,6 @@ If you found a bug or want to share an idea on how to improve my addon, either r
 
 Feel free to add and/or review translations on [CurseForge](https://wow.curseforge.com/addons/ls-toasts/localization/), alternatively, you may create a PR on [project's GitHub page](https://github.com/ls-/ls_Toasts/pulls).
 
-## FAQ
-
-**Q:** Will you add group/master loot roll frames to your addon?
-
-**A:** Maybe later, I'm not sure yet.
-
 ## License
 
 Please see [LICENSE](https://github.com/ls-/ls_Toasts/blob/master/LICENSE.txt) file.
