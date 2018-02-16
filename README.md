@@ -1,6 +1,6 @@
 # ls: Toasts
 
-Replacement for default alert system. Better toasts, cheers!
+Replacement for the default alert system. Better toasts, cheers!
 
 ![image](https://i.imgur.com/PvzX6VF.gif)
 
