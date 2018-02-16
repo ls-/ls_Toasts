@@ -15,7 +15,7 @@ Use **`/LSTOASTS`** or **`/LST`** to open in-game config.
 
 ## Feedback and Feature Requests
 
-If you found a bug or want to share an idea on how to improve my addon, either use issue tracker on [GitHub](https://github.com/ls-/ls_Toasts/issues) or [Curse](https://wow.curseforge.com/projects/ls-toasts/issues), or post a comment on [WoWInterfrace](http://www.wowinterface.com/downloads/info24123.html#comments) or [Curse](http://mods.curse.com/addons/wow/ls-toasts#comments).
+If you found a bug or want to share an idea on how to improve my addon, either use the issue tracker on [GitHub](https://github.com/ls-/ls_Toasts/issues) or [Curse](https://wow.curseforge.com/projects/ls-toasts/issues), or post a comment on [WoWInterfrace](http://www.wowinterface.com/downloads/info24123.html#comments) or [Curse](http://mods.curse.com/addons/wow/ls-toasts#comments).
 
 ## Localisation
 
