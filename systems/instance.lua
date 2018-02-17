@@ -37,7 +37,7 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 		local slot = toast["Slot"..usedSlots]
 
 		if slot then
-			SetPortraitToTexture(slot.Icon, "Interface\\Icons\\inv_misc_coin_02")
+			slot.Icon:SetTexture("Interface\\Icons\\inv_misc_coin_02")
 
 			slot._data = {
 				type = "money",
@@ -54,7 +54,7 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 		local slot = toast["Slot"..usedSlots]
 
 		if slot then
-			SetPortraitToTexture(slot.Icon, "Interface\\Icons\\xp_icon")
+			slot.Icon:SetTexture("Interface\\Icons\\xp_icon")
 
 			slot._data = {
 				type = "xp",
@@ -74,12 +74,10 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 			local slot = toast["Slot"..usedSlots]
 
 			if slot then
-				local icon = GetLFGCompletionRewardItem(i)
-				local isOK = pcall(SetPortraitToTexture, slot.Icon, icon)
+				local texture = GetLFGCompletionRewardItem(i)
+				texture = texture or "Interface\\Icons\\INV_Box_02"
 
-				if not isOK then
-					SetPortraitToTexture(slot.Icon, "Interface\\Icons\\INV_Box_02")
-				end
+				slot.Icon:SetTexture(texture)
 
 				slot._data = {
 					type = "item",

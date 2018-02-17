@@ -670,32 +670,24 @@ local function constructToast()
 		local slot = CreateFrame("Frame", nil, toast)
 		slot:SetFlattensRenderLayers(true)
 		slot:SetFrameLevel(toast:GetFrameLevel() + 3)
-		slot:SetSize(32, 32)
+		slot:SetSize(18, 18)
 		slot:Hide()
 		slot:SetScript("OnEnter", slot_OnEnter)
 		slot:SetScript("OnLeave", slot_OnLeave)
 		slot:SetScript("OnHide", slot_OnHide)
 		toast["Slot"..i] = slot
 
-		local sMask = slot:CreateMaskTexture()
-		sMask:SetPoint("TOPLEFT", 6, -6)
-		sMask:SetPoint("BOTTOMRIGHT", -6, 6)
-		slot.Mask = sMask
+		local slotIcon = slot:CreateTexture(nil, "BACKGROUND", nil, 1)
+		slotIcon:SetAllPoints()
+		slot.Icon = slotIcon
 
-		local sIcon = slot:CreateTexture(nil, "BACKGROUND")
-		sIcon:SetPoint("TOPLEFT", 5, -5)
-		sIcon:SetPoint("BOTTOMRIGHT", -5, 5)
-		sIcon:AddMaskTexture(sMask)
-		slot.Icon = sIcon
-
-		local sBorder = slot:CreateTexture(nil, "BORDER")
-		sBorder:SetAllPoints()
-		slot.Border = sBorder
+		local slotBorder = createBorder(slot, "BACKGROUND", 2)
+		slot.Border = slotBorder
 
 		if i == 1 then
-			slot:SetPoint("TOPRIGHT", -2, 16)
+			slot:SetPoint("TOPRIGHT", -4, 9)
 		else
-			slot:SetPoint("RIGHT", toast["Slot"..(i - 1)], "LEFT", -2 , 0)
+			slot:SetPoint("RIGHT", toast["Slot"..(i - 1)], "LEFT", -4 , 0)
 		end
 	end
 

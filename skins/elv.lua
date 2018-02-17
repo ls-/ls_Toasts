@@ -22,6 +22,15 @@ E:RegisterSkin("elv", {
 		size = 1,
 		texture = {1, 1, 1, 1},
 	},
+	slot = {
+		tex_coords = {5 / 64, 59 / 64, 5 / 64, 59 / 64},
+	},
+	slot_border = {
+		color = {0, 0, 0},
+		offset = 0,
+		size = 1,
+		texture = {1, 1, 1, 1},
+	},
 })
 
 E:RegisterSkin("elv-no-art", {

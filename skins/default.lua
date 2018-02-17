@@ -57,9 +57,13 @@ E:RegisterSkin("default", {
 		hidden = false,
 	},
 	slot = {
-		mask = "Interface\\CHARACTERFRAME\\TempPortraitAlphaMaskSmall",
-		tex_coords = {28 / 128, 100 / 128, 28 / 128, 100 / 128},
-		texture = "Interface\\AddOns\\ls_Toasts\\assets\\slot-border",
+		tex_coords = {4 / 64, 60 / 64, 4 / 64, 60 / 64}
+	},
+	slot_border = {
+		color = {1, 1, 1},
+		offset = -4,
+		size = 16,
+		texture = "Interface\\AddOns\\ls_Toasts\\assets\\icon-border",
 	},
 	bg = {
 		alliance = {

@@ -177,12 +177,15 @@ function E.ApplySkin(_, toast)
 	for i = 1, 5 do
 		local slot = toast["Slot"..i]
 
-		-- .Mask
-		slot.Mask:SetTexture(skin.slot.mask, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+		-- .Icon
+		slot.Icon:SetTexCoord(unpack(skin.slot.tex_coords))
 
 		-- .Border
-		slot.Border:SetTexture(skin.slot.texture)
-		slot.Border:SetTexCoord(unpack(skin.slot.tex_coords))
+		local slotBorder = slot.Border
+		slotBorder:SetTexture(skin.slot_border.texture)
+		slotBorder:SetVertexColor(unpack(skin.slot_border.color))
+		slotBorder:SetSize(skin.slot_border.size)
+		slotBorder:SetOffset(skin.slot_border.offset)
 	end
 end
 
