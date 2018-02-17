@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 70300.08
+
+- Fixed libs' loading order.
+
 ## Version 70300.07
 
 - Reworked skin engine. Added new toast and icon border textures. Added two basic ElvUI-like skins;
