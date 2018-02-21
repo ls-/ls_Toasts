@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 70300.09
+
+- Reworked slots for additional rewards.
+
 ## Version 70300.08
 
 - Fixed libs' loading order.
