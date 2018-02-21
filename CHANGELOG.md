@@ -2,7 +2,9 @@
 
 ## Version 70300.09
 
-- Reworked slots for additional rewards.
+- Reworked slots for additional rewards;
+- Updated Korean translation. Translated by next96@Curse;
+- Updated Traditional Chinese translation. Translated by gaspy10@Curse.
 
 ## Version 70300.08
 
