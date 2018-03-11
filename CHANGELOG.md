@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 70300.10
+
+- Updated Traditional Chinese translation.
+
 ## Version 70300.09
 
 - Reworked slots for additional rewards;
