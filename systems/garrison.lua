@@ -108,19 +108,45 @@ local function FollowerToast_OnEnter(self)
 
 		if isOK and link then
 			local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = s_split(":", link)
-			local followerType = C_Garrison.GetFollowerTypeByID(tonumber(garrisonFollowerID))
+			garrisonFollowerID = tonumber(garrisonFollowerID)
+			local data = {
+				garrisonFollowerID = garrisonFollowerID,
+				followerTypeID = C_Garrison.GetFollowerTypeByID(garrisonFollowerID),
+				collected = false,
+				hyperlink = false,
+				name = C_Garrison.GetFollowerNameByID(garrisonFollowerID),
+				spec = C_Garrison.GetFollowerClassSpecByID(garrisonFollowerID),
+				portraitIconID = C_Garrison.GetFollowerPortraitIconIDByID(garrisonFollowerID),
+				quality = tonumber(quality),
+				level = tonumber(level),
+				xp = 0,
+				levelxp = 0,
+				iLevel = tonumber(itemLevel),
+				spec1 = tonumber(spec1),
+				ability1 = tonumber(ability1),
+				ability2 = tonumber(ability2),
+				ability3 = tonumber(ability3),
+				ability4 = tonumber(ability4),
+				trait1 = tonumber(trait1),
+				trait2 = tonumber(trait2),
+				trait3 = tonumber(trait3),
+				trait4 = tonumber(trait4),
+				isTroop = C_Garrison.GetFollowerIsTroop(garrisonFollowerID),
+			}
+			local tooltip
 
-			GarrisonFollowerTooltip_Show(tonumber(garrisonFollowerID), false, tonumber(quality), tonumber(level), 0, 0, tonumber(itemLevel), tonumber(spec1), tonumber(ability1), tonumber(ability2), tonumber(ability3), tonumber(ability4), tonumber(trait1), tonumber(trait2), tonumber(trait3), tonumber(trait4))
-
-			if followerType == LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
-				GarrisonShipyardFollowerTooltip:ClearAllPoints()
-				GarrisonShipyardFollowerTooltip:SetPoint(GameTooltip:GetPoint())
+			if data.followerTypeID == LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
+				tooltip = GarrisonShipyardFollowerTooltip
+				GarrisonFollowerTooltipTemplate_SetShipyardFollower(tooltip, data)
 			else
-				GarrisonFollowerTooltip:ClearAllPoints()
-				GarrisonFollowerTooltip:SetPoint(GameTooltip:GetPoint())
+				tooltip = GarrisonFollowerTooltip
+				GarrisonFollowerTooltipTemplate_SetGarrisonFollower(tooltip, data)
 			end
-		end
 
+			tooltip:Show()
+			tooltip:ClearAllPoints()
+			tooltip:SetPoint(GameTooltip:GetPoint())
+		end
 	end
 end
 
