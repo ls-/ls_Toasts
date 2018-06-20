@@ -266,7 +266,7 @@ end
 
 ------
 
-local function TalentToast_SetUp(event, talentID)
+local function TalentToast_SetUp(event, garrisonType, talentID)
 	local talent = C_Garrison.GetTalent(talentID)
 	local toast = E:GetToast()
 
@@ -280,16 +280,17 @@ local function TalentToast_SetUp(event, talentID)
 		talend_id = talentID,
 	}
 
-	if C.db.profile.types.garrison_7_0.sfx then
+	if (garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.sfx)
+		or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx) then
 		toast._data.sound_file = 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
 	end
 
-	toast:Spawn(C.db.profile.types.garrison_7_0.dnd)
+	toast:Spawn((garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.dnd) or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd))
 end
 
 local function GARRISON_TALENT_COMPLETE(garrisonType, doAlert)
 	if doAlert then
-		TalentToast_SetUp("GARRISON_TALENT_COMPLETE", C_Garrison.GetCompleteTalent(garrisonType))
+		TalentToast_SetUp("GARRISON_TALENT_COMPLETE", garrisonType, C_Garrison.GetCompleteTalent(garrisonType))
 	end
 end
 
@@ -303,7 +304,7 @@ local function Enable()
 			E:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE", GARRISON_BUILDING_ACTIVATABLE)
 		end
 
-		if C.db.profile.types.garrison_7_0.enabled then
+		if C.db.profile.types.garrison_8_0.enabled or C.db.profile.types.garrison_7_0.enabled then
 			E:RegisterEvent("GARRISON_TALENT_COMPLETE", GARRISON_TALENT_COMPLETE)
 		end
 	end
@@ -320,7 +321,7 @@ local function Disable()
 		E:UnregisterEvent("GARRISON_BUILDING_ACTIVATABLE", GARRISON_BUILDING_ACTIVATABLE)
 	end
 
-	if not C.db.profile.types.garrison_7_0.enabled then
+	if not (C.db.profile.types.garrison_8_0.enabled and C.db.profile.types.garrison_7_0.enabled) then
 		E:UnregisterEvent("GARRISON_TALENT_COMPLETE", GARRISON_TALENT_COMPLETE)
 	end
 end
@@ -390,13 +391,13 @@ local function TestClassHall()
 	local tree, _
 
 	if talentTreeID then
-		_, _, tree = C_Garrison.GetTalentTreeInfoForID(LE_GARRISON_TYPE_7_0, talentTreeID)
+		_, _, tree = C_Garrison.GetTalentTreeInfoForID(talentTreeID)
 	end
 
-	local talentID = tree and tree[1] and tree[1][1] and tree[1][1].id or nil
+	local talentID = tree and tree[1] and tree[1].id or nil
 
 	if talentID then
-		TalentToast_SetUp("GARRISON_TALENT_TEST", talentID)
+		TalentToast_SetUp("GARRISON_TALENT_TEST", LE_GARRISON_TYPE_7_0, talentID)
 	end
 end
 
