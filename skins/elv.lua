@@ -49,6 +49,9 @@ E:RegisterSkin("elv-no-art", {
 		archaeology = {
 			texture = {0.06, 0.06, 0.06, 0.8},
 		},
+		azerite = {
+			texture = {0.06, 0.06, 0.06, 0.8},
+		},
 		collection = {
 			texture = {0.06, 0.06, 0.06, 0.8},
 		},

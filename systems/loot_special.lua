@@ -42,7 +42,7 @@ local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or value)
 end
 
-local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, isItem, isHonor, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase)
+local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, isItem, isHonor, isPersonal, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase, isAzerite)
 	if isItem then
 		if link then
 			local sanitizedLink, originalLink, _, itemID = E:SanitizeLink(link)
@@ -102,6 +102,12 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 						title = L["BLIZZARD_STORE_PURCHASE_DELIVERED"]
 						soundFile = 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
 						bgTexture = "store"
+					end
+
+					if isAzerite then
+						title = L["ITEM_AZERITE_EMPOWERED"]
+						soundFile = 118238 -- SOUNDKIT.UI_AZERITE_EMPOWERED_ITEM_LOOT_TOAST
+						bgTexture = "azerite"
 					end
 
 					if rollType == LOOT_ROLL_TYPE_NEED then
@@ -234,6 +240,10 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 	end
 end
 
+local function AZERITE_EMPOWERED_ITEM_LOOTED(link)
+	Toast_SetUp("AZERITE_EMPOWERED_ITEM_LOOTED", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, nil, true)
+end
+
 local function LOOT_ITEM_ROLL_WON(link, quantity, rollType, roll, isUpgraded)
 	Toast_SetUp("LOOT_ITEM_ROLL_WON", link, quantity, rollType, roll, nil, true, nil, nil, nil, isUpgraded)
 end
@@ -290,10 +300,11 @@ end
 
 local function Enable()
 	if C.db.profile.types.loot_special.enabled then
+		E:RegisterEvent("AZERITE_EMPOWERED_ITEM_LOOTED", AZERITE_EMPOWERED_ITEM_LOOTED)
 		E:RegisterEvent("LOOT_ITEM_ROLL_WON", LOOT_ITEM_ROLL_WON)
-		E:RegisterEvent("SHOW_LOOT_TOAST", SHOW_LOOT_TOAST)
 		E:RegisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED", SHOW_LOOT_TOAST_LEGENDARY_LOOTED)
 		E:RegisterEvent("SHOW_LOOT_TOAST_UPGRADE", SHOW_LOOT_TOAST_UPGRADE)
+		E:RegisterEvent("SHOW_LOOT_TOAST", SHOW_LOOT_TOAST)
 		E:RegisterEvent("SHOW_PVP_FACTION_LOOT_TOAST", SHOW_PVP_FACTION_LOOT_TOAST)
 		E:RegisterEvent("SHOW_RATED_PVP_REWARD_TOAST", SHOW_RATED_PVP_REWARD_TOAST)
 		E:RegisterEvent("STORE_PRODUCT_DELIVERED", STORE_PRODUCT_DELIVERED)
@@ -305,10 +316,11 @@ local function Enable()
 end
 
 local function Disable()
+	E:UnregisterEvent("AZERITE_EMPOWERED_ITEM_LOOTED", AZERITE_EMPOWERED_ITEM_LOOTED)
 	E:UnregisterEvent("LOOT_ITEM_ROLL_WON", LOOT_ITEM_ROLL_WON)
-	E:UnregisterEvent("SHOW_LOOT_TOAST", SHOW_LOOT_TOAST)
 	E:UnregisterEvent("SHOW_LOOT_TOAST_LEGENDARY_LOOTED", SHOW_LOOT_TOAST_LEGENDARY_LOOTED)
 	E:UnregisterEvent("SHOW_LOOT_TOAST_UPGRADE", SHOW_LOOT_TOAST_UPGRADE)
+	E:UnregisterEvent("SHOW_LOOT_TOAST", SHOW_LOOT_TOAST)
 	E:UnregisterEvent("SHOW_PVP_FACTION_LOOT_TOAST", SHOW_PVP_FACTION_LOOT_TOAST)
 	E:UnregisterEvent("SHOW_RATED_PVP_REWARD_TOAST", SHOW_RATED_PVP_REWARD_TOAST)
 	E:UnregisterEvent("STORE_PRODUCT_DELIVERED", STORE_PRODUCT_DELIVERED)
@@ -363,6 +375,13 @@ local function Test()
 
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, true)
+	end
+
+	-- azerite, Vest of the Champion
+	_, link = GetItemInfo("item:159906::::::::110:581::11::::")
+
+	if link then
+		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, true, nil, nil, nil, nil, nil, nil, nil, true)
 	end
 end
 

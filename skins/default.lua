@@ -72,6 +72,9 @@ E:RegisterSkin("default", {
 		archaeology = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-archaeology",
 		},
+		azerite = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-azerite",
+		},
 		collection = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-collection",
 		},
