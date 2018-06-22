@@ -49,7 +49,6 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 	-- "Invasion: Azshara", 0, 0, 0, false, false, true, 12345, 12345, 4, "Azshara"
 
 	if isNew then
-		local skin = E:GetSkin()
 		local usedSlots = 0
 		local soundFile
 

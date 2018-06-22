@@ -52,8 +52,6 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 	local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
 
 	if isNew then
-		local skin = E:GetSkin()
-
 		if isAdded then
 			toast.Title:SetText(L["TRANSMOG_ADDED"])
 		else
