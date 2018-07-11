@@ -401,7 +401,7 @@ local function TestClassHall()
 	end
 end
 
-local function TestBFAGarrison()
+local function TestWarEffort()
 	-- champion
 	local followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_8_0)
 	local follower = followers and followers[1] or nil
@@ -520,7 +520,7 @@ E:RegisterOptions("garrison_8_0", {
 	dnd = true,
 	sfx = true,
 }, {
-	name = "BFAGarrison", -- FIXME! Temp name
+	name = L["TYPE_WAR_EFFORT"],
 	get = function(info)
 		return C.db.profile.types.garrison_8_0[info[#info]]
 	end,
@@ -558,11 +558,11 @@ E:RegisterOptions("garrison_8_0", {
 			order = 99,
 			width = "full",
 			name = L["TEST"],
-			func = TestBFAGarrison,
+			func = TestWarEffort,
 		},
 	},
 })
 
 E:RegisterSystem("garrison_6_0", Enable, Disable, TestGarrison)
 E:RegisterSystem("garrison_7_0", Enable, Disable, TestClassHall)
-E:RegisterSystem("garrison_8_0", Enable, Disable, TestBFAGarrison)
+E:RegisterSystem("garrison_8_0", Enable, Disable, TestWarEffort)
