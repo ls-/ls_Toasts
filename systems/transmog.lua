@@ -52,8 +52,6 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 	local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
 
 	if isNew then
-		local skin = E:GetSkin()
-
 		if isAdded then
 			toast.Title:SetText(L["TRANSMOG_ADDED"])
 		else
@@ -103,27 +101,33 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 end
 
 local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt)
-	local isKnown = IsAppearanceKnown(sourceID)
-	attempt = attempt or 1
+	-- don't show toasts for sources that aren't in player's wardrobe
+	if C_TransmogCollection.PlayerKnowsSource(sourceID) then
+		local isKnown = IsAppearanceKnown(sourceID)
+		attempt = attempt or 1
 
-	if attempt < 4 then
-		if isKnown == false then
-			Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
-		elseif isKnown == nil then
-			C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt + 1) end)
+		if attempt < 4 then
+			if isKnown == false then
+				Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
+			elseif isKnown == nil then
+				C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt + 1) end)
+			end
 		end
 	end
 end
 
 local function TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt)
-	local isKnown = IsAppearanceKnown(sourceID, true)
-	attempt = attempt or 1
+	-- don't show toasts for sources that aren't in player's wardrobe
+	if C_TransmogCollection.PlayerKnowsSource(sourceID) then
+		local isKnown = IsAppearanceKnown(sourceID, true)
+		attempt = attempt or 1
 
-	if attempt < 4 then
-		if isKnown == false then
-			Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
-		elseif isKnown == nil then
-			C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt + 1) end)
+		if attempt < 4 then
+			if isKnown == false then
+				Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
+			elseif isKnown == nil then
+				C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt + 1) end)
+			end
 		end
 	end
 end

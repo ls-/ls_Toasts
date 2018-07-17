@@ -11,11 +11,21 @@ local tonumber = _G.tonumber
 -- Blizz
 local C_Garrison = _G.C_Garrison
 
+--[[ luacheck: globals
+	GameTooltip GarrisonFollowerOptions GarrisonFollowerTooltip GarrisonFollowerTooltipTemplate_SetGarrisonFollower
+	GarrisonFollowerTooltipTemplate_SetShipyardFollower GarrisonShipyardFollowerTooltip GetInstanceInfo
+	ITEM_QUALITY_COLORS LE_FOLLOWER_TYPE_GARRISON_6_0 LE_FOLLOWER_TYPE_GARRISON_7_0 LE_FOLLOWER_TYPE_GARRISON_8_0
+	LE_FOLLOWER_TYPE_SHIPYARD_6_2 LE_GARRISON_TYPE_6_0 LE_GARRISON_TYPE_7_0 LE_GARRISON_TYPE_8_0
+	LOOTUPGRADEFRAME_QUALITY_TEXTURES UnitClass
+]]
+
 -- Mine
 local PLAYER_CLASS = select(3, UnitClass("player"))
 
 local function GetGarrisonTypeByFollowerType(followerTypeID)
-	if followerTypeID == LE_FOLLOWER_TYPE_GARRISON_7_0 then
+	if followerTypeID == LE_FOLLOWER_TYPE_GARRISON_8_0 then
+		return LE_GARRISON_TYPE_8_0
+	elseif followerTypeID == LE_FOLLOWER_TYPE_GARRISON_7_0 then
 		return LE_GARRISON_TYPE_7_0
 	elseif followerTypeID == LE_FOLLOWER_TYPE_GARRISON_6_0 or followerTypeID == LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
 		return LE_GARRISON_TYPE_6_0
@@ -57,19 +67,21 @@ local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 		mission_id = missionID,
 	}
 
-	if (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx)
-	or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.sfx) then
+	if (garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.sfx)
+		or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx)
+		or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.sfx) then
 		toast._data.sound_file = 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
 	end
 
-	toast:Spawn((garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
+	toast:Spawn((garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.dnd) or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
 end
 
 local function GARRISON_MISSION_FINISHED(followerTypeID, missionID)
 	local garrisonType = GetGarrisonTypeByFollowerType(followerTypeID)
 
-	if (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
-	or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
+	if (garrisonType == LE_GARRISON_TYPE_8_0 and not C.db.profile.types.garrison_8_0.enabled)
+		or (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
+		or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
 		return
 	end
 
@@ -88,8 +100,9 @@ end
 local function GARRISON_RANDOM_MISSION_ADDED(followerTypeID, missionID)
 	local garrisonType = GetGarrisonTypeByFollowerType(followerTypeID)
 
-	if (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
-	or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
+	if (garrisonType == LE_GARRISON_TYPE_8_0 and not C.db.profile.types.garrison_8_0.enabled)
+		or (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
+		or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
 		return
 	end
 
@@ -108,19 +121,45 @@ local function FollowerToast_OnEnter(self)
 
 		if isOK and link then
 			local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = s_split(":", link)
-			local followerType = C_Garrison.GetFollowerTypeByID(tonumber(garrisonFollowerID))
+			garrisonFollowerID = tonumber(garrisonFollowerID)
+			local data = {
+				garrisonFollowerID = garrisonFollowerID,
+				followerTypeID = C_Garrison.GetFollowerTypeByID(garrisonFollowerID),
+				collected = false,
+				hyperlink = false,
+				name = C_Garrison.GetFollowerNameByID(garrisonFollowerID),
+				spec = C_Garrison.GetFollowerClassSpecByID(garrisonFollowerID),
+				portraitIconID = C_Garrison.GetFollowerPortraitIconIDByID(garrisonFollowerID),
+				quality = tonumber(quality),
+				level = tonumber(level),
+				xp = 0,
+				levelxp = 0,
+				iLevel = tonumber(itemLevel),
+				spec1 = tonumber(spec1),
+				ability1 = tonumber(ability1),
+				ability2 = tonumber(ability2),
+				ability3 = tonumber(ability3),
+				ability4 = tonumber(ability4),
+				trait1 = tonumber(trait1),
+				trait2 = tonumber(trait2),
+				trait3 = tonumber(trait3),
+				trait4 = tonumber(trait4),
+				isTroop = C_Garrison.GetFollowerIsTroop(garrisonFollowerID),
+			}
+			local tooltip
 
-			GarrisonFollowerTooltip_Show(tonumber(garrisonFollowerID), false, tonumber(quality), tonumber(level), 0, 0, tonumber(itemLevel), tonumber(spec1), tonumber(ability1), tonumber(ability2), tonumber(ability3), tonumber(ability4), tonumber(trait1), tonumber(trait2), tonumber(trait3), tonumber(trait4))
-
-			if followerType == LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
-				GarrisonShipyardFollowerTooltip:ClearAllPoints()
-				GarrisonShipyardFollowerTooltip:SetPoint(GameTooltip:GetPoint())
+			if data.followerTypeID == LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
+				tooltip = GarrisonShipyardFollowerTooltip
+				GarrisonFollowerTooltipTemplate_SetShipyardFollower(tooltip, data)
 			else
-				GarrisonFollowerTooltip:ClearAllPoints()
-				GarrisonFollowerTooltip:SetPoint(GameTooltip:GetPoint())
+				tooltip = GarrisonFollowerTooltip
+				GarrisonFollowerTooltipTemplate_SetGarrisonFollower(tooltip, data)
 			end
-		end
 
+			tooltip:Show()
+			tooltip:ClearAllPoints()
+			tooltip:SetPoint(GameTooltip:GetPoint())
+		end
 	end
 end
 
@@ -178,20 +217,22 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 		show_arrows = isUpgraded,
 	}
 
-	if (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx)
-	or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.sfx) then
+	if (garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.sfx)
+		or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx)
+		or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.sfx) then
 		toast._data.sound_file = 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
 	end
 
 	toast:HookScript("OnEnter", FollowerToast_OnEnter)
-	toast:Spawn((garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
+	toast:Spawn((garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.dnd) or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
 end
 
 local function GARRISON_FOLLOWER_ADDED(followerID, name, _, level, quality, isUpgraded, texPrefix, followerTypeID)
 	local garrisonType = GetGarrisonTypeByFollowerType(followerTypeID)
 
-	if (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
-	or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
+	if (garrisonType == LE_GARRISON_TYPE_8_0 and not C.db.profile.types.garrison_8_0.enabled)
+		or (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
+		or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
 		return
 	end
 
@@ -225,7 +266,7 @@ end
 
 ------
 
-local function TalentToast_SetUp(event, talentID)
+local function TalentToast_SetUp(event, garrisonType, talentID)
 	local talent = C_Garrison.GetTalent(talentID)
 	local toast = E:GetToast()
 
@@ -239,21 +280,22 @@ local function TalentToast_SetUp(event, talentID)
 		talend_id = talentID,
 	}
 
-	if C.db.profile.types.garrison_7_0.sfx then
+	if (garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.sfx)
+		or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx) then
 		toast._data.sound_file = 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
 	end
 
-	toast:Spawn(C.db.profile.types.garrison_7_0.dnd)
+	toast:Spawn((garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.dnd) or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd))
 end
 
 local function GARRISON_TALENT_COMPLETE(garrisonType, doAlert)
 	if doAlert then
-		TalentToast_SetUp("GARRISON_TALENT_COMPLETE", C_Garrison.GetCompleteTalent(garrisonType))
+		TalentToast_SetUp("GARRISON_TALENT_COMPLETE", garrisonType, C_Garrison.GetCompleteTalent(garrisonType))
 	end
 end
 
 local function Enable()
-	if C.db.profile.types.garrison_6_0.enabled or C.db.profile.types.garrison_7_0.enabled then
+	if C.db.profile.types.garrison_8_0.enabled or C.db.profile.types.garrison_7_0.enabled or C.db.profile.types.garrison_6_0.enabled then
 		E:RegisterEvent("GARRISON_FOLLOWER_ADDED", GARRISON_FOLLOWER_ADDED)
 		E:RegisterEvent("GARRISON_MISSION_FINISHED", GARRISON_MISSION_FINISHED)
 		E:RegisterEvent("GARRISON_RANDOM_MISSION_ADDED", GARRISON_RANDOM_MISSION_ADDED)
@@ -262,14 +304,14 @@ local function Enable()
 			E:RegisterEvent("GARRISON_BUILDING_ACTIVATABLE", GARRISON_BUILDING_ACTIVATABLE)
 		end
 
-		if C.db.profile.types.garrison_7_0.enabled then
+		if C.db.profile.types.garrison_8_0.enabled or C.db.profile.types.garrison_7_0.enabled then
 			E:RegisterEvent("GARRISON_TALENT_COMPLETE", GARRISON_TALENT_COMPLETE)
 		end
 	end
 end
 
 local function Disable()
-	if not (C.db.profile.types.garrison_7_0.enabled and C.db.profile.types.garrison_6_0.enabled) then
+	if not (C.db.profile.types.garrison_8_0.enabled and C.db.profile.types.garrison_7_0.enabled and C.db.profile.types.garrison_6_0.enabled) then
 		E:UnregisterEvent("GARRISON_FOLLOWER_ADDED", GARRISON_FOLLOWER_ADDED)
 		E:UnregisterEvent("GARRISON_MISSION_FINISHED", GARRISON_MISSION_FINISHED)
 		E:UnregisterEvent("GARRISON_RANDOM_MISSION_ADDED", GARRISON_RANDOM_MISSION_ADDED)
@@ -279,7 +321,7 @@ local function Disable()
 		E:UnregisterEvent("GARRISON_BUILDING_ACTIVATABLE", GARRISON_BUILDING_ACTIVATABLE)
 	end
 
-	if not C.db.profile.types.garrison_7_0.enabled then
+	if not (C.db.profile.types.garrison_8_0.enabled and C.db.profile.types.garrison_7_0.enabled) then
 		E:UnregisterEvent("GARRISON_TALENT_COMPLETE", GARRISON_TALENT_COMPLETE)
 	end
 end
@@ -349,13 +391,31 @@ local function TestClassHall()
 	local tree, _
 
 	if talentTreeID then
-		_, _, tree = C_Garrison.GetTalentTreeInfoForID(LE_GARRISON_TYPE_7_0, talentTreeID)
+		_, _, tree = C_Garrison.GetTalentTreeInfoForID(talentTreeID)
 	end
 
-	local talentID = tree and tree[1] and tree[1][1] and tree[1][1].id or nil
+	local talentID = tree and tree[1] and tree[1].id or nil
 
 	if talentID then
-		TalentToast_SetUp("GARRISON_TALENT_TEST", talentID)
+		TalentToast_SetUp("GARRISON_TALENT_TEST", LE_GARRISON_TYPE_7_0, talentID)
+	end
+end
+
+local function TestWarEffort()
+	-- champion
+	local followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_8_0)
+	local follower = followers and followers[1] or nil
+
+	if follower then
+		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", LE_GARRISON_TYPE_8_0, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
+	end
+
+	-- mission
+	local missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_8_0)
+	local missionID = missions and missions[1] and missions[1].missionID or nil
+
+	if missionID then
+		MissionToast_SetUp("GARRISON_MISSION_TEST", LE_GARRISON_TYPE_8_0, missionID)
 	end
 end
 
@@ -455,5 +515,54 @@ E:RegisterOptions("garrison_7_0", {
 	},
 })
 
+E:RegisterOptions("garrison_8_0", {
+	enabled = true,
+	dnd = true,
+	sfx = true,
+}, {
+	name = L["TYPE_WAR_EFFORT"],
+	get = function(info)
+		return C.db.profile.types.garrison_8_0[info[#info]]
+	end,
+	set = function(info, value)
+		C.db.profile.types.garrison_8_0[info[#info]] = value
+	end,
+	args = {
+		enabled = {
+			order = 1,
+			type = "toggle",
+			name = L["ENABLE"],
+			set = function(_, value)
+				C.db.profile.types.garrison_8_0.enabled = value
+
+				if value then
+					Enable()
+				else
+					Disable()
+				end
+			end
+		},
+		dnd = {
+			order = 2,
+			type = "toggle",
+			name = L["DND"],
+			desc = L["DND_TOOLTIP"],
+		},
+		sfx = {
+			order = 3,
+			type = "toggle",
+			name = L["SFX"],
+		},
+		test = {
+			type = "execute",
+			order = 99,
+			width = "full",
+			name = L["TEST"],
+			func = TestWarEffort,
+		},
+	},
+})
+
 E:RegisterSystem("garrison_6_0", Enable, Disable, TestGarrison)
 E:RegisterSystem("garrison_7_0", Enable, Disable, TestClassHall)
+E:RegisterSystem("garrison_8_0", Enable, Disable, TestWarEffort)

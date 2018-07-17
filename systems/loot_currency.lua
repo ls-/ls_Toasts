@@ -103,7 +103,7 @@ end
 
 local function Test()
 	-- Order Resources
-	local link, _ = GetCurrencyLink(1220)
+	local link, _ = GetCurrencyLink(1220, 1)
 
 	if link then
 		Toast_SetUp("LOOT_CURRENCY_TEST", link, m_random(300, 600))

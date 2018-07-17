@@ -49,7 +49,6 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 	-- "Invasion: Azshara", 0, 0, 0, false, false, true, 12345, 12345, 4, "Azshara"
 
 	if isNew then
-		local skin = E:GetSkin()
 		local usedSlots = 0
 		local soundFile
 
@@ -251,25 +250,25 @@ local function Test()
 		-- world quest, may not work
 		local quests = C_TaskQuest.GetQuestsForPlayerByMapID(1014)
 
-		if #quests == 0 then
+		if not quests or #quests == 0 then
 			quests = C_TaskQuest.GetQuestsForPlayerByMapID(1015)
 
-			if #quests == 0 then
+			if not quests or #quests == 0 then
 				quests = C_TaskQuest.GetQuestsForPlayerByMapID(1017)
 
-				if #quests == 0 then
+				if not quests or #quests == 0 then
 					quests = C_TaskQuest.GetQuestsForPlayerByMapID(1018)
 
-					if #quests == 0 then
+					if not quests or #quests == 0 then
 						quests = C_TaskQuest.GetQuestsForPlayerByMapID(1021)
 
-						if #quests == 0 then
+						if not quests or #quests == 0 then
 							quests = C_TaskQuest.GetQuestsForPlayerByMapID(1024)
 
-							if #quests == 0 then
+							if not quests or #quests == 0 then
 								quests = C_TaskQuest.GetQuestsForPlayerByMapID(1033)
 
-								if #quests == 0 then
+								if not quests or #quests == 0 then
 									quests = C_TaskQuest.GetQuestsForPlayerByMapID(1096)
 								end
 							end
@@ -279,13 +278,15 @@ local function Test()
 			end
 		end
 
-		for _, quest in next, quests do
-			if HaveQuestData(quest.questId) then
-				if QuestUtils_IsQuestWorldQuest(quest.questId) then
-					Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest.GetQuestInfoByQuestID(quest.questId), 123456, 123456)
-					Toast_SetUp("WORLD_TEST", true, quest.questId, "scenario", nil, nil, nil, link)
+		if quests then
+			for _, quest in next, quests do
+				if HaveQuestData(quest.questId) then
+					if QuestUtils_IsQuestWorldQuest(quest.questId) then
+						Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest.GetQuestInfoByQuestID(quest.questId), 123456, 123456)
+						Toast_SetUp("WORLD_TEST", true, quest.questId, "scenario", nil, nil, nil, link)
 
-					return
+						return
+					end
 				end
 			end
 		end
