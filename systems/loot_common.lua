@@ -65,8 +65,8 @@ local function Toast_SetUp(event, link, quantity)
 			isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 		end
 
-		if (quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
-			or (C.db.profile.types.loot_common.quest and isQuestItem) then
+		if name and ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
+			or (C.db.profile.types.loot_common.quest and isQuestItem)) then
 			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 
 			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue

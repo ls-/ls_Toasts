@@ -51,7 +51,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 			if isNew then
 				local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(originalLink)
 
-				if quality >= C.db.profile.types.loot_special.threshold and quality <= 5 then
+				if name and (quality and quality >= C.db.profile.types.loot_special.threshold and quality <= 5) then
 					local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 					local title = L["YOU_WON"]
 					local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
