@@ -299,6 +299,8 @@ local function toastAnimOut_OnFinished(self)
 end
 
 local function toast_Spawn(self, isDND)
+	self._data = self._data or {}
+
 	if #activeToasts >= C.db.profile.max_active_toasts or (InCombatLockdown() and isDND) then
 		if InCombatLockdown() and isDND then
 			self._data.dnd = true

@@ -1,10 +1,16 @@
 # CHANGELOG
 
+## Version 80000.02
+
+- Updated Spanish translations. Translated by Gotzon@Curse;
+- Updated Traditional Chinese translation. Translated by gaspy10@Curse;
+- Updated embeds.
+
 ## Version 80000.01
 
 - Added 8.0.1 support;
 - Added War Effort (BfA garrison) toasts;
-- Added partial Latin American Spanish translation. Copied from Spanish.
+- Added partial Latin American Spanish translation. Copied from Spanish;
 - Updated German translation. Translated by staratnight@Curse;
 - Updated French translation. Translated by Daniel8513@Curse;
 - Updated embeds.
