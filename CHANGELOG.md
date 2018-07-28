@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 80000.03
+
+- Fixed an issue where the addon would try to show a toast for an item whose data wasn't available.
+
 ## Version 80000.02
 
 - Updated Spanish translations. Translated by Gotzon@Curse;
