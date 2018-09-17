@@ -10,6 +10,7 @@ if GetLocale() ~= "deDE" then return end
 
 L["ANCHOR"] = "Anker der Benachrichtigung"
 L["ANCHOR_FRAME"] = "Ankerrahmen"
+--[[ L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position." ]]
 L["BORDER"] = "Rahmen"
 L["COLLECTIONS_TAINT_WARNING"] = "Diese Option kann Probleme verursachen, wenn das Sammlungsfenster während des Kampfes geöffnet wird."
 L["COLORS"] = "Farben"

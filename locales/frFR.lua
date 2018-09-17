@@ -10,6 +10,7 @@ if GetLocale() ~= "frFR" then return end
 
 L["ANCHOR"] = "Point d'attache des 'Toast'"
 L["ANCHOR_FRAME"] = "Point d'attache"
+--[[ L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position." ]]
 L["BORDER"] = "Bordure"
 L["COLLECTIONS_TAINT_WARNING"] = "Activer cette option peut provoquer des erreurs lors de l'ouverture de l'interface \"Collections\" en combat"
 L["COLORS"] = "Couleurs"

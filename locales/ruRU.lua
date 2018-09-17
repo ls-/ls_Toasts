@@ -10,6 +10,7 @@ if GetLocale() ~= "ruRU" then return end
 
 L["ANCHOR"] = "Крепление уведомления"
 L["ANCHOR_FRAME"] = "Фрейм крепления"
+L["ANCHOR_RESET_DESC"] = "|cffffffffЗажмите Shift и щелкните|r, чтобы сбросить позицию."
 L["BORDER"] = "Рамка"
 L["COLLECTIONS_TAINT_WARNING"] = "Включение данной настройки может вызвать ошибки при открытии панели \"Коллекции\" в бою."
 L["COLORS"] = "Цвета"

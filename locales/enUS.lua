@@ -48,6 +48,7 @@ L["YOU_WON"] = _G.YOU_WON_LABEL
 -- Require translation
 L["ANCHOR"] = "Toast Anchor"
 L["ANCHOR_FRAME"] = "Anchor Frame"
+L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position."
 L["BORDER"] = "Border"
 L["COLLECTIONS_TAINT_WARNING"] = "Enabling this option may cause errors when opening \"Collections\" panel in combat."
 L["COLORS"] = "Colours"

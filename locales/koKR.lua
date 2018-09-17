@@ -10,6 +10,7 @@ if GetLocale() ~= "koKR" then return end
 
 L["ANCHOR"] = "알림창 고정기"
 L["ANCHOR_FRAME"] = "고정기 창"
+--[[ L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position." ]]
 L["BORDER"] = "테두리"
 L["COLLECTIONS_TAINT_WARNING"] = "이 설정을 사용하는 경우 전투중 \"수집창\"을 열게 되면 오류가 발생합니다."
 L["COLORS"] = "색상"
