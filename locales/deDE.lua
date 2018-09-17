@@ -59,5 +59,5 @@ L["TYPE_LOOT_SPECIAL"] = "Beute (Spezial)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Benachrichtigungen, die von besonderen Beuteereignissen wie gewonnene Würfe, legendäre Gegenstände, persönliche Beute etc. ausgelöst werden."
 L["TYPE_RECIPE"] = "Rezept"
 L["TYPE_TRANSMOG"] = "Transmogrifikation"
--- L["TYPE_WAR_EFFORT"] = "War Effort"
+--[[ L["TYPE_WAR_EFFORT"] = "War Effort" ]]
 L["TYPE_WORLD_QUEST"] = "Weltquest"
