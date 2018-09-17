@@ -10,6 +10,7 @@ if GetLocale() ~= "deDE" then return end
 
 L["ANCHOR"] = "Anker der Benachrichtigung"
 L["ANCHOR_FRAME"] = "Ankerrahmen"
+--[[ L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position." ]]
 L["BORDER"] = "Rahmen"
 L["COLLECTIONS_TAINT_WARNING"] = "Diese Option kann Probleme verursachen, wenn das Sammlungsfenster während des Kampfes geöffnet wird."
 L["COLORS"] = "Farben"
@@ -59,5 +60,5 @@ L["TYPE_LOOT_SPECIAL"] = "Beute (Spezial)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Benachrichtigungen, die von besonderen Beuteereignissen wie gewonnene Würfe, legendäre Gegenstände, persönliche Beute etc. ausgelöst werden."
 L["TYPE_RECIPE"] = "Rezept"
 L["TYPE_TRANSMOG"] = "Transmogrifikation"
--- L["TYPE_WAR_EFFORT"] = "War Effort"
+--[[ L["TYPE_WAR_EFFORT"] = "War Effort" ]]
 L["TYPE_WORLD_QUEST"] = "Weltquest"

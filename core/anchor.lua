@@ -1,11 +1,15 @@
 local _, addonTable = ...
-local E, C, L = addonTable.E, addonTable.C, addonTable.L
+local E, C, D, L = addonTable.E, addonTable.C, addonTable.D, addonTable.L
 
 -- Lua
 local _G = getfenv(0)
 local m_floor = _G.math.floor
 local next = _G.next
 local s_upper = _G.string.upper
+
+--[[ luacheck: globals
+	CreateFrame GameTooltip IsShiftKeyDown SquareButton_SetIcon UIParent
+]]
 
 -- Mine
 local function calculatePosition(self)
@@ -26,10 +30,10 @@ local function calculatePosition(self)
 	end
 
 	if selfCenterX >= screenRight then
-		p = p.."RIGHT"
+		p = p .. "RIGHT"
 		x = self:GetRight() - screenWidth
 	elseif selfCenterX <= screenLeft then
-		p = p.."LEFT"
+		p = p .. "LEFT"
 		x = self:GetLeft()
 	else
 		x = selfCenterX - screenCenterX
@@ -38,10 +42,11 @@ local function calculatePosition(self)
 	return p, p, m_floor(x + 0.5), m_floor(y + 0.5)
 end
 
-local anchorFrame = CreateFrame("Frame", "LSToastAnchor", UIParent)
+local anchorFrame = CreateFrame("Button", "LSToastAnchor", UIParent)
 anchorFrame:RegisterForDrag("LeftButton")
+anchorFrame:RegisterForClicks("LeftButtonUp")
 anchorFrame:SetClampedToScreen(true)
-anchorFrame:SetClampRectInsets(-26, 14, 14, -14)
+anchorFrame:SetClampRectInsets(-4, 4, 4, -4)
 anchorFrame:SetFlattensRenderLayers(true)
 anchorFrame:SetFrameStrata("DIALOG")
 anchorFrame:SetToplevel(true)
@@ -79,7 +84,9 @@ local function onEnter()
 
 	GameTooltip:SetOwner(anchorFrame, "ANCHOR_CURSOR")
 	GameTooltip:AddLine(L["COORDS"])
-	GameTooltip:AddLine("|cffffd100P:|r "..p..", |cffffd100X:|r "..x..", |cffffd100Y:|r "..y, 1, 1, 1)
+	GameTooltip:AddLine("|cffffd100P:|r " .. p .. ", |cffffd100X:|r " .. x .. ", |cffffd100Y:|r " .. y, 1, 1, 1)
+	GameTooltip:AddLine(" ")
+	GameTooltip:AddLine(L["ANCHOR_RESET_DESC"])
 	GameTooltip:Show()
 end
 
@@ -101,6 +108,20 @@ end
 
 anchorFrame:SetScript("OnEnter", onEnter)
 anchorFrame:SetScript("OnLeave", onLeave)
+
+anchorFrame:SetScript("OnClick", function(self)
+	if IsShiftKeyDown() then
+		self:ClearAllPoints()
+		self:SetPoint(D.profile.point.p, "UIParent", D.profile.point.rP, D.profile.point.x, D.profile.point.y)
+
+		C.db.profile.point = {
+			p = D.profile.point.p,
+			rP = D.profile.point.rP,
+			x = D.profile.point.x,
+			y = D.profile.point.y,
+		}
+	end
+end)
 
 anchorFrame:SetScript("OnDragStart", function(self)
 	self:StartMoving()
@@ -159,7 +180,7 @@ local function button_OnClick(self)
 end
 
 for dir, data in next, buttons do
-	local button = CreateFrame("Button", "$parentButton"..dir, anchorFrame, "UIPanelSquareButton")
+	local button = CreateFrame("Button", "$parentButton" .. dir, anchorFrame, "UIPanelSquareButton")
 	button:GetHighlightTexture():SetColorTexture(0.4, 0.4, 0.4, 0.8)
 	button:GetNormalTexture():SetColorTexture(0.2, 0.2, 0.2, 0.8)
 	button:GetPushedTexture():SetColorTexture(0.1, 0.1, 0.1, 0.8)

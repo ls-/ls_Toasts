@@ -10,6 +10,7 @@ if GetLocale() ~= "zhTW" then return end
 
 L["ANCHOR"] = "通知定位點"
 L["ANCHOR_FRAME"] = "定位框架"
+L["ANCHOR_RESET_DESC"] = "|cffffffffShift-左鍵點擊|r 重置位置。"
 L["BORDER"] = "邊框"
 L["COLLECTIONS_TAINT_WARNING"] = "啟用這個選項時，若在戰鬥中點擊開啟了 \"收藏\" 視窗，會發生錯誤。"
 L["COLORS"] = "顏色"

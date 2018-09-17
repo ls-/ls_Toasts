@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 80000.04
+
+- Reduced anchor frame's offsets to 4px. Now you can move toasts closer to the screen edge;
+- Updated Simplified Chinese translation. Translated by y368413@Curse;
+- Updated Traditional Chinese translation. Translated by gaspy10@Curse;
+- Updated embeds.
+
 ## Version 80000.03
 
 - Fixed an issue where the addon would try to show a toast for an item whose data wasn't available.

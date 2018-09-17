@@ -10,6 +10,7 @@ if GetLocale() ~= "esMX" then return end
 
 L["ANCHOR"] = "Marco Toast"
 L["ANCHOR_FRAME"] = "Marco de anclaje"
+--[[ L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position." ]]
 L["BORDER"] = "Borde"
 L["COLLECTIONS_TAINT_WARNING"] = "Activar esta opción puede causar problemas al abrir la ventana de \"Colecciones\" en combate."
 L["COLORS"] = "Colores"

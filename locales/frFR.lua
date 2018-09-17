@@ -1,4 +1,4 @@
-﻿-- Contributors: cyberlinkfr@Curse, Daniel8513@Curse
+-- Contributors: cyberlinkfr@Curse, Daniel8513@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -10,6 +10,7 @@ if GetLocale() ~= "frFR" then return end
 
 L["ANCHOR"] = "Point d'attache des 'Toast'"
 L["ANCHOR_FRAME"] = "Point d'attache"
+--[[ L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position." ]]
 L["BORDER"] = "Bordure"
 L["COLLECTIONS_TAINT_WARNING"] = "Activer cette option peut provoquer des erreurs lors de l'ouverture de l'interface \"Collections\" en combat"
 L["COLORS"] = "Couleurs"
@@ -25,11 +26,11 @@ L["GROWTH_DIR_DOWN"] = "Bas"
 L["GROWTH_DIR_LEFT"] = "Gauche"
 L["GROWTH_DIR_RIGHT"] = "Droite"
 L["GROWTH_DIR_UP"] = "Haut"
--- L["HANDLE_LEFT_CLICK"] = "Handle Left Click"
+--[[ L["HANDLE_LEFT_CLICK"] = "Handle Left Click" ]]
 L["ICON_BORDER"] = "Bordure d'icône"
 L["NAME"] = "Nom"
 L["OPEN_CONFIG"] = "Ouvrir Configuration"
--- L["RARITY_THRESHOLD"] = "Rarity Threshold"
+--[[ L["RARITY_THRESHOLD"] = "Rarity Threshold" ]]
 L["SCALE"] = "Echelle"
 L["SETTINGS_TYPE_LABEL"] = "Types de 'Toast'"
 L["SHOW_ILVL"] = "Montrer l'iLvl"
@@ -59,5 +60,5 @@ L["TYPE_LOOT_SPECIAL"] = "Butin (Special)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Toasts générés par les Butins spéciaux, ex: Jets de Butin, Butin Légendaire ou Personnel, etc."
 L["TYPE_RECIPE"] = "Recettes"
 L["TYPE_TRANSMOG"] = "Transmogrification"
--- L["TYPE_WAR_EFFORT"] = "War Effort"
+--[[ L["TYPE_WAR_EFFORT"] = "War Effort" ]]
 L["TYPE_WORLD_QUEST"] = "Missions d'expédition"
