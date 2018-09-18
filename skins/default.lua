@@ -92,45 +92,59 @@ E:RegisterSkin("default", {
 	bg = {
 		alliance = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-alliance",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		archaeology = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-archaeology",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		azerite = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-azerite",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		collection = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-collection",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		default = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		dungeon = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-dungeon",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		horde = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-horde",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		legendary = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legendary",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		legion = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legion",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		recipe = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-recipe",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		store = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-store",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		transmog = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-transmog",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		upgrade = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-upgrade",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 		worldquest = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-worldquest",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 		},
 	},
 })

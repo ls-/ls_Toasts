@@ -395,8 +395,10 @@ local function toast_SetBackground(self, id)
 
 	if type(skin.bg[id].texture) == "table" then
 		self.BG:SetColorTexture(unpack(skin.bg[id].texture))
+		self.BG:SetTexCoord(1, 0, 1, 0)
 	else
 		self.BG:SetTexture(skin.bg[id].texture)
+		self.BG:SetTexCoord(unpack(skin.bg[id].tex_coords))
 	end
 end
 
@@ -415,7 +417,6 @@ local function constructToast()
 
 	local bg = toast:CreateTexture(nil, "BACKGROUND", nil, -8)
 	bg:SetAllPoints()
-	bg:SetTexCoord(1 / 256, 225 / 256, 1 / 64, 49 / 64)
 	toast.BG = bg
 
 	local border = createBorder(toast, "BACKGROUND", 1)
