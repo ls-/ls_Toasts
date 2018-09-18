@@ -9,6 +9,10 @@ local s_format = _G.string.format
 local type = _G.type
 local unpack = _G.unpack
 
+--[[ luacheck: globals
+	LibStub
+]]
+
 -- Mine
 local skins = {}
 local skinList = {}
@@ -176,7 +180,7 @@ function E.ApplySkin(_, toast)
 	toast.Skull.isHidden = skin.skull.hidden
 
 	for i = 1, 5 do
-		local slot = toast["Slot"..i]
+		local slot = toast["Slot" .. i]
 
 		-- .Icon
 		slot.Icon:SetTexCoord(unpack(skin.slot.tex_coords))
