@@ -238,11 +238,6 @@ function E.ResetSkin(_, toast)
 	-- .IconBorder
 	toast.IconBorder:SetVertexColor(unpack(skin.icon_border.color))
 
-	-- .IconHL
-	if not toast.IconHL.isHidden then
-		toast.IconHL:SetTexCoord(unpack(skin.icon_highlight.tex_coords))
-	end
-
 	-- .IconText1
 	toast.IconText1:SetVertexColor(unpack(skin.icon_text_1.color))
 
