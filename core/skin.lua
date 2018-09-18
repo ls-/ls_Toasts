@@ -146,10 +146,11 @@ function E.ApplySkin(_, toast)
 	if not skin.icon_highlight.hidden then
 		if type(skin.icon_highlight.texture) == "table" then
 			iconHL:SetColorTexture(unpack(skin.icon_highlight.texture))
+			iconHL:SetTexCoord(1, 0, 1, 0)
 		else
 			iconHL:SetTexture(skin.icon_highlight.texture)
+			iconHL:SetTexCoord(unpack(skin.icon_highlight.tex_coords))
 		end
-		iconHL:SetTexCoord(unpack(skin.icon_highlight.tex_coords))
 		iconHL.isHidden = false
 	else
 		iconHL.isHidden = true
