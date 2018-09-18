@@ -187,6 +187,34 @@ function E.ApplySkin(_, toast)
 		slotBorder:SetSize(skin.slot_border.size)
 		slotBorder:SetOffset(skin.slot_border.offset)
 	end
+
+	-- .Glow
+	local glow = toast.Glow
+	glow:SetSize(unpack(skin.glow.size))
+	glow:SetPoint(skin.glow.point.p, toast, skin.glow.point.rP, skin.glow.point.x, skin.glow.point.y)
+	if type(skin.glow.texture) == "table" then
+		glow:SetColorTexture(unpack(skin.glow.texture))
+		glow:SetTexCoord(1, 0, 1 ,0)
+	else
+		glow:SetTexture(skin.glow.texture)
+		glow:SetTexCoord(unpack(skin.glow.tex_coords))
+	end
+	glow:SetVertexColor(unpack(skin.glow.color))
+
+	-- .Shine
+	local shine = toast.Shine
+	shine:SetSize(unpack(skin.shine.size))
+	shine:SetPoint(skin.shine.point.p, toast, skin.shine.point.rP, skin.shine.point.x, skin.shine.point.y)
+	if type(skin.shine.texture) == "table" then
+		shine:SetColorTexture(unpack(skin.shine.texture))
+		shine:SetTexCoord(1, 0, 1 ,0)
+	else
+		shine:SetTexture(skin.shine.texture)
+		shine:SetTexCoord(unpack(skin.shine.tex_coords))
+	end
+	shine:SetVertexColor(unpack(skin.shine.color))
+
+	toast.AnimIn.Anim5:SetOffset(224 - skin.shine.size[1], 0)
 end
 
 function E.ResetSkin(_, toast)
@@ -219,4 +247,10 @@ function E.ResetSkin(_, toast)
 
 	-- .IconText1
 	toast.IconText2:SetVertexColor(unpack(skin.icon_text_2.color))
+
+	-- .Glow
+	toast.Glow:SetVertexColor(unpack(skin.glow.color))
+
+	-- .Shine
+	toast.Shine:SetVertexColor(unpack(skin.shine.color))
 end

@@ -31,6 +31,13 @@ E:RegisterSkin("elv", {
 		size = 1,
 		texture = {1, 1, 1, 1},
 	},
+	glow = {
+		texture = {1, 1, 1, 1},
+		size = {226, 50},
+	},
+	shine = {
+		texture = {0, 0, 0, 0},
+	},
 })
 
 E:RegisterSkin("elv-no-art", {

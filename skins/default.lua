@@ -65,6 +65,30 @@ E:RegisterSkin("default", {
 		size = 16,
 		texture = "Interface\\AddOns\\ls_Toasts\\assets\\icon-border",
 	},
+	glow = {
+		color = {1, 1, 1},
+		texture = "Interface\\AchievementFrame\\UI-Achievement-Alert-Glow",
+		tex_coords = {5 / 512, 395 / 512, 5 / 256, 167 / 256},
+		size = {318, 152},
+		point = {
+			p = "CENTER",
+			rP = "CENTER",
+			x = 0,
+			y = 0,
+		},
+	},
+	shine = {
+		color = {1, 1, 1},
+		texture = "Interface\\AchievementFrame\\UI-Achievement-Alert-Glow",
+		tex_coords = {403 / 512, 465 / 512, 14 / 256, 62 / 256},
+		size = {66, 52},
+		point = {
+			p = "BOTTOMLEFT",
+			rP = "BOTTOMLEFT",
+			x = 0,
+			y = -2,
+		},
+	},
 	bg = {
 		alliance = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-alliance",
