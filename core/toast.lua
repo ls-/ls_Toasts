@@ -664,7 +664,7 @@ local function constructToast()
 		anim:SetToAlpha(0)
 		anim:SetStartDelay(C.db.profile.fadeout_delay)
 		anim:SetDuration(1.2)
-		ag.Anim = anim
+		ag.Anim1 = anim
 	end
 
 	-- .Slot1, .Slot2, .Slot3, .Slot4, .Slot5
@@ -787,7 +787,7 @@ function E.UpdateFadeOutDelay()
 	local delay = C.db.profile.fadeout_delay
 
 	for _, toast in next, toasts do
-		toast.AnimOut.Anim:SetStartDelay(delay)
+		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 end
 
