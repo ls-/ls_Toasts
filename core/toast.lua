@@ -393,6 +393,10 @@ end
 local function toast_SetBackground(self, id)
 	local skin = E:GetSkin()
 
+	if not skin.bg[id] then
+		id = "default"
+	end
+
 	if type(skin.bg[id].texture) == "table" then
 		self.BG:SetColorTexture(unpack(skin.bg[id].texture))
 		self.BG:SetTexCoord(1, 0, 1, 0)
