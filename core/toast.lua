@@ -416,6 +416,7 @@ local function toast_SetBackground(self, id)
 		end
 	end
 
+	self.BG:SetVertexColor(unpack(skin.bg[id].color))
 end
 
 local function constructToast()
