@@ -129,6 +129,11 @@ function E.ApplySkin(_, toast)
 	text:SetWordWrap(false)
 	text:SetShadowOffset(skin.text.shadow and 1 or 0, skin.text.shadow and -1 or 0)
 
+	-- .TextBG
+	local textBG = toast.TextBG
+	textBG:SetShown(not skin.text_bg.hidden)
+	textBG.isHidden = skin.text_bg.hidden
+
 	-- .Bonus
 	toast.Bonus.isHidden = skin.bonus.hidden
 

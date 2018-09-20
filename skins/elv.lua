@@ -43,6 +43,9 @@ E:RegisterSkin("elv", {
 E:RegisterSkin("elv-no-art", {
 	name = "ElvUI (No Artwork)",
 	template = "elv",
+	text_bg = {
+		hidden = true,
+	},
 	dragon = {
 		hidden = true,
 	},

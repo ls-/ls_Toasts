@@ -23,6 +23,9 @@ E:RegisterSkin("default", {
 		flags = "",
 		shadow = true,
 	},
+	text_bg = {
+		hidden = false,
+	},
 	bonus = {
 		hidden = false,
 	},
