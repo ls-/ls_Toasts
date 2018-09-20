@@ -36,7 +36,11 @@ E:RegisterSkin("elv", {
 		size = {226, 50},
 	},
 	shine = {
-		texture = {0, 0, 0, 0},
+		tex_coords = {403 / 512, 465 / 512, 15 / 256, 61 / 256},
+		size = {67, 50},
+		point = {
+			y = -1,
+		},
 	},
 })
 
