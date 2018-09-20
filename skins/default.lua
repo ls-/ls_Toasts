@@ -96,6 +96,7 @@ E:RegisterSkin("default", {
 		default = {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default",
 			tex_coords = {1 / 512, 449 / 512, 1 / 128, 97 / 128},
+			tile = false,
 		},
 	},
 })

@@ -399,11 +399,23 @@ local function toast_SetBackground(self, id)
 
 	if type(skin.bg[id].texture) == "table" then
 		self.BG:SetColorTexture(unpack(skin.bg[id].texture))
+		self.BG:SetHorizTile(false)
+		self.BG:SetVertTile(false)
 		self.BG:SetTexCoord(1, 0, 1, 0)
 	else
-		self.BG:SetTexture(skin.bg[id].texture)
-		self.BG:SetTexCoord(unpack(skin.bg[id].tex_coords))
+		if skin.bg[id].tile then
+			self.BG:SetTexture(skin.bg[id].texture, "REPEAT", "REPEAT")
+			self.BG:SetHorizTile(true)
+			self.BG:SetVertTile(true)
+			self.BG:SetTexCoord(1, 0, 1, 0)
+		else
+			self.BG:SetTexture(skin.bg[id].texture)
+			self.BG:SetHorizTile(false)
+			self.BG:SetVertTile(false)
+			self.BG:SetTexCoord(unpack(skin.bg[id].tex_coords))
+		end
 	end
+
 end
 
 local function constructToast()
