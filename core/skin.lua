@@ -9,6 +9,10 @@ local s_format = _G.string.format
 local type = _G.type
 local unpack = _G.unpack
 
+--[[ luacheck: globals
+	LibStub
+]]
+
 -- Mine
 local skins = {}
 local skinList = {}
@@ -125,6 +129,11 @@ function E.ApplySkin(_, toast)
 	text:SetWordWrap(false)
 	text:SetShadowOffset(skin.text.shadow and 1 or 0, skin.text.shadow and -1 or 0)
 
+	-- .TextBG
+	local textBG = toast.TextBG
+	textBG:SetShown(not skin.text_bg.hidden)
+	textBG.isHidden = skin.text_bg.hidden
+
 	-- .Bonus
 	toast.Bonus.isHidden = skin.bonus.hidden
 
@@ -146,10 +155,11 @@ function E.ApplySkin(_, toast)
 	if not skin.icon_highlight.hidden then
 		if type(skin.icon_highlight.texture) == "table" then
 			iconHL:SetColorTexture(unpack(skin.icon_highlight.texture))
+			iconHL:SetTexCoord(1, 0, 1, 0)
 		else
 			iconHL:SetTexture(skin.icon_highlight.texture)
+			iconHL:SetTexCoord(unpack(skin.icon_highlight.tex_coords))
 		end
-		iconHL:SetTexCoord(unpack(skin.icon_highlight.tex_coords))
 		iconHL.isHidden = false
 	else
 		iconHL.isHidden = true
@@ -175,7 +185,7 @@ function E.ApplySkin(_, toast)
 	toast.Skull.isHidden = skin.skull.hidden
 
 	for i = 1, 5 do
-		local slot = toast["Slot"..i]
+		local slot = toast["Slot" .. i]
 
 		-- .Icon
 		slot.Icon:SetTexCoord(unpack(skin.slot.tex_coords))
@@ -187,6 +197,34 @@ function E.ApplySkin(_, toast)
 		slotBorder:SetSize(skin.slot_border.size)
 		slotBorder:SetOffset(skin.slot_border.offset)
 	end
+
+	-- .Glow
+	local glow = toast.Glow
+	glow:SetSize(unpack(skin.glow.size))
+	glow:SetPoint(skin.glow.point.p, toast, skin.glow.point.rP, skin.glow.point.x, skin.glow.point.y)
+	if type(skin.glow.texture) == "table" then
+		glow:SetColorTexture(unpack(skin.glow.texture))
+		glow:SetTexCoord(1, 0, 1 ,0)
+	else
+		glow:SetTexture(skin.glow.texture)
+		glow:SetTexCoord(unpack(skin.glow.tex_coords))
+	end
+	glow:SetVertexColor(unpack(skin.glow.color))
+
+	-- .Shine
+	local shine = toast.Shine
+	shine:SetSize(unpack(skin.shine.size))
+	shine:SetPoint(skin.shine.point.p, toast, skin.shine.point.rP, skin.shine.point.x, skin.shine.point.y)
+	if type(skin.shine.texture) == "table" then
+		shine:SetColorTexture(unpack(skin.shine.texture))
+		shine:SetTexCoord(1, 0, 1 ,0)
+	else
+		shine:SetTexture(skin.shine.texture)
+		shine:SetTexCoord(unpack(skin.shine.tex_coords))
+	end
+	shine:SetVertexColor(unpack(skin.shine.color))
+
+	toast.AnimIn.Anim5:SetOffset(224 - skin.shine.size[1], 0)
 end
 
 function E.ResetSkin(_, toast)
@@ -209,14 +247,15 @@ function E.ResetSkin(_, toast)
 	-- .IconBorder
 	toast.IconBorder:SetVertexColor(unpack(skin.icon_border.color))
 
-	-- .IconHL
-	if not toast.IconHL.isHidden then
-		toast.IconHL:SetTexCoord(unpack(skin.icon_highlight.tex_coords))
-	end
-
 	-- .IconText1
 	toast.IconText1:SetVertexColor(unpack(skin.icon_text_1.color))
 
 	-- .IconText1
 	toast.IconText2:SetVertexColor(unpack(skin.icon_text_2.color))
+
+	-- .Glow
+	toast.Glow:SetVertexColor(unpack(skin.glow.color))
+
+	-- .Shine
+	toast.Shine:SetVertexColor(unpack(skin.shine.color))
 end

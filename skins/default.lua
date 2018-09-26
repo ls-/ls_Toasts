@@ -23,6 +23,9 @@ E:RegisterSkin("default", {
 		flags = "",
 		shadow = true,
 	},
+	text_bg = {
+		hidden = false,
+	},
 	bonus = {
 		hidden = false,
 	},
@@ -65,48 +68,36 @@ E:RegisterSkin("default", {
 		size = 16,
 		texture = "Interface\\AddOns\\ls_Toasts\\assets\\icon-border",
 	},
+	glow = {
+		color = {1, 1, 1},
+		texture = "Interface\\AchievementFrame\\UI-Achievement-Alert-Glow",
+		tex_coords = {5 / 512, 395 / 512, 5 / 256, 167 / 256},
+		size = {318, 152},
+		point = {
+			p = "CENTER",
+			rP = "CENTER",
+			x = 0,
+			y = 0,
+		},
+	},
+	shine = {
+		color = {1, 1, 1},
+		texture = "Interface\\AchievementFrame\\UI-Achievement-Alert-Glow",
+		tex_coords = {403 / 512, 465 / 512, 14 / 256, 62 / 256},
+		size = {66, 52},
+		point = {
+			p = "BOTTOMLEFT",
+			rP = "BOTTOMLEFT",
+			x = 0,
+			y = -2,
+		},
+	},
 	bg = {
-		alliance = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-alliance",
-		},
-		archaeology = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-archaeology",
-		},
-		azerite = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-azerite",
-		},
-		collection = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-collection",
-		},
 		default = {
+			color = {1, 1, 1},
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default",
-		},
-		dungeon = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-dungeon",
-		},
-		horde = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-horde",
-		},
-		legendary = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legendary",
-		},
-		legion = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-legion",
-		},
-		recipe = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-recipe",
-		},
-		store = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-store",
-		},
-		transmog = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-transmog",
-		},
-		upgrade = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-upgrade",
-		},
-		worldquest = {
-			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-worldquest",
+			tex_coords = {1 / 512, 449 / 512, 1 / 128, 97 / 128},
+			tile = false,
 		},
 	},
 })

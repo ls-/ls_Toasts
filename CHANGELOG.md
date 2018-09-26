@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 80000.05
+
+- Updated the default background texture. Retired all other backgrounds, but I'll eventually  
+  redraw some of them in higher resolution;
+- Updated included ElvUI skins;
+- Updated Korean translation. Translated by next96@Curse.
+
 ## Version 80000.04
 
 - Reduced anchor frame's offsets to 4px. Now you can move toasts closer to the screen edge;

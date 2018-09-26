@@ -393,11 +393,30 @@ end
 local function toast_SetBackground(self, id)
 	local skin = E:GetSkin()
 
+	if not skin.bg[id] then
+		id = "default"
+	end
+
 	if type(skin.bg[id].texture) == "table" then
 		self.BG:SetColorTexture(unpack(skin.bg[id].texture))
+		self.BG:SetHorizTile(false)
+		self.BG:SetVertTile(false)
+		self.BG:SetTexCoord(1, 0, 1, 0)
 	else
-		self.BG:SetTexture(skin.bg[id].texture)
+		if skin.bg[id].tile then
+			self.BG:SetTexture(skin.bg[id].texture, "REPEAT", "REPEAT")
+			self.BG:SetHorizTile(true)
+			self.BG:SetVertTile(true)
+			self.BG:SetTexCoord(1, 0, 1, 0)
+		else
+			self.BG:SetTexture(skin.bg[id].texture)
+			self.BG:SetHorizTile(false)
+			self.BG:SetVertTile(false)
+			self.BG:SetTexCoord(unpack(skin.bg[id].tex_coords))
+		end
 	end
+
+	self.BG:SetVertexColor(unpack(skin.bg[id].color))
 end
 
 local function constructToast()
@@ -415,7 +434,6 @@ local function constructToast()
 
 	local bg = toast:CreateTexture(nil, "BACKGROUND", nil, -8)
 	bg:SetAllPoints()
-	bg:SetTexCoord(1 / 256, 225 / 256, 1 / 64, 49 / 64)
 	toast.BG = bg
 
 	local border = createBorder(toast, "BACKGROUND", 1)
@@ -589,19 +607,11 @@ local function constructToast()
 	glowParent:SetAllPoints()
 
 	local glow = glowParent:CreateTexture(nil, "OVERLAY", nil, 2)
-	glow:SetSize(318, 152)
-	glow:SetPoint("CENTER")
-	glow:SetTexture("Interface\\AchievementFrame\\UI-Achievement-Alert-Glow")
-	glow:SetTexCoord(5 / 512, 395 / 512, 5 / 256, 167 / 256)
 	glow:SetBlendMode("ADD")
 	glow:SetAlpha(0)
 	toast.Glow = glow
 
 	local shine = glowParent:CreateTexture(nil, "OVERLAY", nil, 1)
-	shine:SetSize(66, 52)
-	shine:SetPoint("BOTTOMLEFT", 0, -2)
-	shine:SetTexture("Interface\\AchievementFrame\\UI-Achievement-Alert-Glow")
-	shine:SetTexCoord(403 / 512, 465 / 512, 14 / 256, 62 / 256)
 	shine:SetBlendMode("ADD")
 	shine:SetAlpha(0)
 	toast.Shine = shine
@@ -618,6 +628,7 @@ local function constructToast()
 		anim:SetFromAlpha(0)
 		anim:SetToAlpha(1)
 		anim:SetDuration(0)
+		ag.Anim1 = anim
 
 		anim = ag:CreateAnimation("Alpha")
 		anim:SetChildKey("Glow")
@@ -625,6 +636,7 @@ local function constructToast()
 		anim:SetFromAlpha(0)
 		anim:SetToAlpha(1)
 		anim:SetDuration(0.2)
+		ag.Anim2 = anim
 
 		anim = ag:CreateAnimation("Alpha")
 		anim:SetChildKey("Glow")
@@ -632,6 +644,7 @@ local function constructToast()
 		anim:SetFromAlpha(1)
 		anim:SetToAlpha(0)
 		anim:SetDuration(0.5)
+		ag.Anim3 = anim
 
 		anim = ag:CreateAnimation("Alpha")
 		anim:SetChildKey("Shine")
@@ -639,12 +652,13 @@ local function constructToast()
 		anim:SetFromAlpha(0)
 		anim:SetToAlpha(1)
 		anim:SetDuration(0.2)
+		ag.Anim4 = anim
 
 		anim = ag:CreateAnimation("Translation")
 		anim:SetChildKey("Shine")
 		anim:SetOrder(3)
-		anim:SetOffset(168, 0)
 		anim:SetDuration(0.85)
+		ag.Anim5 = anim
 
 		anim = ag:CreateAnimation("Alpha")
 		anim:SetChildKey("Shine")
@@ -653,6 +667,7 @@ local function constructToast()
 		anim:SetToAlpha(0)
 		anim:SetStartDelay(0.35)
 		anim:SetDuration(0.5)
+		ag.Anim6 = anim
 
 		ag = toast:CreateAnimationGroup()
 		ag:SetScript("OnFinished", toastAnimOut_OnFinished)
@@ -664,7 +679,7 @@ local function constructToast()
 		anim:SetToAlpha(0)
 		anim:SetStartDelay(C.db.profile.fadeout_delay)
 		anim:SetDuration(1.2)
-		ag.Anim = anim
+		ag.Anim1 = anim
 	end
 
 	-- .Slot1, .Slot2, .Slot3, .Slot4, .Slot5
@@ -787,7 +802,7 @@ function E.UpdateFadeOutDelay()
 	local delay = C.db.profile.fadeout_delay
 
 	for _, toast in next, toasts do
-		toast.AnimOut.Anim:SetStartDelay(delay)
+		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 end
 

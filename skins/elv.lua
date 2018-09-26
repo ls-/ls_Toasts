@@ -31,11 +31,25 @@ E:RegisterSkin("elv", {
 		size = 1,
 		texture = {1, 1, 1, 1},
 	},
+	glow = {
+		texture = {1, 1, 1, 1},
+		size = {226, 50},
+	},
+	shine = {
+		tex_coords = {403 / 512, 465 / 512, 15 / 256, 61 / 256},
+		size = {67, 50},
+		point = {
+			y = -1,
+		},
+	},
 })
 
 E:RegisterSkin("elv-no-art", {
 	name = "ElvUI (No Artwork)",
 	template = "elv",
+	text_bg = {
+		hidden = true,
+	},
 	dragon = {
 		hidden = true,
 	},
@@ -43,46 +57,7 @@ E:RegisterSkin("elv-no-art", {
 		hidden = true,
 	},
 	bg = {
-		alliance = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		archaeology = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		azerite = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		collection = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
 		default = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		dungeon = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		horde = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		legendary = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		legion = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		recipe = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		store = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		transmog = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		upgrade = {
-			texture = {0.06, 0.06, 0.06, 0.8},
-		},
-		worldquest = {
 			texture = {0.06, 0.06, 0.06, 0.8},
 		},
 	},
