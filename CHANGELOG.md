@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 80000.06
+
+- Added "Default (Legacy)" and "ElvUI (Legacy)" skins that use old texture backgrounds;
+- Updated Simplified Chinese translation. Translated by dxlmike@Curse;
+
 ## Version 80000.05
 
 - Updated the default background texture. Retired all other backgrounds, but I'll eventually  

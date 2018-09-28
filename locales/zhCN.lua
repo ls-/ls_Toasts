@@ -1,4 +1,4 @@
-﻿-- Contributors: y368413@Curse
+﻿-- Contributors: y368413@Curse, dxlmike@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -10,7 +10,7 @@ if GetLocale() ~= "zhCN" then return end
 
 L["ANCHOR"] = "框体位置"
 L["ANCHOR_FRAME"] = "框架定位"
---[[ L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position." ]]
+L["ANCHOR_RESET_DESC"] = "|cffffffffShift-点击左键|r 重置位置。"
 L["BORDER"] = "边框"
 L["COLLECTIONS_TAINT_WARNING"] = "战斗中打开收藏(包括坐骑、宠物和玩具)界面，会引起Blz内置插件报错(污染)。"
 L["COLORS"] = "着色"
