@@ -44,6 +44,97 @@ E:RegisterSkin("elv", {
 	},
 })
 
+E:RegisterSkin("elv-legacy", {
+	name = "ElvUI (Legacy)",
+	template = "elv",
+	bg = {
+		alliance = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-alliance",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		archaeology = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-archaeology",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		azerite = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-azerite",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		collection = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-collection",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		default = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-default",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		dungeon = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-dungeon",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		horde = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-horde",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		legendary = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-legendary",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		legion = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-legion",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		recipe = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-recipe",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		store = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-store",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		transmog = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-transmog",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		upgrade = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-upgrade",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		worldquest = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-worldquest",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+	},
+})
+
 E:RegisterSkin("elv-no-art", {
 	name = "ElvUI (No Artwork)",
 	template = "elv",
