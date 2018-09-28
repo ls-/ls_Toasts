@@ -1,6 +1,6 @@
 ## Interface: 80000
 ## Author: lightspark
-## Version: 80000.05
+## Version: 80000.06
 ## Title: ls: |cff1a9fc0Toasts|r
 ## Notes: Better toasts, cheers!
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
