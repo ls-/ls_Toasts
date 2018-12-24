@@ -12,7 +12,7 @@ local C_PetJournal = _G.C_PetJournal
 local C_Timer = _G.C_Timer
 
 -- Mine
-local PLAYER_NAME = UnitName("player")
+local PLAYER_GUID = UnitGUID("player")
 
 local function Toast_OnClick(self)
 	if self._data then
@@ -139,41 +139,48 @@ local function Toast_SetUp(event, link, quantity)
 	end
 end
 
+local LOOT_ITEM_CREATED_PATTERN
+local LOOT_ITEM_CREATED_MULTIPLE_PATTERN
 local LOOT_ITEM_PATTERN
-local LOOT_ITEM_PUSHED_PATTERN
 local LOOT_ITEM_MULTIPLE_PATTERN
+local LOOT_ITEM_PUSHED_PATTERN
 local LOOT_ITEM_PUSHED_MULTIPLE_PATTERN
 
-local function CHAT_MSG_LOOT(message, _, _, _, target)
-	if target ~= PLAYER_NAME then
+local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
+	if guid ~= PLAYER_GUID then
 		return
 	end
 
 	local link, quantity = message:match(LOOT_ITEM_MULTIPLE_PATTERN)
-
 	if not link then
 		link, quantity = message:match(LOOT_ITEM_PUSHED_MULTIPLE_PATTERN)
-
 		if not link then
-			quantity, link = 1, message:match(LOOT_ITEM_PATTERN)
-
+			link, quantity = message:match(LOOT_ITEM_CREATED_MULTIPLE_PATTERN)
 			if not link then
-				quantity, link = 1, message:match(LOOT_ITEM_PUSHED_PATTERN)
-
+				quantity, link = 1, message:match(LOOT_ITEM_PATTERN)
 				if not link then
-					return
+					quantity, link = 1, message:match(LOOT_ITEM_PUSHED_PATTERN)
+					if not link then
+						quantity, link = 1, message:match(LOOT_ITEM_CREATED_PATTERN)
+					end
 				end
 			end
 		end
+	end
+
+	if not link then
+		return
 	end
 
 	C_Timer.After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
 end
 
 local function Enable()
+	LOOT_ITEM_CREATED_PATTERN = LOOT_ITEM_CREATED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+	LOOT_ITEM_CREATED_MULTIPLE_PATTERN = LOOT_ITEM_CREATED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
 	LOOT_ITEM_PATTERN = LOOT_ITEM_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
-	LOOT_ITEM_PUSHED_PATTERN = LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
 	LOOT_ITEM_MULTIPLE_PATTERN = LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+	LOOT_ITEM_PUSHED_PATTERN = LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
 	LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
 
 	if C.db.profile.types.loot_common.enabled then
