@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 80100.01
+
+- Added 8.1.0 support;
+- Slightly reorganised in-game config;
+- Fixed common loot toasts. Items created via professions and scrapping should be handled  
+  correctly once again.
+
 ## Version 80000.06
 
 - Added "Default (Legacy)" and "ElvUI (Legacy)" skins that use old texture backgrounds;
