@@ -294,7 +294,10 @@ end
 local function BonusRollFrame_FinishedFading_Enabled(self)
 	local frame = self:GetParent()
 
-	Toast_SetUp("LOOT_ITEM_BONUS_ROLL_WON", frame.rewardLink, frame.rewardQuantity, nil, nil, nil, frame.rewardType == "item" or frame.rewardType == "artifact_power")
+	if frame.rewardType == "item" or frame.rewardType == "artifact_power" then
+		Toast_SetUp("LOOT_ITEM_BONUS_ROLL_WON", frame.rewardLink, frame.rewardQuantity, nil, nil, nil, true)
+	end
+
 	GroupLootContainer_RemoveFrame(GroupLootContainer, frame)
 end
 
