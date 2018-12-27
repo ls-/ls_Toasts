@@ -136,7 +136,6 @@ function E.RegisterOptions(_, id, dbTable, optionsTable)
 
 	if optionsTable then
 		options[id] = optionsTable
-		options[id].guiInline = true
 		options[id].order = order
 		options[id].type = "group"
 
