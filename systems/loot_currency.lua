@@ -6,7 +6,45 @@ local _G = getfenv(0)
 local m_random = _G.math.random
 local tonumber = _G.tonumber
 
+-- Blizz
+local C_Timer = _G.C_Timer
+
+--[[ luacheck: globals
+	GameTooltip GetCurrencyInfo GetCurrencyLink
+
+	CURRENCY_GAINED CURRENCY_GAINED_MULTIPLE CURRENCY_GAINED_MULTIPLE_BONUS ITEM_QUALITY_COLORS
+]]
+
 -- Mine
+local CACHED_CURRENCY_GAINED
+local CACHED_CURRENCY_GAINED_MULTIPLE
+local CACHED_CURRENCY_GAINED_MULTIPLE_BONUS
+
+local CURRENCY_GAINED_PATTERN
+local CURRENCY_GAINED_MULTIPLE_PATTERN
+local CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN
+
+local function updatePatterns()
+	if CACHED_CURRENCY_GAINED ~= CURRENCY_GAINED then
+		CURRENCY_GAINED_PATTERN = CURRENCY_GAINED:gsub("%%s", "(.+)"):gsub("^", "^")
+		CACHED_CURRENCY_GAINED = CURRENCY_GAINED
+	end
+
+	if CACHED_CURRENCY_GAINED_MULTIPLE ~= CURRENCY_GAINED_MULTIPLE then
+		CURRENCY_GAINED_MULTIPLE_PATTERN = CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_CURRENCY_GAINED_MULTIPLE = CURRENCY_GAINED_MULTIPLE
+	end
+
+	if CACHED_CURRENCY_GAINED_MULTIPLE_BONUS ~= CURRENCY_GAINED_MULTIPLE_BONUS then
+		CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN = CURRENCY_GAINED_MULTIPLE_BONUS:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_CURRENCY_GAINED_MULTIPLE_BONUS = CURRENCY_GAINED_MULTIPLE_BONUS
+	end
+end
+
+local function delayedUpdatePatterns()
+	C_Timer.After(0.1, updatePatterns)
+end
+
 local function Toast_OnEnter(self)
 	GameTooltip:SetHyperlink(self._data.tooltip_link)
 	GameTooltip:Show()
@@ -71,34 +109,34 @@ local function Toast_SetUp(event, link, quantity)
 	end
 end
 
-local CURRENCY_GAINED_PATTERN
-local CURRENCY_GAINED_MULTIPLE_PATTERN
-
 local function CHAT_MSG_CURRENCY(message)
 	local link, quantity = message:match(CURRENCY_GAINED_MULTIPLE_PATTERN)
+	if not link then
+		link, quantity = message:match(CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN)
+		if not link then
+			quantity, link = 1, message:match(CURRENCY_GAINED_PATTERN)
+		end
+	end
 
 	if not link then
-		quantity, link = 1, message:match(CURRENCY_GAINED_PATTERN)
-
-		if not link then
-			return
-		end
+		return
 	end
 
 	Toast_SetUp("CHAT_MSG_CURRENCY", link, tonumber(quantity) or 0)
 end
 
 local function Enable()
-	CURRENCY_GAINED_PATTERN = CURRENCY_GAINED:gsub("%%s", "(.+)"):gsub("^", "^")
-	CURRENCY_GAINED_MULTIPLE_PATTERN = CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+	updatePatterns()
 
 	if C.db.profile.types.loot_currency.enabled then
 		E:RegisterEvent("CHAT_MSG_CURRENCY", CHAT_MSG_CURRENCY)
+		E:RegisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
 	end
 end
 
 local function Disable()
 	E:UnregisterEvent("CHAT_MSG_CURRENCY", CHAT_MSG_CURRENCY)
+	E:UnregisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
 end
 
 local function Test()

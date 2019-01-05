@@ -11,8 +11,67 @@ local tonumber = _G.tonumber
 local C_PetJournal = _G.C_PetJournal
 local C_Timer = _G.C_Timer
 
+--[[ luacheck: globals
+	BattlePetToolTip_Show GameTooltip GetItemInfo OpenBag UnitGUID
+
+	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC
+	LOOT_ITEM_CREATED_SELF LOOT_ITEM_CREATED_SELF_MULTIPLE LOOT_ITEM_PUSHED_SELF LOOT_ITEM_PUSHED_SELF_MULTIPLE
+	LOOT_ITEM_SELF LOOT_ITEM_SELF_MULTIPLE
+]]
+
 -- Mine
 local PLAYER_GUID = UnitGUID("player")
+
+local CACHED_LOOT_ITEM_CREATED
+local CACHED_LOOT_ITEM_CREATED_MULTIPLE
+local CACHED_LOOT_ITEM
+local CACHED_LOOT_ITEM_MULTIPLE
+local CACHED_LOOT_ITEM_PUSHED
+local CACHED_LOOT_ITEM_PUSHED_MULTIPLE
+
+local LOOT_ITEM_CREATED_PATTERN
+local LOOT_ITEM_CREATED_MULTIPLE_PATTERN
+local LOOT_ITEM_PATTERN
+local LOOT_ITEM_MULTIPLE_PATTERN
+local LOOT_ITEM_PUSHED_PATTERN
+local LOOT_ITEM_PUSHED_MULTIPLE_PATTERN
+
+local function updatePatterns()
+	if CACHED_LOOT_ITEM_CREATED ~= LOOT_ITEM_CREATED_SELF then
+		LOOT_ITEM_CREATED_PATTERN = LOOT_ITEM_CREATED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_CREATED = LOOT_ITEM_CREATED_SELF
+	end
+
+	if CACHED_LOOT_ITEM_CREATED_MULTIPLE ~= LOOT_ITEM_CREATED_SELF_MULTIPLE then
+		LOOT_ITEM_CREATED_MULTIPLE_PATTERN = LOOT_ITEM_CREATED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_CREATED_MULTIPLE = LOOT_ITEM_CREATED_SELF_MULTIPLE
+	end
+
+	if CACHED_LOOT_ITEM ~= LOOT_ITEM_SELF then
+		LOOT_ITEM_PATTERN = LOOT_ITEM_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM = LOOT_ITEM_SELF
+	end
+
+	if CACHED_LOOT_ITEM_MULTIPLE ~= LOOT_ITEM_SELF_MULTIPLE then
+		LOOT_ITEM_MULTIPLE_PATTERN = LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_MULTIPLE = LOOT_ITEM_SELF_MULTIPLE
+	end
+
+	if CACHED_LOOT_ITEM_PUSHED ~= LOOT_ITEM_PUSHED_SELF then
+		LOOT_ITEM_PUSHED_PATTERN = LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_PUSHED = LOOT_ITEM_PUSHED_SELF
+	end
+
+	if CACHED_LOOT_ITEM_PUSHED_MULTIPLE ~= LOOT_ITEM_PUSHED_SELF_MULTIPLE then
+		LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_PUSHED_MULTIPLE = LOOT_ITEM_PUSHED_SELF_MULTIPLE
+	end
+
+end
+
+local function delayedUpdatePatterns()
+	C_Timer.After(0.1, updatePatterns)
+end
 
 local function Toast_OnClick(self)
 	if self._data then
@@ -139,13 +198,6 @@ local function Toast_SetUp(event, link, quantity)
 	end
 end
 
-local LOOT_ITEM_CREATED_PATTERN
-local LOOT_ITEM_CREATED_MULTIPLE_PATTERN
-local LOOT_ITEM_PATTERN
-local LOOT_ITEM_MULTIPLE_PATTERN
-local LOOT_ITEM_PUSHED_PATTERN
-local LOOT_ITEM_PUSHED_MULTIPLE_PATTERN
-
 local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
 	if guid ~= PLAYER_GUID then
 		return
@@ -176,20 +228,17 @@ local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
 end
 
 local function Enable()
-	LOOT_ITEM_CREATED_PATTERN = LOOT_ITEM_CREATED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
-	LOOT_ITEM_CREATED_MULTIPLE_PATTERN = LOOT_ITEM_CREATED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-	LOOT_ITEM_PATTERN = LOOT_ITEM_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
-	LOOT_ITEM_MULTIPLE_PATTERN = LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-	LOOT_ITEM_PUSHED_PATTERN = LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
-	LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+	updatePatterns()
 
 	if C.db.profile.types.loot_common.enabled then
 		E:RegisterEvent("CHAT_MSG_LOOT", CHAT_MSG_LOOT)
+		E:RegisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
 	end
 end
 
 local function Disable()
 	E:UnregisterEvent("CHAT_MSG_LOOT", CHAT_MSG_LOOT)
+	E:UnregisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
 end
 
 local function Test()
