@@ -9,7 +9,42 @@ local tonumber = _G.tonumber
 -- Blizz
 local C_Timer = _G.C_Timer
 
+--[[ luacheck: globals
+	GameTooltip GetCurrencyInfo GetCurrencyLink
+
+	CURRENCY_GAINED CURRENCY_GAINED_MULTIPLE CURRENCY_GAINED_MULTIPLE_BONUS ITEM_QUALITY_COLORS
+]]
+
 -- Mine
+local CACHED_CURRENCY_GAINED
+local CACHED_CURRENCY_GAINED_MULTIPLE
+local CACHED_CURRENCY_GAINED_MULTIPLE_BONUS
+
+local CURRENCY_GAINED_PATTERN
+local CURRENCY_GAINED_MULTIPLE_PATTERN
+local CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN
+
+local function updatePatterns()
+	if CACHED_CURRENCY_GAINED ~= CURRENCY_GAINED then
+		CURRENCY_GAINED_PATTERN = CURRENCY_GAINED:gsub("%%s", "(.+)"):gsub("^", "^")
+		CACHED_CURRENCY_GAINED = CURRENCY_GAINED
+	end
+
+	if CACHED_CURRENCY_GAINED_MULTIPLE ~= CURRENCY_GAINED_MULTIPLE then
+		CURRENCY_GAINED_MULTIPLE_PATTERN = CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_CURRENCY_GAINED_MULTIPLE = CURRENCY_GAINED_MULTIPLE
+	end
+
+	if CACHED_CURRENCY_GAINED_MULTIPLE_BONUS ~= CURRENCY_GAINED_MULTIPLE_BONUS then
+		CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN = CURRENCY_GAINED_MULTIPLE_BONUS:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_CURRENCY_GAINED_MULTIPLE_BONUS = CURRENCY_GAINED_MULTIPLE_BONUS
+	end
+end
+
+local function delayedUpdatePatterns()
+	C_Timer.After(0.1, updatePatterns)
+end
+
 local function Toast_OnEnter(self)
 	GameTooltip:SetHyperlink(self._data.tooltip_link)
 	GameTooltip:Show()
@@ -72,34 +107,6 @@ local function Toast_SetUp(event, link, quantity)
 			toast.AnimOut:Play()
 		end
 	end
-end
-
-local CACHED_CURRENCY_GAINED
-local CACHED_CURRENCY_GAINED_MULTIPLE
-local CACHED_CURRENCY_GAINED_MULTIPLE_BONUS
-local CURRENCY_GAINED_PATTERN
-local CURRENCY_GAINED_MULTIPLE_PATTERN
-local CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN
-
-local function updatePatterns()
-	if CACHED_CURRENCY_GAINED ~= CURRENCY_GAINED then
-		CURRENCY_GAINED_PATTERN = CURRENCY_GAINED:gsub("%%s", "(.+)"):gsub("^", "^")
-		CACHED_CURRENCY_GAINED = CURRENCY_GAINED
-	end
-
-	if CACHED_CURRENCY_GAINED_MULTIPLE ~= CURRENCY_GAINED_MULTIPLE then
-		CURRENCY_GAINED_MULTIPLE_PATTERN = CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		CACHED_CURRENCY_GAINED_MULTIPLE = CURRENCY_GAINED_MULTIPLE
-	end
-
-	if CACHED_CURRENCY_GAINED_MULTIPLE_BONUS ~= CURRENCY_GAINED_MULTIPLE_BONUS then
-		CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN = CURRENCY_GAINED_MULTIPLE_BONUS:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		CACHED_CURRENCY_GAINED_MULTIPLE_BONUS = CURRENCY_GAINED_MULTIPLE_BONUS
-	end
-end
-
-local function delayedUpdatePatterns()
-	C_Timer.After(0.1, updatePatterns)
 end
 
 local function CHAT_MSG_CURRENCY(message)
