@@ -4,7 +4,7 @@
 
 - Improved compatibility with addons that modify chat messages which are used by common loot and  
   currency toasts.
-  
+
 ## Version 80100.01
 
 - Added 8.1.0 support;
