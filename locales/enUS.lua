@@ -46,7 +46,6 @@ L["YOU_RECEIVED"] = _G.YOU_RECEIVED_LABEL
 L["YOU_WON"] = _G.YOU_WON_LABEL
 
 -- Require translation
-L["ANCHOR"] = "Toast Anchor"
 L["ANCHOR_FRAME"] = "Anchor Frame"
 L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position."
 L["BORDER"] = "Border"
@@ -100,3 +99,5 @@ L["TYPE_RECIPE"] = "Recipe"
 L["TYPE_TRANSMOG"] = "Transmogrification"
 L["TYPE_WAR_EFFORT"] = "War Effort"
 L["TYPE_WORLD_QUEST"] = "World Quest"
+
+L["ANCHOR_FRAME_#"] = "Anchor Frame #%d"

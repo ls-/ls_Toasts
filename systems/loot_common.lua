@@ -176,7 +176,7 @@ local function Toast_SetUp(event, link, quantity)
 
 			toast:HookScript("OnClick", Toast_OnClick)
 			toast:HookScript("OnEnter", Toast_OnEnter)
-			toast:Spawn(C.db.profile.types.loot_common.dnd)
+			toast:Spawn(C.db.profile.types.loot_common.anchor, C.db.profile.types.loot_common.dnd)
 		else
 			toast:Recycle()
 		end
@@ -255,6 +255,7 @@ end
 
 E:RegisterOptions("loot_common", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 	sfx = true,
 	ilvl = true,

@@ -165,7 +165,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 
 					toast:HookScript("OnClick", Toast_OnClick)
 					toast:HookScript("OnEnter", Toast_OnEnter)
-					toast:Spawn(C.db.profile.types.loot_special.dnd)
+					toast:Spawn(C.db.profile.types.loot_special.anchor, C.db.profile.types.loot_special.dnd)
 				else
 					toast:Recycle()
 				end
@@ -220,7 +220,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 				toast._data.sound_file = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 			end
 
-			toast:Spawn(C.db.profile.types.loot_special.dnd)
+			toast:Spawn(C.db.profile.types.loot_special.anchor, C.db.profile.types.loot_special.dnd)
 		else
 			if isQueued then
 				toast._data.count = toast._data.count + quantity
@@ -390,6 +390,7 @@ end
 
 E:RegisterOptions("loot_special", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 	sfx = true,
 	ilvl = true,

@@ -170,7 +170,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			toast._data.sound_file = soundFile
 		end
 
-		toast:Spawn(C.db.profile.types.world.dnd)
+		toast:Spawn(C.db.profile.types.world.anchor, C.db.profile.types.world.dnd)
 	else
 		if itemReward then
 			toast._data.used_slots = toast._data.used_slots + 1
@@ -295,6 +295,7 @@ end
 
 E:RegisterOptions("world", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 	sfx = true,
 }, {

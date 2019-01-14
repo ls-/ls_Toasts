@@ -30,7 +30,7 @@ local function Toast_SetUp(event, researchFieldID)
 		toast._data.sound_file = 38326 -- SOUNDKIT.UI_DIG_SITE_COMPLETION_TOAST
 	end
 
-	toast:Spawn(C.db.profile.types.archaeology.dnd)
+	toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
 end
 
 local function ARTIFACT_DIGSITE_COMPLETE(researchFieldID)
@@ -71,6 +71,7 @@ end
 
 E:RegisterOptions("archaeology", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 	sfx = true,
 }, {

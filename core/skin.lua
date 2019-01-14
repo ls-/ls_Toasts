@@ -1,5 +1,5 @@
 local _, addonTable = ...
-local E, C = addonTable.E, addonTable.C
+local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, addonTable.L
 
 -- Lua
 local _G = getfenv(0)
@@ -89,7 +89,7 @@ function E.SetSkin(_, id)
 
 	C.db.profile.skin = id
 
-	for _, toast in next, E:GetToasts() do
+	for _, toast in next, P:GetToasts() do
 		E:ApplySkin(toast)
 	end
 

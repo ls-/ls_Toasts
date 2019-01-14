@@ -1,9 +1,10 @@
 local _, addonTable = ...
-local E, C = addonTable.E, addonTable.C
+local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, addonTable.L
 
 -- Lua
 local _G = getfenv(0)
 local error = _G.error
+local m_min = _G.math.min
 local next = _G.next
 local s_format = _G.string.format
 local type = _G.type
@@ -94,24 +95,6 @@ local db = {} -- for profile switching
 local options = {}
 local order = 1
 
-local function updateTable(src, dest)
-	if type(dest) ~= "table" then
-		dest = {}
-	end
-
-	for k, v in next, src do
-		if type(v) == "table" then
-			dest[k] = updateTable(v, dest[k])
-		else
-			if dest[k] == nil then
-				dest[k] = v
-			end
-		end
-	end
-
-	return dest
-end
-
 function E.RegisterOptions(_, id, dbTable, optionsTable)
 	if type(id) ~= "string" then
 		error(s_format("Invalid argument #1 to 'RegisterOptions' method, expected a string, got a '%s'", type(id)), 2)
@@ -127,11 +110,16 @@ function E.RegisterOptions(_, id, dbTable, optionsTable)
 		return
 	end
 
+	dbTable.anchor = dbTable.anchor or 1
+
 	db[id] = dbTable
 
 	if IsLoggedIn() then
 		C.db.profile.types[id] = {}
-		updateTable(db[id], C.db.profile.types[id])
+		P:UpdateTable(db[id], C.db.profile.types[id])
+
+		db[id].anchor = m_min(db[id].anchor, #C.db.profile.anchors)
+		C.db.profile.types[id].anchor = db[id].anchor
 	end
 
 	if optionsTable then
@@ -143,15 +131,20 @@ function E.RegisterOptions(_, id, dbTable, optionsTable)
 
 		if IsLoggedIn() then
 			C.options.args.types.args[id] = {}
-			updateTable(options[id], C.options.args.types.args[id])
+			P:UpdateTable(options[id], C.options.args.types.args[id])
 		end
 	end
 end
 
 function E.UpdateDB()
-	updateTable(db, C.db.profile.types)
+	P:UpdateTable(db, C.db.profile.types)
+
+	for id in next, db do
+		db[id].anchor = m_min(db[id].anchor, #C.db.profile.anchors)
+		C.db.profile.types[id].anchor = db[id].anchor
+	end
 end
 
 function E.UpdateOptions()
-	updateTable(options, C.options.args.types.args)
+	P:UpdateTable(options, C.options.args.types.args)
 end

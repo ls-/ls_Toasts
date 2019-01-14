@@ -14,8 +14,8 @@ local tonumber = _G.tonumber
 local type = _G.type
 
 -- Mine
-local E = {}
-addonTable.E = E
+local E, P = {}, {}
+addonTable.E, addonTable.P = E, P
 
 _G[addonName] = {
 	[1] = E,
@@ -73,6 +73,24 @@ do
 			end
 		end
 	end
+end
+
+function P:UpdateTable(src, dest)
+	if type(dest) ~= "table" then
+		dest = {}
+	end
+
+	for k, v in next, src do
+		if type(v) == "table" then
+			dest[k] = self:UpdateTable(v, dest[k])
+		else
+			if dest[k] == nil then
+				dest[k] = v
+			end
+		end
+	end
+
+	return dest
 end
 
 -------------

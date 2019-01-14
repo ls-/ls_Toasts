@@ -70,7 +70,7 @@ local function Toast_SetUp(event, recipeID)
 
 			toast:HookScript("OnClick", Toast_OnClick)
 			toast:HookScript("OnEnter", Toast_OnEnter)
-			toast:Spawn(C.db.profile.types.recipe.dnd)
+			toast:Spawn(C.db.profile.types.recipe.anchor, C.db.profile.types.recipe.dnd)
 		end
 	end
 end
@@ -99,6 +99,7 @@ end
 
 E:RegisterOptions("recipe", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 	sfx = true,
 }, {

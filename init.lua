@@ -1,5 +1,5 @@
 local addonName, addonTable = ...
-local E, L, C, D = addonTable.E, addonTable.L, addonTable.C, addonTable.D
+local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, addonTable.L
 
 -- Lua
 local _G = getfenv(0)
@@ -53,6 +53,7 @@ local BLACKLISTED_EVENTS = {
 }
 
 local function updateCallback()
+	P:UpdateAnchors()
 	E:UpdateDB()
 	E:DisableAllSystems()
 	E:EnableAllSystems()
@@ -92,7 +93,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				order = 1,
 				type = "execute",
 				name = L["ANCHOR_FRAME"],
-				func = function() E:GetAnchorFrame():Toggle() end,
+				func = function() P:ToggleAllAnchors() end,
 			},
 			test_all = {
 				order = 2,
@@ -117,7 +118,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 							value = STRATAS[value]
 							C.db.profile.strata = value
 
-							E:UpdateStrata()
+							P:UpdateStrata()
 						end,
 					},
 					skin = {
@@ -137,65 +138,65 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						type = "description",
 						name = "",
 					},
-					num = {
-						order = 10,
-						type = "range",
-						name = L["TOAST_NUM"],
-						min = 1, max = 20, step = 1,
-						get = function()
-							return C.db.profile.max_active_toasts
-						end,
-						set = function(_, value)
-							C.db.profile.max_active_toasts = value
-						end,
-					},
-					scale = {
-						order = 11,
-						type = "range",
-						name = L["SCALE"],
-						min = 0.8, max = 2, step = 0.1,
-						get = function()
-							return C.db.profile.scale
-						end,
-						set = function(_, value)
-							C.db.profile.scale = value
+					-- num = {
+					-- 	order = 10,
+					-- 	type = "range",
+					-- 	name = L["TOAST_NUM"],
+					-- 	min = 1, max = 20, step = 1,
+					-- 	get = function()
+					-- 		return C.db.profile.max_active_toasts
+					-- 	end,
+					-- 	set = function(_, value)
+					-- 		C.db.profile.max_active_toasts = value
+					-- 	end,
+					-- },
+					-- scale = {
+					-- 	order = 11,
+					-- 	type = "range",
+					-- 	name = L["SCALE"],
+					-- 	min = 0.8, max = 2, step = 0.1,
+					-- 	get = function()
+					-- 		return C.db.profile.scale
+					-- 	end,
+					-- 	set = function(_, value)
+					-- 		C.db.profile.scale = value
 
-							E:UpdateScale()
-						end,
-					},
-					delay = {
-						order = 12,
-						type = "range",
-						name = L["FADE_OUT_DELAY"],
-						min = 0.8, max = 10, step = 0.4,
-						get = function()
-							return C.db.profile.fadeout_delay
-						end,
-						set = function(_, value)
-							C.db.profile.fadeout_delay = value
+					-- 		E:UpdateScale()
+					-- 	end,
+					-- },
+					-- delay = {
+					-- 	order = 12,
+					-- 	type = "range",
+					-- 	name = L["FADE_OUT_DELAY"],
+					-- 	min = 0.8, max = 10, step = 0.4,
+					-- 	get = function()
+					-- 		return C.db.profile.fadeout_delay
+					-- 	end,
+					-- 	set = function(_, value)
+					-- 		C.db.profile.fadeout_delay = value
 
-							E:UpdateFadeOutDelay()
-						end,
-					},
-					growth_dir = {
-						order = 13,
-						type = "select",
-						name = L["GROWTH_DIR"],
-						values = {
-							UP = L["GROWTH_DIR_UP"],
-							DOWN = L["GROWTH_DIR_DOWN"],
-							LEFT = L["GROWTH_DIR_LEFT"],
-							RIGHT = L["GROWTH_DIR_RIGHT"],
-						},
-						get = function()
-							return C.db.profile.growth_direction
-						end,
-						set = function(_, value)
-							C.db.profile.growth_direction = value
+					-- 		E:UpdateFadeOutDelay()
+					-- 	end,
+					-- },
+					-- growth_dir = {
+					-- 	order = 13,
+					-- 	type = "select",
+					-- 	name = L["GROWTH_DIR"],
+					-- 	values = {
+					-- 		UP = L["GROWTH_DIR_UP"],
+					-- 		DOWN = L["GROWTH_DIR_DOWN"],
+					-- 		LEFT = L["GROWTH_DIR_LEFT"],
+					-- 		RIGHT = L["GROWTH_DIR_RIGHT"],
+					-- 	},
+					-- 	get = function()
+					-- 		return C.db.profile.growth_direction
+					-- 	end,
+					-- 	set = function(_, value)
+					-- 		C.db.profile.growth_direction = value
 
-							E:RefreshQueue()
-						end,
-					},
+					-- 		P:RefreshQueues()
+					-- 	end,
+					-- },
 					colors = {
 						order = 20,
 						type = "group",
@@ -321,9 +322,9 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	end)
 
 	E:RegisterEvent("PLAYER_LOGIN", function()
+		P:UpdateAnchors()
 		E:UpdateDB()
 		E:UpdateOptions()
-		E:GetAnchorFrame():Refresh()
 		E:EnableAllSystems()
 		E:CheckResetDefaultSkin()
 

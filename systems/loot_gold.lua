@@ -43,7 +43,7 @@ local function Toast_SetUp(event, quantity)
 				toast._data.sound_file = 865 -- SOUNDKIT.IG_BACKPACK_COIN_OK
 			end
 
-			toast:Spawn(C.db.profile.types.loot_gold.dnd)
+			toast:Spawn(C.db.profile.types.loot_gold.anchor, C.db.profile.types.loot_gold.dnd)
 		else
 			toast:Recycle()
 		end
@@ -90,6 +90,7 @@ end
 
 E:RegisterOptions("loot_gold", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 	sfx = true,
 	threshold = 1,
