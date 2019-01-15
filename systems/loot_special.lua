@@ -338,15 +338,8 @@ local function Test()
 
 	Toast_SetUp("SPECIAL_LOOT_TEST", nil, m_random(100, 400), nil, nil, factionGroup, nil, true)
 
-	-- roll won, Tunic of the Underworld
-	local _, link = GetItemInfo(134439)
-
-	if link then
-		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, 1, 64, nil, true)
-	end
-
 	-- pvp, Fearless Gladiator's Dreadplate Girdle
-	_, link = GetItemInfo(142679)
+	local _, link = GetItemInfo(142679)
 
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, factionGroup, true)

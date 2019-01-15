@@ -118,8 +118,7 @@ function E.RegisterOptions(_, id, dbTable, optionsTable)
 		C.db.profile.types[id] = {}
 		P:UpdateTable(db[id], C.db.profile.types[id])
 
-		db[id].anchor = m_min(db[id].anchor, #C.db.profile.anchors)
-		C.db.profile.types[id].anchor = db[id].anchor
+		C.db.profile.types[id].anchor = m_min(C.db.profile.types[id].anchor, #C.db.profile.anchors)
 	end
 
 	if optionsTable then
@@ -132,19 +131,20 @@ function E.RegisterOptions(_, id, dbTable, optionsTable)
 		if IsLoggedIn() then
 			C.options.args.types.args[id] = {}
 			P:UpdateTable(options[id], C.options.args.types.args[id])
+			P:UpdateAnchorsOptions()
 		end
 	end
 end
 
-function E.UpdateDB()
+function E:UpdateDB()
 	P:UpdateTable(db, C.db.profile.types)
 
 	for id in next, db do
-		db[id].anchor = m_min(db[id].anchor, #C.db.profile.anchors)
-		C.db.profile.types[id].anchor = db[id].anchor
+		C.db.profile.types[id].anchor = m_min(C.db.profile.types[id].anchor, #C.db.profile.anchors)
 	end
 end
 
 function E.UpdateOptions()
 	P:UpdateTable(options, C.options.args.types.args)
+	P:UpdateAnchorsOptions()
 end

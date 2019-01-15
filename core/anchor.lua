@@ -7,6 +7,8 @@ local m_floor = _G.math.floor
 local next = _G.next
 local s_upper = _G.string.upper
 local t_insert = _G.table.insert
+local tonumber = _G.tonumber
+local tostring = _G.tostring
 
 --[[ luacheck: globals
 	CreateFrame GameTooltip IsShiftKeyDown SquareButton_SetIcon UIParent
@@ -42,6 +44,8 @@ local buttons = {
 		offset_y = 0,
 	},
 }
+
+local isToggled = false
 
 local function calculatePosition(self)
 	local selfCenterX, selfCenterY = self:GetCenter()
@@ -80,14 +84,7 @@ local function anchor_Refresh(self)
 	self:ClearAllPoints()
 	self:SetSize(224 * config.scale, 48 * config.scale)
 	self:SetPoint(config.point.p, "UIParent", config.point.rP, config.point.x, config.point.y)
-end
-
-local function anchor_Toggle(self)
-	if self:IsShown() then
-		self:Hide()
-	else
-		self:Show()
-	end
+	self:SetShown(isToggled)
 end
 
 local function anchor_OnEnter(self)
@@ -240,7 +237,6 @@ local function costructAnchor(index)
 	end
 
 	anchor.Refresh = anchor_Refresh
-	anchor.Toggle = anchor_Toggle
 
 	t_insert(anchors, index, anchor)
 
@@ -251,18 +247,170 @@ function P:GetAnchor(index)
 	return activeAnchors[index]
 end
 
+local options = {}
+
+local function delete(info)
+	P:RemoveAnchor(tonumber(info[#info - 1]))
+
+	GameTooltip:Hide()
+end
+
+local function getAnchor(info)
+	return C.db.profile.types[info[#info]].anchor == tonumber(info[#info - 1])
+end
+
+local function setAnchor(info)
+	C.db.profile.types[info[#info]].anchor = tonumber(info[#info - 1])
+end
+
+local function getOption(info)
+	return C.db.profile.anchors[tonumber(info[#info - 1])][info[#info]]
+end
+
+local function setMaxActiveToasts(info, value)
+	C.db.profile.anchors[tonumber(info[#info - 1])].max_active_toasts = value
+end
+
+local function setScale(info, value)
+	C.db.profile.anchors[tonumber(info[#info - 1])].scale = value
+
+	P:UpdateScale(tonumber(info[#info - 1]))
+end
+
+local function setFadeOutDelay(info, value)
+	C.db.profile.anchors[tonumber(info[#info - 1])].fadeout_delay = value
+
+	P:UpdateFadeOutDelay(tonumber(info[#info - 1]))
+end
+
+local function setGrowthDirection(info, value)
+	C.db.profile.anchors[tonumber(info[#info - 1])].growth_direction = value
+
+	P:RefreshQueues()
+end
+
+local function setGrowthOffsetX(info, value)
+	C.db.profile.anchors[tonumber(info[#info - 1])].growth_offset_x = value
+
+	P:RefreshQueues()
+end
+
+local function setGrowthOffsetY(info, value)
+	C.db.profile.anchors[tonumber(info[#info - 1])].growth_offset_y = value
+
+	P:RefreshQueues()
+end
+
 function P:AddAnchor(index)
 	if not activeAnchors[index] then
-		t_insert(activeAnchors, index, anchors[index] or costructAnchor(index))
+		activeAnchors[index] = anchors[index] or costructAnchor(index)
 
 		C.db.profile.anchors[index] = P:UpdateTable(D.profile.anchors[1], C.db.profile.anchors[index])
+
+		if not options[index] then
+			options[index] = {
+				order = 9 + index,
+				type = "group",
+				name = L["ANCHOR_FRAME_#"]:format(index),
+				inline = true,
+				get = getAnchor,
+				set = setAnchor,
+				args = {
+					spacer_1 = {
+						order = 9990,
+						type = "description",
+						name = " ",
+					},
+					max_active_toasts = {
+						order = 9991,
+						type = "range",
+						name = L["TOAST_NUM"],
+						desc = L["DEFAULT_VALUE"]:format(D.profile.anchors[1].max_active_toasts),
+						min = 1, max = 20, step = 1,
+						get = getOption,
+						set = setMaxActiveToasts,
+					},
+					scale = {
+						order = 9992,
+						type = "range",
+						name = L["SCALE"],
+						min = 0.8, max = 2, step = 0.1,
+						get = getOption,
+						set = setScale,
+					},
+					fadeout_delay = {
+						order = 9993,
+						type = "range",
+						name = L["FADE_OUT_DELAY"],
+						desc = L["DEFAULT_VALUE"]:format(D.profile.anchors[1].fadeout_delay),
+						min = 0.8, max = 10, step = 0.4,
+						get = getOption,
+						set = setFadeOutDelay,
+					},
+					growth_direction = {
+						order = 9994,
+						type = "select",
+						name = L["GROWTH_DIR"],
+						values = {
+							UP = L["GROWTH_DIR_UP"],
+							DOWN = L["GROWTH_DIR_DOWN"],
+							LEFT = L["GROWTH_DIR_LEFT"],
+							RIGHT = L["GROWTH_DIR_RIGHT"],
+						},
+						get = getOption,
+						set = setGrowthDirection,
+					},
+					growth_offset_x = {
+						order = 9995,
+						type = "range",
+						name = L["X_OFFSET"],
+						desc = L["DEFAULT_VALUE"]:format(D.profile.anchors[1].growth_offset_x),
+						min = 4, max = 48, step = 2,
+						get = getOption,
+						set = setGrowthOffsetX,
+					},
+					growth_offset_y = {
+						order = 9996,
+						type = "range",
+						name = L["Y_OFFSET"],
+						desc = L["DEFAULT_VALUE"]:format(D.profile.anchors[1].growth_offset_y),
+						min = 4, max = 48, step = 2,
+						get = getOption,
+						set = setGrowthOffsetY,
+					},
+				},
+			}
+
+			if index ~= 1 then
+				options[index].args.spacer_2 = {
+					order = 9998,
+					type = "description",
+					name = " ",
+				}
+				options[index].args.delete = {
+					order = 9999,
+					name = L["DELETE"],
+					type = "execute",
+					width = "full",
+					func = delete,
+				}
+			end
+		end
+
+		C.options.args.anchors.args[tostring(index)] = options[index]
 	end
 end
 
 function P:RemoveAnchor(index)
 	if index ~= 1 and activeAnchors[index] then
+		self:FlushQueue(index)
+
+		activeAnchors[index]:Hide()
 		activeAnchors[index] = nil
+
 		C.db.profile.anchors[index] = nil
+
+		C.options.args.anchors.args[tostring(index)] = nil
 
 		for _, v in next, C.db.profile.types do
 			if v.anchor == index then
@@ -272,9 +420,11 @@ function P:RemoveAnchor(index)
 	end
 end
 
-function P:ToggleAllAnchors()
+function P:ToggleAnchors()
+	isToggled = not isToggled
+
 	for _, anchor in next, activeAnchors do
-		anchor:Toggle()
+		anchor:SetShown(isToggled)
 	end
 end
 
@@ -286,5 +436,21 @@ function P:UpdateAnchors()
 
 	for i = #C.db.profile.anchors + 1, #anchors do
 		self:RemoveAnchor(i)
+	end
+end
+
+function P:UpdateAnchorsOptions()
+	for index in next, C.db.profile.anchors do
+		index = tostring(index)
+
+		for type in next, C.db.profile.types do
+			if C.options.args.anchors.args[index] and not C.options.args.anchors.args[index].args[type] then
+				C.options.args.anchors.args[index].args[type] = {
+					order = C.options.args.types.args[type].order,
+					type = "toggle",
+					name = C.options.args.types.args[type].name,
+				}
+			end
+		end
 	end
 end

@@ -1,5 +1,5 @@
 local _, addonTable = ...
-local E, C, P = addonTable.E, addonTable.C, addonTable.P
+local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, addonTable.L
 
 -- Lua
 local _G = getfenv(0)
@@ -18,8 +18,10 @@ local queuedToasts = {}
 
 function P:RefreshQueues()
 	for anchorID, queued in next, queuedToasts do
-		local active = activeToasts[anchorID]
 		local config = C.db.profile.anchors[anchorID]
+		if not config then return end
+
+		local active = activeToasts[anchorID]
 
 		if #active < config.max_active_toasts then
 			for _ = 1, config.max_active_toasts - #active do
@@ -40,13 +42,13 @@ function P:RefreshQueues()
 				active[i]:SetPoint("TOPLEFT", P:GetAnchor(anchorID), "TOPLEFT", 0, 0)
 			else
 				if config.growth_direction == "DOWN" then
-					active[i]:SetPoint("TOP", active[i - 1], "BOTTOM", 0, -14)
+					active[i]:SetPoint("TOP", active[i - 1], "BOTTOM", 0, -config.growth_offset_y)
 				elseif config.growth_direction == "UP" then
-					active[i]:SetPoint("BOTTOM", active[i - 1], "TOP", 0, 14)
+					active[i]:SetPoint("BOTTOM", active[i - 1], "TOP", 0, config.growth_offset_y)
 				elseif config.growth_direction == "LEFT" then
-					active[i]:SetPoint("RIGHT", active[i - 1], "LEFT", -26, 0)
+					active[i]:SetPoint("RIGHT", active[i - 1], "LEFT", -config.growth_offset_x, 0)
 				elseif config.growth_direction == "RIGHT" then
-					active[i]:SetPoint("LEFT", active[i - 1], "RIGHT", 26, 0)
+					active[i]:SetPoint("LEFT", active[i - 1], "RIGHT", config.growth_offset_x, 0)
 				end
 			end
 
@@ -96,6 +98,32 @@ function P:Dequeue(toast, anchorID)
 			self:RefreshQueues()
 
 			break
+		end
+	end
+end
+
+local function flush(t)
+	for _ = #t, 1, -1 do
+		t_remove(t, 1):Recycle()
+	end
+end
+
+function P:FlushQueue(anchorID)
+	if anchorID then
+		if queuedToasts[anchorID] then
+			flush(queuedToasts[anchorID])
+		end
+
+		if activeToasts[anchorID] then
+			flush(activeToasts[anchorID])
+		end
+	else
+		for _, queued in next, queuedToasts do
+			flush(queued)
+		end
+
+		for _, active in next, activeToasts do
+			flush(active)
 		end
 	end
 end
