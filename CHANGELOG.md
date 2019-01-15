@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 80100.03
+
+- Added support for multiple toast anchors. Each anchor has its own growth, scale, and other  
+  settings;
+- Added options to adjust toast growth offsets.
+
 ## Version 80100.02
 
 - Improved compatibility with addons that modify chat messages which are used by common loot and  
