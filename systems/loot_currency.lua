@@ -90,7 +90,7 @@ local function Toast_SetUp(event, link, quantity)
 		end
 
 		toast:HookScript("OnEnter", Toast_OnEnter)
-		toast:Spawn(C.db.profile.types.loot_currency.dnd)
+		toast:Spawn(C.db.profile.types.loot_currency.anchor, C.db.profile.types.loot_currency.dnd)
 	else
 		if isQueued then
 			toast._data.count = toast._data.count + quantity
@@ -150,6 +150,7 @@ end
 
 E:RegisterOptions("loot_currency", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 	sfx = true,
 }, {

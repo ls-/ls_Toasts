@@ -1,5 +1,5 @@
 local addonName, addonTable = ...
-local E, L, C, D = addonTable.E, addonTable.L, addonTable.C, addonTable.D
+local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, addonTable.L
 
 -- Lua
 local _G = getfenv(0)
@@ -53,7 +53,9 @@ local BLACKLISTED_EVENTS = {
 }
 
 local function updateCallback()
-	E:UpdateDB()
+	P:UpdateAnchors()
+	P:UpdateDB()
+	P:FlushQueue()
 	E:DisableAllSystems()
 	E:EnableAllSystems()
 end
@@ -83,6 +85,14 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		C.db.profile.sfx = nil
 	end
 
+	-- ->80100.03
+	if not C.db.profile.version or C.db.profile.version < 8010003 then
+		C.db.profile.fadeout_delay = nil
+		C.db.profile.growth_direction = nil
+		C.db.profile.max_active_toasts = nil
+		C.db.profile.scale = nil
+	end
+
 	C.options = {
 		type = "group",
 		name = L["LS_TOASTS"],
@@ -91,8 +101,8 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 			toggle_anchors = {
 				order = 1,
 				type = "execute",
-				name = L["ANCHOR_FRAME"],
-				func = function() E:GetAnchorFrame():Toggle() end,
+				name = L["TOGGLE_ANCHORS"],
+				func = function() P:ToggleAnchors() end,
 			},
 			test_all = {
 				order = 2,
@@ -117,7 +127,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 							value = STRATAS[value]
 							C.db.profile.strata = value
 
-							E:UpdateStrata()
+							P:UpdateStrata()
 						end,
 					},
 					skin = {
@@ -136,65 +146,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						order = 9,
 						type = "description",
 						name = "",
-					},
-					num = {
-						order = 10,
-						type = "range",
-						name = L["TOAST_NUM"],
-						min = 1, max = 20, step = 1,
-						get = function()
-							return C.db.profile.max_active_toasts
-						end,
-						set = function(_, value)
-							C.db.profile.max_active_toasts = value
-						end,
-					},
-					scale = {
-						order = 11,
-						type = "range",
-						name = L["SCALE"],
-						min = 0.8, max = 2, step = 0.1,
-						get = function()
-							return C.db.profile.scale
-						end,
-						set = function(_, value)
-							C.db.profile.scale = value
-
-							E:UpdateScale()
-						end,
-					},
-					delay = {
-						order = 12,
-						type = "range",
-						name = L["FADE_OUT_DELAY"],
-						min = 0.8, max = 10, step = 0.4,
-						get = function()
-							return C.db.profile.fadeout_delay
-						end,
-						set = function(_, value)
-							C.db.profile.fadeout_delay = value
-
-							E:UpdateFadeOutDelay()
-						end,
-					},
-					growth_dir = {
-						order = 13,
-						type = "select",
-						name = L["GROWTH_DIR"],
-						values = {
-							UP = L["GROWTH_DIR_UP"],
-							DOWN = L["GROWTH_DIR_DOWN"],
-							LEFT = L["GROWTH_DIR_LEFT"],
-							RIGHT = L["GROWTH_DIR_RIGHT"],
-						},
-						get = function()
-							return C.db.profile.growth_direction
-						end,
-						set = function(_, value)
-							C.db.profile.growth_direction = value
-
-							E:RefreshQueue()
-						end,
 					},
 					colors = {
 						order = 20,
@@ -294,10 +245,35 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 					},
 				},
 			},
-			types = {
+			anchors = {
 				order = 4,
 				type = "group",
-				name = L["SETTINGS_TYPE_LABEL"],
+				name = L["ANCHOR_FRAMES"],
+				args = {
+					add = {
+						order = 1,
+						name = L["ADD"],
+						type = "execute",
+						width = "full",
+						func = function()
+							local index = #C.db.profile.anchors + 1
+							P:AddAnchor(index)
+							P:GetAnchor(index):Refresh()
+							P:UpdateAnchorsOptions()
+						end,
+					},
+					spacer_1 = {
+						order = 2,
+						type = "description",
+						name = " ",
+					},
+				},
+			},
+			types = {
+				order = 5,
+				type = "group",
+				name = L["TOAST_TYPES"],
+				childGroups = "tab",
 				args = {},
 			},
 		},
@@ -321,9 +297,9 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	end)
 
 	E:RegisterEvent("PLAYER_LOGIN", function()
-		E:UpdateDB()
-		E:UpdateOptions()
-		E:GetAnchorFrame():Refresh()
+		P:UpdateAnchors()
+		P:UpdateDB()
+		P:UpdateOptions()
 		E:EnableAllSystems()
 		E:CheckResetDefaultSkin()
 

@@ -1,5 +1,5 @@
 local _, addonTable = ...
-local E, C = addonTable.E, addonTable.C
+local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, addonTable.L
 
 -- Lua
 local _G = getfenv(0)
@@ -17,25 +17,7 @@ local unpack = _G.unpack
 local skins = {}
 local skinList = {}
 
-local function mergeTable(src, dest)
-	if type(dest) ~= "table" then
-		dest = {}
-	end
-
-	for k, v in next, src do
-		if type(v) == "table" then
-			dest[k] = mergeTable(v, dest[k])
-		else
-			if dest[k] == nil then
-				dest[k] = v
-			end
-		end
-	end
-
-	return dest
-end
-
-function E.RegisterSkin(_, id, data)
+function E:RegisterSkin(id, data)
 	if type(id) ~= "string" then
 		error(s_format("Invalid argument #1 to 'RegisterSkin' method, expected a string, got a '%s'", type(id)), 2)
 		return
@@ -53,7 +35,7 @@ function E.RegisterSkin(_, id, data)
 	local template = data.template or "default"
 	if id ~= "default" then
 		if skins[template] then
-			mergeTable(skins[template], data)
+			P:UpdateTable(skins[template], data)
 		else
 			error(s_format("Invalid template reference, skin '%s' doesn't exist", template), 2)
 			return
@@ -64,21 +46,21 @@ function E.RegisterSkin(_, id, data)
 	skinList[id] = data.name
 end
 
-function E.CheckResetDefaultSkin()
+function E:CheckResetDefaultSkin()
 	if not skins[C.db.profile.skin] then
 		C.db.profile.skin = "default"
 	end
 end
 
-function E.GetSkinList()
+function E:GetSkinList()
 	return skinList
 end
 
-function E.GetSkin()
+function E:GetSkin()
 	return skins[C.db.profile.skin] or skins["default"]
 end
 
-function E.SetSkin(_, id)
+function E:SetSkin(id)
 	if type(id) ~= "string" then
 		error(s_format("Invalid argument to 'SetSkin' method, expected a string, got a '%s'", type(id)), 2)
 		return
@@ -89,14 +71,14 @@ function E.SetSkin(_, id)
 
 	C.db.profile.skin = id
 
-	for _, toast in next, E:GetToasts() do
+	for _, toast in next, P:GetToasts() do
 		E:ApplySkin(toast)
 	end
 
 	return true
 end
 
-function E.ApplySkin(_, toast)
+function E:ApplySkin(toast)
 	local skin = skins[C.db.profile.skin] or skins["default"]
 	local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
@@ -227,7 +209,7 @@ function E.ApplySkin(_, toast)
 	toast.AnimIn.Anim5:SetOffset(224 - skin.shine.size[1], 0)
 end
 
-function E.ResetSkin(_, toast)
+function E:ResetSkin(toast)
 	local skin = skins[C.db.profile.skin] or skins["default"]
 
 	-- .Border

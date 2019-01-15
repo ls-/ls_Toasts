@@ -57,7 +57,7 @@ local function Toast_SetUp(event, achievementID, flag, isCriteria)
 	}
 
 	toast:HookScript("OnClick", Toast_OnClick)
-	toast:Spawn(C.db.profile.types.achievement.dnd)
+	toast:Spawn(C.db.profile.types.achievement.anchor, C.db.profile.types.achievement.dnd)
 end
 
 local function ACHIEVEMENT_EARNED(achievementID, alreadyEarned)
@@ -90,6 +90,7 @@ end
 
 E:RegisterOptions("achievement", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 }, {
 	name = L["TYPE_ACHIEVEMENT"],

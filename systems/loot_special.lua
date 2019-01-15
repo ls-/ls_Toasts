@@ -165,7 +165,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 
 					toast:HookScript("OnClick", Toast_OnClick)
 					toast:HookScript("OnEnter", Toast_OnEnter)
-					toast:Spawn(C.db.profile.types.loot_special.dnd)
+					toast:Spawn(C.db.profile.types.loot_special.anchor, C.db.profile.types.loot_special.dnd)
 				else
 					toast:Recycle()
 				end
@@ -220,7 +220,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 				toast._data.sound_file = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 			end
 
-			toast:Spawn(C.db.profile.types.loot_special.dnd)
+			toast:Spawn(C.db.profile.types.loot_special.anchor, C.db.profile.types.loot_special.dnd)
 		else
 			if isQueued then
 				toast._data.count = toast._data.count + quantity
@@ -338,15 +338,8 @@ local function Test()
 
 	Toast_SetUp("SPECIAL_LOOT_TEST", nil, m_random(100, 400), nil, nil, factionGroup, nil, true)
 
-	-- roll won, Tunic of the Underworld
-	local _, link = GetItemInfo(134439)
-
-	if link then
-		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, 1, 64, nil, true)
-	end
-
 	-- pvp, Fearless Gladiator's Dreadplate Girdle
-	_, link = GetItemInfo(142679)
+	local _, link = GetItemInfo(142679)
 
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, factionGroup, true)
@@ -390,6 +383,7 @@ end
 
 E:RegisterOptions("loot_special", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 	sfx = true,
 	ilvl = true,

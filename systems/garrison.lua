@@ -67,13 +67,25 @@ local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 		mission_id = missionID,
 	}
 
-	if (garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.sfx)
-		or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx)
-		or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.sfx) then
-		toast._data.sound_file = 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
-	end
+	if garrisonType == LE_GARRISON_TYPE_8_0 then
+		if C.db.profile.types.garrison_8_0.sfx then
+			toast._data.sound_file = 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
+		end
 
-	toast:Spawn((garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.dnd) or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
+		toast:Spawn(C.db.profile.types.garrison_8_0.anchor, C.db.profile.types.garrison_8_0.dnd)
+	elseif garrisonType == LE_GARRISON_TYPE_7_0 then
+		if C.db.profile.types.garrison_7_0.sfx then
+			toast._data.sound_file = 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
+		end
+
+		toast:Spawn(C.db.profile.types.garrison_7_0.anchor, C.db.profile.types.garrison_7_0.dnd)
+	elseif garrisonType == LE_GARRISON_TYPE_6_0 then
+		if C.db.profile.types.garrison_6_0.sfx then
+			toast._data.sound_file = 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
+		end
+
+		toast:Spawn(C.db.profile.types.garrison_6_0.anchor, C.db.profile.types.garrison_6_0.dnd)
+	end
 end
 
 local function GARRISON_MISSION_FINISHED(followerTypeID, missionID)
@@ -217,14 +229,27 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 		show_arrows = isUpgraded,
 	}
 
-	if (garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.sfx)
-		or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx)
-		or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.sfx) then
-		toast._data.sound_file = 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
-	end
-
 	toast:HookScript("OnEnter", FollowerToast_OnEnter)
-	toast:Spawn((garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.dnd) or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd) or (garrisonType == LE_GARRISON_TYPE_6_0 and C.db.profile.types.garrison_6_0.dnd))
+
+	if garrisonType == LE_GARRISON_TYPE_8_0 then
+		if C.db.profile.types.garrison_8_0.sfx then
+			toast._data.sound_file = 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
+		end
+
+		toast:Spawn(C.db.profile.types.garrison_8_0.anchor, C.db.profile.types.garrison_8_0.dnd)
+	elseif garrisonType == LE_GARRISON_TYPE_7_0 then
+		if C.db.profile.types.garrison_7_0.sfx then
+			toast._data.sound_file = 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
+		end
+
+		toast:Spawn(C.db.profile.types.garrison_7_0.anchor, C.db.profile.types.garrison_7_0.dnd)
+	elseif garrisonType == LE_GARRISON_TYPE_6_0 then
+		if C.db.profile.types.garrison_6_0.sfx then
+			toast._data.sound_file = 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
+		end
+
+		toast:Spawn(C.db.profile.types.garrison_6_0.anchor, C.db.profile.types.garrison_6_0.dnd)
+	end
 end
 
 local function GARRISON_FOLLOWER_ADDED(followerID, name, _, level, quality, isUpgraded, texPrefix, followerTypeID)
@@ -257,7 +282,7 @@ local function BuildingToast_SetUp(event, buildingName)
 		toast._data.sound_file = 44295 -- SOUNDKIT.UI_GARRISON_TOAST_BUILDING_COMPLETE
 	end
 
-	toast:Spawn(C.db.profile.types.garrison_6_0.dnd)
+	toast:Spawn(C.db.profile.types.garrison_6_0.anchor, C.db.profile.types.garrison_6_0.dnd)
 end
 
 local function GARRISON_BUILDING_ACTIVATABLE(buildingName)
@@ -280,12 +305,19 @@ local function TalentToast_SetUp(event, garrisonType, talentID)
 		talend_id = talentID,
 	}
 
-	if (garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.sfx)
-		or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.sfx) then
-		toast._data.sound_file = 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
-	end
+	if garrisonType == LE_GARRISON_TYPE_8_0 then
+		if C.db.profile.types.garrison_8_0.sfx then
+			toast._data.sound_file = 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
+		end
 
-	toast:Spawn((garrisonType == LE_GARRISON_TYPE_8_0 and C.db.profile.types.garrison_8_0.dnd) or (garrisonType == LE_GARRISON_TYPE_7_0 and C.db.profile.types.garrison_7_0.dnd))
+		toast:Spawn(C.db.profile.types.garrison_8_0.anchor, C.db.profile.types.garrison_8_0.dnd)
+	elseif garrisonType == LE_GARRISON_TYPE_7_0 then
+		if C.db.profile.types.garrison_7_0.sfx then
+			toast._data.sound_file = 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
+		end
+
+		toast:Spawn(C.db.profile.types.garrison_7_0.anchor, C.db.profile.types.garrison_7_0.dnd)
+	end
 end
 
 local function GARRISON_TALENT_COMPLETE(garrisonType, doAlert)
@@ -421,6 +453,7 @@ end
 
 E:RegisterOptions("garrison_6_0", {
 	enabled = false,
+	anchor = 1,
 	dnd = true,
 	sfx = true,
 }, {
@@ -469,6 +502,7 @@ E:RegisterOptions("garrison_6_0", {
 
 E:RegisterOptions("garrison_7_0", {
 	enabled = true,
+	anchor = 1,
 	dnd = true,
 	sfx = true,
 }, {
@@ -517,6 +551,7 @@ E:RegisterOptions("garrison_7_0", {
 
 E:RegisterOptions("garrison_8_0", {
 	enabled = true,
+	anchor = 1,
 	dnd = true,
 	sfx = true,
 }, {

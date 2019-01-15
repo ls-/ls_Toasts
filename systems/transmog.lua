@@ -85,7 +85,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 			toast:HookScript("OnClick", Toast_OnClick)
 		end
 
-		toast:Spawn(C.db.profile.types.transmog.dnd)
+		toast:Spawn(C.db.profile.types.transmog.anchor, C.db.profile.types.transmog.dnd)
 	else
 		if isAdded then
 			toast.Title:SetText(L["TRANSMOG_ADDED"])
@@ -157,6 +157,7 @@ end
 
 E:RegisterOptions("transmog", {
 	enabled = true,
+	anchor = 1,
 	dnd = false,
 	sfx = true,
 	left_click = false,

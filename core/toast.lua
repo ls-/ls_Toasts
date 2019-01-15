@@ -1,5 +1,5 @@
 local _, addonTable = ...
-local E, C = addonTable.E, addonTable.C
+local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, addonTable.L
 
 -- Lua
 local _G = getfenv(0)
@@ -8,17 +8,21 @@ local m_floor = _G.math.floor
 local next = _G.next
 local t_insert = _G.table.insert
 local t_remove = _G.table.remove
-local t_wipe = _G.table.wipe
 local type = _G.type
 local unpack = _G.unpack
 
 -- Blizz
+local C_Timer = _G.C_Timer
 local Lerp = _G.Lerp
 
+--[[ luacheck: globals
+	BattlePetTooltip CreateFrame GameTooltip GameTooltip_ShowCompareItem GarrisonFollowerTooltip
+	GarrisonShipyardFollowerTooltip GetCVarBool IsModifiedClick PlaySound ShoppingTooltip1
+	ShoppingTooltip2 UIParent
+]]
+
 -- Mine
-local activeToasts = {}
-local createdToasts = {}
-local queuedToasts = {}
+local freeToasts = {}
 local toasts = {}
 
 local ARROWS_CFG = {
@@ -219,12 +223,6 @@ local function slot_OnHide(self)
 end
 
 -- Base Toast
-local num = 0
-local function getToastName()
-	num = num + 1
-	return "LSToast"..num
-end
-
 local function MODIFIER_STATE_CHANGED()
 	if IsModifiedClick("COMPAREITEMS") or GetCVarBool("alwaysCompareItems") then
 		GameTooltip_ShowCompareItem()
@@ -298,47 +296,28 @@ local function toastAnimOut_OnFinished(self)
 	self:GetParent():Recycle()
 end
 
-local function toast_Spawn(self, isDND)
+local order = 0
+local function toast_Spawn(self, anchorID, isDND)
+	order = order + 1
+
 	self._data = self._data or {}
+	self._data.anchor = anchorID
+	self._data.dnd = isDND
+	self._data.order = order
 
-	if #activeToasts >= C.db.profile.max_active_toasts or (InCombatLockdown() and isDND) then
-		if InCombatLockdown() and isDND then
-			self._data.dnd = true
-		end
+	self:SetScale(C.db.profile.anchors[anchorID].scale)
+	self.AnimOut.Anim1:SetStartDelay(C.db.profile.anchors[anchorID].fadeout_delay)
 
-		t_insert(queuedToasts, self)
-
-		return
-	end
-
-	if #activeToasts > 0 then
-		if C.db.profile.growth_direction == "DOWN" then
-			self:SetPoint("TOP", activeToasts[#activeToasts], "BOTTOM", 0, -14)
-		elseif C.db.profile.growth_direction == "UP" then
-			self:SetPoint("BOTTOM", activeToasts[#activeToasts], "TOP", 0, 14)
-		elseif C.db.profile.growth_direction == "LEFT" then
-			self:SetPoint("RIGHT", activeToasts[#activeToasts], "LEFT", -26, 0)
-		elseif C.db.profile.growth_direction == "RIGHT" then
-			self:SetPoint("LEFT", activeToasts[#activeToasts], "RIGHT", 26, 0)
-		end
-	else
-		self:SetPoint("TOPLEFT", E:GetAnchorFrame(), "TOPLEFT", 0, 0)
-	end
-
-	t_insert(activeToasts, self)
-
-	self:Show()
+	P:Queue(self, anchorID)
 end
 
 local function toast_Recycle(self)
 	self:ClearAllPoints()
 	self:SetAlpha(1)
 	self:Hide()
-
 	self:SetScript("OnClick", toast_OnClick)
 	self:SetScript("OnEnter", toast_OnEnter)
 
-	self._data = nil
 	self.AnimArrows:Stop()
 	self.AnimIn:Stop()
 	self.AnimOut:Stop()
@@ -365,29 +344,21 @@ local function toast_Recycle(self)
 	for i = 1, 5 do
 		self["Slot"..i]:Hide()
 		self["Slot"..i]:SetScript("OnEnter", slot_OnEnter)
-		self["Slot"..i]._data = nil
+		self["Slot"..i]._data = nil -- table.wipe???
 	end
 
 	for i = 1, 5 do
 		self["Arrow"..i]:SetAlpha(0)
 	end
 
-	for i, activeToast in next, activeToasts do
-		if self == activeToast then
-			t_remove(activeToasts, i)
-		end
+	-- a toast that's recycled before spawning
+	if self._data then
+		P:Dequeue(self, self._data.anchor)
 	end
 
-	-- jic something goes wrong
-	for i, queuedToast in next, queuedToasts do
-		if self == queuedToast then
-			t_remove(queuedToasts, i)
-		end
-	end
+	self._data = nil -- table.wipe???
 
-	t_insert(createdToasts, self)
-
-	E:RefreshQueue()
+	t_insert(freeToasts, self)
 end
 
 local function toast_SetBackground(self, id)
@@ -419,12 +390,14 @@ local function toast_SetBackground(self, id)
 	self.BG:SetVertexColor(unpack(skin.bg[id].color))
 end
 
+local num = 0
 local function constructToast()
-	local toast = CreateFrame("Button", getToastName(), UIParent)
+	num = num + 1
+
+	local toast = CreateFrame("Button", "LSToast" .. num, UIParent)
 	toast:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 	toast:SetFlattensRenderLayers(true)
 	toast:SetFrameStrata(C.db.profile.strata)
-	toast:SetScale(C.db.profile.scale)
 	toast:SetSize(224, 48)
 	toast:Hide()
 	toast:SetScript("OnShow", toast_OnShow)
@@ -677,7 +650,6 @@ local function constructToast()
 		anim:SetOrder(1)
 		anim:SetFromAlpha(1)
 		anim:SetToAlpha(0)
-		anim:SetStartDelay(C.db.profile.fadeout_delay)
 		anim:SetDuration(1.2)
 		ag.Anim1 = anim
 	end
@@ -719,31 +691,32 @@ local function constructToast()
 	return toast
 end
 
-function E.FindToast(_, toastEvent, dataType, dataValue)
+function E:FindToast(toastEvent, dataType, dataValue)
 	if dataType and dataValue then
-		for _, t in next, activeToasts do
-			if (not toastEvent or toastEvent == t._data.event)
-				and (t._data[dataType] == dataValue) then
-				return t
+		for _, queuedToasts in next, P:GetQueuedToasts() do
+			for _, t in next, queuedToasts do
+				if (not toastEvent or toastEvent == t._data.event) and (t._data[dataType] == dataValue) then
+					return t, true
+				end
 			end
 		end
 
-		for _, t in next, queuedToasts do
-			if (not toastEvent or toastEvent == t._data.event)
-				and (t._data[dataType] == dataValue) then
-				return t, true
+		for _, activeToasts in next, P:GetActiveToasts() do
+			for _, t in next, activeToasts do
+				if (not toastEvent or toastEvent == t._data.event) and (t._data[dataType] == dataValue) then
+					return t
+				end
 			end
 		end
 	end
 end
 
-function E.GetToast(_, toastEvent, dataType, dataValue)
+function E:GetToast(toastEvent, dataType, dataValue)
 	local toast, isQueued = E:FindToast(toastEvent, dataType, dataValue)
 	local isNew
 
 	if not toast then
-		toast = t_remove(createdToasts, 1)
-
+		toast = t_remove(freeToasts, 1)
 		if not toast then
 			toast = constructToast()
 		end
@@ -754,59 +727,37 @@ function E.GetToast(_, toastEvent, dataType, dataValue)
 	return toast, isNew, isQueued
 end
 
-function E.FlushToastsCache()
-	t_wipe(queuedToasts)
-
-	for _ = 1, #activeToasts do
-		activeToasts[1]:Click("RightButton")
-	end
-
-	t_wipe(createdToasts)
-end
-
-function E.GetQueuedToasts()
-	return queuedToasts
-end
-
-function E.GetNumQueuedToasts()
-	return #queuedToasts
-end
-
-function E.GetActiveToasts()
-	return activeToasts
-end
-
-function E.GetNumActiveToasts()
-	return #activeToasts
-end
-
-function E.GetCreatedToasts()
-	return createdToasts
-end
-
-function E.GetToasts()
+function P:GetToasts()
 	return toasts
 end
 
-function E.UpdateScale()
-	local scale = C.db.profile.scale
+function P:UpdateScale(anchorID)
+	local scale = C.db.profile.anchors[anchorID].scale
 
-	E:GetAnchorFrame():SetSize(224 * scale, 48 * scale)
+	self:GetAnchor(anchorID):SetSize(224 * scale, 48 * scale)
 
-	for _, toast in next, toasts do
+	for _, toast in next, self:GetActiveToasts(anchorID) do
+		toast:SetScale(scale)
+	end
+
+	for _, toast in next, self:GetQueuedToasts(anchorID) do
 		toast:SetScale(scale)
 	end
 end
 
-function E.UpdateFadeOutDelay()
-	local delay = C.db.profile.fadeout_delay
+function P:UpdateFadeOutDelay(anchorID)
+	local delay = C.db.profile.anchors[anchorID].fadeout_delay
 
-	for _, toast in next, toasts do
+	for _, toast in next, self:GetActiveToasts(anchorID) do
+		toast.AnimOut.Anim1:SetStartDelay(delay)
+	end
+
+	for _, toast in next, self:GetQueuedToasts(anchorID) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)
 	end
 end
 
-function E.UpdateStrata()
+function P:UpdateStrata()
 	local strata = C.db.profile.strata
 
 	for _, toast in next, toasts do
