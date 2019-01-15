@@ -85,6 +85,14 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		C.db.profile.sfx = nil
 	end
 
+	-- ->80100.03
+	if not C.db.profile.version or C.db.profile.version < 8010003 then
+		C.db.profile.fadeout_delay = nil
+		C.db.profile.growth_direction = nil
+		C.db.profile.max_active_toasts = nil
+		C.db.profile.scale = nil
+	end
+
 	C.options = {
 		type = "group",
 		name = L["LS_TOASTS"],
