@@ -9,11 +9,15 @@ local next = _G.next
 local s_format = _G.string.format
 local type = _G.type
 
+--[[ luacheck: globals
+	IsLoggedIn
+]]
+
 -- Mine
 local systems = {}
 local function dummy() end
 
-function E.RegisterSystem(_, id, enableFunc, disableFunc, testFunc)
+function E:RegisterSystem(id, enableFunc, disableFunc, testFunc)
 	if type(id) ~= "string" then
 		error(s_format("Invalid argument #1 to 'RegisterSystem' method, expected a string, got a '%s'", type(id)), 2)
 		return
@@ -39,7 +43,7 @@ function E.RegisterSystem(_, id, enableFunc, disableFunc, testFunc)
 	}
 end
 
-function E.EnableSystem(_, id)
+function E:EnableSystem(id)
 	local system = systems[id]
 
 	if system and not system.isEnabled then
@@ -49,7 +53,7 @@ function E.EnableSystem(_, id)
 	end
 end
 
-function E.DisableSystem(_, id)
+function E:DisableSystem(id)
 	local system = systems[id]
 
 	if system and system.isEnabled then
@@ -59,13 +63,13 @@ function E.DisableSystem(_, id)
 	end
 end
 
-function E.TestSystem(_, id)
+function E:TestSystem(id)
 	if systems[id] then
 		systems[id]:Test()
 	end
 end
 
-function E.EnableAllSystems()
+function E:EnableAllSystems()
 	for _, system in next, systems do
 		if not system.isEnabled then
 			system:Enable()
@@ -75,7 +79,7 @@ function E.EnableAllSystems()
 	end
 end
 
-function E.DisableAllSystems()
+function E:DisableAllSystems()
 	for _, system in next, systems do
 		if system.isEnabled then
 			system:Disable()
@@ -85,7 +89,7 @@ function E.DisableAllSystems()
 	end
 end
 
-function E.TestAllSystems()
+function E:TestAllSystems()
 	for _, system in next, systems do
 			system:Test()
 	end
@@ -95,7 +99,7 @@ local db = {} -- for profile switching
 local options = {}
 local order = 1
 
-function E.RegisterOptions(_, id, dbTable, optionsTable)
+function E:RegisterOptions(id, dbTable, optionsTable)
 	if type(id) ~= "string" then
 		error(s_format("Invalid argument #1 to 'RegisterOptions' method, expected a string, got a '%s'", type(id)), 2)
 		return
@@ -136,7 +140,7 @@ function E.RegisterOptions(_, id, dbTable, optionsTable)
 	end
 end
 
-function E:UpdateDB()
+function P:UpdateDB()
 	P:UpdateTable(db, C.db.profile.types)
 
 	for id in next, db do
@@ -144,7 +148,7 @@ function E:UpdateDB()
 	end
 end
 
-function E.UpdateOptions()
+function P:UpdateOptions()
 	P:UpdateTable(options, C.options.args.types.args)
 	P:UpdateAnchorsOptions()
 end

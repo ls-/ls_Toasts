@@ -13,6 +13,15 @@ local t_remove = _G.table.remove
 local tonumber = _G.tonumber
 local type = _G.type
 
+--[[ luacheck: globals
+	CreateFrame GetContainerItemID GetContainerNumSlots GetDetailedItemLevelInfo GetItemInfo
+	UIParent
+
+	INVSLOT_BACK INVSLOT_CHEST INVSLOT_FEET INVSLOT_FINGER1 INVSLOT_FINGER2 INVSLOT_HAND
+	INVSLOT_HEAD INVSLOT_LEGS INVSLOT_MAINHAND INVSLOT_NECK INVSLOT_OFFHAND INVSLOT_RANGED
+	INVSLOT_SHOULDER INVSLOT_TRINKET1 INVSLOT_TRINKET2 INVSLOT_WAIST INVSLOT_WRIST NUM_BAG_SLOTS
+]]
+
 -- Mine
 local E, P = {}, {}
 addonTable.E, addonTable.P = E, P
@@ -38,7 +47,7 @@ do
 		end
 	end)
 
-	function E.RegisterEvent(_, event, func, unit1, unit2)
+	function E:RegisterEvent(event, func, unit1, unit2)
 		if oneTimeEvents[event] then
 			error(s_format("Failed to register for '%s' event, already fired!", event), 3)
 		end
@@ -60,7 +69,7 @@ do
 		registeredEvents[event][func] = true
 	end
 
-	function E.UnregisterEvent(_, event, func)
+	function E:UnregisterEvent(event, func)
 		local funcs = registeredEvents[event]
 
 		if funcs and funcs[func] then
@@ -97,7 +106,7 @@ end
 -- HELPERS --
 -------------
 
-function E.SanitizeLink(_, link)
+function E:SanitizeLink(link)
 	if not link or link == "[]" or link == "" then
 		return
 	end
@@ -120,7 +129,7 @@ function E.SanitizeLink(_, link)
 	return t_concat(linkTable, ":"), link, linkTable[1], tonumber(linkTable[2]), name
 end
 
-function E.GetScreenQuadrant(_, frame)
+function E:GetScreenQuadrant(frame)
 	local x, y = frame:GetCenter()
 
 	if not (x and y) then
@@ -186,7 +195,7 @@ do
 		["INVTYPE_THROWN"] = {INVSLOT_RANGED},
 	}
 
-	function E.GetItemLevel(_, itemLink)
+	function E:GetItemLevel(itemLink)
 		local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, itemSubClassID = GetItemInfo(itemLink)
 
 		-- 3:11 is artefact relic
@@ -198,7 +207,7 @@ do
 	end
 end
 
-function E.SearchBagsForItemID(_, itemID)
+function E:SearchBagsForItemID(itemID)
 	for i = 0, NUM_BAG_SLOTS do
 		for j = 1, GetContainerNumSlots(i) do
 			if GetContainerItemID(i, j) == itemID then

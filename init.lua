@@ -54,7 +54,7 @@ local BLACKLISTED_EVENTS = {
 
 local function updateCallback()
 	P:UpdateAnchors()
-	E:UpdateDB()
+	P:UpdateDB()
 	P:FlushQueue()
 	E:DisableAllSystems()
 	E:EnableAllSystems()
@@ -290,8 +290,8 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 
 	E:RegisterEvent("PLAYER_LOGIN", function()
 		P:UpdateAnchors()
-		E:UpdateDB()
-		E:UpdateOptions()
+		P:UpdateDB()
+		P:UpdateOptions()
 		E:EnableAllSystems()
 		E:CheckResetDefaultSkin()
 

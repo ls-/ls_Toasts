@@ -8,12 +8,18 @@ local m_floor = _G.math.floor
 local next = _G.next
 local t_insert = _G.table.insert
 local t_remove = _G.table.remove
-local t_wipe = _G.table.wipe
 local type = _G.type
 local unpack = _G.unpack
 
 -- Blizz
+local C_Timer = _G.C_Timer
 local Lerp = _G.Lerp
+
+--[[ luacheck: globals
+	BattlePetTooltip CreateFrame GameTooltip GameTooltip_ShowCompareItem GarrisonFollowerTooltip
+	GarrisonShipyardFollowerTooltip GetCVarBool IsModifiedClick PlaySound ShoppingTooltip1
+	ShoppingTooltip2 UIParent
+]]
 
 -- Mine
 local freeToasts = {}
@@ -685,12 +691,11 @@ local function constructToast()
 	return toast
 end
 
-function E.FindToast(_, toastEvent, dataType, dataValue)
+function E:FindToast(toastEvent, dataType, dataValue)
 	if dataType and dataValue then
 		for _, queuedToasts in next, P:GetQueuedToasts() do
 			for _, t in next, queuedToasts do
-				if (not toastEvent or toastEvent == t._data.event)
-					and (t._data[dataType] == dataValue) then
+				if (not toastEvent or toastEvent == t._data.event) and (t._data[dataType] == dataValue) then
 					return t, true
 				end
 			end
@@ -698,8 +703,7 @@ function E.FindToast(_, toastEvent, dataType, dataValue)
 
 		for _, activeToasts in next, P:GetActiveToasts() do
 			for _, t in next, activeToasts do
-				if (not toastEvent or toastEvent == t._data.event)
-					and (t._data[dataType] == dataValue) then
+				if (not toastEvent or toastEvent == t._data.event) and (t._data[dataType] == dataValue) then
 					return t
 				end
 			end
@@ -707,7 +711,7 @@ function E.FindToast(_, toastEvent, dataType, dataValue)
 	end
 end
 
-function E.GetToast(_, toastEvent, dataType, dataValue)
+function E:GetToast(toastEvent, dataType, dataValue)
 	local toast, isQueued = E:FindToast(toastEvent, dataType, dataValue)
 	local isNew
 
