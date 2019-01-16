@@ -342,13 +342,13 @@ local function toast_Recycle(self)
 	P:ResetSkin(self)
 
 	for i = 1, 5 do
-		self["Slot"..i]:Hide()
-		self["Slot"..i]:SetScript("OnEnter", slot_OnEnter)
-		self["Slot"..i]._data = nil -- table.wipe???
+		self["Slot" .. i]:Hide()
+		self["Slot" .. i]:SetScript("OnEnter", slot_OnEnter)
+		self["Slot" .. i]._data = nil -- table.wipe???
 	end
 
 	for i = 1, 5 do
-		self["Arrow"..i]:SetAlpha(0)
+		self["Arrow" .. i]:SetAlpha(0)
 	end
 
 	-- a toast that's recycled before spawning
@@ -531,17 +531,17 @@ local function constructToast()
 			arrow:ClearAllPoints()
 			arrow:SetPoint("CENTER", iconParent, "BOTTOM", ARROWS_CFG[i].x, 0)
 			arrow:SetAlpha(0)
-			toast["Arrow"..i] = arrow
+			toast["Arrow" .. i] = arrow
 
 			local anim = ag:CreateAnimation("Alpha")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetOrder(1)
 			anim:SetFromAlpha(1)
 			anim:SetToAlpha(0)
 			anim:SetDuration(0)
 
 			anim = ag:CreateAnimation("Alpha")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetSmoothing("IN")
 			anim:SetOrder(2)
 			anim:SetFromAlpha(0)
@@ -550,7 +550,7 @@ local function constructToast()
 			anim:SetDuration(0.25)
 
 			anim = ag:CreateAnimation("Alpha")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetSmoothing("OUT")
 			anim:SetOrder(2)
 			anim:SetFromAlpha(1)
@@ -559,14 +559,14 @@ local function constructToast()
 			anim:SetDuration(0.25)
 
 			anim = ag:CreateAnimation("Translation")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetOrder(2)
 			anim:SetOffset(0, 60)
 			anim:SetStartDelay(ARROWS_CFG[i].delay)
 			anim:SetDuration(0.5)
 
 			anim = ag:CreateAnimation("Alpha")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetDuration(0)
 			anim:SetOrder(3)
 			anim:SetFromAlpha(1)
@@ -664,7 +664,7 @@ local function constructToast()
 		slot:SetScript("OnEnter", slot_OnEnter)
 		slot:SetScript("OnLeave", slot_OnLeave)
 		slot:SetScript("OnHide", slot_OnHide)
-		toast["Slot"..i] = slot
+		toast["Slot" .. i] = slot
 
 		local slotIcon = slot:CreateTexture(nil, "BACKGROUND", nil, 1)
 		slotIcon:SetAllPoints()
@@ -676,7 +676,7 @@ local function constructToast()
 		if i == 1 then
 			slot:SetPoint("TOPRIGHT", -4, 9)
 		else
-			slot:SetPoint("RIGHT", toast["Slot"..(i - 1)], "LEFT", -4 , 0)
+			slot:SetPoint("RIGHT", toast["Slot" .. (i - 1)], "LEFT", -4 , 0)
 		end
 	end
 

@@ -7,6 +7,14 @@ local hooksecurefunc = _G.hooksecurefunc
 local next = _G.next
 local tonumber = _G.tonumber
 
+--[[ luacheck: globals
+	AlertFrame CreateFrame GetAddOnMetadata InCombatLockdown InterfaceOptions_AddCategory
+	InterfaceOptionsFrame_Show InterfaceOptionsFramePanelContainer SlashCmdList
+
+	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC
+	ITEM_QUALITY5_DESC LS_TOASTS_CFG LS_TOASTS_CFG_GLOBAL SLASH_LSTOASTS1 SLASH_LSTOASTS2
+]]
+
 -- Mine
 local VER = tonumber(GetAddOnMetadata(addonName, "Version"):gsub("%D", ""), nil)
 
@@ -19,37 +27,37 @@ local STRATAS = {
 }
 
 local STRATA_INDICES ={
-	BACKGROUND = 1,
-	LOW = 2,
-	MEDIUM = 3,
-	HIGH = 4,
-	DIALOG = 5,
+	["BACKGROUND"] = 1,
+	["LOW"] = 2,
+	["MEDIUM"] = 3,
+	["HIGH"] = 4,
+	["DIALOG"] = 5,
 }
 
 local BLACKLISTED_EVENTS = {
-	ACHIEVEMENT_EARNED = true,
-	AZERITE_EMPOWERED_ITEM_LOOTED = true,
-	CRITERIA_EARNED = true,
-	GARRISON_BUILDING_ACTIVATABLE = true,
-	GARRISON_FOLLOWER_ADDED = true,
-	GARRISON_MISSION_FINISHED = true,
-	GARRISON_RANDOM_MISSION_ADDED = true,
-	GARRISON_TALENT_COMPLETE = true,
-	LFG_COMPLETION_REWARD = true,
-	LOOT_ITEM_ROLL_WON = true,
-	NEW_MOUNT_ADDED = true,
-	NEW_PET_ADDED = true,
-	NEW_RECIPE_LEARNED = true,
-	QUEST_LOOT_RECEIVED = true,
-	QUEST_TURNED_IN = true,
-	SCENARIO_COMPLETED = true,
-	SHOW_LOOT_TOAST = true,
-	SHOW_LOOT_TOAST_LEGENDARY_LOOTED = true,
-	SHOW_LOOT_TOAST_UPGRADE = true,
-	SHOW_PVP_FACTION_LOOT_TOAST = true,
-	SHOW_RATED_PVP_REWARD_TOAST = true,
-	STORE_PRODUCT_DELIVERED = true,
-	TOYS_UPDATED = true,
+	["ACHIEVEMENT_EARNED"] = true,
+	["AZERITE_EMPOWERED_ITEM_LOOTED"] = true,
+	["CRITERIA_EARNED"] = true,
+	["GARRISON_BUILDING_ACTIVATABLE"] = true,
+	["GARRISON_FOLLOWER_ADDED"] = true,
+	["GARRISON_MISSION_FINISHED"] = true,
+	["GARRISON_RANDOM_MISSION_ADDED"] = true,
+	["GARRISON_TALENT_COMPLETE"] = true,
+	["LFG_COMPLETION_REWARD"] = true,
+	["LOOT_ITEM_ROLL_WON"] = true,
+	["NEW_MOUNT_ADDED"] = true,
+	["NEW_PET_ADDED"] = true,
+	["NEW_RECIPE_LEARNED"] = true,
+	["QUEST_LOOT_RECEIVED"] = true,
+	["QUEST_TURNED_IN"] = true,
+	["SCENARIO_COMPLETED"] = true,
+	["SHOW_LOOT_TOAST_LEGENDARY_LOOTED"] = true,
+	["SHOW_LOOT_TOAST_UPGRADE"] = true,
+	["SHOW_LOOT_TOAST"] = true,
+	["SHOW_PVP_FACTION_LOOT_TOAST"] = true,
+	["SHOW_RATED_PVP_REWARD_TOAST"] = true,
+	["STORE_PRODUCT_DELIVERED"] = true,
+	["TOYS_UPDATED"] = true,
 }
 
 local function updateCallback()
@@ -79,11 +87,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	-- cleanup
 	LS_TOASTS_CFG = nil
 	LS_TOASTS_CFG_GLOBAL = nil
-
-	-- ->70300.07
-	if not C.db.profile.version or C.db.profile.version < 7030007 then
-		C.db.profile.sfx = nil
-	end
 
 	-- ->80100.03
 	if not C.db.profile.version or C.db.profile.version < 8010003 then
@@ -191,11 +194,11 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 								type = "select",
 								name = L["RARITY_THRESHOLD"],
 								values = {
-									[1] = ITEM_QUALITY_COLORS[1].hex..ITEM_QUALITY1_DESC.."|r",
-									[2] = ITEM_QUALITY_COLORS[2].hex..ITEM_QUALITY2_DESC.."|r",
-									[3] = ITEM_QUALITY_COLORS[3].hex..ITEM_QUALITY3_DESC.."|r",
-									[4] = ITEM_QUALITY_COLORS[4].hex..ITEM_QUALITY4_DESC.."|r",
-									[5] = ITEM_QUALITY_COLORS[5].hex..ITEM_QUALITY5_DESC.."|r",
+									[1] = ITEM_QUALITY_COLORS[1].hex .. ITEM_QUALITY1_DESC .. "|r",
+									[2] = ITEM_QUALITY_COLORS[2].hex .. ITEM_QUALITY2_DESC .. "|r",
+									[3] = ITEM_QUALITY_COLORS[3].hex .. ITEM_QUALITY3_DESC .. "|r",
+									[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r",
+									[5] = ITEM_QUALITY_COLORS[5].hex .. ITEM_QUALITY5_DESC .. "|r",
 								},
 								get = function()
 									return C.db.profile.colors.threshold
