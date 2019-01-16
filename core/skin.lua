@@ -4,13 +4,11 @@ local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, ad
 -- Lua
 local _G = getfenv(0)
 local error = _G.error
-local next = _G.next
 local s_format = _G.string.format
 local type = _G.type
 local unpack = _G.unpack
 
 --[[ luacheck: globals
-	LibStub
 ]]
 
 -- Mine
@@ -46,40 +44,16 @@ function E:RegisterSkin(id, data)
 	skinList[id] = data.name
 end
 
-function P:CheckResetDefaultSkin()
-	if not skins[C.db.profile.skin] then
-		C.db.profile.skin = "default"
-	end
-end
-
 function P:GetSkinList()
 	return skinList
 end
 
-function P:GetSkin()
-	return skins[C.db.profile.skin] or skins["default"]
+function P:GetSkin(id)
+	return skins[id] or skins["default"]
 end
 
-function P:SetSkin(id)
-	if type(id) ~= "string" then
-		error(s_format("Invalid argument to 'SetSkin' method, expected a string, got a '%s'", type(id)), 2)
-		return
-	elseif not skins[id] then
-		error(s_format("Invalid skin reference, skin '%s' doesn't exist", id), 2)
-		return
-	end
-
-	C.db.profile.skin = id
-
-	for _, toast in next, self:GetToasts() do
-		self:ApplySkin(toast)
-	end
-
-	return true
-end
-
-function P:ApplySkin(toast)
-	local skin = skins[C.db.profile.skin] or skins["default"]
+function P:SetSkin(toast, id)
+	local skin = skins[id] or skins["default"]
 	local fontPath = P.LSM:Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
 

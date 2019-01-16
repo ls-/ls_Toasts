@@ -362,7 +362,7 @@ local function toast_Recycle(self)
 end
 
 local function toast_SetBackground(self, id)
-	local skin = P:GetSkin()
+	local skin = P:GetSkin(C.db.profile.skin)
 
 	if not skin.bg[id] then
 		id = "default"
@@ -684,7 +684,7 @@ local function constructToast()
 	toast.Spawn = toast_Spawn
 	toast.SetBackground = toast_SetBackground
 
-	P:ApplySkin(toast)
+	P:SetSkin(toast, C.db.profile.skin)
 
 	t_insert(toasts, toast)
 
@@ -766,7 +766,7 @@ function P:UpdateStrata()
 end
 
 function P:UpdateFont()
-	local skin = self:GetSkin()
+	local skin = self:GetSkin(C.db.profile.skin)
 	local fontPath = P.LSM:Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
 
@@ -782,5 +782,13 @@ function P:UpdateFont()
 
 		-- .IconText2
 		toast.IconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags)
+	end
+end
+
+function P:UpdateSkin()
+	local id = C.db.profile.skin
+
+	for _, toast in next, toasts do
+		self:SetSkin(toast, id)
 	end
 end

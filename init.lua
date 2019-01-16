@@ -142,7 +142,9 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 							return C.db.profile.skin
 						end,
 						set = function(_, value)
-							P:SetSkin(value)
+							C.db.profile.skin = value
+
+							P:UpdateSkin()
 						end,
 					},
 					spacer1 = {
@@ -286,7 +288,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		P:UpdateDB()
 		P:UpdateOptions()
 		P:EnableAllSystems()
-		P:CheckResetDefaultSkin()
 
 		local panel = CreateFrame("Frame", "LSTConfigPanel", InterfaceOptionsFramePanelContainer)
 		panel.name = L["LS_TOASTS"]
