@@ -69,7 +69,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		return
 	end
 
-	C.db = LibStub("AceDB-3.0"):New("LS_TOASTS_GLOBAL_CONFIG", D, true)
+	C.db = P.AceDB:New("LS_TOASTS_GLOBAL_CONFIG", D, true)
 	C.db:RegisterCallback("OnProfileChanged", updateCallback)
 	C.db:RegisterCallback("OnProfileCopied", updateCallback)
 	C.db:RegisterCallback("OnProfileReset", updateCallback)
@@ -217,9 +217,9 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 								type = "select",
 								name = L["NAME"],
 								dialogControl = "LSM30_Font",
-								values = AceGUIWidgetLSMlists.font,
+								values = P.LSM:HashTable("font"),
 								get = function()
-									return LibStub("LibSharedMedia-3.0"):IsValid("font", C.db.profile.font.name) and C.db.profile.font.name or LibStub("LibSharedMedia-3.0"):GetDefault("font")
+									return P.LSM:IsValid("font", C.db.profile.font.name) and C.db.profile.font.name or P.LSM:GetDefault("font")
 								end,
 								set = function(_, value)
 									C.db.profile.font.name = value
@@ -279,10 +279,10 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		},
 	}
 
-	LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, C.options)
-	LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 1024, 768)
+	P.AceConfig:RegisterOptionsTable(addonName, C.options)
+	P.AceConfigDialog:SetDefaultSize(addonName, 1024, 768)
 
-	C.options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(C.db, true)
+	C.options.args.profiles = P.AceDBOptions:GetOptionsTable(C.db, true)
 	C.options.args.profiles.order = 100
 	C.options.args.profiles.desc = nil
 
@@ -315,7 +315,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 			if not InCombatLockdown() then
 				InterfaceOptionsFrame_Show()
 
-				LibStub("AceConfigDialog-3.0"):Open(addonName)
+				P.AceConfigDialog:Open(addonName)
 			end
 		end)
 
@@ -326,7 +326,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		SlashCmdList["LSTOASTS"] = function(msg)
 			if msg == "" then
 				if not InCombatLockdown() then
-					LibStub("AceConfigDialog-3.0"):Open(addonName)
+					P.AceConfigDialog:Open(addonName)
 				end
 			elseif msg == "test" then
 				E:TestAllSystems()
