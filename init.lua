@@ -113,8 +113,14 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				name = L["TEST_ALL"],
 				func = P.TestAllSystems,
 			},
-			general = {
+			flush_queue = {
 				order = 3,
+				type = "execute",
+				name = L["FLUSH_QUEUE"],
+				func = function() P:FlushQueue() end,
+			},
+			general = {
+				order = 10,
 				type = "group",
 				name = L["GENERAL"],
 				args = {
@@ -233,7 +239,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				},
 			},
 			anchors = {
-				order = 4,
+				order = 20,
 				type = "group",
 				name = L["ANCHOR_FRAMES"],
 				args = {
@@ -257,7 +263,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				},
 			},
 			types = {
-				order = 5,
+				order = 30,
 				type = "group",
 				name = L["TOAST_TYPES"],
 				childGroups = "tab",
@@ -316,6 +322,8 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				end
 			elseif msg == "test" then
 				P:TestAllSystems()
+			elseif msg == "flush" then
+				P:FlushQueue()
 			end
 		end
 	end)
