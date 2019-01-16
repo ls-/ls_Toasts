@@ -155,39 +155,27 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						type = "group",
 						guiInline = true,
 						name = L["COLORS"],
+						get = function(info)
+							return C.db.profile.colors[info[#info]]
+						end,
+						set = function(info, value)
+							C.db.profile.colors[info[#info]] = value
+						end,
 						args = {
 							name = {
 								order = 1,
 								type = "toggle",
 								name = L["NAME"],
-								get = function()
-									return C.db.profile.colors.name
-								end,
-								set = function(_, value)
-									C.db.profile.colors.name = value
-								end
 							},
 							border = {
 								order = 2,
 								type = "toggle",
 								name = L["BORDER"],
-								get = function()
-									return C.db.profile.colors.border
-								end,
-								set = function(_, value)
-									C.db.profile.colors.border = value
-								end
 							},
 							icon_border = {
 								order = 3,
 								type = "toggle",
 								name = L["ICON_BORDER"],
-								get = function()
-									return C.db.profile.colors.icon_border
-								end,
-								set = function(_, value)
-									C.db.profile.colors.icon_border = value
-								end
 							},
 							threshold = {
 								order = 4,
@@ -200,12 +188,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 									[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r",
 									[5] = ITEM_QUALITY_COLORS[5].hex .. ITEM_QUALITY5_DESC .. "|r",
 								},
-								get = function()
-									return C.db.profile.colors.threshold
-								end,
-								set = function(_, value)
-									C.db.profile.colors.threshold = value
-								end,
 							},
 						}
 					},
