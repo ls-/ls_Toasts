@@ -100,7 +100,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	C.options = {
 		type = "group",
 		name = L["LS_TOASTS"],
-		disabled = function() return InCombatLockdown() end,
 		args = {
 			toggle_anchors = {
 				order = 1,
@@ -313,6 +312,10 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		end)
 
 		InterfaceOptions_AddCategory(panel, true)
+
+		E:RegisterEvent("PLAYER_REGEN_DISABLED", function()
+			P.AceConfigDialog:Close(addonName)
+		end)
 
 		SLASH_LSTOASTS1 = "/lstoasts"
 		SLASH_LSTOASTS2 = "/lst"
