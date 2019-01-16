@@ -56,8 +56,8 @@ local function updateCallback()
 	P:UpdateAnchors()
 	P:UpdateDB()
 	P:FlushQueue()
-	E:DisableAllSystems()
-	E:EnableAllSystems()
+	P:DisableAllSystems()
+	P:EnableAllSystems()
 end
 
 local function shutdownCallback()
@@ -102,13 +102,13 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				order = 1,
 				type = "execute",
 				name = L["TOGGLE_ANCHORS"],
-				func = function() P:ToggleAnchors() end,
+				func = P.ToggleAnchors,
 			},
 			test_all = {
 				order = 2,
 				type = "execute",
 				name = L["TEST_ALL"],
-				func = function() E:TestAllSystems() end,
+				func = P.TestAllSystems,
 			},
 			general = {
 				order = 3,
@@ -134,12 +134,12 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						order = 2,
 						type = "select",
 						name = L["SKIN"],
-						values = E.GetSkinList,
+						values = P.GetSkinList,
 						get = function()
 							return C.db.profile.skin
 						end,
 						set = function(_, value)
-							E:SetSkin(value)
+							P:SetSkin(value)
 						end,
 					},
 					spacer1 = {
@@ -224,7 +224,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 								set = function(_, value)
 									C.db.profile.font.name = value
 
-									E:UpdateFont()
+									P:UpdateFont()
 								end
 							},
 							size = {
@@ -238,7 +238,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 								set = function(_, value)
 									C.db.profile.font.size = value
 
-									E:UpdateFont()
+									P:UpdateFont()
 								end,
 							},
 						},
@@ -300,8 +300,8 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		P:UpdateAnchors()
 		P:UpdateDB()
 		P:UpdateOptions()
-		E:EnableAllSystems()
-		E:CheckResetDefaultSkin()
+		P:EnableAllSystems()
+		P:CheckResetDefaultSkin()
 
 		local panel = CreateFrame("Frame", "LSTConfigPanel", InterfaceOptionsFramePanelContainer)
 		panel.name = L["LS_TOASTS"]
@@ -329,7 +329,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 					P.AceConfigDialog:Open(addonName)
 				end
 			elseif msg == "test" then
-				E:TestAllSystems()
+				P:TestAllSystems()
 			end
 		end
 	end)

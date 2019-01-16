@@ -46,21 +46,21 @@ function E:RegisterSkin(id, data)
 	skinList[id] = data.name
 end
 
-function E:CheckResetDefaultSkin()
+function P:CheckResetDefaultSkin()
 	if not skins[C.db.profile.skin] then
 		C.db.profile.skin = "default"
 	end
 end
 
-function E:GetSkinList()
+function P:GetSkinList()
 	return skinList
 end
 
-function E:GetSkin()
+function P:GetSkin()
 	return skins[C.db.profile.skin] or skins["default"]
 end
 
-function E:SetSkin(id)
+function P:SetSkin(id)
 	if type(id) ~= "string" then
 		error(s_format("Invalid argument to 'SetSkin' method, expected a string, got a '%s'", type(id)), 2)
 		return
@@ -71,14 +71,14 @@ function E:SetSkin(id)
 
 	C.db.profile.skin = id
 
-	for _, toast in next, P:GetToasts() do
-		E:ApplySkin(toast)
+	for _, toast in next, self:GetToasts() do
+		self:ApplySkin(toast)
 	end
 
 	return true
 end
 
-function E:ApplySkin(toast)
+function P:ApplySkin(toast)
 	local skin = skins[C.db.profile.skin] or skins["default"]
 	local fontPath = P.LSM:Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
@@ -209,7 +209,7 @@ function E:ApplySkin(toast)
 	toast.AnimIn.Anim5:SetOffset(224 - skin.shine.size[1], 0)
 end
 
-function E:ResetSkin(toast)
+function P:ResetSkin(toast)
 	local skin = skins[C.db.profile.skin] or skins["default"]
 
 	-- .Border

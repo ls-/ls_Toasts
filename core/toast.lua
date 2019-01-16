@@ -339,7 +339,7 @@ local function toast_Recycle(self)
 	self.Text.PostSetAnimatedValue = nil
 	self.Title:SetText("")
 
-	E:ResetSkin(self)
+	P:ResetSkin(self)
 
 	for i = 1, 5 do
 		self["Slot"..i]:Hide()
@@ -362,7 +362,7 @@ local function toast_Recycle(self)
 end
 
 local function toast_SetBackground(self, id)
-	local skin = E:GetSkin()
+	local skin = P:GetSkin()
 
 	if not skin.bg[id] then
 		id = "default"
@@ -684,7 +684,7 @@ local function constructToast()
 	toast.Spawn = toast_Spawn
 	toast.SetBackground = toast_SetBackground
 
-	E:ApplySkin(toast)
+	P:ApplySkin(toast)
 
 	t_insert(toasts, toast)
 
@@ -765,8 +765,8 @@ function P:UpdateStrata()
 	end
 end
 
-function E.UpdateFont()
-	local skin = E:GetSkin()
+function P:UpdateFont()
+	local skin = self:GetSkin()
 	local fontPath = P.LSM:Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
 
