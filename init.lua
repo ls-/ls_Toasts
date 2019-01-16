@@ -5,6 +5,7 @@ local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, ad
 local _G = getfenv(0)
 local hooksecurefunc = _G.hooksecurefunc
 local next = _G.next
+local print = _G.print
 local tonumber = _G.tonumber
 
 --[[ luacheck: globals
@@ -324,6 +325,28 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				P:TestAllSystems()
 			elseif msg == "flush" then
 				P:FlushQueue()
+			elseif msg == "dump" then
+				print("|cffdc4436Queued Toasts|r:")
+				for anchorID, queued in next, P:GetQueuedToasts() do
+					print("  |cff2eac34Anchor Frame|r:", anchorID)
+					for _, toast in next, queued do
+						print("    |cff267dce" .. toast:GetDebugName() .. "|r:")
+						for k, v in next, toast._data do
+							print("      |cfff6c442" .. k .. "|r:", v)
+						end
+					end
+				end
+
+				print("|cffdc4436Active Toasts|r:")
+				for anchorID, active in next, P:GetActiveToasts() do
+					print("  |cff2eac34Anchor Frame|r:", anchorID)
+					for _, toast in next, active do
+						print("    |cff267dce" .. toast:GetDebugName() .. "|r:")
+						for k, v in next, toast._data do
+							print("      |cfff6c442" .. k .. "|r:", v)
+						end
+					end
+				end
 			end
 		end
 	end)
