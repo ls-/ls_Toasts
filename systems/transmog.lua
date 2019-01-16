@@ -150,9 +150,6 @@ local function Test()
 
 	-- added
 	Toast_SetUp("TRANSMOG_TEST", source.sourceID, true, 1)
-
-	-- removed
-	C_Timer.After(2, function() Toast_SetUp("TRANSMOG_TEST", source.sourceID, nil, 1) end )
 end
 
 E:RegisterOptions("transmog", {
