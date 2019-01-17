@@ -13,16 +13,17 @@ local C_Garrison = _G.C_Garrison
 
 --[[ luacheck: globals
 	GameTooltip GarrisonFollowerOptions GarrisonFollowerTooltip GarrisonFollowerTooltipTemplate_SetGarrisonFollower
-	GarrisonFollowerTooltipTemplate_SetShipyardFollower GarrisonShipyardFollowerTooltip GetInstanceInfo
+	GarrisonFollowerTooltipTemplate_SetShipyardFollower GarrisonShipyardFollowerTooltip GetInstanceInfo UnitClass
+
 	ITEM_QUALITY_COLORS LE_FOLLOWER_TYPE_GARRISON_6_0 LE_FOLLOWER_TYPE_GARRISON_7_0 LE_FOLLOWER_TYPE_GARRISON_8_0
 	LE_FOLLOWER_TYPE_SHIPYARD_6_2 LE_GARRISON_TYPE_6_0 LE_GARRISON_TYPE_7_0 LE_GARRISON_TYPE_8_0
-	LOOTUPGRADEFRAME_QUALITY_TEXTURES UnitClass
+	LOOTUPGRADEFRAME_QUALITY_TEXTURES
 ]]
 
 -- Mine
 local PLAYER_CLASS = select(3, UnitClass("player"))
 
-local function GetGarrisonTypeByFollowerType(followerTypeID)
+local function getGarrisonTypeByFollowerType(followerTypeID)
 	if followerTypeID == LE_FOLLOWER_TYPE_GARRISON_8_0 then
 		return LE_GARRISON_TYPE_8_0
 	elseif followerTypeID == LE_FOLLOWER_TYPE_GARRISON_7_0 then
@@ -62,35 +63,26 @@ local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 	toast.Icon:SetAtlas(missionInfo.typeAtlas, false)
 	toast.IconText1:SetText(level)
 
-	toast._data = {
-		event = event,
-		mission_id = missionID,
-	}
+	toast._data.event = event
+	toast._data.mission_id = missionID
 
 	if garrisonType == LE_GARRISON_TYPE_8_0 then
-		if C.db.profile.types.garrison_8_0.sfx then
-			toast._data.sound_file = 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
-		end
+		toast._data.sound_file = C.db.profile.types.garrison_8_0.sfx and 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
 
 		toast:Spawn(C.db.profile.types.garrison_8_0.anchor, C.db.profile.types.garrison_8_0.dnd)
 	elseif garrisonType == LE_GARRISON_TYPE_7_0 then
-		if C.db.profile.types.garrison_7_0.sfx then
-			toast._data.sound_file = 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
-		end
+		toast._data.sound_file = C.db.profile.types.garrison_7_0.sfx and 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
 
 		toast:Spawn(C.db.profile.types.garrison_7_0.anchor, C.db.profile.types.garrison_7_0.dnd)
 	elseif garrisonType == LE_GARRISON_TYPE_6_0 then
-		if C.db.profile.types.garrison_6_0.sfx then
-			toast._data.sound_file = 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
-		end
+		toast._data.sound_file = C.db.profile.types.garrison_6_0.sfx and 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
 
 		toast:Spawn(C.db.profile.types.garrison_6_0.anchor, C.db.profile.types.garrison_6_0.dnd)
 	end
 end
 
 local function GARRISON_MISSION_FINISHED(followerTypeID, missionID)
-	local garrisonType = GetGarrisonTypeByFollowerType(followerTypeID)
-
+	local garrisonType = getGarrisonTypeByFollowerType(followerTypeID)
 	if (garrisonType == LE_GARRISON_TYPE_8_0 and not C.db.profile.types.garrison_8_0.enabled)
 		or (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
 		or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
@@ -110,8 +102,7 @@ local function GARRISON_MISSION_FINISHED(followerTypeID, missionID)
 end
 
 local function GARRISON_RANDOM_MISSION_ADDED(followerTypeID, missionID)
-	local garrisonType = GetGarrisonTypeByFollowerType(followerTypeID)
-
+	local garrisonType = getGarrisonTypeByFollowerType(followerTypeID)
 	if (garrisonType == LE_GARRISON_TYPE_8_0 and not C.db.profile.types.garrison_8_0.enabled)
 		or (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
 		or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
@@ -124,9 +115,8 @@ end
 ------
 
 local function FollowerToast_OnEnter(self)
-	if self._data then
+	if self._data.follower_id then
 		local isOK, link = pcall(C_Garrison.GetFollowerLink, self._data.follower_id)
-
 		if not isOK then
 			isOK, link = pcall(C_Garrison.GetFollowerLinkByID, self._data.follower_id)
 		end
@@ -158,8 +148,8 @@ local function FollowerToast_OnEnter(self)
 				trait4 = tonumber(trait4),
 				isTroop = C_Garrison.GetFollowerIsTroop(garrisonFollowerID),
 			}
-			local tooltip
 
+			local tooltip
 			if data.followerTypeID == LE_FOLLOWER_TYPE_SHIPYARD_6_2 then
 				tooltip = GarrisonShipyardFollowerTooltip
 				GarrisonFollowerTooltipTemplate_SetShipyardFollower(tooltip, data)
@@ -186,7 +176,7 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 		toast.Icon:SetPoint("TOPLEFT", -2, -1)
 		toast.Icon:SetSize(46, 40)
 		toast.Icon:SetTexCoord(0, 1, 0, 1)
-		toast.Icon:SetAtlas(texPrefix.."-Portrait", false)
+		toast.Icon:SetAtlas(texPrefix .. "-Portrait", false)
 	else
 		local portrait
 		if followerInfo.portraitIconID and followerInfo.portraitIconID ~= 0 then
@@ -205,7 +195,7 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 		toast.Title:SetText(followerStrings.FOLLOWER_ADDED_UPGRADED_TOAST)
 
 		for i = 1, 5 do
-			toast["Arrow"..i]:SetAtlas(upgradeTexture.arrow, true)
+			toast["Arrow" .. i]:SetAtlas(upgradeTexture.arrow, true)
 		end
 	else
 		toast.Title:SetText(followerStrings.FOLLOWER_ADDED_TOAST)
@@ -223,38 +213,29 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 
 	toast.Text:SetText(name)
 
-	toast._data = {
-		event = event,
-		follower_id = followerID,
-		show_arrows = isUpgraded,
-	}
+	toast._data.event = event
+	toast._data.follower_id = followerID
+	toast._data.show_arrows = isUpgraded
 
 	toast:HookScript("OnEnter", FollowerToast_OnEnter)
 
 	if garrisonType == LE_GARRISON_TYPE_8_0 then
-		if C.db.profile.types.garrison_8_0.sfx then
-			toast._data.sound_file = 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
-		end
+		toast._data.sound_file = C.db.profile.types.garrison_8_0.sfx and 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
 
 		toast:Spawn(C.db.profile.types.garrison_8_0.anchor, C.db.profile.types.garrison_8_0.dnd)
 	elseif garrisonType == LE_GARRISON_TYPE_7_0 then
-		if C.db.profile.types.garrison_7_0.sfx then
-			toast._data.sound_file = 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
-		end
+		toast._data.sound_file = C.db.profile.types.garrison_7_0.sfx and 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
 
 		toast:Spawn(C.db.profile.types.garrison_7_0.anchor, C.db.profile.types.garrison_7_0.dnd)
 	elseif garrisonType == LE_GARRISON_TYPE_6_0 then
-		if C.db.profile.types.garrison_6_0.sfx then
-			toast._data.sound_file = 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
-		end
+		toast._data.sound_file = C.db.profile.types.garrison_6_0.sfx and 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
 
 		toast:Spawn(C.db.profile.types.garrison_6_0.anchor, C.db.profile.types.garrison_6_0.dnd)
 	end
 end
 
 local function GARRISON_FOLLOWER_ADDED(followerID, name, _, level, quality, isUpgraded, texPrefix, followerTypeID)
-	local garrisonType = GetGarrisonTypeByFollowerType(followerTypeID)
-
+	local garrisonType = getGarrisonTypeByFollowerType(followerTypeID)
 	if (garrisonType == LE_GARRISON_TYPE_8_0 and not C.db.profile.types.garrison_8_0.enabled)
 		or (garrisonType == LE_GARRISON_TYPE_7_0 and not C.db.profile.types.garrison_7_0.enabled)
 		or (garrisonType == LE_GARRISON_TYPE_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
@@ -274,13 +255,8 @@ local function BuildingToast_SetUp(event, buildingName)
 	toast.Icon:SetTexture("Interface\\Icons\\Garrison_Build")
 	toast.IconBorder:Show()
 
-	toast._data = {
-		event = event,
-	}
-
-	if C.db.profile.types.garrison_6_0.sfx then
-		toast._data.sound_file = 44295 -- SOUNDKIT.UI_GARRISON_TOAST_BUILDING_COMPLETE
-	end
+	toast._data.event = event
+	toast._data.sound_file = C.db.profile.types.garrison_6_0.sfx and 44295 -- SOUNDKIT.UI_GARRISON_TOAST_BUILDING_COMPLETE
 
 	toast:Spawn(C.db.profile.types.garrison_6_0.anchor, C.db.profile.types.garrison_6_0.dnd)
 end
@@ -300,21 +276,15 @@ local function TalentToast_SetUp(event, garrisonType, talentID)
 	toast.Icon:SetTexture(talent.icon)
 	toast.IconBorder:Show()
 
-	toast._data = {
-		event = event,
-		talend_id = talentID,
-	}
+	toast._data.event = event
+	toast._data.talend_id = talentID
 
 	if garrisonType == LE_GARRISON_TYPE_8_0 then
-		if C.db.profile.types.garrison_8_0.sfx then
-			toast._data.sound_file = 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
-		end
+		toast._data.sound_file = C.db.profile.types.garrison_8_0.sfx and 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
 
 		toast:Spawn(C.db.profile.types.garrison_8_0.anchor, C.db.profile.types.garrison_8_0.dnd)
 	elseif garrisonType == LE_GARRISON_TYPE_7_0 then
-		if C.db.profile.types.garrison_7_0.sfx then
-			toast._data.sound_file = 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
-		end
+		toast._data.sound_file = C.db.profile.types.garrison_7_0.sfx and 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
 
 		toast:Spawn(C.db.profile.types.garrison_7_0.anchor, C.db.profile.types.garrison_7_0.dnd)
 	end
@@ -362,7 +332,6 @@ local function TestGarrison()
 	-- follower
 	local followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_6_0)
 	local follower = followers and followers[1] or nil
-
 	if follower then
 		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", LE_GARRISON_TYPE_6_0, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
 	end
@@ -370,7 +339,6 @@ local function TestGarrison()
 	-- ship
 	followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
 	follower = followers and followers[1] or nil
-
 	if follower then
 		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", LE_GARRISON_TYPE_6_0, follower.followerTypeID, follower.followerID, follower.name, follower.texPrefix, follower.level, follower.quality, false)
 	end
@@ -378,7 +346,6 @@ local function TestGarrison()
 	-- garrison mission
 	local missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_6_0)
 	local missionID = missions and missions[1] and missions[1].missionID or nil
-
 	if missionID then
 		MissionToast_SetUp("GARRISON_MISSION_TEST", LE_GARRISON_TYPE_6_0, missionID)
 	end
@@ -386,7 +353,6 @@ local function TestGarrison()
 	-- shipyard mission
 	missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_SHIPYARD_6_2)
 	missionID = missions and missions[1] and missions[1].missionID or nil
-
 	if missionID then
 		MissionToast_SetUp("GARRISON_MISSION_TEST", LE_GARRISON_TYPE_6_0, missionID)
 	end
@@ -394,7 +360,6 @@ local function TestGarrison()
 	-- building
 	local buildings = C_Garrison.GetBuildings(LE_GARRISON_TYPE_6_0)
 	local buildingID = buildings and buildings[1] and buildings[1].buildingID or nil
-
 	if buildingID then
 		BuildingToast_SetUp("GARRISON_BUILDING_TEST", select(2, C_Garrison.GetBuildingInfo(buildingID)))
 	end
@@ -404,7 +369,6 @@ local function TestClassHall()
 	-- champion
 	local followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_7_0)
 	local follower = followers and followers[1] or nil
-
 	if follower then
 		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", LE_GARRISON_TYPE_7_0, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
 	end
@@ -412,7 +376,6 @@ local function TestClassHall()
 	-- mission
 	local missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_7_0)
 	local missionID = missions and missions[1] and missions[1].missionID or nil
-
 	if missionID then
 		MissionToast_SetUp("GARRISON_MISSION_TEST", LE_GARRISON_TYPE_7_0, missionID)
 	end
@@ -427,7 +390,6 @@ local function TestClassHall()
 	end
 
 	local talentID = tree and tree[1] and tree[1].id or nil
-
 	if talentID then
 		TalentToast_SetUp("GARRISON_TALENT_TEST", LE_GARRISON_TYPE_7_0, talentID)
 	end
@@ -437,7 +399,6 @@ local function TestWarEffort()
 	-- champion
 	local followers = C_Garrison.GetFollowers(LE_FOLLOWER_TYPE_GARRISON_8_0)
 	local follower = followers and followers[1] or nil
-
 	if follower then
 		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", LE_GARRISON_TYPE_8_0, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
 	end
@@ -445,7 +406,6 @@ local function TestWarEffort()
 	-- mission
 	local missions = C_Garrison.GetAvailableMissions(LE_FOLLOWER_TYPE_GARRISON_8_0)
 	local missionID = missions and missions[1] and missions[1].missionID or nil
-
 	if missionID then
 		MissionToast_SetUp("GARRISON_MISSION_TEST", LE_GARRISON_TYPE_8_0, missionID)
 	end

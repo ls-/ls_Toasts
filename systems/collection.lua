@@ -9,26 +9,32 @@ local C_MountJournal = _G.C_MountJournal
 local C_PetJournal = _G.C_PetJournal
 local C_ToyBox = _G.C_ToyBox
 
+--[[ luacheck: globals
+	CollectionsJournal CollectionsJournal_LoadUI InCombatLockdown MountJournal_SelectByMountID PetJournal
+	PetJournal_SelectPet SetCollectionsJournalShown ToyBox ToyBox_FindPageForToyID
+
+	COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS COLLECTIONS_JOURNAL_TAB_INDEX_PETS COLLECTIONS_JOURNAL_TAB_INDEX_TOYS
+	ITEM_QUALITY_COLORS
+]]
+
 -- Mine
 local function Toast_OnClick(self)
-	local data = self._data
-
-	if data and not InCombatLockdown() then
+	if self._data.collection_id and not InCombatLockdown() then
 		if not CollectionsJournal then
 			CollectionsJournal_LoadUI()
 		end
 
 		if CollectionsJournal then
-			if data.is_mount then
+			if self._data.is_mount then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS)
-				MountJournal_SelectByMountID(data.collection_id)
-			elseif data.is_pet then
+				MountJournal_SelectByMountID(self._data.collection_id)
+			elseif self._data.is_pet then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_PETS)
-				PetJournal_SelectPet(PetJournal, data.collection_id)
-			elseif data.is_toy then
+				PetJournal_SelectPet(PetJournal, self._data.collection_id)
+			elseif self._data.is_toy then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_TOYS)
 
-				local page = ToyBox_FindPageForToyID(data.collection_id)
+				local page = ToyBox_FindPageForToyID(self._data.collection_id)
 				if page then
 					ToyBox.PagingFrame:SetCurrentPage(page)
 				end
@@ -43,7 +49,6 @@ end
 
 local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 	local toast, isNew, isQueued = E:GetToast(event, "collection_id", ID)
-
 	if isNew then
 		local color, name, icon, rarity, _
 
@@ -87,18 +92,13 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 		toast.IconBorder:Show()
 		toast.IconText1:SetAnimatedValue(1, true)
 
-		toast._data = {
-			collection_id = ID,
-			count = 1,
-			event = event,
-			is_mount = isMount,
-			is_pet = isPet,
-			is_toy = isToy,
-		}
-
-		if C.db.profile.types.collection.sfx then
-			toast._data.sound_file = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
-		end
+		toast._data.collection_id = ID
+		toast._data.count = 1
+		toast._data.event = event
+		toast._data.is_mount = isMount
+		toast._data.is_pet = isPet
+		toast._data.is_toy = isToy
+		toast._data.sound_file = C.db.profile.types.collection.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 
 		if C.db.profile.types.collection.left_click then
 			toast:HookScript("OnClick", Toast_OnClick)
@@ -157,7 +157,6 @@ local function Test()
 
 	-- Pet
 	local petID = C_PetJournal.GetPetInfoByIndex(1)
-
 	if petID then
 		Toast_SetUp("PET_TEST", petID, nil, true)
 	end

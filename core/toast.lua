@@ -8,6 +8,7 @@ local m_floor = _G.math.floor
 local next = _G.next
 local t_insert = _G.table.insert
 local t_remove = _G.table.remove
+local t_wipe = _G.table.wipe
 local type = _G.type
 local unpack = _G.unpack
 
@@ -300,7 +301,6 @@ local order = 0
 local function toast_Spawn(self, anchorID, isDND)
 	order = order + 1
 
-	self._data = self._data or {}
 	self._data.anchor = anchorID
 	self._data.dnd = isDND
 	self._data.order = order
@@ -352,12 +352,11 @@ local function toast_Recycle(self)
 	end
 
 	-- a toast that's recycled before spawning
-	if self._data then
+	if self._data.anchor then
 		P:Dequeue(self, self._data.anchor)
 	end
 
-	self._data = nil -- table.wipe???
-
+	t_wipe(self._data)
 	t_insert(freeToasts, self)
 end
 
@@ -680,6 +679,7 @@ local function constructToast()
 		end
 	end
 
+	toast._data = {}
 	toast.Recycle = toast_Recycle
 	toast.Spawn = toast_Spawn
 	toast.SetBackground = toast_SetBackground
