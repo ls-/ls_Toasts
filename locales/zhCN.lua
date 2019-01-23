@@ -21,6 +21,7 @@ L["COPPER_THRESHOLD_DESC"] = "至少要多少銅才会显示拾取提示面板�
 L["DND"] = "勿扰"
 L["DND_TOOLTIP"] = "提示处于勿扰模式将不会在战斗中显示，但仍在后台队列，一旦你离开战斗，就会开始弹出提示。"
 L["FADE_OUT_DELAY"] = "淡出延迟"
+--[[ L["FLUSH_QUEUE"] = "Flush Queue" ]]
 L["FONTS"] = "字体"
 L["GROWTH_DIR"] = "延伸方向"
 L["GROWTH_DIR_DOWN"] = "下"
