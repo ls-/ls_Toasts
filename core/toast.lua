@@ -220,7 +220,7 @@ local function slot_OnLeave(self)
 end
 
 local function slot_OnHide(self)
-	self._data = nil
+	t_wipe(self._data)
 end
 
 -- Base Toast
@@ -344,7 +344,7 @@ local function toast_Recycle(self)
 	for i = 1, 5 do
 		self["Slot" .. i]:Hide()
 		self["Slot" .. i]:SetScript("OnEnter", slot_OnEnter)
-		self["Slot" .. i]._data = nil -- table.wipe???
+		t_wipe(self["Slot" .. i]._data)
 	end
 
 	for i = 1, 5 do
@@ -677,6 +677,8 @@ local function constructToast()
 		else
 			slot:SetPoint("RIGHT", toast["Slot" .. (i - 1)], "LEFT", -4 , 0)
 		end
+
+		slot._data = {}
 	end
 
 	toast._data = {}

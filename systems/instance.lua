@@ -43,10 +43,8 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 		if slot then
 			slot.Icon:SetTexture("Interface\\Icons\\inv_misc_coin_02")
 
-			slot._data = {
-				type = "money",
-				count = moneyReward,
-			}
+			slot._data.type = "money"
+			slot._data.count = moneyReward
 
 			slot:HookScript("OnEnter", Slot_OnEnter)
 			slot:Show()
@@ -60,10 +58,8 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 		if slot then
 			slot.Icon:SetTexture("Interface\\Icons\\xp_icon")
 
-			slot._data = {
-				type = "xp",
-				count = xpReward,
-			}
+			slot._data.type = "xp"
+			slot._data.count = xpReward
 
 			slot:HookScript("OnEnter", Slot_OnEnter)
 			slot:Show()
@@ -82,10 +78,8 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 
 				slot.Icon:SetTexture(texture)
 
-				slot._data = {
-					type = "item",
-					link = link,
-				}
+				slot._data.type = "item"
+				slot._data.link = link
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()

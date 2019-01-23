@@ -64,10 +64,8 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			if slot then
 				slot.Icon:SetTexture("Interface\\Icons\\inv_misc_coin_02")
 
-				slot._data = {
-					type = "money",
-					count = moneyReward,
-				}
+				slot._data.type = "money"
+				slot._data.count = moneyReward
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()
@@ -81,10 +79,8 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			if slot then
 				slot.Icon:SetTexture("Interface\\Icons\\xp_icon")
 
-				slot._data = {
-					type = "xp",
-					count = xpReward,
-				}
+				slot._data.type = "xp"
+				slot._data.count = xpReward
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()
@@ -101,11 +97,9 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 				slot.Icon:SetTexture(texture)
 
-				slot._data = {
-					type = "currency",
-					count = count,
-					texture = texture,
-				}
+				slot._data.type = "currency"
+				slot._data.count = count
+				slot._data.texture = texture
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()
@@ -182,10 +176,8 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 				slot.Icon:SetTexture(texture)
 
-				slot._data = {
-					type = "item",
-					link = itemReward,
-				}
+				slot._data.type = "item"
+				slot._data.link = itemReward
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()
