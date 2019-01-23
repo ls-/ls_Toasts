@@ -59,7 +59,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 		if moneyReward and moneyReward > 0 then
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot"..usedSlots]
+			local slot = toast["Slot" .. usedSlots]
 
 			if slot then
 				slot.Icon:SetTexture("Interface\\Icons\\inv_misc_coin_02")
@@ -76,7 +76,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 		if xpReward and xpReward > 0 and UnitLevel("player") < MAX_PLAYER_LEVEL then
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot"..usedSlots]
+			local slot = toast["Slot" .. usedSlots]
 
 			if slot then
 				slot.Icon:SetTexture("Interface\\Icons\\xp_icon")
@@ -93,7 +93,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 		for i = 1, numCurrencyRewards or 0 do
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot"..usedSlots]
+			local slot = toast["Slot" .. usedSlots]
 
 			if slot then
 				local _, texture, count = GetQuestLogRewardCurrencyInfo(i, questID)
@@ -174,7 +174,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 	else
 		if itemReward then
 			toast._data.used_slots = toast._data.used_slots + 1
-			local slot = toast["Slot"..toast._data.used_slots]
+			local slot = toast["Slot" .. toast._data.used_slots]
 
 			if slot then
 				local _, _, _, _, texture = GetItemInfoInstant(itemReward)
