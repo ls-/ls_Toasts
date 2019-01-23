@@ -91,10 +91,25 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 
 	-- ->80100.03
 	if not C.db.profile.version or C.db.profile.version < 8010003 then
-		C.db.profile.fadeout_delay = nil
-		C.db.profile.growth_direction = nil
-		C.db.profile.max_active_toasts = nil
-		C.db.profile.scale = nil
+		if C.db.profile.fadeout_delay then
+			C.db.profile.anchors[1].fadeout_delay = C.db.profile.fadeout_delay
+			C.db.profile.fadeout_delay = nil
+		end
+
+		if C.db.profile.growth_direction then
+			C.db.profile.anchors[1].growth_direction = C.db.profile.growth_direction
+			C.db.profile.growth_direction = nil
+		end
+
+		if C.db.profile.max_active_toasts then
+			C.db.profile.anchors[1].max_active_toasts = C.db.profile.max_active_toasts
+			C.db.profile.max_active_toasts = nil
+		end
+
+		if C.db.profile.scale then
+			C.db.profile.anchors[1].scale = C.db.profile.scale
+			C.db.profile.scale = nil
+		end
 	end
 
 	C.options = {
