@@ -110,6 +110,19 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 			C.db.profile.anchors[1].scale = C.db.profile.scale
 			C.db.profile.scale = nil
 		end
+
+		if C.db.profile.point then
+			C.db.profile.anchors[1].point.p = C.db.profile.point.p
+			C.db.profile.anchors[1].point.rP = C.db.profile.point.rP
+			C.db.profile.anchors[1].point.x = C.db.profile.point.x
+			C.db.profile.anchors[1].point.y = C.db.profile.point.y
+			C.db.profile.point = nil
+		end
+	end
+
+	-- ->80100.05
+	if not C.db.profile.version or C.db.profile.version < 8010005 then
+		C.db.profile.point = nil
 	end
 
 	C.options = {

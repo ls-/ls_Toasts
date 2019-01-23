@@ -17,12 +17,6 @@ D.profile = {
 		icon_border = true,
 		threshold = 1,
 	},
-	point = {
-		p = "TOPLEFT",
-		rP = "TOPLEFT",
-		x = 26,
-		y = -14,
-	},
 	types = {},
 	anchors = {
 		[1] = {
