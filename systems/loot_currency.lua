@@ -10,7 +10,7 @@ local tonumber = _G.tonumber
 local C_Timer = _G.C_Timer
 
 --[[ luacheck: globals
-	GameTooltip GetCurrencyInfo GetCurrencyLink
+	FormatLargeNumber GameTooltip GetCurrencyInfo GetCurrencyLink
 
 	CURRENCY_GAINED CURRENCY_GAINED_MULTIPLE CURRENCY_GAINED_MULTIPLE_BONUS ITEM_QUALITY_COLORS
 ]]
@@ -53,7 +53,7 @@ local function Toast_OnEnter(self)
 end
 
 local function PostSetAnimatedValue(self, value)
-	self:SetText(value == 1 and "" or value)
+	self:SetText(value == 1 and "" or FormatLargeNumber(value))
 end
 
 local function Toast_SetUp(event, link, quantity)
