@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 80100.04
+
+- Added "SetSkin" and "ResetSkin" callbacks. Use these if you hooked my ApplySkin method to modify toasts'  
+  appearance since ApplySkin no longer exists. Callbacks use CallbackHandler-1.0, so something like  
+  `ls_Toasts[1].RegisterCallback({}, "SetSkin", function(callbackName, toast) end)` should do the trick;
+- Updated Traditional Chinese translation. Translated by BNSSNB@Curse;
+- Misc performance and memory optimisations.
+
 ## Version 80100.03
 
 - Added support for multiple toast anchors. Each anchor has its own growth, scale, and other  

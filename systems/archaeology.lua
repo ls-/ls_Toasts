@@ -5,6 +5,10 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 local hooksecurefunc = _G.hooksecurefunc
 
+--[[ luacheck: globals
+	ArchaeologyFrame ArcheologyDigsiteProgressBar GetArchaeologyRaceInfoByID
+]]
+
 -- Mine
 local function Toast_SetUp(event, researchFieldID)
 	local toast = E:GetToast()
@@ -22,13 +26,8 @@ local function Toast_SetUp(event, researchFieldID)
 	toast.Icon:SetTexture(raceTexture)
 	toast.Icon:SetTexCoord(0 / 128, 74 / 128, 0 / 128, 88 / 128)
 
-	toast._data = {
-		event = event,
-	}
-
-	if C.db.profile.types.archaeology.sfx then
-		toast._data.sound_file = 38326 -- SOUNDKIT.UI_DIG_SITE_COMPLETION_TOAST
-	end
+	toast._data.event = event
+	toast._data.sound_file = C.db.profile.types.archaeology.sfx and 38326 -- SOUNDKIT.UI_DIG_SITE_COMPLETION_TOAST
 
 	toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
 end

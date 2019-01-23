@@ -3,24 +3,28 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
-local pcall = _G.pcall
 
 -- Blizz
 local C_Scenario = _G.C_Scenario
 
+--[[ luacheck: globals
+	GameTooltip GetLFGCompletionReward GetLFGCompletionRewardItem GetLFGCompletionRewardItemLink GetLFGDungeonInfo
+	GetMoneyString UnitLevel
+
+	LE_SCENARIO_TYPE_LEGION_INVASION LFG_SUBTYPEID_HEROIC MAX_PLAYER_LEVEL
+]]
+
 -- Mine
 local function Slot_OnEnter(self)
-	local data = self._data
-
-	if data then
-		if data.type == "item" then
-			GameTooltip:SetHyperlink(data.link)
-		elseif data.type == "xp" then
+	if self._data.type then
+		if self._data.type == "item" then
+			GameTooltip:SetHyperlink(self._data.link)
+		elseif self._data.type == "xp" then
 			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(L["XP_FORMAT"]:format(data.count), 1, 1, 1)
-		elseif data.type == "money" then
+			GameTooltip:AddLine(L["XP_FORMAT"]:format(self._data.count), 1, 1, 1)
+		elseif self._data.type == "money" then
 			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(GetMoneyString(data.count), 1, 1, 1)
+			GameTooltip:AddLine(GetMoneyString(self._data.count, true), 1, 1, 1)
 		end
 
 		GameTooltip:Show()
@@ -34,15 +38,13 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 
 	if moneyReward and moneyReward > 0 then
 		usedSlots = usedSlots + 1
-		local slot = toast["Slot"..usedSlots]
 
+		local slot = toast["Slot" .. usedSlots]
 		if slot then
 			slot.Icon:SetTexture("Interface\\Icons\\inv_misc_coin_02")
 
-			slot._data = {
-				type = "money",
-				count = moneyReward,
-			}
+			slot._data.type = "money"
+			slot._data.count = moneyReward
 
 			slot:HookScript("OnEnter", Slot_OnEnter)
 			slot:Show()
@@ -51,15 +53,13 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 
 	if xpReward and xpReward > 0 and UnitLevel("player") < MAX_PLAYER_LEVEL then
 		usedSlots = usedSlots + 1
-		local slot = toast["Slot"..usedSlots]
 
+		local slot = toast["Slot" .. usedSlots]
 		if slot then
 			slot.Icon:SetTexture("Interface\\Icons\\xp_icon")
 
-			slot._data = {
-				type = "xp",
-				count = xpReward,
-			}
+			slot._data.type = "xp"
+			slot._data.count = xpReward
 
 			slot:HookScript("OnEnter", Slot_OnEnter)
 			slot:Show()
@@ -68,21 +68,18 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 
 	for i = 1, numItemRewards or 0 do
 		local link = GetLFGCompletionRewardItemLink(i)
-
 		if link then
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot"..usedSlots]
 
+			local slot = toast["Slot" .. usedSlots]
 			if slot then
 				local texture = GetLFGCompletionRewardItem(i)
 				texture = texture or "Interface\\Icons\\INV_Box_02"
 
 				slot.Icon:SetTexture(texture)
 
-				slot._data = {
-					type = "item",
-					link = link,
-				}
+				slot._data.type = "item"
+				slot._data.link = link
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()
@@ -113,14 +110,9 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 	toast.Icon:SetTexture(textureFile or "Interface\\LFGFrame\\LFGIcon-Dungeon")
 	toast.IconBorder:Show()
 
-	toast._data = {
-		event = event,
-		used_slots = usedSlots,
-	}
-
-	if C.db.profile.types.instance.sfx then
-		toast._data.sound_file = soundFile
-	end
+	toast._data.event = event
+	toast._data.sound_file = C.db.profile.types.instance.sfx and soundFile
+	toast._data.used_slots = usedSlots
 
 	toast:Spawn(C.db.profile.types.instance.anchor, C.db.profile.types.instance.dnd)
 end
@@ -154,14 +146,12 @@ end
 local function Test()
 	-- dungeon, Wailing Caverns
 	local name, _, subTypeID = GetLFGDungeonInfo(1)
-
 	if name then
 		Toast_SetUp("INSTANCE_TEST", name, subTypeID, nil, 123456, 123456, 0)
 	end
 
 	-- scenario, Crypt of Forgotten Kings
 	name, _, subTypeID = GetLFGDungeonInfo(504)
-
 	if name then
 		Toast_SetUp("INSTANCE_TEST", name, subTypeID, nil, 123456, 123456, 0, true, true)
 	end

@@ -7,16 +7,19 @@ local m_random = _G.math.random
 local tonumber = _G.tonumber
 local tostring = _G.tostring
 
+--[[ luacheck: globals
+	GetMoney GetMoneyString
+]]
+
 -- Mine
 local old
 
 local function PostSetAnimatedValue(self, value)
-	self:SetText(GetMoneyString(value))
+	self:SetText(GetMoneyString(value, true))
 end
 
 local function Toast_SetUp(event, quantity)
 	local toast, isNew, isQueued = E:GetToast(nil, "event", event)
-
 	if isNew then
 		if quantity >= C.db.profile.types.loot_gold.threshold then
 			toast.Text.PostSetAnimatedValue = PostSetAnimatedValue
@@ -34,14 +37,9 @@ local function Toast_SetUp(event, quantity)
 			toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
 			toast.IconBorder:Show()
 
-			toast._data = {
-				event = event,
-				count = quantity,
-			}
-
-			if C.db.profile.types.loot_gold.sfx then
-				toast._data.sound_file = 865 -- SOUNDKIT.IG_BACKPACK_COIN_OK
-			end
+			toast._data.count = quantity
+			toast._data.event = event
+			toast._data.sound_file = C.db.profile.types.loot_gold.sfx and 865 -- SOUNDKIT.IG_BACKPACK_COIN_OK
 
 			toast:Spawn(C.db.profile.types.loot_gold.anchor, C.db.profile.types.loot_gold.dnd)
 		else

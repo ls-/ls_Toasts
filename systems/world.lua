@@ -4,31 +4,37 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 local next = _G.next
-local pcall = _G.pcall
 local select = _G.select
 
 -- Blizz
 local C_Scenario = _G.C_Scenario
 local C_TaskQuest = _G.C_TaskQuest
 
+--[[ luacheck: globals
+	GameTooltip GetItemInfo GetItemInfoInstant GetMoneyString GetNumQuestLogRewardCurrencies GetProfessionInfo
+	GetQuestLogRewardCurrencyInfo GetQuestLogRewardMoney GetQuestLogRewardXP GetQuestTagInfo HaveQuestData
+	QuestUtils_IsQuestWorldQuest UnitLevel
+
+	LE_QUEST_TAG_TYPE_DUNGEON LE_QUEST_TAG_TYPE_PET_BATTLE LE_QUEST_TAG_TYPE_PROFESSION LE_QUEST_TAG_TYPE_PVP
+	LE_QUEST_TAG_TYPE_RAID LE_SCENARIO_TYPE_LEGION_INVASION MAX_PLAYER_LEVEL WORLD_QUEST_QUALITY_COLORS
+]]
+
 -- Mine
 local CURRENCY_TEMPLATE = "%s|T%s:0|t"
 
 local function Slot_OnEnter(self)
-	local data = self._data
-
-	if data then
-		if data.type == "item" then
-			GameTooltip:SetHyperlink(data.link)
-		elseif data.type == "xp" then
+	if self._data.type then
+		if self._data.type == "item" then
+			GameTooltip:SetHyperlink(self._data.link)
+		elseif self._data.type == "xp" then
 			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(L["XP_FORMAT"]:format(data.count), 1, 1, 1)
-		elseif data.type == "money" then
+			GameTooltip:AddLine(L["XP_FORMAT"]:format(self._data.count), 1, 1, 1)
+		elseif self._data.type == "money" then
 			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(GetMoneyString(data.count), 1, 1, 1)
-		elseif data.type == "currency" then
+			GameTooltip:AddLine(GetMoneyString(self._data.count, true), 1, 1, 1)
+		elseif self._data.type == "currency" then
 			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(CURRENCY_TEMPLATE:format(data.count, data.texture))
+			GameTooltip:AddLine(CURRENCY_TEMPLATE:format(self._data.count, self._data.texture), 1, 1, 1)
 		end
 
 		GameTooltip:Show()
@@ -37,7 +43,6 @@ end
 
 local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward, numCurrencyRewards, itemReward, isInvasion, isInvasionBonusComplete)
 	local toast, isNew, isQueued = E:GetToast(nil, "quest_id", questID)
-
 	if isUpdate and isNew then
 		toast:Recycle()
 
@@ -54,15 +59,13 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 		if moneyReward and moneyReward > 0 then
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot"..usedSlots]
+			local slot = toast["Slot" .. usedSlots]
 
 			if slot then
 				slot.Icon:SetTexture("Interface\\Icons\\inv_misc_coin_02")
 
-				slot._data = {
-					type = "money",
-					count = moneyReward,
-				}
+				slot._data.type = "money"
+				slot._data.count = moneyReward
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()
@@ -71,15 +74,13 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 		if xpReward and xpReward > 0 and UnitLevel("player") < MAX_PLAYER_LEVEL then
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot"..usedSlots]
+			local slot = toast["Slot" .. usedSlots]
 
 			if slot then
 				slot.Icon:SetTexture("Interface\\Icons\\xp_icon")
 
-				slot._data = {
-					type = "xp",
-					count = xpReward,
-				}
+				slot._data.type = "xp"
+				slot._data.count = xpReward
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()
@@ -88,7 +89,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 		for i = 1, numCurrencyRewards or 0 do
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot"..usedSlots]
+			local slot = toast["Slot" .. usedSlots]
 
 			if slot then
 				local _, texture, count = GetQuestLogRewardCurrencyInfo(i, questID)
@@ -96,11 +97,9 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 				slot.Icon:SetTexture(texture)
 
-				slot._data = {
-					type = "currency",
-					count = count,
-					texture = texture,
-				}
+				slot._data.type = "currency"
+				slot._data.count = count
+				slot._data.texture = texture
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()
@@ -160,21 +159,16 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 		toast.Text:SetText(name)
 		toast.IconBorder:Show()
 
-		toast._data = {
-			event = event,
-			quest_id = questID,
-			used_slots = usedSlots,
-		}
-
-		if C.db.profile.types.world.sfx then
-			toast._data.sound_file = soundFile
-		end
+		toast._data.event = event
+		toast._data.quest_id = questID
+		toast._data.sound_file = C.db.profile.types.world.sfx and soundFile
+		toast._data.used_slots = usedSlots
 
 		toast:Spawn(C.db.profile.types.world.anchor, C.db.profile.types.world.dnd)
 	else
 		if itemReward then
 			toast._data.used_slots = toast._data.used_slots + 1
-			local slot = toast["Slot"..toast._data.used_slots]
+			local slot = toast["Slot" .. toast._data.used_slots]
 
 			if slot then
 				local _, _, _, _, texture = GetItemInfoInstant(itemReward)
@@ -182,10 +176,8 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 				slot.Icon:SetTexture(texture)
 
-				slot._data = {
-					type = "item",
-					link = itemReward,
-				}
+				slot._data.type = "item"
+				slot._data.link = itemReward
 
 				slot:HookScript("OnEnter", Slot_OnEnter)
 				slot:Show()
@@ -249,25 +241,18 @@ local function Test()
 
 		-- world quest, may not work
 		local quests = C_TaskQuest.GetQuestsForPlayerByMapID(1014)
-
 		if not quests or #quests == 0 then
 			quests = C_TaskQuest.GetQuestsForPlayerByMapID(1015)
-
 			if not quests or #quests == 0 then
 				quests = C_TaskQuest.GetQuestsForPlayerByMapID(1017)
-
 				if not quests or #quests == 0 then
 					quests = C_TaskQuest.GetQuestsForPlayerByMapID(1018)
-
 					if not quests or #quests == 0 then
 						quests = C_TaskQuest.GetQuestsForPlayerByMapID(1021)
-
 						if not quests or #quests == 0 then
 							quests = C_TaskQuest.GetQuestsForPlayerByMapID(1024)
-
 							if not quests or #quests == 0 then
 								quests = C_TaskQuest.GetQuestsForPlayerByMapID(1033)
-
 								if not quests or #quests == 0 then
 									quests = C_TaskQuest.GetQuestsForPlayerByMapID(1096)
 								end

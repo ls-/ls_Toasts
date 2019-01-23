@@ -43,7 +43,7 @@ function E:RegisterSystem(id, enableFunc, disableFunc, testFunc)
 	}
 end
 
-function E:EnableSystem(id)
+function P:EnableSystem(id)
 	local system = systems[id]
 
 	if system and not system.isEnabled then
@@ -53,7 +53,7 @@ function E:EnableSystem(id)
 	end
 end
 
-function E:DisableSystem(id)
+function P:DisableSystem(id)
 	local system = systems[id]
 
 	if system and system.isEnabled then
@@ -63,13 +63,13 @@ function E:DisableSystem(id)
 	end
 end
 
-function E:TestSystem(id)
+function P:TestSystem(id)
 	if systems[id] then
 		systems[id]:Test()
 	end
 end
 
-function E:EnableAllSystems()
+function P:EnableAllSystems()
 	for _, system in next, systems do
 		if not system.isEnabled then
 			system:Enable()
@@ -79,7 +79,7 @@ function E:EnableAllSystems()
 	end
 end
 
-function E:DisableAllSystems()
+function P:DisableAllSystems()
 	for _, system in next, systems do
 		if system.isEnabled then
 			system:Disable()
@@ -89,7 +89,7 @@ function E:DisableAllSystems()
 	end
 end
 
-function E:TestAllSystems()
+function P:TestAllSystems()
 	for _, system in next, systems do
 			system:Test()
 	end

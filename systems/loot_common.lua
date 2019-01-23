@@ -74,9 +74,8 @@ local function delayedUpdatePatterns()
 end
 
 local function Toast_OnClick(self)
-	if self._data then
+	if self._data.item_id then
 		local bag = E:SearchBagsForItemID(self._data.item_id)
-
 		if bag >= 0 then
 			OpenBag(bag)
 		end
@@ -84,12 +83,14 @@ local function Toast_OnClick(self)
 end
 
 local function Toast_OnEnter(self)
-	if self._data.tooltip_link:find("item") then
-		GameTooltip:SetHyperlink(self._data.tooltip_link)
-		GameTooltip:Show()
-	elseif self._data.tooltip_link:find("battlepet") then
-		local _, speciesID, level, breedQuality, maxHealth, power, speed = s_split(":", self._data.tooltip_link)
-		BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed))
+	if self._data.tooltip_link then
+		if self._data.tooltip_link:find("item") then
+			GameTooltip:SetHyperlink(self._data.tooltip_link)
+			GameTooltip:Show()
+		elseif self._data.tooltip_link:find("battlepet") then
+			local _, speciesID, level, breedQuality, maxHealth, power, speed = s_split(":", self._data.tooltip_link)
+			BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed))
+		end
 	end
 end
 
@@ -103,7 +104,6 @@ local function Toast_SetUp(event, link, quantity)
 
 	-- Check if there's a toast for this item from another event
 	toast, isQueued = E:FindToast(nil, "item_id", itemID)
-
 	if toast then
 		if toast._data.event ~= event then
 			return
@@ -132,7 +132,7 @@ local function Toast_SetUp(event, link, quantity)
 
 			if quality >= C.db.profile.colors.threshold then
 				if C.db.profile.colors.name then
-					name = color.hex..name.."|r"
+					name = color.hex .. name .. "|r"
 				end
 
 				if C.db.profile.colors.border then
@@ -148,7 +148,7 @@ local function Toast_SetUp(event, link, quantity)
 				local iLevel = E:GetItemLevel(originalLink)
 
 				if iLevel > 0 then
-					name = "["..color.hex..iLevel.."|r] "..name
+					name = "[" .. color.hex .. iLevel .. "|r] " .. name
 				end
 			end
 
@@ -162,17 +162,12 @@ local function Toast_SetUp(event, link, quantity)
 			toast.IconBorder:Show()
 			toast.IconText1:SetAnimatedValue(quantity, true)
 
-			toast._data = {
-				count = quantity,
-				event = event,
-				link = sanitizedLink,
-				tooltip_link = originalLink,
-				item_id = itemID,
-			}
-
-			if C.db.profile.types.loot_common.sfx then
-				toast._data.sound_file = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
-			end
+			toast._data.count = quantity
+			toast._data.event = event
+			toast._data.item_id = itemID
+			toast._data.link = sanitizedLink
+			toast._data.sound_file = C.db.profile.types.loot_common.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			toast._data.tooltip_link = originalLink
 
 			toast:HookScript("OnClick", Toast_OnClick)
 			toast:HookScript("OnEnter", Toast_OnEnter)
@@ -188,7 +183,7 @@ local function Toast_SetUp(event, link, quantity)
 			toast._data.count = toast._data.count + quantity
 			toast.IconText1:SetAnimatedValue(toast._data.count)
 
-			toast.IconText2:SetText("+"..quantity)
+			toast.IconText2:SetText("+" .. quantity)
 			toast.IconText2.Blink:Stop()
 			toast.IconText2.Blink:Play()
 
@@ -244,7 +239,6 @@ end
 local function Test()
 	-- item, Chaos Crystal
 	local _, link = GetItemInfo(124442)
-
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
 	end
@@ -311,10 +305,10 @@ E:RegisterOptions("loot_common", {
 			type = "select",
 			name = L["LOOT_THRESHOLD"],
 			values = {
-				[1] = ITEM_QUALITY_COLORS[1].hex..ITEM_QUALITY1_DESC.."|r",
-				[2] = ITEM_QUALITY_COLORS[2].hex..ITEM_QUALITY2_DESC.."|r",
-				[3] = ITEM_QUALITY_COLORS[3].hex..ITEM_QUALITY3_DESC.."|r",
-				[4] = ITEM_QUALITY_COLORS[4].hex..ITEM_QUALITY4_DESC.."|r",
+				[1] = ITEM_QUALITY_COLORS[1].hex .. ITEM_QUALITY1_DESC .. "|r",
+				[2] = ITEM_QUALITY_COLORS[2].hex .. ITEM_QUALITY2_DESC .. "|r",
+				[3] = ITEM_QUALITY_COLORS[3].hex .. ITEM_QUALITY3_DESC .. "|r",
+				[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r",
 			},
 		},
 		quest = {

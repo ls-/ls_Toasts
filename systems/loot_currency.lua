@@ -10,7 +10,7 @@ local tonumber = _G.tonumber
 local C_Timer = _G.C_Timer
 
 --[[ luacheck: globals
-	GameTooltip GetCurrencyInfo GetCurrencyLink
+	FormatLargeNumber GameTooltip GetCurrencyInfo GetCurrencyLink
 
 	CURRENCY_GAINED CURRENCY_GAINED_MULTIPLE CURRENCY_GAINED_MULTIPLE_BONUS ITEM_QUALITY_COLORS
 ]]
@@ -46,17 +46,24 @@ local function delayedUpdatePatterns()
 end
 
 local function Toast_OnEnter(self)
-	GameTooltip:SetHyperlink(self._data.tooltip_link)
-	GameTooltip:Show()
+	if self._data.tooltip_link then
+		GameTooltip:SetHyperlink(self._data.tooltip_link)
+		GameTooltip:Show()
+	end
+end
+
+local function PostSetAnimatedValue(self, value)
+	self:SetText(value == 1 and "" or FormatLargeNumber(value))
 end
 
 local function Toast_SetUp(event, link, quantity)
 	local sanitizedLink, originalLink = E:SanitizeLink(link)
 	local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
-
 	if isNew then
 		local name, _, icon, _, _, _, _, quality = GetCurrencyInfo(link)
 		local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
+
+		toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
 		if quality >= C.db.profile.colors.threshold then
 			if C.db.profile.colors.name then
@@ -78,16 +85,11 @@ local function Toast_SetUp(event, link, quantity)
 		toast.IconBorder:Show()
 		toast.IconText1:SetAnimatedValue(quantity, true)
 
-		toast._data = {
-			event = event,
-			count = quantity,
-			link = sanitizedLink,
-			tooltip_link = originalLink,
-		}
-
-		if C.db.profile.types.loot_currency.sfx then
-			toast._data.sound_file = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
-		end
+		toast._data.count = quantity
+		toast._data.event = event
+		toast._data.link = sanitizedLink
+		toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+		toast._data.tooltip_link = originalLink
 
 		toast:HookScript("OnEnter", Toast_OnEnter)
 		toast:Spawn(C.db.profile.types.loot_currency.anchor, C.db.profile.types.loot_currency.dnd)
@@ -99,7 +101,7 @@ local function Toast_SetUp(event, link, quantity)
 			toast._data.count = toast._data.count + quantity
 			toast.IconText1:SetAnimatedValue(toast._data.count)
 
-			toast.IconText2:SetText("+"..quantity)
+			toast.IconText2:SetText("+" .. quantity)
 			toast.IconText2.Blink:Stop()
 			toast.IconText2.Blink:Play()
 
@@ -142,7 +144,6 @@ end
 local function Test()
 	-- Order Resources
 	local link, _ = GetCurrencyLink(1220, 1)
-
 	if link then
 		Toast_SetUp("LOOT_CURRENCY_TEST", link, m_random(300, 600))
 	end

@@ -21,6 +21,7 @@ L["COPPER_THRESHOLD_DESC"] = "Seuil minimum en pièce de cuivre permettant de g�
 L["DND"] = "NPD"
 L["DND_TOOLTIP"] = "Les 'Toast' en mode NPD (Ne Pas Déranger) ne s'afficheront pas en combat mais seront stockés dans le système. Quand le combat s'achève, les 'Toast' s'affichent."
 L["FADE_OUT_DELAY"] = "Délai de disparition en fondu"
+--[[ L["FLUSH_QUEUE"] = "Flush Queue" ]]
 L["FONTS"] = "Polices"
 L["GROWTH_DIR"] = "Sens d'affichage"
 L["GROWTH_DIR_DOWN"] = "Bas"

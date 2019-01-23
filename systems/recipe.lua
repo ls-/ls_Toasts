@@ -7,25 +7,27 @@ local _G = getfenv(0)
 -- Blizz
 local C_TradeSkillUI = _G.C_TradeSkillUI
 
+--[[ luacheck: globals
+	GameTooltip GetSpellInfo GetSpellRank InCombatLockdown TradeSkillFrame TradeSkillFrame_LoadUI
+]]
+
 -- Mine
 local function Toast_OnClick(self)
-	local data = self._data
-
-	if data and not InCombatLockdown() then
+	if self._data.tradeskill_id and not InCombatLockdown() then
 		if not TradeSkillFrame then
 			TradeSkillFrame_LoadUI()
 		end
 
 		if TradeSkillFrame then
-			if C_TradeSkillUI.OpenTradeSkill(data.tradeskill_id) then
-				TradeSkillFrame:SelectRecipe(data.recipe_id)
+			if C_TradeSkillUI.OpenTradeSkill(self._data.tradeskill_id) then
+				TradeSkillFrame:SelectRecipe(self._data.recipe_id)
 			end
 		end
 	end
 end
 
 local function Toast_OnEnter(self)
-	if self._data then
+	if self._data.recipe_id then
 		GameTooltip:SetSpellByID(self._data.recipe_id)
 		GameTooltip:Show()
 	end
@@ -33,10 +35,8 @@ end
 
 local function Toast_SetUp(event, recipeID)
 	local tradeSkillID = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
-
 	if tradeSkillID then
 		local recipeName = GetSpellInfo(recipeID)
-
 		if recipeName then
 			local toast = E:GetToast()
 			local rank = GetSpellRank(recipeID)
@@ -58,15 +58,10 @@ local function Toast_SetUp(event, recipeID)
 			toast.IconText1:SetText(rankTexture)
 			toast.IconText1BG:SetShown(not not rank)
 
-			toast._data = {
-				event = event,
-				recipe_id = recipeID,
-				tradeskill_id = tradeSkillID,
-			}
-
-			if C.db.profile.types.recipe.sfx then
-				toast._data.sound_file = 73919 -- SOUNDKIT.UI_PROFESSIONS_NEW_RECIPE_LEARNED_TOAST
-			end
+			toast._data.event = event
+			toast._data.recipe_id = recipeID
+			toast._data.sound_file = C.db.profile.types.recipe.sfx and 73919 -- SOUNDKIT.UI_PROFESSIONS_NEW_RECIPE_LEARNED_TOAST
+			toast._data.tradeskill_id = tradeSkillID
 
 			toast:HookScript("OnClick", Toast_OnClick)
 			toast:HookScript("OnEnter", Toast_OnEnter)

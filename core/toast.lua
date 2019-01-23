@@ -8,6 +8,7 @@ local m_floor = _G.math.floor
 local next = _G.next
 local t_insert = _G.table.insert
 local t_remove = _G.table.remove
+local t_wipe = _G.table.wipe
 local type = _G.type
 local unpack = _G.unpack
 
@@ -219,7 +220,7 @@ local function slot_OnLeave(self)
 end
 
 local function slot_OnHide(self)
-	self._data = nil
+	t_wipe(self._data)
 end
 
 -- Base Toast
@@ -300,7 +301,6 @@ local order = 0
 local function toast_Spawn(self, anchorID, isDND)
 	order = order + 1
 
-	self._data = self._data or {}
 	self._data.anchor = anchorID
 	self._data.dnd = isDND
 	self._data.order = order
@@ -339,30 +339,29 @@ local function toast_Recycle(self)
 	self.Text.PostSetAnimatedValue = nil
 	self.Title:SetText("")
 
-	E:ResetSkin(self)
+	P:ResetSkin(self)
 
 	for i = 1, 5 do
-		self["Slot"..i]:Hide()
-		self["Slot"..i]:SetScript("OnEnter", slot_OnEnter)
-		self["Slot"..i]._data = nil -- table.wipe???
+		self["Slot" .. i]:Hide()
+		self["Slot" .. i]:SetScript("OnEnter", slot_OnEnter)
+		t_wipe(self["Slot" .. i]._data)
 	end
 
 	for i = 1, 5 do
-		self["Arrow"..i]:SetAlpha(0)
+		self["Arrow" .. i]:SetAlpha(0)
 	end
 
 	-- a toast that's recycled before spawning
-	if self._data then
+	if self._data.anchor then
 		P:Dequeue(self, self._data.anchor)
 	end
 
-	self._data = nil -- table.wipe???
-
+	t_wipe(self._data)
 	t_insert(freeToasts, self)
 end
 
 local function toast_SetBackground(self, id)
-	local skin = E:GetSkin()
+	local skin = P:GetSkin(C.db.profile.skin)
 
 	if not skin.bg[id] then
 		id = "default"
@@ -531,17 +530,17 @@ local function constructToast()
 			arrow:ClearAllPoints()
 			arrow:SetPoint("CENTER", iconParent, "BOTTOM", ARROWS_CFG[i].x, 0)
 			arrow:SetAlpha(0)
-			toast["Arrow"..i] = arrow
+			toast["Arrow" .. i] = arrow
 
 			local anim = ag:CreateAnimation("Alpha")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetOrder(1)
 			anim:SetFromAlpha(1)
 			anim:SetToAlpha(0)
 			anim:SetDuration(0)
 
 			anim = ag:CreateAnimation("Alpha")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetSmoothing("IN")
 			anim:SetOrder(2)
 			anim:SetFromAlpha(0)
@@ -550,7 +549,7 @@ local function constructToast()
 			anim:SetDuration(0.25)
 
 			anim = ag:CreateAnimation("Alpha")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetSmoothing("OUT")
 			anim:SetOrder(2)
 			anim:SetFromAlpha(1)
@@ -559,14 +558,14 @@ local function constructToast()
 			anim:SetDuration(0.25)
 
 			anim = ag:CreateAnimation("Translation")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetOrder(2)
 			anim:SetOffset(0, 60)
 			anim:SetStartDelay(ARROWS_CFG[i].delay)
 			anim:SetDuration(0.5)
 
 			anim = ag:CreateAnimation("Alpha")
-			anim:SetChildKey("Arrow"..i)
+			anim:SetChildKey("Arrow" .. i)
 			anim:SetDuration(0)
 			anim:SetOrder(3)
 			anim:SetFromAlpha(1)
@@ -664,7 +663,7 @@ local function constructToast()
 		slot:SetScript("OnEnter", slot_OnEnter)
 		slot:SetScript("OnLeave", slot_OnLeave)
 		slot:SetScript("OnHide", slot_OnHide)
-		toast["Slot"..i] = slot
+		toast["Slot" .. i] = slot
 
 		local slotIcon = slot:CreateTexture(nil, "BACKGROUND", nil, 1)
 		slotIcon:SetAllPoints()
@@ -676,15 +675,18 @@ local function constructToast()
 		if i == 1 then
 			slot:SetPoint("TOPRIGHT", -4, 9)
 		else
-			slot:SetPoint("RIGHT", toast["Slot"..(i - 1)], "LEFT", -4 , 0)
+			slot:SetPoint("RIGHT", toast["Slot" .. (i - 1)], "LEFT", -4 , 0)
 		end
+
+		slot._data = {}
 	end
 
+	toast._data = {}
 	toast.Recycle = toast_Recycle
 	toast.Spawn = toast_Spawn
 	toast.SetBackground = toast_SetBackground
 
-	E:ApplySkin(toast)
+	P:SetSkin(toast, C.db.profile.skin)
 
 	t_insert(toasts, toast)
 
@@ -765,9 +767,9 @@ function P:UpdateStrata()
 	end
 end
 
-function E.UpdateFont()
-	local skin = E:GetSkin()
-	local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
+function P:UpdateFont()
+	local skin = self:GetSkin(C.db.profile.skin)
+	local fontPath = P.LSM:Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
 
 	for _, toast in next, toasts do
@@ -782,5 +784,13 @@ function E.UpdateFont()
 
 		-- .IconText2
 		toast.IconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags)
+	end
+end
+
+function P:UpdateSkin()
+	local id = C.db.profile.skin
+
+	for _, toast in next, toasts do
+		self:SetSkin(toast, id)
 	end
 end

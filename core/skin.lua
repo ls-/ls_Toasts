@@ -4,13 +4,11 @@ local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, ad
 -- Lua
 local _G = getfenv(0)
 local error = _G.error
-local next = _G.next
 local s_format = _G.string.format
 local type = _G.type
 local unpack = _G.unpack
 
 --[[ luacheck: globals
-	LibStub
 ]]
 
 -- Mine
@@ -46,41 +44,17 @@ function E:RegisterSkin(id, data)
 	skinList[id] = data.name
 end
 
-function E:CheckResetDefaultSkin()
-	if not skins[C.db.profile.skin] then
-		C.db.profile.skin = "default"
-	end
-end
-
-function E:GetSkinList()
+function P:GetSkinList()
 	return skinList
 end
 
-function E:GetSkin()
-	return skins[C.db.profile.skin] or skins["default"]
+function P:GetSkin(id)
+	return skins[id] or skins["default"]
 end
 
-function E:SetSkin(id)
-	if type(id) ~= "string" then
-		error(s_format("Invalid argument to 'SetSkin' method, expected a string, got a '%s'", type(id)), 2)
-		return
-	elseif not skins[id] then
-		error(s_format("Invalid skin reference, skin '%s' doesn't exist", id), 2)
-		return
-	end
-
-	C.db.profile.skin = id
-
-	for _, toast in next, P:GetToasts() do
-		E:ApplySkin(toast)
-	end
-
-	return true
-end
-
-function E:ApplySkin(toast)
-	local skin = skins[C.db.profile.skin] or skins["default"]
-	local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
+function P:SetSkin(toast, id)
+	local skin = skins[id] or skins["default"]
+	local fontPath = P.LSM:Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
 
 	-- .Border
@@ -207,9 +181,11 @@ function E:ApplySkin(toast)
 	shine:SetVertexColor(unpack(skin.shine.color))
 
 	toast.AnimIn.Anim5:SetOffset(224 - skin.shine.size[1], 0)
+
+	P.CallbackHandler:Fire("SetSkin", toast)
 end
 
-function E:ResetSkin(toast)
+function P:ResetSkin(toast)
 	local skin = skins[C.db.profile.skin] or skins["default"]
 
 	-- .Border
@@ -240,4 +216,6 @@ function E:ResetSkin(toast)
 
 	-- .Shine
 	toast.Shine:SetVertexColor(unpack(skin.shine.color))
+
+	P.CallbackHandler:Fire("ResetSkin", toast)
 end

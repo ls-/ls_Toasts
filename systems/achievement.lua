@@ -4,18 +4,21 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 
+--[[ luacheck: globals
+	AchievementFrame AchievementFrame_LoadUI AchievementFrame_SelectAchievement GetAchievementInfo InCombatLockdown
+	ShowUIPanel
+]]
+
 -- Mine
 local function Toast_OnClick(self)
-	local data = self._data
-
-	if data and not InCombatLockdown() then
+	if self._data.ach_id and not InCombatLockdown() then
 		if not AchievementFrame then
 			AchievementFrame_LoadUI()
 		end
 
 		if AchievementFrame then
 			ShowUIPanel(AchievementFrame)
-			AchievementFrame_SelectAchievement(data.ach_id)
+			AchievementFrame_SelectAchievement(self._data.ach_id)
 		end
 	end
 end
@@ -51,10 +54,8 @@ local function Toast_SetUp(event, achievementID, flag, isCriteria)
 	toast.Icon:SetTexture(icon)
 	toast.IconBorder:Show()
 
-	toast._data = {
-		event = event,
-		ach_id = achievementID,
-	}
+	toast._data.event = event
+	toast._data.ach_id = achievementID
 
 	toast:HookScript("OnClick", Toast_OnClick)
 	toast:Spawn(C.db.profile.types.achievement.anchor, C.db.profile.types.achievement.dnd)

@@ -21,6 +21,7 @@ L["COPPER_THRESHOLD_DESC"] = "알림창을 만들 최소 코퍼 금액입니다.
 L["DND"] = "대기"
 L["DND_TOOLTIP"] = "대기 모드의 알림창은 전투 중에 표시되지 않고, 대신 시스템 내부에 대기하게 됩니다. 전투에서 벗어나면 대기 중이던 알림이 나타나기 시작합니다."
 L["FADE_OUT_DELAY"] = "페이드 아웃 지연 시간"
+--[[ L["FLUSH_QUEUE"] = "Flush Queue" ]]
 L["FONTS"] = "글꼴"
 L["GROWTH_DIR"] = "성장 방향"
 L["GROWTH_DIR_DOWN"] = "아래로"

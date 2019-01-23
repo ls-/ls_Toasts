@@ -21,6 +21,7 @@ L["COPPER_THRESHOLD_DESC"] = "Cantidad mínima de Cobre con la que mostrar un To
 L["DND"] = "DND"
 L["DND_TOOLTIP"] = "Toasts en modo DND no se mostrarán en combate, pero se pondrán a la cola del sistema. Una vez salgas de combate, aparecerán."
 L["FADE_OUT_DELAY"] = "Retraso de desvanecimiento"
+--[[ L["FLUSH_QUEUE"] = "Flush Queue" ]]
 L["FONTS"] = "Fuentes"
 L["GROWTH_DIR"] = "Dirección de aparición"
 L["GROWTH_DIR_DOWN"] = "Abajo"

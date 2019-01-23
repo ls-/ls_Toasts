@@ -21,6 +21,7 @@ L["COPPER_THRESHOLD_DESC"] = "Minimale Anzahl Kupfer. Ab dieser Anzahl wird eine
 L["DND"] = "DND"
 L["DND_TOOLTIP"] = "Benachrichtigungen im DND-Modus werden nicht im Kampf angezeigt, sie werden jedoch in einer Warteschlange gesammelt. Sobald du den Kampf verlässt, werden sie auftauchen."
 L["FADE_OUT_DELAY"] = "Ausblendungsverzögerung"
+--[[ L["FLUSH_QUEUE"] = "Flush Queue" ]]
 L["FONTS"] = "Schriften"
 L["GROWTH_DIR"] = "Ausbreitungsrichtung"
 L["GROWTH_DIR_DOWN"] = "Nach unten"
