@@ -31,7 +31,7 @@ local function Slot_OnEnter(self)
 			GameTooltip:AddLine(L["XP_FORMAT"]:format(self._data.count), 1, 1, 1)
 		elseif self._data.type == "money" then
 			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(GetMoneyString(self._data.count), 1, 1, 1)
+			GameTooltip:AddLine(GetMoneyString(self._data.count, true), 1, 1, 1)
 		elseif self._data.type == "currency" then
 			GameTooltip:AddLine(L["YOU_RECEIVED"])
 			GameTooltip:AddLine(CURRENCY_TEMPLATE:format(self._data.count, self._data.texture), 1, 1, 1)

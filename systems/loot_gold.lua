@@ -15,7 +15,7 @@ local tostring = _G.tostring
 local old
 
 local function PostSetAnimatedValue(self, value)
-	self:SetText(GetMoneyString(value))
+	self:SetText(GetMoneyString(value, true))
 end
 
 local function Toast_SetUp(event, quantity)
