@@ -181,6 +181,8 @@ function P:SetSkin(toast, id)
 	shine:SetVertexColor(unpack(skin.shine.color))
 
 	toast.AnimIn.Anim5:SetOffset(224 - skin.shine.size[1], 0)
+
+	P.CallbackHandler:Fire("SetSkin", toast)
 end
 
 function P:ResetSkin(toast)
@@ -214,4 +216,6 @@ function P:ResetSkin(toast)
 
 	-- .Shine
 	toast.Shine:SetVertexColor(unpack(skin.shine.color))
+
+	P.CallbackHandler:Fire("ResetSkin", toast)
 end
