@@ -25,7 +25,7 @@ end
 
 local function Toast_SetUp(event, achievementID, flag, isCriteria)
 	local toast = E:GetToast()
-	local _, name, points, _, _, _, _, _, _, icon = GetAchievementInfo(achievementID)
+	local _, name, points, _, _, _, _, _, _, icon, _, isGuildAchievement = GetAchievementInfo(achievementID)
 
 	if isCriteria then
 		toast.Title:SetText(L["ACHIEVEMENT_PROGRESSED"])
@@ -33,7 +33,7 @@ local function Toast_SetUp(event, achievementID, flag, isCriteria)
 
 		toast.IconText1:SetText("")
 	else
-		toast.Title:SetText(L["ACHIEVEMENT_UNLOCKED"])
+		toast.Title:SetText(isGuildAchievement and L["GUILD_ACHIEVEMENT_UNLOCKED"] or L["ACHIEVEMENT_UNLOCKED"])
 		toast.Text:SetText(name)
 
 		if flag then
@@ -87,6 +87,9 @@ local function Test()
 
 	-- earned, Ten Hit Tunes
 	Toast_SetUp("ACHIEVEMENT_TEST", 9828, true)
+
+	-- guild, It All Adds Up
+	Toast_SetUp("ACHIEVEMENT_TEST", 4913, false)
 end
 
 E:RegisterOptions("achievement", {
