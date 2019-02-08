@@ -41,7 +41,7 @@ local function Slot_OnEnter(self)
 	end
 end
 
-local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward, numCurrencyRewards, itemReward, isInvasion, isInvasionBonusComplete)
+local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward, numCurrencyRewards, itemReward)
 	local toast, isNew, isQueued = E:GetToast(nil, "quest_id", questID)
 	if isUpdate and isNew then
 		toast:Recycle()
@@ -55,12 +55,11 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 	if isNew then
 		local usedSlots = 0
-		local soundFile
 
 		if moneyReward and moneyReward > 0 then
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot" .. usedSlots]
 
+			local slot = toast["Slot" .. usedSlots]
 			if slot then
 				slot.Icon:SetTexture("Interface\\Icons\\inv_misc_coin_02")
 
@@ -74,8 +73,8 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 		if xpReward and xpReward > 0 and UnitLevel("player") < MAX_PLAYER_LEVEL then
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot" .. usedSlots]
 
+			local slot = toast["Slot" .. usedSlots]
 			if slot then
 				slot.Icon:SetTexture("Interface\\Icons\\xp_icon")
 
@@ -89,8 +88,8 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 
 		for i = 1, numCurrencyRewards or 0 do
 			usedSlots = usedSlots + 1
-			local slot = toast["Slot" .. usedSlots]
 
+			local slot = toast["Slot" .. usedSlots]
 			if slot then
 				local _, texture, count = GetQuestLogRewardCurrencyInfo(i, questID)
 				texture = texture or "Interface\\Icons\\INV_Box_02"
@@ -106,62 +105,39 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			end
 		end
 
-		if isInvasion then
-			if isInvasionBonusComplete and not toast.Bonus.isHidden then
-				toast.Bonus:Show()
-			end
+		local _, _, worldQuestType, rarity, _, tradeskillLineIndex = GetQuestTagInfo(questID)
+		if worldQuestType == LE_QUEST_TAG_TYPE_PVP then
+			toast.Icon:SetTexture("Interface\\Icons\\achievement_arena_2v2_1")
+		elseif worldQuestType == LE_QUEST_TAG_TYPE_PET_BATTLE then
+			toast.Icon:SetTexture("Interface\\Icons\\INV_Pet_BattlePetTraining")
+		elseif worldQuestType == LE_QUEST_TAG_TYPE_PROFESSION and tradeskillLineIndex then
+			toast.Icon:SetTexture(select(2, GetProfessionInfo(tradeskillLineIndex)))
+		elseif worldQuestType == LE_QUEST_TAG_TYPE_DUNGEON or worldQuestType == LE_QUEST_TAG_TYPE_RAID then
+			toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Bone_Skull_02")
+		else
+			toast.Icon:SetTexture("Interface\\Icons\\Achievement_Quests_Completed_TwilightHighlands")
+		end
+
+		if rarity >= C.db.profile.colors.threshold then
+			local color = WORLD_QUEST_QUALITY_COLORS[rarity] or WORLD_QUEST_QUALITY_COLORS[1]
 
 			if C.db.profile.colors.border then
-				toast.Border:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
+				toast.Border:SetVertexColor(color.r, color.g, color.b)
 			end
 
 			if C.db.profile.colors.icon_border then
-				toast.IconBorder:SetVertexColor(60 / 255, 255 / 255, 38 / 255) -- fel green #3cff26
+				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 			end
-
-			toast:SetBackground("legion")
-			toast.Title:SetText(L["SCENARIO_INVASION_COMPLETED"])
-			toast.Icon:SetTexture("Interface\\Icons\\Ability_Warlock_DemonicPower")
-
-			soundFile = 31754 -- SOUNDKIT.UI_SCENARIO_ENDING
-		else
-			local _, _, worldQuestType, rarity, _, tradeskillLineIndex = GetQuestTagInfo(questID)
-			local color = WORLD_QUEST_QUALITY_COLORS[rarity] or WORLD_QUEST_QUALITY_COLORS[1]
-
-			if worldQuestType == LE_QUEST_TAG_TYPE_PVP then
-				toast.Icon:SetTexture("Interface\\Icons\\achievement_arena_2v2_1")
-			elseif worldQuestType == LE_QUEST_TAG_TYPE_PET_BATTLE then
-				toast.Icon:SetTexture("Interface\\Icons\\INV_Pet_BattlePetTraining")
-			elseif worldQuestType == LE_QUEST_TAG_TYPE_PROFESSION and tradeskillLineIndex then
-				toast.Icon:SetTexture(select(2, GetProfessionInfo(tradeskillLineIndex)))
-			elseif worldQuestType == LE_QUEST_TAG_TYPE_DUNGEON or worldQuestType == LE_QUEST_TAG_TYPE_RAID then
-				toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Bone_Skull_02")
-			else
-				toast.Icon:SetTexture("Interface\\Icons\\Achievement_Quests_Completed_TwilightHighlands")
-			end
-
-			if rarity >= C.db.profile.colors.threshold then
-				if C.db.profile.colors.border then
-					toast.Border:SetVertexColor(color.r, color.g, color.b)
-				end
-
-				if C.db.profile.colors.icon_border then
-					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-				end
-			end
-
-			toast:SetBackground("worldquest")
-			toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])
-
-			soundFile = 73277 -- SOUNDKIT.UI_WORLDQUEST_COMPLETE
 		end
 
+		toast:SetBackground("worldquest")
+		toast.Title:SetText(L["WORLD_QUEST_COMPLETED"])
 		toast.Text:SetText(name)
 		toast.IconBorder:Show()
 
 		toast._data.event = event
 		toast._data.quest_id = questID
-		toast._data.sound_file = C.db.profile.types.world.sfx and soundFile
+		toast._data.sound_file = C.db.profile.types.world.sfx and 73277 -- SOUNDKIT.UI_WORLDQUEST_COMPLETE
 		toast._data.used_slots = usedSlots
 
 		toast:Spawn(C.db.profile.types.world.anchor, C.db.profile.types.world.dnd)
@@ -191,16 +167,6 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 	end
 end
 
-local function SCENARIO_COMPLETED(questID)
-	local scenarioName, _, _, _, hasBonusStep, isBonusStepComplete, _, xp, money, scenarioType, areaName = C_Scenario.GetInfo()
-
-	if scenarioType == LE_SCENARIO_TYPE_LEGION_INVASION then
-		if questID then
-			Toast_SetUp("SCENARIO_COMPLETED", false, questID, areaName or scenarioName, money, xp, nil, nil, true, hasBonusStep and isBonusStepComplete)
-		end
-	end
-end
-
 local function QUEST_TURNED_IN(questID)
 	if QuestUtils_IsQuestWorldQuest(questID) then
 		Toast_SetUp("QUEST_TURNED_IN", false, questID, C_TaskQuest.GetQuestInfoByQuestID(questID), GetQuestLogRewardMoney(questID), GetQuestLogRewardXP(questID), GetNumQuestLogRewardCurrencies(questID))
@@ -218,14 +184,12 @@ end
 
 local function Enable()
 	if C.db.profile.types.world.enabled then
-		E:RegisterEvent("SCENARIO_COMPLETED", SCENARIO_COMPLETED)
 		E:RegisterEvent("QUEST_TURNED_IN", QUEST_TURNED_IN)
 		E:RegisterEvent("QUEST_LOOT_RECEIVED", QUEST_LOOT_RECEIVED)
 	end
 end
 
 local function Disable()
-	E:UnregisterEvent("SCENARIO_COMPLETED")
 	E:UnregisterEvent("QUEST_TURNED_IN")
 	E:UnregisterEvent("QUEST_LOOT_RECEIVED")
 end
@@ -233,12 +197,7 @@ end
 local function Test()
 	-- reward, Blood of Sargeras
 	local _, link = GetItemInfo(124124)
-
 	if link then
-		-- invasion
-		Toast_SetUp("WORLD_TEST", false, 43301, "Invasion!", 123456, 123456, nil, nil, true)
-		Toast_SetUp("WORLD_TEST", true, 43301, nil, nil, nil, nil, link)
-
 		-- world quest, may not work
 		local quests = C_TaskQuest.GetQuestsForPlayerByMapID(1014)
 		if not quests or #quests == 0 then
