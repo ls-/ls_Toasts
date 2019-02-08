@@ -9,11 +9,12 @@ local select = _G.select
 -- Blizz
 local C_Scenario = _G.C_Scenario
 local C_TaskQuest = _G.C_TaskQuest
+local C_Timer = _G.C_Timer
 
 --[[ luacheck: globals
 	GameTooltip GetItemInfo GetItemInfoInstant GetMoneyString GetNumQuestLogRewardCurrencies GetProfessionInfo
 	GetQuestLogRewardCurrencyInfo GetQuestLogRewardMoney GetQuestLogRewardXP GetQuestTagInfo HaveQuestData
-	QuestUtils_IsQuestWorldQuest UnitLevel
+	HaveQuestRewardData QuestUtils_IsQuestWorldQuest UnitLevel
 
 	LE_QUEST_TAG_TYPE_DUNGEON LE_QUEST_TAG_TYPE_PET_BATTLE LE_QUEST_TAG_TYPE_PROFESSION LE_QUEST_TAG_TYPE_PVP
 	LE_QUEST_TAG_TYPE_RAID LE_SCENARIO_TYPE_LEGION_INVASION MAX_PLAYER_LEVEL WORLD_QUEST_QUALITY_COLORS
@@ -169,6 +170,13 @@ end
 
 local function QUEST_TURNED_IN(questID)
 	if QuestUtils_IsQuestWorldQuest(questID) then
+		if not HaveQuestRewardData(questID) then
+			C_TaskQuest.RequestPreloadRewardData(questID)
+			C_Timer.After(0.5, function() QUEST_TURNED_IN(questID) end)
+
+			return
+		end
+
 		Toast_SetUp("QUEST_TURNED_IN", false, questID, C_TaskQuest.GetQuestInfoByQuestID(questID), GetQuestLogRewardMoney(questID), GetQuestLogRewardXP(questID), GetNumQuestLogRewardCurrencies(questID))
 	end
 end
@@ -176,6 +184,13 @@ end
 local function QUEST_LOOT_RECEIVED(questID, itemLink)
 	--- QUEST_LOOT_RECEIVED may fire before QUEST_TURNED_IN
 	if not E:FindToast(nil, "quest_id", questID) then
+		if not HaveQuestRewardData(questID) then
+			C_TaskQuest.RequestPreloadRewardData(questID)
+			C_Timer.After(0.5, function() QUEST_LOOT_RECEIVED(questID, itemLink) end)
+
+			return
+		end
+
 		QUEST_TURNED_IN(questID)
 	end
 
