@@ -17,7 +17,7 @@ local tonumber = _G.tonumber
 ]]
 
 -- Mine
-local VER = tonumber(GetAddOnMetadata(addonName, "Version"):gsub("%D", ""), nil)
+E.VER = tonumber(GetAddOnMetadata(addonName, "Version"):gsub("%D", ""), nil)
 
 local STRATAS = {
 	[1] = "BACKGROUND",
@@ -70,7 +70,7 @@ local function updateCallback()
 end
 
 local function shutdownCallback()
-	C.db.profile.version = VER
+	C.db.profile.version = E.VER
 end
 
 E:RegisterEvent("ADDON_LOADED", function(arg1)
