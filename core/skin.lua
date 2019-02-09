@@ -160,7 +160,7 @@ function P:SetSkin(toast, id)
 	glow:SetPoint(skin.glow.point.p, toast, skin.glow.point.rP, skin.glow.point.x, skin.glow.point.y)
 	if type(skin.glow.texture) == "table" then
 		glow:SetColorTexture(unpack(skin.glow.texture))
-		glow:SetTexCoord(1, 0, 1 ,0)
+		glow:SetTexCoord(1, 0, 1, 0)
 	else
 		glow:SetTexture(skin.glow.texture)
 		glow:SetTexCoord(unpack(skin.glow.tex_coords))
@@ -173,7 +173,7 @@ function P:SetSkin(toast, id)
 	shine:SetPoint(skin.shine.point.p, toast, skin.shine.point.rP, skin.shine.point.x, skin.shine.point.y)
 	if type(skin.shine.texture) == "table" then
 		shine:SetColorTexture(unpack(skin.shine.texture))
-		shine:SetTexCoord(1, 0, 1 ,0)
+		shine:SetTexCoord(1, 0, 1, 0)
 	else
 		shine:SetTexture(skin.shine.texture)
 		shine:SetTexCoord(unpack(skin.shine.tex_coords))
