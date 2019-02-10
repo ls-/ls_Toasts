@@ -35,12 +35,6 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 
 	local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
 	if isNew then
-		if isAdded then
-			toast.Title:SetText(L["TRANSMOG_ADDED"])
-		else
-			toast.Title:SetText(L["TRANSMOG_REMOVED"])
-		end
-
 		if C.db.profile.colors.border then
 			toast.Border:SetVertexColor(1, 0.5, 1)
 		end
@@ -50,6 +44,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		end
 
 		toast:SetBackground("transmog")
+		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED"])
 		toast.Text:SetText(name)
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()
@@ -65,11 +60,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 
 		toast:Spawn(C.db.profile.types.transmog.anchor, C.db.profile.types.transmog.dnd)
 	else
-		if isAdded then
-			toast.Title:SetText(L["TRANSMOG_ADDED"])
-		else
-			toast.Title:SetText(L["TRANSMOG_REMOVED"])
-		end
+		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED"])
 
 		if not isQueued then
 			toast.AnimOut:Stop()
