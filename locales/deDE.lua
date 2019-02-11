@@ -1,4 +1,4 @@
-﻿-- Contributors: pas06@Curse, Ithilrandir@Curse, staratnight@Curse
+﻿-- Contributors: pas06@Curse, Ithilrandir@Curse, staratnight@Curse, Merathilis@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -8,20 +8,20 @@ local _G = getfenv(0)
 
 if GetLocale() ~= "deDE" then return end
 
---[[ L["ANCHOR_FRAME_#"] = "Anchor Frame #%d" ]]
---[[ L["ANCHOR_FRAMES"] = "Anchor Frames" ]]
---[[ L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r to reset the position." ]]
+L["ANCHOR_FRAME_#"] = "Ankerrahmen #%d"
+L["ANCHOR_FRAMES"] = "Ankerrahmen"
+L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Klick|r um die Position zurückzusetzen."
 L["BORDER"] = "Rahmen"
 L["COLLECTIONS_TAINT_WARNING"] = "Diese Option kann Probleme verursachen, wenn das Sammlungsfenster während des Kampfes geöffnet wird."
 L["COLORS"] = "Farben"
 L["COORDS"] = "Koordinaten"
 L["COPPER_THRESHOLD"] = "Kupferschwelle"
 L["COPPER_THRESHOLD_DESC"] = "Minimale Anzahl Kupfer. Ab dieser Anzahl wird eine Benachrichtigung erstellt."
---[[ L["DEFAULT_VALUE"] = "Default value: |cffffd200%s|r" ]]
+L["DEFAULT_VALUE"] = "Standartwert: |cffffd200%s|r"
 L["DND"] = "DND"
 L["DND_TOOLTIP"] = "Benachrichtigungen im DND-Modus werden nicht im Kampf angezeigt, sie werden jedoch in einer Warteschlange gesammelt. Sobald du den Kampf verlässt, werden sie auftauchen."
 L["FADE_OUT_DELAY"] = "Ausblendungsverzögerung"
---[[ L["FLUSH_QUEUE"] = "Flush Queue" ]]
+L["FLUSH_QUEUE"] = "Warteschlange"
 L["FONTS"] = "Schriften"
 L["GROWTH_DIR"] = "Ausbreitungsrichtung"
 L["GROWTH_DIR_DOWN"] = "Nach unten"
@@ -45,7 +45,7 @@ L["TEST"] = "Test"
 L["TEST_ALL"] = "Alle testen"
 L["TOAST_NUM"] = "Anzahl der Benachrichtigungen"
 L["TOAST_TYPES"] = "Benachrichtigungstypen"
---[[ L["TOGGLE_ANCHORS"] = "Toggle Anchors" ]]
+L["TOGGLE_ANCHORS"] = "Ankerpunkte umschalten"
 L["TRANSMOG_ADDED"] = "Vorlage hinzugefügt"
 L["TRANSMOG_REMOVED"] = "Vorlage entfernt"
 L["TYPE_ACHIEVEMENT"] = "Erfolg"
@@ -63,7 +63,7 @@ L["TYPE_LOOT_SPECIAL"] = "Beute (Spezial)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Benachrichtigungen, die von besonderen Beuteereignissen wie gewonnene Würfe, legendäre Gegenstände, persönliche Beute etc. ausgelöst werden."
 L["TYPE_RECIPE"] = "Rezept"
 L["TYPE_TRANSMOG"] = "Transmogrifikation"
---[[ L["TYPE_WAR_EFFORT"] = "War Effort" ]]
+L["TYPE_WAR_EFFORT"] = "Kriegsanstrengungen"
 L["TYPE_WORLD_QUEST"] = "Weltquest"
---[[ L["X_OFFSET"] = "xOffset" ]]
---[[ L["Y_OFFSET"] = "yOffset" ]]
+L["X_OFFSET"] = "X-Versatz"
+L["Y_OFFSET"] = "Y-Versatz"

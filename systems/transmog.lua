@@ -25,22 +25,6 @@ local function Toast_OnClick(self)
 	end
 end
 
-local function isAppearanceKnown(sourceID)
-	local data = C_TransmogCollection.GetSourceInfo(sourceID)
-	local sources = C_TransmogCollection.GetAppearanceSources(data.visualID)
-	if sources then
-		for i = 1, #sources do
-			if sources[i].isCollected and sourceID ~= sources[i].sourceID then
-				return true
-			end
-		end
-	else
-		return nil
-	end
-
-	return false
-end
-
 local function Toast_SetUp(event, sourceID, isAdded, attempt)
 	local _, _, _, icon, _, _, link = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
 	local name
@@ -51,12 +35,6 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 
 	local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
 	if isNew then
-		if isAdded then
-			toast.Title:SetText(L["TRANSMOG_ADDED"])
-		else
-			toast.Title:SetText(L["TRANSMOG_REMOVED"])
-		end
-
 		if C.db.profile.colors.border then
 			toast.Border:SetVertexColor(1, 0.5, 1)
 		end
@@ -66,6 +44,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		end
 
 		toast:SetBackground("transmog")
+		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED"])
 		toast.Text:SetText(name)
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()
@@ -81,11 +60,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 
 		toast:Spawn(C.db.profile.types.transmog.anchor, C.db.profile.types.transmog.dnd)
 	else
-		if isAdded then
-			toast.Title:SetText(L["TRANSMOG_ADDED"])
-		else
-			toast.Title:SetText(L["TRANSMOG_REMOVED"])
-		end
+		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED"])
 
 		if not isQueued then
 			toast.AnimOut:Stop()
@@ -94,33 +69,17 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 	end
 end
 
-local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt)
+local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
 	-- don't show toasts for sources that aren't in player's wardrobe
 	if C_TransmogCollection.PlayerKnowsSource(sourceID) then
-		attempt = attempt or 1
-		if attempt < 4 then
-			local isKnown = isAppearanceKnown(sourceID)
-			if isKnown == false then
-				Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
-			elseif isKnown == nil then
-				C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID, attempt + 1) end)
-			end
-		end
+		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 	end
 end
 
-local function TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt)
+local function TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
 	-- don't show toasts for sources that aren't in player's wardrobe
 	if C_TransmogCollection.PlayerKnowsSource(sourceID) then
-		attempt = attempt or 1
-		if attempt < 4 then
-			local isKnown = isAppearanceKnown(sourceID, true)
-			if isKnown == false then
-				Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
-			elseif isKnown == nil then
-				C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID, attempt + 1) end)
-			end
-		end
+		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
 	end
 end
 

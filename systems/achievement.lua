@@ -5,8 +5,8 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 
 --[[ luacheck: globals
-	AchievementFrame AchievementFrame_LoadUI AchievementFrame_SelectAchievement GetAchievementInfo InCombatLockdown
-	ShowUIPanel
+	AchievementFrame AchievementFrame_LoadUI AchievementFrame_SelectAchievement FormatShortDate GameTooltip
+	GetAchievementInfo InCombatLockdown ShowUIPanel
 ]]
 
 -- Mine
@@ -23,9 +23,24 @@ local function Toast_OnClick(self)
 	end
 end
 
+local function Toast_OnEnter(self)
+	if self._data.ach_id then
+		local _, name, _, _, month, day, year, description = GetAchievementInfo(self._data.ach_id)
+		if name then
+			GameTooltip:AddDoubleLine(name, FormatShortDate(day, month, year), nil, nil, nil, 0.5, 0.5, 0.5)
+
+			if description then
+				GameTooltip:AddLine(description, 1, 1, 1, true)
+			end
+		end
+
+		GameTooltip:Show()
+	end
+end
+
 local function Toast_SetUp(event, achievementID, flag, isCriteria)
 	local toast = E:GetToast()
-	local _, name, points, _, _, _, _, _, _, icon = GetAchievementInfo(achievementID)
+	local _, name, points, _, _, _, _, _, _, icon, _, isGuildAchievement = GetAchievementInfo(achievementID)
 
 	if isCriteria then
 		toast.Title:SetText(L["ACHIEVEMENT_PROGRESSED"])
@@ -33,7 +48,7 @@ local function Toast_SetUp(event, achievementID, flag, isCriteria)
 
 		toast.IconText1:SetText("")
 	else
-		toast.Title:SetText(L["ACHIEVEMENT_UNLOCKED"])
+		toast.Title:SetText(isGuildAchievement and L["GUILD_ACHIEVEMENT_UNLOCKED"] or L["ACHIEVEMENT_UNLOCKED"])
 		toast.Text:SetText(name)
 
 		if flag then
@@ -58,6 +73,7 @@ local function Toast_SetUp(event, achievementID, flag, isCriteria)
 	toast._data.ach_id = achievementID
 
 	toast:HookScript("OnClick", Toast_OnClick)
+	toast:HookScript("OnEnter", Toast_OnEnter)
 	toast:Spawn(C.db.profile.types.achievement.anchor, C.db.profile.types.achievement.dnd)
 end
 
@@ -87,6 +103,9 @@ local function Test()
 
 	-- earned, Ten Hit Tunes
 	Toast_SetUp("ACHIEVEMENT_TEST", 9828, true)
+
+	-- guild, It All Adds Up
+	Toast_SetUp("ACHIEVEMENT_TEST", 4913, false)
 end
 
 E:RegisterOptions("achievement", {
