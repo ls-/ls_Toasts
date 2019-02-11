@@ -1,4 +1,4 @@
-﻿-- Contributors: pas06@Curse, Ithilrandir@Curse, staratnight@Curse
+﻿-- Contributors: pas06@Curse, Ithilrandir@Curse, staratnight@Curse, Merathilis@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
