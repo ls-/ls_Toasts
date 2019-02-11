@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version 80100.05
+
+- Fixed an issue where world quest toasts wouldn't show the rewards;
+- Tweaked achievement toasts. Added tooltips, guild achievements' toasts will now use "Guild  
+  Achievement Earned" as their title;
+- Updated German translation. Translated by Merathilis@Curse;
+- Updated Traditional Chinese translation. Translated by BNSSNB@Curse;
+- Updated embeds.
+
 ## Version 80100.04
 
 - Added "SetSkin" and "ResetSkin" callbacks. Use these if you hooked my ApplySkin method to modify toasts'  
