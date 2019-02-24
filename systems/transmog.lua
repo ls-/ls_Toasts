@@ -26,14 +26,20 @@ local function Toast_OnClick(self)
 end
 
 local function Toast_SetUp(event, sourceID, isAdded, attempt)
-	local _, _, _, icon, _, _, link = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+	local _, visualID, _, icon, _, _, link = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
 	local name
 	link, _, _, _, name = E:SanitizeLink(link)
 	if not link then
 		return attempt < 4 and C_Timer.After(0.25, function() Toast_SetUp(event, sourceID, isAdded, attempt + 1) end)
 	end
 
-	local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
+	local toast = E:FindToast(event, "visual_id", visualID)
+	if toast then
+		return
+	end
+
+	local isNew, isQueued
+	toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
 	if isNew then
 		if C.db.profile.colors.border then
 			toast.Border:SetVertexColor(1, 0.5, 1)
@@ -53,6 +59,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		toast._data.link = link
 		toast._data.sound_file = C.db.profile.types.transmog.sfx and 38326 -- SOUNDKIT.UI_DIG_SITE_COMPLETION_TOAST
 		toast._data.source_id = sourceID
+		toast._data.visual_id = visualID
 
 		if C.db.profile.types.transmog.left_click then
 			toast:HookScript("OnClick", Toast_OnClick)
