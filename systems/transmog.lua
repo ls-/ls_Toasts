@@ -33,13 +33,11 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		return attempt < 4 and C_Timer.After(0.25, function() Toast_SetUp(event, sourceID, isAdded, attempt + 1) end)
 	end
 
-	local toast = E:FindToast(event, "visual_id", visualID)
-	if toast then
+	if E:FindToast(event, "visual_id", visualID) then
 		return
 	end
 
-	local isNew, isQueued
-	toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
+	local toast, isNew, isQueued = E:GetToast(nil, "source_id", sourceID)
 	if isNew then
 		if C.db.profile.colors.border then
 			toast.Border:SetVertexColor(1, 0.5, 1)
