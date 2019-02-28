@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 80100.06
+
+- Fixed an issue where multiple transmog toasts were shown for different sources of the same  
+  appearance. It's mainly occurring when turning in the weekly conquest quest.
+
 ## Version 80100.05
 
 - Fixed an issue where world quest toasts wouldn't show the rewards;
