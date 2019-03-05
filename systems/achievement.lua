@@ -27,7 +27,11 @@ local function Toast_OnEnter(self)
 	if self._data.ach_id then
 		local _, name, _, _, month, day, year, description = GetAchievementInfo(self._data.ach_id)
 		if name then
-			GameTooltip:AddDoubleLine(name, FormatShortDate(day, month, year), nil, nil, nil, 0.5, 0.5, 0.5)
+			if day and day > 0 then
+				GameTooltip:AddDoubleLine(name, FormatShortDate(day, month, year), nil, nil, nil, 0.5, 0.5, 0.5)
+			else
+				GameTooltip:AddLine(name)
+			end
 
 			if description then
 				GameTooltip:AddLine(description, 1, 1, 1, true)
