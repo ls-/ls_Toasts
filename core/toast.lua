@@ -268,7 +268,8 @@ local function toast_OnEnter(self)
 	end
 
 	GameTooltip:Hide()
-	GameTooltip:SetOwner(self, "ANCHOR_NONE")
+	GameTooltip:SetOwner(self, "ANCHOR_PRESERVE")
+	GameTooltip:ClearAllPoints()
 	GameTooltip:SetPoint(p, self, rP, x, y)
 
 	self.AnimOut:Stop()
