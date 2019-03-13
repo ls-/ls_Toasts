@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 80100.08
+
+- Added a workaround for a Blizz bug which prevents item tooltips from being rendered correctly.
+
 ## Version 80100.07
 
 - Added 8.1.5 support.
