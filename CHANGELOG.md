@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 80100.07
+
+- Added 8.1.5 support.
+
 ## Version 80100.06
 
 - Fixed an issue where multiple transmog toasts were shown for different sources of the same  
