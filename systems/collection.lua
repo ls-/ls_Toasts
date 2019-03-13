@@ -131,24 +131,22 @@ local function NEW_PET_ADDED(petID)
 	Toast_SetUp("NEW_PET_ADDED", petID, nil, true)
 end
 
-local function TOYS_UPDATED(toyID, isNew)
-	if toyID and isNew then
-		Toast_SetUp("TOYS_UPDATED", toyID, nil, nil, true)
-	end
+local function NEW_TOY_ADDED(toyID)
+	Toast_SetUp("NEW_TOY_ADDED", toyID, nil, nil, true)
 end
 
 local function Enable()
 	if C.db.profile.types.collection.enabled then
 		E:RegisterEvent("NEW_MOUNT_ADDED", NEW_MOUNT_ADDED)
 		E:RegisterEvent("NEW_PET_ADDED", NEW_PET_ADDED)
-		E:RegisterEvent("TOYS_UPDATED", TOYS_UPDATED)
+		E:RegisterEvent("NEW_TOY_ADDED", NEW_TOY_ADDED)
 	end
 end
 
 local function Disable()
 	E:UnregisterEvent("NEW_MOUNT_ADDED", NEW_MOUNT_ADDED)
 	E:UnregisterEvent("NEW_PET_ADDED", NEW_PET_ADDED)
-	E:UnregisterEvent("TOYS_UPDATED", TOYS_UPDATED)
+	E:UnregisterEvent("NEW_TOY_ADDED", NEW_TOY_ADDED)
 end
 
 local function Test()

@@ -49,16 +49,16 @@ local BLACKLISTED_EVENTS = {
 	["NEW_MOUNT_ADDED"] = true,
 	["NEW_PET_ADDED"] = true,
 	["NEW_RECIPE_LEARNED"] = true,
+	["NEW_TOY_ADDED"] = true,
 	["QUEST_LOOT_RECEIVED"] = true,
 	["QUEST_TURNED_IN"] = true,
 	["SCENARIO_COMPLETED"] = true,
+	["SHOW_LOOT_TOAST"] = true,
 	["SHOW_LOOT_TOAST_LEGENDARY_LOOTED"] = true,
 	["SHOW_LOOT_TOAST_UPGRADE"] = true,
-	["SHOW_LOOT_TOAST"] = true,
 	["SHOW_PVP_FACTION_LOOT_TOAST"] = true,
 	["SHOW_RATED_PVP_REWARD_TOAST"] = true,
 	["STORE_PRODUCT_DELIVERED"] = true,
-	["TOYS_UPDATED"] = true,
 }
 
 local function updateCallback()
