@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 80100.09
+
+- Updated anchors' config code.
+
 ## Version 80100.08
 
 - Added a workaround for a Blizz bug which prevents item tooltips from being rendered correctly.
