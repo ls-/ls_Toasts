@@ -444,7 +444,7 @@ function P:UpdateAnchorsOptions()
 		index = tostring(index)
 
 		for type in next, C.db.profile.types do
-			if C.options.args.anchors.args[index] and not C.options.args.anchors.args[index].args[type] then
+			if C.options.args.types.args[type] and C.options.args.anchors.args[index] and not C.options.args.anchors.args[index].args[type] then
 				C.options.args.anchors.args[index].args[type] = {
 					order = C.options.args.types.args[type].order,
 					type = "toggle",
