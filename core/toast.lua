@@ -317,6 +317,8 @@ local function toast_Spawn(self, anchorID, isDND)
 	self.AnimOut.Anim1:SetStartDelay(C.db.profile.anchors[anchorID].fadeout_delay)
 
 	P:Queue(self, anchorID)
+
+	P.CallbackHandler:Fire("ToastSpawned", self)
 end
 
 local function toast_Release(self)
@@ -366,6 +368,8 @@ local function toast_Release(self)
 
 	t_wipe(self._data)
 	t_insert(freeToasts, self)
+
+	P.CallbackHandler:Fire("ToastReleased", self)
 end
 
 local function toast_SetBackground(self, id)
@@ -698,6 +702,8 @@ local function constructToast()
 	P:SetSkin(toast, C.db.profile.skin)
 
 	t_insert(toasts, toast)
+
+	P.CallbackHandler:Fire("ToastCreated", toast)
 
 	return toast
 end
