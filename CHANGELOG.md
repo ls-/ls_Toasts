@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Version 80100.10
+
+- Added "ToastCreated", "ToastSpawned", and "ToastReleased" callbacks. As always, callbacks use  
+  CallbackHandler-1.0;
+- Renamed toasts' Recycle method to Release. Recycle is still available, but is deprecated;
+- Renamed "SetSkin" and "ResetSkin" callbacks to "SkinSet" and "SkinReset". "SetSkin" and  
+  "ResetSkin" are still available, but are deprecated;
+- Fixed toasts' border's tiling;
+- Updated embeds.
+
 ## Version 80100.09
 
 - Updated anchors' config code.

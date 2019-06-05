@@ -66,7 +66,7 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 		end
 
 		if not name then
-			return toast:Recycle()
+			return toast:Release()
 		end
 
 		toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue

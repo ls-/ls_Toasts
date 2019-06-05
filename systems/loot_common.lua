@@ -173,7 +173,7 @@ local function Toast_SetUp(event, link, quantity)
 			toast:HookScript("OnEnter", Toast_OnEnter)
 			toast:Spawn(C.db.profile.types.loot_common.anchor, C.db.profile.types.loot_common.dnd)
 		else
-			toast:Recycle()
+			toast:Release()
 		end
 	else
 		if isQueued then

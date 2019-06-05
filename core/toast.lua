@@ -81,9 +81,11 @@ local function border_SetSize(self, size)
 	self.RIGHT:SetWidth(size)
 
 	if self.calcTile then
-		local tile = (self.parent:GetWidth() + 2 * self.offset) / size
+		local tile = (self.parent:GetWidth() + 2 * self.offset) / 16
 		self.TOP:SetTexCoord(0.25, tile, 0.375, tile, 0.25, 0, 0.375, 0)
 		self.BOTTOM:SetTexCoord(0.375, tile, 0.5, tile, 0.375, 0, 0.5, 0)
+
+		tile = (self.parent:GetHeight() + 2 * self.offset) / 16
 		self.LEFT:SetTexCoord(0, 0.125, 0, tile)
 		self.RIGHT:SetTexCoord(0.125, 0.25, 0, tile)
 	end
@@ -251,7 +253,7 @@ end
 
 local function toast_OnClick(self, button)
 	if button == "RightButton" then
-		self:Recycle()
+		self:Release()
 	end
 end
 
@@ -302,7 +304,7 @@ local function toastAnimIn_OnFinished(self)
 end
 
 local function toastAnimOut_OnFinished(self)
-	self:GetParent():Recycle()
+	self:GetParent():Release()
 end
 
 local order = 0
@@ -317,9 +319,11 @@ local function toast_Spawn(self, anchorID, isDND)
 	self.AnimOut.Anim1:SetStartDelay(C.db.profile.anchors[anchorID].fadeout_delay)
 
 	P:Queue(self, anchorID)
+
+	P.CallbackHandler:Fire("ToastSpawned", self)
 end
 
-local function toast_Recycle(self)
+local function toast_Release(self)
 	self:ClearAllPoints()
 	self:SetAlpha(1)
 	self:Hide()
@@ -366,6 +370,8 @@ local function toast_Recycle(self)
 
 	t_wipe(self._data)
 	t_insert(freeToasts, self)
+
+	P.CallbackHandler:Fire("ToastReleased", self)
 end
 
 local function toast_SetBackground(self, id)
@@ -690,13 +696,16 @@ local function constructToast()
 	end
 
 	toast._data = {}
-	toast.Recycle = toast_Recycle
+	toast.Release = toast_Release
+	toast.Recycle = toast_Release -- Deprecated
 	toast.Spawn = toast_Spawn
 	toast.SetBackground = toast_SetBackground
 
 	P:SetSkin(toast, C.db.profile.skin)
 
 	t_insert(toasts, toast)
+
+	P.CallbackHandler:Fire("ToastCreated", toast)
 
 	return toast
 end
