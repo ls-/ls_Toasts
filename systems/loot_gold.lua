@@ -43,7 +43,7 @@ local function Toast_SetUp(event, quantity)
 
 			toast:Spawn(C.db.profile.types.loot_gold.anchor, C.db.profile.types.loot_gold.dnd)
 		else
-			toast:Recycle()
+			toast:Release()
 		end
 	else
 		if isQueued then

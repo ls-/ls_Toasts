@@ -251,7 +251,7 @@ end
 
 local function toast_OnClick(self, button)
 	if button == "RightButton" then
-		self:Recycle()
+		self:Release()
 	end
 end
 
@@ -302,7 +302,7 @@ local function toastAnimIn_OnFinished(self)
 end
 
 local function toastAnimOut_OnFinished(self)
-	self:GetParent():Recycle()
+	self:GetParent():Release()
 end
 
 local order = 0
@@ -319,7 +319,7 @@ local function toast_Spawn(self, anchorID, isDND)
 	P:Queue(self, anchorID)
 end
 
-local function toast_Recycle(self)
+local function toast_Release(self)
 	self:ClearAllPoints()
 	self:SetAlpha(1)
 	self:Hide()
@@ -690,7 +690,8 @@ local function constructToast()
 	end
 
 	toast._data = {}
-	toast.Recycle = toast_Recycle
+	toast.Release = toast_Release
+	toast.Recycle = toast_Release -- Deprecated
 	toast.Spawn = toast_Spawn
 	toast.SetBackground = toast_SetBackground
 

@@ -167,7 +167,7 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 					toast:HookScript("OnEnter", Toast_OnEnter)
 					toast:Spawn(C.db.profile.types.loot_special.anchor, C.db.profile.types.loot_special.dnd)
 				else
-					toast:Recycle()
+					toast:Release()
 				end
 			else
 				if rollType then

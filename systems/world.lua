@@ -45,7 +45,7 @@ end
 local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward, numCurrencyRewards, itemReward)
 	local toast, isNew, isQueued = E:GetToast(nil, "quest_id", questID)
 	if isUpdate and isNew then
-		toast:Recycle()
+		toast:Release()
 
 		return
 	end
