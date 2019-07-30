@@ -103,11 +103,6 @@ function P:UpdateTable(src, dest)
 end
 
 -- Libs
-P.AceConfig = LibStub("AceConfig-3.0")
-P.AceConfigDialog = LibStub("AceConfigDialog-3.0")
-P.AceDB = LibStub("AceDB-3.0")
-P.AceDBOptions = LibStub("AceDBOptions-3.0")
-P.LSM = LibStub("LibSharedMedia-3.0")
 P.CallbackHandler = LibStub("CallbackHandler-1.0"):New(E)
 
 -------------

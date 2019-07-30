@@ -54,7 +54,7 @@ end
 
 function P:SetSkin(toast, id)
 	local skin = skins[id] or skins["default"]
-	local fontPath = P.LSM:Fetch("font", C.db.profile.font.name)
+	local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
 
 	-- .Border
