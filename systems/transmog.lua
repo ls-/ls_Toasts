@@ -9,12 +9,15 @@ local C_Timer = _G.C_Timer
 local C_TransmogCollection = _G.C_TransmogCollection
 
 --[[ luacheck: globals
-	CollectionsJournal CollectionsJournal_LoadUI InCombatLockdown WardrobeCollectionFrame_OpenTransmogLink
+	CollectionsJournal CollectionsJournal_LoadUI DressUpVisual InCombatLockdown IsModifiedClick
+	WardrobeCollectionFrame_OpenTransmogLink
 ]]
 
 -- Mine
 local function Toast_OnClick(self)
-	if self._data.link and not InCombatLockdown() then
+	if self._data.source_id and IsModifiedClick("DRESSUP") then
+		DressUpVisual(self._data.source_id)
+	elseif C.db.profile.types.transmog.left_click and self._data.link and not InCombatLockdown() then
 		if not CollectionsJournal then
 			CollectionsJournal_LoadUI()
 		end
@@ -59,10 +62,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		toast._data.source_id = sourceID
 		toast._data.visual_id = visualID
 
-		if C.db.profile.types.transmog.left_click then
-			toast:HookScript("OnClick", Toast_OnClick)
-		end
-
+		toast:HookScript("OnClick", Toast_OnClick)
 		toast:Spawn(C.db.profile.types.transmog.anchor, C.db.profile.types.transmog.dnd)
 	else
 		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED"])

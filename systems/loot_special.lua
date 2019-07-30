@@ -9,11 +9,13 @@ local s_split = _G.string.split
 local tonumber = _G.tonumber
 
 -- Blizz
+local C_MountJournal = _G.C_MountJournal
+local C_PetJournal = _G.C_PetJournal
 local C_Timer = _G.C_Timer
 
 --[[ luacheck: globals
-	BattlePetToolTip_Show BonusRollFrame GameTooltip GetItemInfo GroupLootContainer GroupLootContainer_RemoveFrame
-	OpenBag UnitFactionGroup
+	BattlePetToolTip_Show BonusRollFrame DressUpBattlePet DressUpMount DressUpVisual GameTooltip GetItemInfo
+	GroupLootContainer GroupLootContainer_RemoveFrame IsDressableItem IsModifiedClick OpenBag UnitFactionGroup
 
 	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC ITEM_QUALITY5_DESC
 	LOOT_ROLL_TYPE_DISENCHANT LOOT_ROLL_TYPE_GREED LOOT_ROLL_TYPE_NEED LOOTUPGRADEFRAME_QUALITY_TEXTURES
@@ -24,8 +26,53 @@ local TITLE_DE_TEMPLATE = "%s|cff00ff00%s|r|TInterface\\Buttons\\UI-GroupLoot-DE
 local TITLE_GREED_TEMPLATE = "%s|cff00ff00%s|r|TInterface\\Buttons\\UI-GroupLoot-Coin-Up:0:0:0:0:32:32:0:32:0:31|t"
 local TITLE_NEED_TEMPLATE = "%s|cff00ff00%s|r|TInterface\\Buttons\\UI-GroupLoot-Dice-Up:0:0:0:0:32:32:0:32:0:31|t"
 
+local function dressUp(link)
+	if not link then
+		return
+	end
+
+	-- item
+	if IsDressableItem(link) then
+		if DressUpVisual(link) then
+			return
+		end
+	end
+
+	-- battle pet
+	local creatureID, displayID
+
+	local linkType, linkID, _ = s_split(":", link)
+	if linkType == "item" then
+		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoByItemID(tonumber(linkID))
+	elseif linkType == "battlepet" then
+		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoBySpeciesID(tonumber(linkID))
+	end
+
+	if creatureID and displayID then
+		if DressUpBattlePet(creatureID, displayID) then
+			return
+		end
+	end
+
+	-- mount
+	local mountID
+
+	linkType, linkID = s_split(":", link)
+	if linkType == "item" then
+		mountID = C_MountJournal.GetMountFromItem(tonumber(linkID))
+	elseif linkType == "spell" then
+		mountID = C_MountJournal.GetMountFromSpell(tonumber(linkID))
+	end
+
+	if mountID then
+		DressUpMount(C_MountJournal.GetMountInfoExtraByID(mountID))
+	end
+end
+
 local function Toast_OnClick(self)
-	if self._data.item_id then
+	if self._data.link and IsModifiedClick("DRESSUP") then
+		dressUp(self._data.link)
+	elseif self._data.item_id then
 		local slot = E:SearchBagsForItemID(self._data.item_id)
 		if slot >= 0 then
 			OpenBag(slot)

@@ -8,11 +8,13 @@ local s_split = _G.string.split
 local tonumber = _G.tonumber
 
 -- Blizz
+local C_MountJournal = _G.C_MountJournal
 local C_PetJournal = _G.C_PetJournal
 local C_Timer = _G.C_Timer
 
 --[[ luacheck: globals
-	BattlePetToolTip_Show GameTooltip GetItemInfo OpenBag UnitGUID
+	BattlePetToolTip_Show DressUpBattlePet DressUpMount DressUpVisual GameTooltip GetItemInfo IsDressableItem
+	IsModifiedClick OpenBag UnitGUID
 
 	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC
 	LOOT_ITEM_CREATED_SELF LOOT_ITEM_CREATED_SELF_MULTIPLE LOOT_ITEM_PUSHED_SELF LOOT_ITEM_PUSHED_SELF_MULTIPLE
@@ -73,11 +75,56 @@ local function delayedUpdatePatterns()
 	C_Timer.After(0.1, updatePatterns)
 end
 
+local function dressUp(link)
+	if not link then
+		return
+	end
+
+	-- item
+	if IsDressableItem(link) then
+		if DressUpVisual(link) then
+			return
+		end
+	end
+
+	-- battle pet
+	local creatureID, displayID
+
+	local linkType, linkID, _ = s_split(":", link)
+	if linkType == "item" then
+		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoByItemID(tonumber(linkID))
+	elseif linkType == "battlepet" then
+		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoBySpeciesID(tonumber(linkID))
+	end
+
+	if creatureID and displayID then
+		if DressUpBattlePet(creatureID, displayID) then
+			return
+		end
+	end
+
+	-- mount
+	local mountID
+
+	linkType, linkID = s_split(":", link)
+	if linkType == "item" then
+		mountID = C_MountJournal.GetMountFromItem(tonumber(linkID))
+	elseif linkType == "spell" then
+		mountID = C_MountJournal.GetMountFromSpell(tonumber(linkID))
+	end
+
+	if mountID then
+		DressUpMount(C_MountJournal.GetMountInfoExtraByID(mountID))
+	end
+end
+
 local function Toast_OnClick(self)
-	if self._data.item_id then
-		local bag = E:SearchBagsForItemID(self._data.item_id)
-		if bag >= 0 then
-			OpenBag(bag)
+	if self._data.link and IsModifiedClick("DRESSUP") then
+		dressUp(self._data.link)
+	elseif self._data.item_id then
+		local slot = E:SearchBagsForItemID(self._data.item_id)
+		if slot >= 0 then
+			OpenBag(slot)
 		end
 	end
 end
@@ -219,7 +266,7 @@ local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
 		return
 	end
 
-	C_Timer.After(0.125, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
+	C_Timer.After(0.25, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
 end
 
 local function Enable()
