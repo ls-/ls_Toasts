@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 80200.01
+
+- Added 8.2.0 support;
+- Added Ctrl-Left-Click support to transmog, toy, mount, and item toasts to show the dressing room
+  frame;
+- Updated embeds.
+
 ## Version 80100.10
 
 - Added "ToastCreated", "ToastSpawned", and "ToastReleased" callbacks. As always, callbacks use  
