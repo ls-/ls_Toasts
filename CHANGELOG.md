@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 80200.02
+
+- Rewrote gold toasts to display money gains and losses. Removed the copper threshold option  
+  because it's interfering with the new functionality;
+- Updated embeds.
+
 ## Version 80200.01
 
 - Added 8.2.0 support;
