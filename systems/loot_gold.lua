@@ -3,9 +3,8 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local m_abs = _G.math.abs
 local m_random = _G.math.random
-local tonumber = _G.tonumber
-local tostring = _G.tostring
 
 --[[ luacheck: globals
 	GetMoney GetMoneyString
@@ -21,37 +20,47 @@ end
 local function Toast_SetUp(event, quantity)
 	local toast, isNew, isQueued = E:GetToast(nil, "event", event)
 	if isNew then
-		if quantity >= C.db.profile.types.loot_gold.threshold then
-			toast.Text.PostSetAnimatedValue = PostSetAnimatedValue
+		toast.Text.PostSetAnimatedValue = PostSetAnimatedValue
 
-			if C.db.profile.colors.border then
-				toast.Border:SetVertexColor(0.9, 0.75, 0.26)
-			end
-
-			if C.db.profile.colors.icon_border then
-				toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
-			end
-
-			toast.Title:SetText(L["YOU_RECEIVED"])
-			toast.Text:SetAnimatedValue(quantity, true)
-			toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
-			toast.IconBorder:Show()
-
-			toast._data.count = quantity
-			toast._data.event = event
-			toast._data.sound_file = C.db.profile.types.loot_gold.sfx and 865 -- SOUNDKIT.IG_BACKPACK_COIN_OK
-
-			toast:Spawn(C.db.profile.types.loot_gold.anchor, C.db.profile.types.loot_gold.dnd)
-		else
-			toast:Release()
+		if C.db.profile.colors.border then
+			toast.Border:SetVertexColor(0.9, 0.75, 0.26)
 		end
-	else
-		if isQueued then
-			toast._data.count = toast._data.count + quantity
-			toast.Text:SetAnimatedValue(toast._data.count, true)
+
+		if C.db.profile.colors.icon_border then
+			toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
+		end
+
+		if quantity > 0 then
+			toast.Title:SetText(L["YOU_RECEIVED"])
+			toast.Title:SetVertexColor(0.180392, 0.67451, 0.203922)
 		else
-			toast._data.count = toast._data.count + quantity
-			toast.Text:SetAnimatedValue(toast._data.count)
+			toast.Title:SetText(L["YOU_LOST"])
+			toast.Title:SetVertexColor(0.862745, 0.266667, 0.211765)
+		end
+
+		toast.Text:SetAnimatedValue(m_abs(quantity), true)
+		toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
+		toast.IconBorder:Show()
+
+		toast._data.count = quantity
+		toast._data.event = event
+		toast._data.sound_file = C.db.profile.types.loot_gold.sfx and 865 -- SOUNDKIT.IG_BACKPACK_COIN_OK
+
+		toast:Spawn(C.db.profile.types.loot_gold.anchor, C.db.profile.types.loot_gold.dnd)
+	else
+		toast._data.count = toast._data.count + quantity
+		if toast._data.count > 0 then
+			toast.Title:SetText(L["YOU_RECEIVED"])
+			toast.Title:SetVertexColor(0.180392, 0.67451, 0.203922)
+		else
+			toast.Title:SetText(L["YOU_LOST"])
+			toast.Title:SetVertexColor(0.862745, 0.266667, 0.211765)
+		end
+
+		if isQueued then
+			toast.Text:SetAnimatedValue(m_abs(toast._data.count), true)
+		else
+			toast.Text:SetAnimatedValue(m_abs(toast._data.count))
 
 			toast.AnimOut:Stop()
 			toast.AnimOut:Play()
@@ -63,7 +72,7 @@ end
 local function PLAYER_MONEY()
 	local cur = GetMoney()
 
-	if cur - old > 0 then
+	if cur - old ~= 0 then
 		Toast_SetUp("PLAYER_MONEY", cur - old)
 	end
 
@@ -83,7 +92,7 @@ local function Disable()
 end
 
 local function Test()
-	Toast_SetUp("LOOT_GOLD_TEST", m_random(C.db.profile.types.loot_gold.threshold + 1, C.db.profile.types.loot_gold.threshold * 2))
+	Toast_SetUp("LOOT_GOLD_TEST", m_random(-100000, 100000))
 end
 
 E:RegisterOptions("loot_gold", {
@@ -91,7 +100,6 @@ E:RegisterOptions("loot_gold", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
-	threshold = 1,
 }, {
 	name = L["TYPE_LOOT_GOLD"],
 	get = function(info)
@@ -125,19 +133,6 @@ E:RegisterOptions("loot_gold", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
-		},
-		threshold = {
-			order = 4,
-			type = "input",
-			name = L["COPPER_THRESHOLD"],
-			desc = L["COPPER_THRESHOLD_DESC"],
-			get = function()
-				return tostring(C.db.profile.types.loot_gold.threshold)
-			end,
-			set = function(_, value)
-				value = tonumber(value)
-					C.db.profile.types.loot_gold.threshold = value >= 1 and value or 1
-			end,
 		},
 		test = {
 			type = "execute",
