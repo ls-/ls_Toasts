@@ -14,7 +14,7 @@ local m_random = _G.math.random
 local old
 
 local function PostSetAnimatedValue(self, value)
-	self:SetText(GetMoneyString(value, true))
+	self:SetText(GetMoneyString(m_abs(value), true))
 end
 
 local function Toast_SetUp(event, quantity)
@@ -38,7 +38,7 @@ local function Toast_SetUp(event, quantity)
 			toast.Title:SetVertexColor(0.862745, 0.266667, 0.211765)
 		end
 
-		toast.Text:SetAnimatedValue(m_abs(quantity), true)
+		toast.Text:SetAnimatedValue(quantity, true)
 		toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
 		toast.IconBorder:Show()
 
@@ -58,9 +58,9 @@ local function Toast_SetUp(event, quantity)
 		end
 
 		if isQueued then
-			toast.Text:SetAnimatedValue(m_abs(toast._data.count), true)
+			toast.Text:SetAnimatedValue(toast._data.count, true)
 		else
-			toast.Text:SetAnimatedValue(m_abs(toast._data.count))
+			toast.Text:SetAnimatedValue(toast._data.count)
 
 			toast.AnimOut:Stop()
 			toast.AnimOut:Play()
