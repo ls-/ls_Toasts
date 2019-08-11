@@ -1,4 +1,4 @@
--- Contributors: WetU@GitHub, yuk6196@Curse, next96@Curse
+-- Contributors: WetU@GitHub, netaras@Curse, unrealcrom96@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -46,6 +46,8 @@ L["TEST_ALL"] = "모두 테스트"
 L["TOAST_NUM"] = "알림창의 갯수"
 L["TOAST_TYPES"] = "알림창 종류"
 --[[ L["TOGGLE_ANCHORS"] = "Toggle Anchors" ]]
+--[[ L["TRACK_LOSS"] = "Track Loss" ]]
+--[[ L["TRACK_LOSS_DESC"] = "This option ignores set copper threshold." ]]
 L["TRANSMOG_ADDED"] = "형상이 추가되었습니다"
 L["TRANSMOG_REMOVED"] = "형상이 제거되었습니다"
 L["TYPE_ACHIEVEMENT"] = "업적"
@@ -65,5 +67,7 @@ L["TYPE_RECIPE"] = "제조법"
 L["TYPE_TRANSMOG"] = "형상변환"
 L["TYPE_WAR_EFFORT"] = "전쟁 효과"
 L["TYPE_WORLD_QUEST"] = "전역 퀘스트"
---[[ L["X_OFFSET"] = "xOffset" ]]
---[[ L["Y_OFFSET"] = "yOffset" ]]
+L["X_OFFSET"] = "X 좌표"
+L["Y_OFFSET"] = "Y 좌표"
+--[[ L["YOU_LOST"] = "You Lost" ]]
+--[[ L["YOU_RECEIVED"] = "You Received" ]]
