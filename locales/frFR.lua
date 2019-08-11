@@ -1,4 +1,4 @@
--- Contributors: cyberlinkfr@Curse, Daniel8513@Curse
+-- Contributors: Daniel8513@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -46,6 +46,8 @@ L["TEST_ALL"] = "Tester tout"
 L["TOAST_NUM"] = "Nombre de 'Toast' simultanés"
 L["TOAST_TYPES"] = "Types de 'Toast'"
 --[[ L["TOGGLE_ANCHORS"] = "Toggle Anchors" ]]
+--[[ L["TRACK_LOSS"] = "Track Loss" ]]
+--[[ L["TRACK_LOSS_DESC"] = "This option ignores set copper threshold." ]]
 L["TRANSMOG_ADDED"] = "Apparence ajoutée"
 L["TRANSMOG_REMOVED"] = "Apparence retirée"
 L["TYPE_ACHIEVEMENT"] = "Haut-Fait"
@@ -67,3 +69,5 @@ L["TYPE_TRANSMOG"] = "Transmogrification"
 L["TYPE_WORLD_QUEST"] = "Missions d'expédition"
 --[[ L["X_OFFSET"] = "xOffset" ]]
 --[[ L["Y_OFFSET"] = "yOffset" ]]
+L["YOU_LOST"] = "Vous avez perdu"
+L["YOU_RECEIVED"] = "Vous avez reçu"

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Version 80200.03
+
+- Re-added copper threshold to gold toasts;
+- Made gold loss tracking optional. Enabling this feature will make gold toasts ignore set copper  
+  threshold. Disabled by default;
+- Updated German translation. Translated by Merathilis@Curse;
+- Updated Korean translation. Translated by netaras@Curse;
+- Updated Spanish translations. Translated by Gotxiko@Curse;
+- Updated Traditional Chinese translation. Translated by BNS333@Curse.
+
 ## Version 80200.02
 
 - Rewrote gold toasts to display money gains and losses. Removed the copper threshold option  

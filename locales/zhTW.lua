@@ -1,4 +1,4 @@
-﻿-- Contributors: BNSSNB@Curse, gaspy10@Curse
+﻿-- Contributors: BNS333@Curse, 彩虹の多多@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -46,6 +46,8 @@ L["TEST_ALL"] = "全部測試"
 L["TOAST_NUM"] = "通知數量"
 L["TOAST_TYPES"] = "通知類型"
 L["TOGGLE_ANCHORS"] = "切換定位點"
+--[[ L["TRACK_LOSS"] = "Track Loss" ]]
+--[[ L["TRACK_LOSS_DESC"] = "This option ignores set copper threshold." ]]
 L["TRANSMOG_ADDED"] = "外觀已加入"
 L["TRANSMOG_REMOVED"] = "外觀已移除"
 L["TYPE_ACHIEVEMENT"] = "成就"
@@ -67,3 +69,5 @@ L["TYPE_WAR_EFFORT"] = "陣營戰役"
 L["TYPE_WORLD_QUEST"] = "世界任務"
 L["X_OFFSET"] = "水平位置"
 L["Y_OFFSET"] = "垂直位置"
+L["YOU_LOST"] = "你失去的"
+L["YOU_RECEIVED"] = "你收到的"

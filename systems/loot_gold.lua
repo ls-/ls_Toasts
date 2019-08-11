@@ -5,6 +5,8 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 local m_abs = _G.math.abs
 local m_random = _G.math.random
+local tonumber = _G.tonumber
+local tostring = _G.tostring
 
 --[[ luacheck: globals
 	GetMoney GetMoneyString
@@ -32,10 +34,8 @@ local function Toast_SetUp(event, quantity)
 
 		if quantity > 0 then
 			toast.Title:SetText(L["YOU_RECEIVED"])
-			toast.Title:SetVertexColor(0.180392, 0.67451, 0.203922)
 		else
 			toast.Title:SetText(L["YOU_LOST"])
-			toast.Title:SetVertexColor(0.862745, 0.266667, 0.211765)
 		end
 
 		toast.Text:SetAnimatedValue(quantity, true)
@@ -51,10 +51,8 @@ local function Toast_SetUp(event, quantity)
 		toast._data.count = toast._data.count + quantity
 		if toast._data.count > 0 then
 			toast.Title:SetText(L["YOU_RECEIVED"])
-			toast.Title:SetVertexColor(0.180392, 0.67451, 0.203922)
 		else
 			toast.Title:SetText(L["YOU_LOST"])
-			toast.Title:SetVertexColor(0.862745, 0.266667, 0.211765)
 		end
 
 		if isQueued then
@@ -72,7 +70,7 @@ end
 local function PLAYER_MONEY()
 	local cur = GetMoney()
 
-	if cur - old ~= 0 then
+	if C.db.profile.types.loot_gold.track_loss and cur - old ~= 0 or cur - old >= C.db.profile.types.loot_gold.threshold then
 		Toast_SetUp("PLAYER_MONEY", cur - old)
 	end
 
@@ -100,6 +98,8 @@ E:RegisterOptions("loot_gold", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	threshold = 1,
+	track_loss = false,
 }, {
 	name = L["TYPE_LOOT_GOLD"],
 	get = function(info)
@@ -133,6 +133,28 @@ E:RegisterOptions("loot_gold", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		track_loss = {
+			order = 4,
+			type = "toggle",
+			name = L["TRACK_LOSS"],
+			desc = L["TRACK_LOSS_DESC"],
+		},
+		threshold = {
+			order = 5,
+			type = "input",
+			name = L["COPPER_THRESHOLD"],
+			desc = L["COPPER_THRESHOLD_DESC"],
+			disabled = function()
+				return C.db.profile.types.loot_gold.track_loss
+			end,
+			get = function()
+				return tostring(C.db.profile.types.loot_gold.threshold)
+			end,
+			set = function(_, value)
+				value = tonumber(value)
+				C.db.profile.types.loot_gold.threshold = value >= 1 and value or 1
+			end,
 		},
 		test = {
 			type = "execute",

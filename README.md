@@ -19,7 +19,7 @@ If you found a bug or want to share an idea on how to improve my addon, either u
 
 ## Localisation
 
-Feel free to add and/or review translations on [Curse](https://wow.curseforge.com/projects/ls-toasts/localization), alternatively, you may create a PR on [project's GitHub page](https://github.com/ls-/ls_Toasts/pulls).
+Feel free to add and/or review translations on [Curse](https://www.curseforge.com/wow/addons/ls-toasts/localization), alternatively, you may create a PR on [project's GitHub page](https://github.com/ls-/ls_Toasts/pulls).
 
 ## License
 

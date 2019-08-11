@@ -1,4 +1,4 @@
-﻿-- Contributors: pas06@Curse, Ithilrandir@Curse, staratnight@Curse, Merathilis@Curse
+﻿-- Contributors: Bullseiify@Curse, Merathilis@Curse, staratnight@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -46,6 +46,8 @@ L["TEST_ALL"] = "Alle testen"
 L["TOAST_NUM"] = "Anzahl der Benachrichtigungen"
 L["TOAST_TYPES"] = "Benachrichtigungstypen"
 L["TOGGLE_ANCHORS"] = "Ankerpunkte umschalten"
+L["TRACK_LOSS"] = "Verlust Verfolgung"
+L["TRACK_LOSS_DESC"] = "Diese Option ignoriert die Kupferschwelle."
 L["TRANSMOG_ADDED"] = "Vorlage hinzugefügt"
 L["TRANSMOG_REMOVED"] = "Vorlage entfernt"
 L["TYPE_ACHIEVEMENT"] = "Erfolg"
@@ -67,3 +69,5 @@ L["TYPE_WAR_EFFORT"] = "Kriegsanstrengungen"
 L["TYPE_WORLD_QUEST"] = "Weltquest"
 L["X_OFFSET"] = "X-Versatz"
 L["Y_OFFSET"] = "Y-Versatz"
+L["YOU_LOST"] = "Ihr verliert"
+L["YOU_RECEIVED"] = "Ihr erhaltet"
