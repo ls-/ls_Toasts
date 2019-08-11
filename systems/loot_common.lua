@@ -3,18 +3,14 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
-local m_random = _G.math.random
-local s_split = _G.string.split
 local tonumber = _G.tonumber
 
 -- Blizz
-local C_MountJournal = _G.C_MountJournal
-local C_PetJournal = _G.C_PetJournal
 local C_Timer = _G.C_Timer
 
 --[[ luacheck: globals
 	BattlePetToolTip_Show DressUpBattlePet DressUpMount DressUpVisual GameTooltip GetItemInfo IsDressableItem
-	IsModifiedClick OpenBag UnitGUID
+	IsModifiedClick OpenBag UnitGUID UnitName
 
 	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC
 	LOOT_ITEM_CREATED_SELF LOOT_ITEM_CREATED_SELF_MULTIPLE LOOT_ITEM_PUSHED_SELF LOOT_ITEM_PUSHED_SELF_MULTIPLE
@@ -23,6 +19,7 @@ local C_Timer = _G.C_Timer
 
 -- Mine
 local PLAYER_GUID = UnitGUID("player")
+local PLAYER_NAME = UnitName("player")
 
 local CACHED_LOOT_ITEM_CREATED
 local CACHED_LOOT_ITEM_CREATED_MULTIPLE
@@ -86,36 +83,6 @@ local function dressUp(link)
 			return
 		end
 	end
-
-	-- battle pet
-	local creatureID, displayID
-
-	local linkType, linkID, _ = s_split(":", link)
-	if linkType == "item" then
-		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoByItemID(tonumber(linkID))
-	elseif linkType == "battlepet" then
-		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoBySpeciesID(tonumber(linkID))
-	end
-
-	if creatureID and displayID then
-		if DressUpBattlePet(creatureID, displayID) then
-			return
-		end
-	end
-
-	-- mount
-	local mountID
-
-	linkType, linkID = s_split(":", link)
-	if linkType == "item" then
-		mountID = C_MountJournal.GetMountFromItem(tonumber(linkID))
-	elseif linkType == "spell" then
-		mountID = C_MountJournal.GetMountFromSpell(tonumber(linkID))
-	end
-
-	if mountID then
-		DressUpMount(C_MountJournal.GetMountInfoExtraByID(mountID))
-	end
 end
 
 local function Toast_OnClick(self)
@@ -131,13 +98,8 @@ end
 
 local function Toast_OnEnter(self)
 	if self._data.tooltip_link then
-		if self._data.tooltip_link:find("item") then
-			GameTooltip:SetHyperlink(self._data.tooltip_link)
-			GameTooltip:Show()
-		elseif self._data.tooltip_link:find("battlepet") then
-			local _, speciesID, level, breedQuality, maxHealth, power, speed = s_split(":", self._data.tooltip_link)
-			BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed))
-		end
+		GameTooltip:SetHyperlink(self._data.tooltip_link)
+		GameTooltip:Show()
 	end
 end
 
@@ -146,30 +108,11 @@ local function PostSetAnimatedValue(self, value)
 end
 
 local function Toast_SetUp(event, link, quantity)
-	local sanitizedLink, originalLink, linkType, itemID = E:SanitizeLink(link)
-	local toast, isNew, isQueued
-
-	-- Check if there's a toast for this item from another event
-	toast, isQueued = E:FindToast(nil, "item_id", itemID)
-	if toast then
-		if toast._data.event ~= event then
-			return
-		end
-	else
-		toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
-	end
-
+	local sanitizedLink, originalLink, _, itemID = E:SanitizeLink(link)
+	local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
 	if isNew then
-		local name, quality, icon, _, classID, subClassID, bindType, isQuestItem
-
-		if linkType == "battlepet" then
-			local _, speciesID, _, breedQuality, _ = s_split(":", originalLink)
-			name, icon = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
-			quality = tonumber(breedQuality)
-		else
-			name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
-			isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
-		end
+		local name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
+		local isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 
 		if name and ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
 			or (C.db.profile.types.loot_common.quest and isQuestItem)) then
@@ -253,8 +196,8 @@ local function Toast_SetUp(event, link, quantity)
 	end
 end
 
-local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
-	if guid ~= PLAYER_GUID then
+local function CHAT_MSG_LOOT(message, _, _, _, name, _, _, _, _, _, _, guid)
+	if guid and guid ~= PLAYER_GUID or name ~= PLAYER_NAME then
 		return
 	end
 
@@ -297,14 +240,35 @@ local function Disable()
 end
 
 local function Test()
-	-- item, Chaos Crystal
-	local _, link = GetItemInfo(124442)
+	-- common, Hearthstone
+	local _, link = GetItemInfo(6948)
 	if link then
-		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
+		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
 	end
 
-	-- battlepet, Anubisath Idol
-	Toast_SetUp("COMMON_LOOT_TEST", "battlepet:1155:25:3:1725:276:244:0000000000000000", 1)
+	-- uncommon, Chromatic Sword
+	_, link = GetItemInfo(1604)
+	if link then
+		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
+	end
+
+	-- rare, Arcanite Reaper
+	_, link = GetItemInfo(12784)
+	if link then
+		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
+	end
+
+	-- epic, Corrupted Ashbringer
+	_, link = GetItemInfo(22691)
+	if link then
+		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
+	end
+
+	-- legendary, Atiesh, Greatstaff of the Guardian
+	_, link = GetItemInfo(22589)
+	if link then
+		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
+	end
 end
 
 E:RegisterOptions("loot_common", {

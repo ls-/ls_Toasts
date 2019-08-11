@@ -36,28 +36,9 @@ local STRATA_INDICES ={
 }
 
 local BLACKLISTED_EVENTS = {
-	["ACHIEVEMENT_EARNED"] = true,
-	["AZERITE_EMPOWERED_ITEM_LOOTED"] = true,
-	["CRITERIA_EARNED"] = true,
-	["GARRISON_BUILDING_ACTIVATABLE"] = true,
-	["GARRISON_FOLLOWER_ADDED"] = true,
-	["GARRISON_MISSION_FINISHED"] = true,
-	["GARRISON_RANDOM_MISSION_ADDED"] = true,
-	["GARRISON_TALENT_COMPLETE"] = true,
-	["LFG_COMPLETION_REWARD"] = true,
 	["LOOT_ITEM_ROLL_WON"] = true,
-	["NEW_MOUNT_ADDED"] = true,
-	["NEW_PET_ADDED"] = true,
 	["NEW_RECIPE_LEARNED"] = true,
-	["NEW_TOY_ADDED"] = true,
-	["QUEST_LOOT_RECEIVED"] = true,
 	["QUEST_TURNED_IN"] = true,
-	["SCENARIO_COMPLETED"] = true,
-	["SHOW_LOOT_TOAST"] = true,
-	["SHOW_LOOT_TOAST_LEGENDARY_LOOTED"] = true,
-	["SHOW_LOOT_TOAST_UPGRADE"] = true,
-	["SHOW_PVP_FACTION_LOOT_TOAST"] = true,
-	["SHOW_RATED_PVP_REWARD_TOAST"] = true,
 	["STORE_PRODUCT_DELIVERED"] = true,
 }
 
@@ -84,46 +65,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	C.db:RegisterCallback("OnProfileReset", updateCallback)
 	C.db:RegisterCallback("OnProfileShutdown", shutdownCallback)
 	C.db:RegisterCallback("OnDatabaseShutdown", shutdownCallback)
-
-	-- cleanup
-	LS_TOASTS_CFG = nil
-	LS_TOASTS_CFG_GLOBAL = nil
-
-	-- ->80100.03
-	if not C.db.profile.version or C.db.profile.version < 8010003 then
-		if C.db.profile.fadeout_delay then
-			C.db.profile.anchors[1].fadeout_delay = C.db.profile.fadeout_delay
-			C.db.profile.fadeout_delay = nil
-		end
-
-		if C.db.profile.growth_direction then
-			C.db.profile.anchors[1].growth_direction = C.db.profile.growth_direction
-			C.db.profile.growth_direction = nil
-		end
-
-		if C.db.profile.max_active_toasts then
-			C.db.profile.anchors[1].max_active_toasts = C.db.profile.max_active_toasts
-			C.db.profile.max_active_toasts = nil
-		end
-
-		if C.db.profile.scale then
-			C.db.profile.anchors[1].scale = C.db.profile.scale
-			C.db.profile.scale = nil
-		end
-
-		if C.db.profile.point then
-			C.db.profile.anchors[1].point.p = C.db.profile.point.p
-			C.db.profile.anchors[1].point.rP = C.db.profile.point.rP
-			C.db.profile.anchors[1].point.x = C.db.profile.point.x
-			C.db.profile.anchors[1].point.y = C.db.profile.point.y
-			C.db.profile.point = nil
-		end
-	end
-
-	-- ->80100.05
-	if not C.db.profile.version or C.db.profile.version < 8010005 then
-		C.db.profile.point = nil
-	end
 
 	C.options = {
 		type = "group",
@@ -308,12 +249,12 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	C.options.args.profiles.desc = nil
 
 	for event in next, BLACKLISTED_EVENTS do
-		AlertFrame:UnregisterEvent(event)
+		print("AlertFrame", pcall(AlertFrame.UnregisterEvent, AlertFrame, event))
 	end
 
 	hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
 		if event and BLACKLISTED_EVENTS[event] then
-			self:UnregisterEvent(event)
+			print("self", pcall(self.UnregisterEvent, self, event))
 		end
 	end)
 
