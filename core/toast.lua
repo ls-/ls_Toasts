@@ -284,10 +284,7 @@ local function toast_OnEnter(self)
 end
 
 local function toast_OnLeave(self)
-	-- BattlePetTooltip:Hide()
 	GameTooltip:Hide()
-	-- GarrisonFollowerTooltip:Hide()
-	-- GarrisonShipyardFollowerTooltip:Hide()
 	ShoppingTooltip1:Hide()
 	ShoppingTooltip2:Hide()
 
