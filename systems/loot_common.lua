@@ -9,8 +9,7 @@ local tonumber = _G.tonumber
 local C_Timer = _G.C_Timer
 
 --[[ luacheck: globals
-	BattlePetToolTip_Show DressUpBattlePet DressUpMount DressUpVisual GameTooltip GetItemInfo IsDressableItem
-	IsModifiedClick OpenBag UnitGUID UnitName
+	DressUpVisual GameTooltip GetItemInfo IsDressableItem IsModifiedClick OpenBag UnitGUID UnitName
 
 	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC
 	LOOT_ITEM_CREATED_SELF LOOT_ITEM_CREATED_SELF_MULTIPLE LOOT_ITEM_PUSHED_SELF LOOT_ITEM_PUSHED_SELF_MULTIPLE
@@ -117,8 +116,7 @@ local function Toast_SetUp(event, link, quantity)
 		if name and ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
 			or (C.db.profile.types.loot_common.quest and isQuestItem)) then
 			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
-			local title = L["YOU_RECEIVED"]
-			local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			local soundFile
 
 			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
@@ -145,21 +143,22 @@ local function Toast_SetUp(event, link, quantity)
 			end
 
 			if quality == 5 then
-				title = L["ITEM_LEGENDARY"]
-				soundFile = 63971 -- SOUNDKIT.UI_LEGENDARY_LOOT_TOAST
+				soundFile = "Interface\\AddOns\\ls_Toasts\\assets\\ui-legendary-loot-toast.OGG"
 
 				toast:SetBackground("legendary")
 
 				if not toast.Dragon.isHidden then
 					toast.Dragon:Show()
 				end
+			else
+				soundFile = "Interface\\AddOns\\ls_Toasts\\assets\\ui-common-loot-toast.OGG"
 			end
 
 			if not toast.IconHL.isHidden then
 				toast.IconHL:SetShown(isQuestItem)
 			end
 
-			toast.Title:SetText(title)
+			toast.Title:SetText(L["YOU_RECEIVED"])
 			toast.Text:SetText(name)
 			toast.Icon:SetTexture(icon)
 			toast.IconBorder:Show()
@@ -288,13 +287,8 @@ E:RegisterOptions("loot_common", {
 		C.db.profile.types.loot_common[info[#info]] = value
 	end,
 	args = {
-		desc = {
-			order = 1,
-			type = "description",
-			name = L["TYPE_LOOT_COMMON_DESC"],
-		},
 		enabled = {
-			order = 2,
+			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
 			set = function(_, value)
@@ -308,24 +302,24 @@ E:RegisterOptions("loot_common", {
 			end
 		},
 		dnd = {
-			order = 3,
+			order = 2,
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
 		},
 		sfx = {
-			order = 4,
+			order = 3,
 			type = "toggle",
 			name = L["SFX"],
 		},
 		ilvl = {
-			order = 5,
+			order = 4,
 			type = "toggle",
 			name = L["SHOW_ILVL"],
 			desc = L["SHOW_ILVL_DESC"],
 		},
 		threshold = {
-			order = 6,
+			order = 5,
 			type = "select",
 			name = L["LOOT_THRESHOLD"],
 			values = {
@@ -336,7 +330,7 @@ E:RegisterOptions("loot_common", {
 			},
 		},
 		quest = {
-			order = 7,
+			order = 6,
 			type = "toggle",
 			name = L["SHOW_QUEST_ITEMS"],
 			desc = L["SHOW_QUEST_ITEMS_DESC"],
