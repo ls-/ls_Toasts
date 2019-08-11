@@ -112,5 +112,11 @@ E:RegisterSkin("default-legacy", {
 			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 			tile = false,
 		},
+		legendary = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-legendary",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
 	},
 })
