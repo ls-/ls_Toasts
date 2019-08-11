@@ -137,8 +137,8 @@ E:RegisterOptions("loot_gold", {
 		track_loss = {
 			order = 4,
 			type = "toggle",
-			name = "Track Loss",
-			desc = "Something something",
+			name = L["TRACK_LOSS"],
+			desc = L["TRACK_LOSS_DESC"],
 		},
 		threshold = {
 			order = 5,
