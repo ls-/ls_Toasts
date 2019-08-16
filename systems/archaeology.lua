@@ -13,7 +13,7 @@ local m_random = _G.math.random
 ]]
 
 -- Mine
-local function ResearchToast_SetUp(event, researchFieldID)
+local function DigsiteToast_SetUp(event, researchFieldID)
 	local toast = E:GetToast()
 	local raceName, raceTexture = GetArchaeologyRaceInfoByID(researchFieldID)
 
@@ -36,7 +36,7 @@ local function ResearchToast_SetUp(event, researchFieldID)
 end
 
 local function ARTIFACT_DIGSITE_COMPLETE(researchFieldID)
-	ResearchToast_SetUp("ARTIFACT_DIGSITE_COMPLETE", researchFieldID)
+	DigsiteToast_SetUp("ARTIFACT_DIGSITE_COMPLETE", researchFieldID)
 end
 
 ------
@@ -172,7 +172,7 @@ local function Test()
 	FragmentToast_SetUp("ARCHAEOLOGY_TEST", "currency:" .. 394, m_random(4, 8))
 
 	-- Night Elf
-	ResearchToast_SetUp("ARCHAEOLOGY_TEST", 4)
+	DigsiteToast_SetUp("ARCHAEOLOGY_TEST", 4)
 end
 
 E:RegisterOptions("archaeology", {
