@@ -105,15 +105,13 @@ local function Toast_SetUp(event, link, quantity, rollType, roll, factionGroup, 
 				local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(originalLink)
 				if name and (quality and quality >= C.db.profile.types.loot_special.threshold and quality <= 5) then
 					local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
-					local title = L["YOU_WON"]
+					local title = L["YOU_RECEIVED"]
 					local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 					local bgTexture
 
 					toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
 					if isPersonal or lessAwesome then
-						title = L["YOU_RECEIVED"]
-
 						if lessAwesome then
 							soundFile = 51402 -- SOUNDKIT.UI_RAID_LOOT_TOAST_LESSER_ITEM_WON
 						end
