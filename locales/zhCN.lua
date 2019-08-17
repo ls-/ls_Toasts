@@ -1,4 +1,4 @@
-﻿-- Contributors: y368413@Curse, dxlmike@Curse
+﻿-- Contributors: y368413@Curse, dxlmike@Curse, vk1103ing@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -8,8 +8,8 @@ local _G = getfenv(0)
 
 if GetLocale() ~= "zhCN" then return end
 
---[[ L["ANCHOR_FRAME_#"] = "Anchor Frame #%d" ]]
---[[ L["ANCHOR_FRAMES"] = "Anchor Frames" ]]
+L["ANCHOR_FRAME_#"] = "锚点框架#%d"
+L["ANCHOR_FRAMES"] = "锚点框架"
 L["ANCHOR_RESET_DESC"] = "|cffffffffShift-点击左键|r 重置位置。"
 L["BORDER"] = "边框"
 L["COLLECTIONS_TAINT_WARNING"] = "战斗中打开收藏(包括坐骑、宠物和玩具)界面，会引起Blz内置插件报错(污染)。"
@@ -17,11 +17,11 @@ L["COLORS"] = "着色"
 L["COORDS"] = "方位"
 L["COPPER_THRESHOLD"] = "拾取最小值(铜)"
 L["COPPER_THRESHOLD_DESC"] = "至少要多少銅才会显示拾取提示面板。"
---[[ L["DEFAULT_VALUE"] = "Default value: |cffffd200%s|r" ]]
+L["DEFAULT_VALUE"] = "默认参数：|cffffd200%s|r"
 L["DND"] = "勿扰"
 L["DND_TOOLTIP"] = "提示处于勿扰模式将不会在战斗中显示，但仍在后台队列，一旦你离开战斗，就会开始弹出提示。"
 L["FADE_OUT_DELAY"] = "淡出延迟"
---[[ L["FLUSH_QUEUE"] = "Flush Queue" ]]
+L["FLUSH_QUEUE"] = "显示队列"
 L["FONTS"] = "字体"
 L["GROWTH_DIR"] = "延伸方向"
 L["GROWTH_DIR_DOWN"] = "下"
@@ -45,9 +45,9 @@ L["TEST"] = "测试"
 L["TEST_ALL"] = "测试全部"
 L["TOAST_NUM"] = "提示框数量"
 L["TOAST_TYPES"] = "提示框类型"
---[[ L["TOGGLE_ANCHORS"] = "Toggle Anchors" ]]
---[[ L["TRACK_LOSS"] = "Track Loss" ]]
---[[ L["TRACK_LOSS_DESC"] = "This option ignores set copper threshold." ]]
+L["TOGGLE_ANCHORS"] = "移动位置"
+L["TRACK_LOSS"] = "追踪损失"
+L["TRACK_LOSS_DESC"] = "开启该选项后将忽略 拾取最小值 设置。"
 L["TRANSMOG_ADDED"] = "幻化外观已添加"
 L["TRANSMOG_REMOVED"] = "幻化外观已移除"
 L["TYPE_ACHIEVEMENT"] = "成就"
@@ -67,7 +67,7 @@ L["TYPE_RECIPE"] = "专业图纸"
 L["TYPE_TRANSMOG"] = "幻化收藏"
 L["TYPE_WAR_EFFORT"] = "前线战役"
 L["TYPE_WORLD_QUEST"] = "世界任务"
---[[ L["X_OFFSET"] = "xOffset" ]]
---[[ L["Y_OFFSET"] = "yOffset" ]]
+L["X_OFFSET"] = "水平偏移量"
+L["Y_OFFSET"] = "垂直偏移量"
 L["YOU_LOST"] = "你損失了"
 L["YOU_RECEIVED"] = "你獲得了"
