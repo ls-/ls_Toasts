@@ -3,47 +3,99 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local m_abs = _G.math.abs
 local m_random = _G.math.random
-local tonumber = _G.tonumber
-
--- Blizz
-local C_Timer = _G.C_Timer
 
 --[[ luacheck: globals
-	FormatLargeNumber GameTooltip GetCurrencyInfo GetCurrencyLink
+	FormatLargeNumber GameTooltip GetCurrencyInfo
 
-	CURRENCY_GAINED CURRENCY_GAINED_MULTIPLE CURRENCY_GAINED_MULTIPLE_BONUS ITEM_QUALITY_COLORS
+	ITEM_QUALITY_COLORS
 ]]
 
 -- Mine
-local CACHED_CURRENCY_GAINED
-local CACHED_CURRENCY_GAINED_MULTIPLE
-local CACHED_CURRENCY_GAINED_MULTIPLE_BONUS
+local NO_GAIN_SOURCE = 38
 
-local CURRENCY_GAINED_PATTERN
-local CURRENCY_GAINED_MULTIPLE_PATTERN
-local CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN
+-- https://wow.tools/dbc/?dbc=currencytypes&build=whatever
+local BLACKLIST = {
+	-- 41 (Test)
+	[  22] = true, -- Birmingham Test Item 3
+	-- 82 (Archaeology)
+	[ 384] = true, -- Dwarf Archaeology Fragment
+	[ 385] = true, -- Troll Archaeology Fragment
+	[ 393] = true, -- Fossil Archaeology Fragment
+	[ 394] = true, -- Night Elf Archaeology Fragment
+	[ 397] = true, -- Orc Archaeology Fragment
+	[ 398] = true, -- Draenei Archaeology Fragment
+	[ 399] = true, -- Vrykul Archaeology Fragment
+	[ 400] = true, -- Nerubian Archaeology Fragment
+	[ 401] = true, -- Tol'vir Archaeology Fragment
+	[ 676] = true, -- Pandaren Archaeology Fragment
+	[ 677] = true, -- Mogu Archaeology Fragment
+	[ 754] = true, -- Mantid Archaeology Fragment
+	[ 821] = true, -- Draenor Clans Archaeology Fragment
+	[ 828] = true, -- Ogre Archaeology Fragment
+	[ 829] = true, -- Arakkoa Archaeology Fragment
+	[ 830] = true, -- n/a
+	[1172] = true, -- Highborne Archaeology Fragment
+	[1173] = true, -- Highmountain Tauren Archaeology Fragment
+	[1174] = true, -- Demonic Archaeology Fragment
+	[1534] = true, -- Zandalari Archaeology Fragment
+	[1535] = true, -- Drust Archaeology Fragment
+	-- 89 (Meta)
+	[ 483] = true, -- Conquest Arena Meta
+	[ 484] = true, -- Conquest Rated BG Meta
+	[ 692] = true, -- Conquest Random BG Meta
+	-- 142 (Hidden)
+	[ 395] = true, -- Justice Points
+	[ 396] = true, -- Valor Points
+	[1171] = true, -- Artifact Knowledge
+	[1191] = true, -- Valor
+	[1324] = true, -- Horde Qiraji Commendation
+	[1325] = true, -- Alliance Qiraji Commendation
+	[1347] = true, -- Legionfall Building - Personal Tracker - Mage Tower (Hidden)
+	[1349] = true, -- Legionfall Building - Personal Tracker - Command Tower (Hidden)
+	[1350] = true, -- Legionfall Building - Personal Tracker - Nether Tower (Hidden)
+	[1501] = true, -- Writhing Essence
+	[1506] = true, -- Argus Waystone
+	-- [1540] = true, -- Wood
+	-- [1541] = true, -- Iron
+	-- [1559] = true, -- Essence of Storms
+	[1579] = true, -- Champions of Azeroth
+	[1592] = true, -- Order of Embers
+	[1593] = true, -- Proudmoore Admiralty
+	[1594] = true, -- Storm's Wake
+	[1595] = true, -- Talanji's Expedition
+	[1596] = true, -- Voldunai
+	[1597] = true, -- Zandalari Empire
+	[1598] = true, -- Tortollan Seekers
+	[1599] = true, -- 7th Legion
+	[1600] = true, -- Honorbound
+	-- [1602] = true, -- Conquest
+	[1703] = true, -- BFA Season Rated Participation Currency
+	[1705] = true, -- Warfronts - Personal Tracker - Iron in Chest (Hidden)
+	[1714] = true, -- Warfronts - Personal Tracker - Wood in Chest (Hidden)
+	[1722] = true, -- Azerite Ore
+	[1723] = true, -- Lumber
+	[1738] = true, -- Unshackled
+	[1739] = true, -- Ankoan
+	[1740] = true, -- Rustbolt Resistance (Hidden)
+	[1742] = true, -- Rustbolt Resistance
+	[1745] = true, -- Nazjatar Ally - Neri Sharpfin
+	[1746] = true, -- Nazjatar Ally - Vim Brineheart
+	[1747] = true, -- Nazjatar Ally - Poen Gillbrack
+	[1748] = true, -- Nazjatar Ally - Bladesman Inowari
+	[1749] = true, -- Nazjatar Ally - Hunter Akana
+	[1750] = true, -- Nazjatar Ally - Farseer Ori
+	[1752] = true, -- Honeyback Hive
+	-- 144 (Virtual)
+	[1553] = true, -- Azerite
+	[1585] = true, -- Honor
+	[1586] = true, -- Honor Level
+}
 
-local function updatePatterns()
-	if CACHED_CURRENCY_GAINED ~= CURRENCY_GAINED then
-		CURRENCY_GAINED_PATTERN = CURRENCY_GAINED:gsub("%%s", "(.+)"):gsub("^", "^")
-		CACHED_CURRENCY_GAINED = CURRENCY_GAINED
-	end
-
-	if CACHED_CURRENCY_GAINED_MULTIPLE ~= CURRENCY_GAINED_MULTIPLE then
-		CURRENCY_GAINED_MULTIPLE_PATTERN = CURRENCY_GAINED_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		CACHED_CURRENCY_GAINED_MULTIPLE = CURRENCY_GAINED_MULTIPLE
-	end
-
-	if CACHED_CURRENCY_GAINED_MULTIPLE_BONUS ~= CURRENCY_GAINED_MULTIPLE_BONUS then
-		CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN = CURRENCY_GAINED_MULTIPLE_BONUS:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		CACHED_CURRENCY_GAINED_MULTIPLE_BONUS = CURRENCY_GAINED_MULTIPLE_BONUS
-	end
-end
-
-local function delayedUpdatePatterns()
-	C_Timer.After(0.1, updatePatterns)
-end
+local MULT = {
+	[1602] = 0.01, -- Conquest
+}
 
 local function Toast_OnEnter(self)
 	if self._data.tooltip_link then
@@ -53,55 +105,59 @@ local function Toast_OnEnter(self)
 end
 
 local function PostSetAnimatedValue(self, value)
-	self:SetText(value == 1 and "" or FormatLargeNumber(value))
+	self:SetText(value == 1 and "" or FormatLargeNumber(m_abs(value)))
 end
 
-local function Toast_SetUp(event, link, quantity)
-	local sanitizedLink, originalLink = E:SanitizeLink(link)
-	local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
+local function Toast_SetUp(event, link, quantity, isGain)
+	local toast, isNew, isQueued = E:GetToast(event, "link", link)
 	if isNew then
 		local name, _, icon, _, _, _, _, quality = GetCurrencyInfo(link)
-		local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
+		if name then
+			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 
-		toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
+			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
-		if quality >= C.db.profile.colors.threshold then
-			if C.db.profile.colors.name then
-				toast.Text:SetTextColor(color.r, color.g, color.b)
+			if quality >= C.db.profile.colors.threshold then
+				if C.db.profile.colors.name then
+					toast.Text:SetTextColor(color.r, color.g, color.b)
+				end
+
+				if C.db.profile.colors.border then
+					toast.Border:SetVertexColor(color.r, color.g, color.b)
+				end
+
+				if C.db.profile.colors.icon_border then
+					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+				end
 			end
 
-			if C.db.profile.colors.border then
-				toast.Border:SetVertexColor(color.r, color.g, color.b)
-			end
+			toast.Title:SetText(isGain and L["YOU_RECEIVED"] or L["YOU_LOST"])
+			toast.Text:SetText(name)
+			toast.Icon:SetTexture(icon)
+			toast.IconBorder:Show()
+			toast.IconText1:SetAnimatedValue(quantity, true)
 
-			if C.db.profile.colors.icon_border then
-				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-			end
+			toast._data.count = quantity * (isGain and 1 or -1)
+			toast._data.event = event
+			toast._data.link = link
+			toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			toast._data.tooltip_link = link
+
+			toast:HookScript("OnEnter", Toast_OnEnter)
+			toast:Spawn(C.db.profile.types.loot_currency.anchor, C.db.profile.types.loot_currency.dnd)
+		else
+			toast:Recycle()
 		end
-
-		toast.Title:SetText(L["YOU_RECEIVED"])
-		toast.Text:SetText(name)
-		toast.Icon:SetTexture(icon)
-		toast.IconBorder:Show()
-		toast.IconText1:SetAnimatedValue(quantity, true)
-
-		toast._data.count = quantity
-		toast._data.event = event
-		toast._data.link = sanitizedLink
-		toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
-		toast._data.tooltip_link = originalLink
-
-		toast:HookScript("OnEnter", Toast_OnEnter)
-		toast:Spawn(C.db.profile.types.loot_currency.anchor, C.db.profile.types.loot_currency.dnd)
 	else
+		toast._data.count = toast._data.count + quantity * (isGain and 1 or -1)
+		toast.Title:SetText(toast._data.count > 0 and L["YOU_RECEIVED"] or L["YOU_LOST"])
+
 		if isQueued then
-			toast._data.count = toast._data.count + quantity
 			toast.IconText1:SetAnimatedValue(toast._data.count, true)
 		else
-			toast._data.count = toast._data.count + quantity
 			toast.IconText1:SetAnimatedValue(toast._data.count)
 
-			toast.IconText2:SetText("+" .. quantity)
+			toast.IconText2:SetText((isGain and "+" or "-") .. quantity)
 			toast.IconText2.Blink:Stop()
 			toast.IconText2.Blink:Play()
 
@@ -111,42 +167,31 @@ local function Toast_SetUp(event, link, quantity)
 	end
 end
 
-local function CHAT_MSG_CURRENCY(message)
-	local link, quantity = message:match(CURRENCY_GAINED_MULTIPLE_PATTERN)
-	if not link then
-		link, quantity = message:match(CURRENCY_GAINED_MULTIPLE_BONUS_PATTERN)
-		if not link then
-			quantity, link = 1, message:match(CURRENCY_GAINED_PATTERN)
-		end
-	end
-
-	if not link then
+local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
+	if not id or BLACKLIST[id] then
 		return
 	end
 
-	Toast_SetUp("CHAT_MSG_CURRENCY", link, tonumber(quantity) or 0)
+	if not C.db.profile.types.loot_currency.track_loss and gainSource == NO_GAIN_SOURCE then
+		return
+	end
+
+	Toast_SetUp("CURRENCY_DISPLAY_UPDATE", "currency:" .. id, quantity * (MULT[id] or 1), gainSource ~= NO_GAIN_SOURCE)
 end
 
 local function Enable()
-	updatePatterns()
-
 	if C.db.profile.types.loot_currency.enabled then
-		E:RegisterEvent("CHAT_MSG_CURRENCY", CHAT_MSG_CURRENCY)
-		E:RegisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
+		E:RegisterEvent("CURRENCY_DISPLAY_UPDATE", CURRENCY_DISPLAY_UPDATE)
 	end
 end
 
 local function Disable()
-	E:UnregisterEvent("CHAT_MSG_CURRENCY", CHAT_MSG_CURRENCY)
-	E:UnregisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
+	E:UnregisterEvent("CURRENCY_DISPLAY_UPDATE", CURRENCY_DISPLAY_UPDATE)
 end
 
 local function Test()
 	-- Order Resources
-	local link, _ = GetCurrencyLink(1220, 1)
-	if link then
-		Toast_SetUp("LOOT_CURRENCY_TEST", link, m_random(300, 600))
-	end
+	Toast_SetUp("LOOT_CURRENCY_TEST", "currency:" .. 1220, m_random(300, 600), m_random(38, 39) == NO_GAIN_SOURCE)
 end
 
 E:RegisterOptions("loot_currency", {
@@ -154,6 +199,7 @@ E:RegisterOptions("loot_currency", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	track_loss = false,
 }, {
 	name = L["TYPE_LOOT_CURRENCY"],
 	get = function(info)
@@ -187,6 +233,12 @@ E:RegisterOptions("loot_currency", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		track_loss = {
+			order = 4,
+			type = "toggle",
+			name = L["TRACK_LOSS"],
+			desc = L["TRACK_LOSS_DESC"],
 		},
 		test = {
 			type = "execute",

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 80200.04
+
+- Added an option to show currency losses. Disabled by default;
+- Added fragment toasts to the "Archaeology" group;
+- Updated Simplified Chinese translation. Translated by vk1103ing@Curse;
+- Updated Traditional Chinese translation. Translated by BNS333@Curse.
+
 ## Version 80200.03
 
 - Re-added copper threshold to gold toasts;

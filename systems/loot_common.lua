@@ -174,6 +174,8 @@ local function Toast_SetUp(event, link, quantity)
 		if name and ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
 			or (C.db.profile.types.loot_common.quest and isQuestItem)) then
 			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
+			local title = L["YOU_RECEIVED"]
+			local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 
 			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
@@ -199,11 +201,22 @@ local function Toast_SetUp(event, link, quantity)
 				end
 			end
 
+			if quality == 5 then
+				title = L["ITEM_LEGENDARY"]
+				soundFile = 63971 -- SOUNDKIT.UI_LEGENDARY_LOOT_TOAST
+
+				toast:SetBackground("legendary")
+
+				if not toast.Dragon.isHidden then
+					toast.Dragon:Show()
+				end
+			end
+
 			if not toast.IconHL.isHidden then
 				toast.IconHL:SetShown(isQuestItem)
 			end
 
-			toast.Title:SetText(L["YOU_RECEIVED"])
+			toast.Title:SetText(title)
 			toast.Text:SetText(name)
 			toast.Icon:SetTexture(icon)
 			toast.IconBorder:Show()
@@ -213,7 +226,7 @@ local function Toast_SetUp(event, link, quantity)
 			toast._data.event = event
 			toast._data.item_id = itemID
 			toast._data.link = sanitizedLink
-			toast._data.sound_file = C.db.profile.types.loot_common.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			toast._data.sound_file = C.db.profile.types.loot_common.sfx and soundFile
 			toast._data.tooltip_link = originalLink
 
 			toast:HookScript("OnClick", Toast_OnClick)
