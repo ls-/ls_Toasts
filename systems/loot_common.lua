@@ -116,7 +116,8 @@ local function Toast_SetUp(event, link, quantity)
 		if name and ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
 			or (C.db.profile.types.loot_common.quest and isQuestItem)) then
 			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
-			local soundFile
+			local title = L["YOU_RECEIVED"]
+			local soundFile = "Interface\\AddOns\\ls_Toasts\\assets\\ui-common-loot-toast.OGG"
 
 			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
@@ -143,6 +144,7 @@ local function Toast_SetUp(event, link, quantity)
 			end
 
 			if quality == 5 then
+				title = L["ITEM_LEGENDARY"]
 				soundFile = "Interface\\AddOns\\ls_Toasts\\assets\\ui-legendary-loot-toast.OGG"
 
 				toast:SetBackground("legendary")
@@ -150,15 +152,13 @@ local function Toast_SetUp(event, link, quantity)
 				if not toast.Dragon.isHidden then
 					toast.Dragon:Show()
 				end
-			else
-				soundFile = "Interface\\AddOns\\ls_Toasts\\assets\\ui-common-loot-toast.OGG"
 			end
 
 			if not toast.IconHL.isHidden then
 				toast.IconHL:SetShown(isQuestItem)
 			end
 
-			toast.Title:SetText(L["YOU_RECEIVED"])
+			toast.Title:SetText(title)
 			toast.Text:SetText(name)
 			toast.Icon:SetTexture(icon)
 			toast.IconBorder:Show()
