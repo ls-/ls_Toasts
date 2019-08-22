@@ -238,7 +238,6 @@ E:RegisterOptions("loot_currency", {
 			order = 4,
 			type = "toggle",
 			name = L["TRACK_LOSS"],
-			desc = L["TRACK_LOSS_DESC"],
 		},
 		test = {
 			type = "execute",
