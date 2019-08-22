@@ -32,7 +32,7 @@ local function Toast_SetUp(event, quantity)
 			toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
 		end
 
-		toast.Title:SetText(quantity > 0 and L["YOU_RECEIVED"] or L["YOU_LOST"])
+		toast.Title:SetText(quantity > 0 and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
 		toast.Text:SetAnimatedValue(quantity, true)
 		toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
 		toast.IconBorder:Show()
@@ -44,7 +44,7 @@ local function Toast_SetUp(event, quantity)
 		toast:Spawn(C.db.profile.types.loot_gold.anchor, C.db.profile.types.loot_gold.dnd)
 	else
 		toast._data.count = toast._data.count + quantity
-		toast.Title:SetText(toast._data.count > 0 and L["YOU_RECEIVED"] or L["YOU_LOST"])
+		toast.Title:SetText(toast._data.count > 0 and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
 
 		if isQueued then
 			toast.Text:SetAnimatedValue(toast._data.count, true)
