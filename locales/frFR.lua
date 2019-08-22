@@ -29,7 +29,6 @@ L["GROWTH_DIR_RIGHT"] = "Droite"
 L["GROWTH_DIR_UP"] = "Haut"
 L["ICON_BORDER"] = "Bordure d'icône"
 L["NAME"] = "Nom"
-L["OPEN_CONFIG"] = "Ouvrir Configuration"
 --[[ L["RARITY_THRESHOLD"] = "Rarity Threshold" ]]
 L["SCALE"] = "Echelle"
 L["SHOW_ILVL"] = "Montrer l'iLvl"

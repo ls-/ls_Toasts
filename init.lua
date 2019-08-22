@@ -10,7 +10,7 @@ local tonumber = _G.tonumber
 
 --[[ luacheck: globals
 	AlertFrame CreateFrame GetAddOnMetadata InCombatLockdown InterfaceOptions_AddCategory
-	InterfaceOptionsFrame_Show InterfaceOptionsFramePanelContainer SlashCmdList
+	InterfaceOptionsFrame_Show InterfaceOptionsFramePanelContainer LibStub SlashCmdList
 
 	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC
 	ITEM_QUALITY5_DESC LS_TOASTS_CFG LS_TOASTS_CFG_GLOBAL SLASH_LSTOASTS1 SLASH_LSTOASTS2
@@ -263,24 +263,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		P:UpdateDB()
 		P:UpdateOptions()
 		P:EnableAllSystems()
-
-		local panel = CreateFrame("Frame", "LSTConfigPanel", InterfaceOptionsFramePanelContainer)
-		panel.name = L["LS_TOASTS"]
-		panel:Hide()
-
-		local button = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
-		button:SetText(L["OPEN_CONFIG"])
-		button:SetWidth(button:GetTextWidth() + 18)
-		button:SetPoint("TOPLEFT", 16, -16)
-		button:SetScript("OnClick", function()
-			if not InCombatLockdown() then
-				InterfaceOptionsFrame_Show()
-
-				LibStub("AceConfigDialog-3.0"):Open(addonName)
-			end
-		end)
-
-		InterfaceOptions_AddCategory(panel, true)
 
 		E:RegisterEvent("PLAYER_REGEN_DISABLED", function()
 			LibStub("AceConfigDialog-3.0"):Close(addonName)
