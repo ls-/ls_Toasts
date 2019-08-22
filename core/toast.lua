@@ -17,9 +17,8 @@ local C_Timer = _G.C_Timer
 local Lerp = _G.Lerp
 
 --[[ luacheck: globals
-	BattlePetTooltip CreateFrame GameTooltip GameTooltip_ShowCompareItem GarrisonFollowerTooltip
-	GarrisonShipyardFollowerTooltip GetCVarBool IsModifiedClick PlaySound ShoppingTooltip1
-	ShoppingTooltip2 UIParent
+	CreateFrame GameTooltip GameTooltip_ShowCompareItem GetCVarBool IsModifiedClick PlaySound PlaySoundFile
+	ShoppingTooltip1 ShoppingTooltip2 UIParent
 ]]
 
 -- Mine
@@ -244,7 +243,11 @@ end
 
 local function toast_OnShow(self)
 	if self._data.sound_file then
-		PlaySound(self._data.sound_file)
+		if type(self._data.sound_file) == "number" then
+			PlaySound(self._data.sound_file)
+		elseif type(self._data.sound_file) == "string" then
+			PlaySoundFile(self._data.sound_file)
+		end
 	end
 
 	self.AnimIn:Play()
@@ -281,10 +284,7 @@ local function toast_OnEnter(self)
 end
 
 local function toast_OnLeave(self)
-	BattlePetTooltip:Hide()
 	GameTooltip:Hide()
-	GarrisonFollowerTooltip:Hide()
-	GarrisonShipyardFollowerTooltip:Hide()
 	ShoppingTooltip1:Hide()
 	ShoppingTooltip2:Hide()
 
