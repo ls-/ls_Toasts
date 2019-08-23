@@ -131,7 +131,7 @@ local function Toast_SetUp(event, link, quantity, isGain)
 				end
 			end
 
-			toast.Title:SetText(isGain and L["YOU_RECEIVED"] or L["YOU_LOST"])
+			toast.Title:SetText(isGain and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
 			toast.Text:SetText(name)
 			toast.Icon:SetTexture(icon)
 			toast.IconBorder:Show()
@@ -150,7 +150,7 @@ local function Toast_SetUp(event, link, quantity, isGain)
 		end
 	else
 		toast._data.count = toast._data.count + quantity * (isGain and 1 or -1)
-		toast.Title:SetText(toast._data.count > 0 and L["YOU_RECEIVED"] or L["YOU_LOST"])
+		toast.Title:SetText(toast._data.count > 0 and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
 
 		if isQueued then
 			toast.IconText1:SetAnimatedValue(toast._data.count, true)
@@ -238,7 +238,6 @@ E:RegisterOptions("loot_currency", {
 			order = 4,
 			type = "toggle",
 			name = L["TRACK_LOSS"],
-			desc = L["TRACK_LOSS_DESC"],
 		},
 		test = {
 			type = "execute",

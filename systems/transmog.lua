@@ -51,7 +51,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		end
 
 		toast:SetBackground("transmog")
-		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED"])
+		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED_RED"])
 		toast.Text:SetText(name)
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()
@@ -65,7 +65,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		toast:HookScript("OnClick", Toast_OnClick)
 		toast:Spawn(C.db.profile.types.transmog.anchor, C.db.profile.types.transmog.dnd)
 	else
-		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED"])
+		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED_RED"])
 
 		if not isQueued then
 			toast.AnimOut:Stop()
