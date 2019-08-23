@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 80200.05
+
+- Colour texts that indicate some sort of loss, i.e., "You Lost", "Appearance Removed", red;
+- Updated Simplified Chinese translation. Translated by vk1103ing@Curse;
+- Misc bug fixes and tweaks.
+
 ## Version 80200.04
 
 - Added an option to show currency losses. Disabled by default;
