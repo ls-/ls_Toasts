@@ -45,9 +45,11 @@ L["TOAST_TYPES"] = "알림창 종류"
 --[[ L["TOGGLE_ANCHORS"] = "Toggle Anchors" ]]
 --[[ L["TRACK_LOSS"] = "Track Loss" ]]
 --[[ L["TRACK_LOSS_DESC"] = "This option ignores set copper threshold." ]]
-L["TYPE_LOOT_COMMON"] = "전리품 (일반)"
 L["TYPE_LOOT_GOLD"] = "전리품 (골드)"
 L["X_OFFSET"] = "X 좌표"
 L["Y_OFFSET"] = "Y 좌표"
 --[[ L["YOU_LOST"] = "You Lost" ]]
 --[[ L["YOU_RECEIVED"] = "You Received" ]]
+
+-- Classic
+L["TYPE_LOOT_ITEMS"] = "전리품 (아이템)"

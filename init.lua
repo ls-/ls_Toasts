@@ -66,6 +66,11 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	C.db:RegisterCallback("OnProfileShutdown", shutdownCallback)
 	C.db:RegisterCallback("OnDatabaseShutdown", shutdownCallback)
 
+	-- ->11302.02
+	if C.db.profile.version and C.db.profile.version < 1130202 then
+		C.db.profile.types.loot_common = nil
+	end
+
 	C.options = {
 		type = "group",
 		name = L["LS_TOASTS"],

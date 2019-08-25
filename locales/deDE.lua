@@ -45,9 +45,11 @@ L["TOAST_TYPES"] = "Benachrichtigungstypen"
 L["TOGGLE_ANCHORS"] = "Ankerpunkte umschalten"
 L["TRACK_LOSS"] = "Verlust Verfolgung"
 L["TRACK_LOSS_DESC"] = "Diese Option ignoriert die Kupferschwelle."
-L["TYPE_LOOT_COMMON"] = "Beute (Gewöhnlich)"
 L["TYPE_LOOT_GOLD"] = "Beute (Gold)"
 L["X_OFFSET"] = "X-Versatz"
 L["Y_OFFSET"] = "Y-Versatz"
 L["YOU_LOST"] = "Ihr verliert"
 L["YOU_RECEIVED"] = "Ihr erhaltet"
+
+-- Classic
+L["TYPE_LOOT_ITEMS"] = "Beute (Gegenstände)"
