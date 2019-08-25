@@ -59,9 +59,11 @@ L["TOAST_TYPES"] = "Toast Types"
 L["TOGGLE_ANCHORS"] = "Toggle Anchors"
 L["TRACK_LOSS"] = "Track Loss"
 L["TRACK_LOSS_DESC"] = "This option ignores set copper threshold."
-L["TYPE_LOOT_COMMON"] = "Loot (Common)"
 L["TYPE_LOOT_GOLD"] = "Loot (Gold)"
 L["X_OFFSET"] = "xOffset"
 L["Y_OFFSET"] = "yOffset"
 L["YOU_LOST"] = "You Lost"
 L["YOU_RECEIVED"] = "You Received"
+
+-- Classic
+L["TYPE_LOOT_ITEMS"] = "Loot (Items)"

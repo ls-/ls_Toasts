@@ -45,9 +45,11 @@ L["TOAST_TYPES"] = "提示框类型"
 L["TOGGLE_ANCHORS"] = "移动位置"
 L["TRACK_LOSS"] = "追踪损失"
 L["TRACK_LOSS_DESC"] = "开启该选项后将忽略 拾取最小值 设置。"
-L["TYPE_LOOT_COMMON"] = "拾取(一般)"
 L["TYPE_LOOT_GOLD"] = "拾取(金币)"
 L["X_OFFSET"] = "水平偏移量"
 L["Y_OFFSET"] = "垂直偏移量"
 L["YOU_LOST"] = "你损失了"
 L["YOU_RECEIVED"] = "你获得了"
+
+-- Classic
+L["TYPE_LOOT_ITEMS"] = "拾取(物品)"

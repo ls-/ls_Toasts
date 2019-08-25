@@ -113,8 +113,8 @@ local function Toast_SetUp(event, link, quantity)
 		local name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
 		local isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 
-		if name and ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
-			or (C.db.profile.types.loot_common.quest and isQuestItem)) then
+		if name and ((quality and quality >= C.db.profile.types.loot_items.threshold and quality <= 5)
+			or (C.db.profile.types.loot_items.quest and isQuestItem)) then
 			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 			local title = L["YOU_RECEIVED"]
 			local soundFile = "Interface\\AddOns\\ls_Toasts\\assets\\ui-common-loot-toast.OGG"
@@ -135,7 +135,7 @@ local function Toast_SetUp(event, link, quantity)
 				end
 			end
 
-			if C.db.profile.types.loot_common.ilvl then
+			if C.db.profile.types.loot_items.ilvl then
 				local iLevel = E:GetItemLevel(originalLink)
 
 				if iLevel > 0 then
@@ -168,12 +168,12 @@ local function Toast_SetUp(event, link, quantity)
 			toast._data.event = event
 			toast._data.item_id = itemID
 			toast._data.link = sanitizedLink
-			toast._data.sound_file = C.db.profile.types.loot_common.sfx and soundFile
+			toast._data.sound_file = C.db.profile.types.loot_items.sfx and soundFile
 			toast._data.tooltip_link = originalLink
 
 			toast:HookScript("OnClick", Toast_OnClick)
 			toast:HookScript("OnEnter", Toast_OnEnter)
-			toast:Spawn(C.db.profile.types.loot_common.anchor, C.db.profile.types.loot_common.dnd)
+			toast:Spawn(C.db.profile.types.loot_items.anchor, C.db.profile.types.loot_items.dnd)
 		else
 			toast:Release()
 		end
@@ -227,7 +227,7 @@ end
 local function Enable()
 	updatePatterns()
 
-	if C.db.profile.types.loot_common.enabled then
+	if C.db.profile.types.loot_items.enabled then
 		E:RegisterEvent("CHAT_MSG_LOOT", CHAT_MSG_LOOT)
 		E:RegisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
 	end
@@ -270,7 +270,7 @@ local function Test()
 	end
 end
 
-E:RegisterOptions("loot_common", {
+E:RegisterOptions("loot_items", {
 	enabled = true,
 	anchor = 1,
 	dnd = false,
@@ -279,12 +279,12 @@ E:RegisterOptions("loot_common", {
 	quest = false,
 	threshold = 1,
 }, {
-	name = L["TYPE_LOOT_COMMON"],
+	name = L["TYPE_LOOT_ITEMS"],
 	get = function(info)
-		return C.db.profile.types.loot_common[info[#info]]
+		return C.db.profile.types.loot_items[info[#info]]
 	end,
 	set = function(info, value)
-		C.db.profile.types.loot_common[info[#info]] = value
+		C.db.profile.types.loot_items[info[#info]] = value
 	end,
 	args = {
 		enabled = {
@@ -292,7 +292,7 @@ E:RegisterOptions("loot_common", {
 			type = "toggle",
 			name = L["ENABLE"],
 			set = function(_, value)
-				C.db.profile.types.loot_common.enabled = value
+				C.db.profile.types.loot_items.enabled = value
 
 				if value then
 					Enable()
@@ -345,4 +345,4 @@ E:RegisterOptions("loot_common", {
 	},
 })
 
-E:RegisterSystem("loot_common", Enable, Disable, Test)
+E:RegisterSystem("loot_items", Enable, Disable, Test)

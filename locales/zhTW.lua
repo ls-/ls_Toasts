@@ -45,9 +45,11 @@ L["TOAST_TYPES"] = "通知類型"
 L["TOGGLE_ANCHORS"] = "切換定位點"
 L["TRACK_LOSS"] = "追蹤失去"
 L["TRACK_LOSS_DESC"] = "此選項忽略設置的銅幣閥值。"
-L["TYPE_LOOT_COMMON"] = "拾取(一般)"
 L["TYPE_LOOT_GOLD"] = "拾取(金錢)"
 L["X_OFFSET"] = "水平位置"
 L["Y_OFFSET"] = "垂直位置"
 L["YOU_LOST"] = "你失去"
 L["YOU_RECEIVED"] = "你收到"
+
+-- Classic
+L["TYPE_LOOT_ITEMS"] = "拾取(物品)"

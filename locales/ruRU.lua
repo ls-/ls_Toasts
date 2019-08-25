@@ -45,9 +45,11 @@ L["TOAST_TYPES"] = "Типы уведомлений"
 L["TOGGLE_ANCHORS"] = "Показать/скрыть фреймы крепления"
 L["TRACK_LOSS"] = "Отслеживать потерю"
 L["TRACK_LOSS_DESC"] = "Эта настройка игнорирует установленный порог меди."
-L["TYPE_LOOT_COMMON"] = "Добыча (Обычная)"
 L["TYPE_LOOT_GOLD"] = "Добыча (Золото)"
 L["X_OFFSET"] = "Смещение по X"
 L["Y_OFFSET"] = "Смещение по Y"
 L["YOU_LOST"] = "Вы потеряли"
 L["YOU_RECEIVED"] = "Вы получили"
+
+-- Classic
+L["TYPE_LOOT_ITEMS"] = "Добыча (Предметы)"

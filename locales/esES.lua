@@ -45,9 +45,11 @@ L["TOAST_TYPES"] = "Tipos de Toasts"
 L["TOGGLE_ANCHORS"] = "Alternar anclajes"
 L["TRACK_LOSS"] = "Mostrar pérdidas"
 L["TRACK_LOSS_DESC"] = "Esta opción ignora el margen de cobre establecido."
-L["TYPE_LOOT_COMMON"] = "Botín (Común)"
 L["TYPE_LOOT_GOLD"] = "Botín (Oro)"
 L["X_OFFSET"] = "xOffset"
 L["Y_OFFSET"] = "yOffset"
 L["YOU_LOST"] = "Has perdido"
 L["YOU_RECEIVED"] = "Has recibido"
+
+-- Classic
+L["TYPE_LOOT_ITEMS"] = "Botín (Objetos)"
