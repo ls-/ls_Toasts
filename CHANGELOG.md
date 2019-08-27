@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 80200.06
+
+- Fixed "Artifact Fragment" currency spam in Ashran. If you encounter similar issues in the future  
+  feel free to report them. There's a number of unusual currencies in the game that behave  
+  differently from others, so manual adjustments are needed to handle them properly.
+
 ## Version 80200.05
 
 - Colour texts that indicate some sort of loss, i.e., "You Lost", "Appearance Removed", red;
