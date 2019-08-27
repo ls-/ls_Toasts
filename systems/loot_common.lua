@@ -279,7 +279,7 @@ local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
 		return
 	end
 
-	C_Timer.After(0.25, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
+	C_Timer.After(0.3, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
 end
 
 local function Enable()

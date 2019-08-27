@@ -94,6 +94,7 @@ local BLACKLIST = {
 }
 
 local MULT = {
+	[ 944] = 0.01, -- Artifact Fragment
 	[1602] = 0.01, -- Conquest
 }
 
@@ -176,7 +177,12 @@ local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
 		return
 	end
 
-	Toast_SetUp("CURRENCY_DISPLAY_UPDATE", "currency:" .. id, quantity * (MULT[id] or 1), gainSource ~= NO_GAIN_SOURCE)
+	quantity = quantity * (MULT[id] or 1)
+	if quantity < 1 then
+		return
+	end
+
+	Toast_SetUp("CURRENCY_DISPLAY_UPDATE", "currency:" .. id, quantity, gainSource ~= NO_GAIN_SOURCE)
 end
 
 local function Enable()
