@@ -23,10 +23,10 @@ local function Toast_OnClick(self)
 	if self._data.collection_id then
 		if IsModifiedClick("DRESSUP") then
 			if self._data.is_mount then
-				DressUpMount(C_MountJournal.GetMountInfoExtraByID(self._data.collection_id))
+				DressUpMount(self._data.collection_id)
 			elseif self._data.is_pet then
-				local _, _, _, _, _, displayID, _, _, _, _, creatureID = C_PetJournal.GetPetInfoByPetID(self._data.collection_id)
-				DressUpBattlePet(creatureID, displayID)
+				local speciesID, _, _, _, _, displayID, _, _, _, _, creatureID = C_PetJournal.GetPetInfoByPetID(self._data.collection_id)
+				DressUpBattlePet(creatureID, displayID, speciesID)
 			end
 		elseif C.db.profile.types.collection.left_click and not InCombatLockdown() then
 			if not CollectionsJournal then

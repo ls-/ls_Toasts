@@ -15,9 +15,13 @@ local tonumber = _G.tonumber
 local type = _G.type
 local xpcall = _G.xpcall
 
+-- Blizz
+local C_MountJournal = _G.C_MountJournal
+local C_PetJournal = _G.C_PetJournal
+
 --[[ luacheck: globals
-	CreateFrame GetContainerItemID GetContainerNumSlots GetDetailedItemLevelInfo GetItemInfo
-	LibStub UIParent
+	CreateFrame DressUpBattlePet DressUpMount DressUpVisual GetContainerItemID GetContainerNumSlots
+	GetDetailedItemLevelInfo GetItemInfo IsDressableItem LibStub UIParent
 
 	INVSLOT_BACK INVSLOT_CHEST INVSLOT_FEET INVSLOT_FINGER1 INVSLOT_FINGER2 INVSLOT_HAND
 	INVSLOT_HEAD INVSLOT_LEGS INVSLOT_MAINHAND INVSLOT_NECK INVSLOT_OFFHAND INVSLOT_RANGED
@@ -232,4 +236,48 @@ function E:SearchBagsForItemID(itemID)
 	end
 
 	return -1, -1
+end
+
+function E:DressUpLink(link)
+	if not link then
+		return
+	end
+
+	-- item
+	if IsDressableItem(link) then
+		if DressUpVisual(link) then
+			return
+		end
+	end
+
+	-- battle pet
+	local creatureID, displayID, speciesID
+
+	local linkType, linkID, _ = s_split(":", link)
+	if linkType == "item" then
+		_, _, _, creatureID, _, _, _, _, _, _, _, displayID, speciesID = C_PetJournal.GetPetInfoByItemID(tonumber(linkID))
+	elseif linkType == "battlepet" then
+		speciesID = tonumber(linkID)
+		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+	end
+
+	if creatureID and displayID and speciesID then
+		if DressUpBattlePet(creatureID, displayID, speciesID) then
+			return
+		end
+	end
+
+	-- mount
+	local mountID
+
+	linkType, linkID = s_split(":", link)
+	if linkType == "item" then
+		mountID = C_MountJournal.GetMountFromItem(tonumber(linkID))
+	elseif linkType == "spell" then
+		mountID = C_MountJournal.GetMountFromSpell(tonumber(linkID))
+	end
+
+	if mountID then
+		DressUpMount(mountID)
+	end
 end
