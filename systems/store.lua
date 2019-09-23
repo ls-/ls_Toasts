@@ -53,28 +53,18 @@ local function Toast_OnClick(self)
 			elseif self._data.entitlement_type == Enum.WoWEntitlementType.Toy then
 				ToyBox.autoPageToCollectedToyID = self._data.entitlement_id
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_TOYS)
-			elseif self._data.entitlement_type == Enum.WoWEntitlementType.Appearance then
+			elseif self._data.entitlement_type == Enum.WoWEntitlementType.Appearance or self._data.entitlement_type == Enum.WoWEntitlementType.AppearanceSet or self._data.entitlement_type == Enum.WoWEntitlementType.Illusion then
 				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_APPEARANCES)
-				WardrobeCollectionFrame_OpenTransmogLink("transmogappearance:" .. self._data.entitlement_id)
-			elseif self._data.entitlement_type == Enum.WoWEntitlementType.AppearanceSet then
-				WardrobeCollectionFrame_OpenTransmogLink("transmogset:" .. self._data.entitlement_id)
-				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_APPEARANCES)
-			elseif self._data.entitlement_type == Enum.WoWEntitlementType.Illusion then
-				SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_APPEARANCES)
+				WardrobeCollectionFrame_OpenTransmogLink(self._data.link)
 			end
 		end
 	end
 end
 
 local function Toast_OnEnter(self)
-	if self._data.tooltip_link then
-		if self._data.tooltip_link:find("item") then
-			GameTooltip:SetHyperlink(self._data.tooltip_link)
-			GameTooltip:Show()
-		elseif self._data.tooltip_link:find("battlepet") then
-			local _, speciesID, level, breedQuality, maxHealth, power, speed = s_split(":", self._data.tooltip_link)
-			BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed))
-		end
+	if self._data.tooltip_link and self._data.tooltip_link:find("item") then
+		GameTooltip:SetHyperlink(self._data.tooltip_link)
+		GameTooltip:Show()
 	end
 end
 
@@ -90,6 +80,14 @@ local function Toast_SetUp(event, entitlementType, textureID, name, payloadID, p
 		toast._data.tooltip_link = originalLink
 	else
 		toast = E:GetToast()
+	end
+
+	if entitlementType == Enum.WoWEntitlementType.Appearance then
+		toast._data.link = "transmogappearance:" .. payloadID
+	elseif entitlementType == Enum.WoWEntitlementType.AppearanceSet then
+		toast._data.link = "transmogset:" .. payloadID
+	elseif entitlementType == Enum.WoWEntitlementType.Illusion then
+		toast._data.link = "transmogillusion:" .. payloadID
 	end
 
 	quality = quality or 1
