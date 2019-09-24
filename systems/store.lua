@@ -3,9 +3,7 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
-local s_split = _G.string.split
 local select = _G.select
-local tonumber = _G.tonumber
 
 -- Blizz
 local C_MountJournal = _G.C_MountJournal
@@ -195,7 +193,7 @@ E:RegisterOptions("store", {
 	sfx = true,
 	left_click = false,
 }, {
-	name = "[WIP] Store",
+	name = L["BLIZZARD_STORE"],
 	get = function(info)
 		return C.db.profile.types.store[info[#info]]
 	end,
