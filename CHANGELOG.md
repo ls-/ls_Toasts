@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 80205.01
+
+- Added 8.2.5 support;
+- Moved all Blizz store-related toasts to their own group: Shop. Revamped Recruit-a-Friend rewards will be handled by  
+  this group as well;
+- Misc bug fixes and tweaks.
+
 ## Version 80200.06
 
 - Fixed "Artifact Fragment" currency spam in Ashran. If you encounter similar issues in the future  
