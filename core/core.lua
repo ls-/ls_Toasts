@@ -4,6 +4,7 @@ local C, L = addonTable.C, addonTable.L
 -- Lua
 local _G = getfenv(0)
 local error = _G.error
+local geterrorhandler = _G.geterrorhandler
 local next = _G.next
 local s_format = _G.string.format
 local s_match = _G.string.match
@@ -12,10 +13,15 @@ local t_concat = _G.table.concat
 local t_remove = _G.table.remove
 local tonumber = _G.tonumber
 local type = _G.type
+local xpcall = _G.xpcall
+
+-- Blizz
+local C_MountJournal = _G.C_MountJournal
+local C_PetJournal = _G.C_PetJournal
 
 --[[ luacheck: globals
-	CreateFrame GetContainerItemID GetContainerNumSlots GetDetailedItemLevelInfo GetItemInfo
-	LibStub UIParent
+	CreateFrame DressUpBattlePet DressUpMount DressUpVisual GetContainerItemID GetContainerNumSlots
+	GetDetailedItemLevelInfo GetItemInfo IsDressableItem LibStub UIParent
 
 	INVSLOT_BACK INVSLOT_CHEST INVSLOT_FEET INVSLOT_FINGER1 INVSLOT_FINGER2 INVSLOT_HAND
 	INVSLOT_HEAD INVSLOT_LEGS INVSLOT_MAINHAND INVSLOT_NECK INVSLOT_OFFHAND INVSLOT_RANGED
@@ -60,9 +66,9 @@ do
 			registeredEvents[event] = {}
 
 			if unit1 then
-				dispatcher:RegisterUnitEvent(event, unit1, unit2)
+				P:Call(dispatcher.RegisterEvent, dispatcher, event, unit1, unit2)
 			else
-				dispatcher:RegisterEvent(event)
+				P:Call(dispatcher.RegisterEvent, dispatcher, event)
 			end
 		end
 
@@ -78,7 +84,7 @@ do
 			if not next(funcs) then
 				registeredEvents[event] = nil
 
-				dispatcher:UnregisterEvent(event)
+				P:Call(dispatcher.UnregisterEvent, dispatcher, event)
 			end
 		end
 	end
@@ -100,6 +106,16 @@ function P:UpdateTable(src, dest)
 	end
 
 	return dest
+end
+
+do
+	local function errorHandler(err)
+		return geterrorhandler()(err)
+	end
+
+	function P:Call(func, ...)
+		return xpcall(func, errorHandler, ...)
+	end
 end
 
 -- Libs
@@ -220,4 +236,48 @@ function E:SearchBagsForItemID(itemID)
 	end
 
 	return -1, -1
+end
+
+function E:DressUpLink(link)
+	if not link then
+		return
+	end
+
+	-- item
+	if IsDressableItem(link) then
+		if DressUpVisual(link) then
+			return
+		end
+	end
+
+	-- battle pet
+	local creatureID, displayID, speciesID
+
+	local linkType, linkID, _ = s_split(":", link)
+	if linkType == "item" then
+		_, _, _, creatureID, _, _, _, _, _, _, _, displayID, speciesID = C_PetJournal.GetPetInfoByItemID(tonumber(linkID))
+	elseif linkType == "battlepet" then
+		speciesID = tonumber(linkID)
+		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+	end
+
+	if creatureID and displayID and speciesID then
+		if DressUpBattlePet(creatureID, displayID, speciesID) then
+			return
+		end
+	end
+
+	-- mount
+	local mountID
+
+	linkType, linkID = s_split(":", link)
+	if linkType == "item" then
+		mountID = C_MountJournal.GetMountFromItem(tonumber(linkID))
+	elseif linkType == "spell" then
+		mountID = C_MountJournal.GetMountFromSpell(tonumber(linkID))
+	end
+
+	if mountID then
+		DressUpMount(mountID)
+	end
 end

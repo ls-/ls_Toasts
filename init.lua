@@ -39,6 +39,7 @@ local BLACKLISTED_EVENTS = {
 	["ACHIEVEMENT_EARNED"] = true,
 	["AZERITE_EMPOWERED_ITEM_LOOTED"] = true,
 	["CRITERIA_EARNED"] = true,
+	["ENTITLEMENT_DELIVERED"] = true,
 	["GARRISON_BUILDING_ACTIVATABLE"] = true,
 	["GARRISON_FOLLOWER_ADDED"] = true,
 	["GARRISON_MISSION_FINISHED"] = true,
@@ -52,13 +53,13 @@ local BLACKLISTED_EVENTS = {
 	["NEW_TOY_ADDED"] = true,
 	["QUEST_LOOT_RECEIVED"] = true,
 	["QUEST_TURNED_IN"] = true,
+	["RAF_ENTITLEMENT_DELIVERED"] = true,
 	["SCENARIO_COMPLETED"] = true,
 	["SHOW_LOOT_TOAST"] = true,
 	["SHOW_LOOT_TOAST_LEGENDARY_LOOTED"] = true,
 	["SHOW_LOOT_TOAST_UPGRADE"] = true,
 	["SHOW_PVP_FACTION_LOOT_TOAST"] = true,
 	["SHOW_RATED_PVP_REWARD_TOAST"] = true,
-	["STORE_PRODUCT_DELIVERED"] = true,
 }
 
 local function updateCallback()
@@ -308,12 +309,12 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	C.options.args.profiles.desc = nil
 
 	for event in next, BLACKLISTED_EVENTS do
-		AlertFrame:UnregisterEvent(event)
+		P:Call(AlertFrame.UnregisterEvent, AlertFrame, event)
 	end
 
 	hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
 		if event and BLACKLISTED_EVENTS[event] then
-			self:UnregisterEvent(event)
+			P:Call(self.UnregisterEvent, self, event)
 		end
 	end)
 

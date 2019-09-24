@@ -7,11 +7,6 @@ local s_lower = _G.string.lower
 local s_split = _G.string.split
 local tonumber = _G.tonumber
 
--- Blizz
-local C_MountJournal = _G.C_MountJournal
-local C_PetJournal = _G.C_PetJournal
-local C_Timer = _G.C_Timer
-
 --[[ luacheck: globals
 	BattlePetToolTip_Show BonusRollFrame DressUpBattlePet DressUpMount DressUpVisual GameTooltip GetItemInfo
 	GroupLootContainer GroupLootContainer_RemoveFrame IsDressableItem IsModifiedClick OpenBag UnitFactionGroup
@@ -21,52 +16,9 @@ local C_Timer = _G.C_Timer
 ]]
 
 -- Mine
-local function dressUp(link)
-	if not link then
-		return
-	end
-
-	-- item
-	if IsDressableItem(link) then
-		if DressUpVisual(link) then
-			return
-		end
-	end
-
-	-- battle pet
-	local creatureID, displayID
-
-	local linkType, linkID, _ = s_split(":", link)
-	if linkType == "item" then
-		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoByItemID(tonumber(linkID))
-	elseif linkType == "battlepet" then
-		_, _, _, creatureID, _, _, _, _, _, _, _, displayID = C_PetJournal.GetPetInfoBySpeciesID(tonumber(linkID))
-	end
-
-	if creatureID and displayID then
-		if DressUpBattlePet(creatureID, displayID) then
-			return
-		end
-	end
-
-	-- mount
-	local mountID
-
-	linkType, linkID = s_split(":", link)
-	if linkType == "item" then
-		mountID = C_MountJournal.GetMountFromItem(tonumber(linkID))
-	elseif linkType == "spell" then
-		mountID = C_MountJournal.GetMountFromSpell(tonumber(linkID))
-	end
-
-	if mountID then
-		DressUpMount(C_MountJournal.GetMountInfoExtraByID(mountID))
-	end
-end
-
 local function Toast_OnClick(self)
 	if self._data.link and IsModifiedClick("DRESSUP") then
-		dressUp(self._data.link)
+		E:DressUpLink(self._data.link)
 	elseif self._data.item_id then
 		local slot = E:SearchBagsForItemID(self._data.item_id)
 		if slot >= 0 then
@@ -91,7 +43,7 @@ local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or value)
 end
 
-local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isUpgraded, baseQuality, isLegendary, isStorePurchase, isAzerite)
+local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isUpgraded, baseQuality, isLegendary, isAzerite)
 	if link then
 		local sanitizedLink, originalLink, _, itemID = E:SanitizeLink(link)
 		local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
@@ -130,10 +82,6 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 					if not toast.Dragon.isHidden then
 						toast.Dragon:Show()
 					end
-				elseif isStorePurchase then
-					title = L["BLIZZARD_STORE_PURCHASE_DELIVERED"]
-					soundFile = 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
-					bgTexture = "store"
 				elseif isAzerite then
 					title = L["ITEM_AZERITE_EMPOWERED"]
 					soundFile = 118238 -- SOUNDKIT.UI_AZERITE_EMPOWERED_ITEM_LOOT_TOAST
@@ -249,15 +197,6 @@ local function SHOW_LOOT_TOAST_LEGENDARY_LOOTED(link)
 	Toast_SetUp("SHOW_LOOT_TOAST_LEGENDARY_LOOTED", link, 1, nil, nil, nil, nil, true)
 end
 
-local function STORE_PRODUCT_DELIVERED(_, _, _, payloadID)
-	local _, link = GetItemInfo(payloadID)
-	if link then
-		Toast_SetUp("STORE_PRODUCT_DELIVERED", link, 1, nil, nil, nil, nil, nil, true)
-	else
-		return C_Timer.After(0.25, function() STORE_PRODUCT_DELIVERED(nil, nil, nil, payloadID) end)
-	end
-end
-
 local function BonusRollFrame_FinishedFading_Disabled(self)
 	GroupLootContainer_RemoveFrame(GroupLootContainer, self:GetParent())
 end
@@ -280,7 +219,6 @@ local function Enable()
 		E:RegisterEvent("SHOW_LOOT_TOAST", SHOW_LOOT_TOAST)
 		E:RegisterEvent("SHOW_PVP_FACTION_LOOT_TOAST", SHOW_PVP_FACTION_LOOT_TOAST)
 		E:RegisterEvent("SHOW_RATED_PVP_REWARD_TOAST", SHOW_RATED_PVP_REWARD_TOAST)
-		E:RegisterEvent("STORE_PRODUCT_DELIVERED", STORE_PRODUCT_DELIVERED)
 
 		BonusRollFrame.FinishRollAnim:SetScript("OnFinished", BonusRollFrame_FinishedFading_Enabled)
 	else
@@ -296,7 +234,6 @@ local function Disable()
 	E:UnregisterEvent("SHOW_LOOT_TOAST", SHOW_LOOT_TOAST)
 	E:UnregisterEvent("SHOW_PVP_FACTION_LOOT_TOAST", SHOW_PVP_FACTION_LOOT_TOAST)
 	E:UnregisterEvent("SHOW_RATED_PVP_REWARD_TOAST", SHOW_RATED_PVP_REWARD_TOAST)
-	E:UnregisterEvent("STORE_PRODUCT_DELIVERED", STORE_PRODUCT_DELIVERED)
 
 	BonusRollFrame.FinishRollAnim:SetScript("OnFinished", BonusRollFrame_FinishedFading_Disabled)
 end
@@ -329,16 +266,10 @@ local function Test()
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, true)
 	end
 
-	-- store, Pouch of Enduring Wisdom
-	_, link = GetItemInfo(105911)
-	if link then
-		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, true)
-	end
-
 	-- azerite, Vest of the Champion
 	_, link = GetItemInfo("item:159906::::::::110:581::11::::")
 	if link then
-		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, nil, true)
+		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, true)
 	end
 end
 
