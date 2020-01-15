@@ -43,7 +43,7 @@ local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or value)
 end
 
-local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isUpgraded, baseQuality, isLegendary, isAzerite)
+local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isUpgraded, baseQuality, isLegendary, isAzerite, isCorrupted)
 	if link then
 		local sanitizedLink, originalLink, _, itemID = E:SanitizeLink(link)
 		local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
@@ -86,6 +86,9 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 					title = L["ITEM_AZERITE_EMPOWERED"]
 					soundFile = 118238 -- SOUNDKIT.UI_AZERITE_EMPOWERED_ITEM_LOOT_TOAST
 					bgTexture = "azerite"
+				elseif isCorrupted then
+					title = L["ITEM_CORRUPTED"]
+					soundFile = 147833 -- SOUNDKIT.UI_CORRUPTED_ITEM_LOOT_TOAST
 				end
 
 				if factionGroup then
@@ -165,9 +168,9 @@ local function LOOT_ITEM_ROLL_WON(link, quantity, _, _, isUpgraded)
 	Toast_SetUp("LOOT_ITEM_ROLL_WON", link, quantity, nil, nil, isUpgraded)
 end
 
-local function SHOW_LOOT_TOAST(typeID, link, quantity, _, _, _, _, lessAwesome, isUpgraded)
+local function SHOW_LOOT_TOAST(typeID, link, quantity, _, _, _, _, lessAwesome, isUpgraded, isCorrupted)
 	if typeID == "item" then
-		Toast_SetUp("SHOW_LOOT_TOAST", link, quantity, nil, lessAwesome, isUpgraded)
+		Toast_SetUp("SHOW_LOOT_TOAST", link, quantity, nil, lessAwesome, isUpgraded, nil, nil, nil, isCorrupted)
 	end
 end
 
@@ -270,6 +273,12 @@ local function Test()
 	_, link = GetItemInfo("item:159906::::::::110:581::11::::")
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, true)
+	end
+
+	-- corrupted, Devastation's Hour
+	_, link = GetItemInfo("item:172187::::::::20:71::3:1:3524:::")
+	if link then
+		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, nil, true)
 	end
 end
 
