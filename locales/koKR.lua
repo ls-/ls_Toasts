@@ -1,4 +1,4 @@
--- Contributors: WetU@GitHub, netaras@Curse, unrealcrom96@Curse
+-- Contributors: WetU@GitHub, netaras@Curse, unrealcrom96@Curse, blacknib@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -8,19 +8,19 @@ local _G = getfenv(0)
 
 if GetLocale() ~= "koKR" then return end
 
---[[ L["ANCHOR_FRAME_#"] = "Anchor Frame #%d" ]]
---[[ L["ANCHOR_FRAMES"] = "Anchor Frames" ]]
+L["ANCHOR_FRAME_#"] = "고정판 #%d"
+L["ANCHOR_FRAMES"] = "고정판"
 L["ANCHOR_RESET_DESC"] = "|cffffffffShift-클릭|r으로 위치를 초기화 합니다."
 L["BORDER"] = "테두리"
 L["COLORS"] = "색상"
 L["COORDS"] = "좌표"
 L["COPPER_THRESHOLD"] = "코퍼 제한"
 L["COPPER_THRESHOLD_DESC"] = "알림창을 만들 최소 코퍼 금액입니다."
---[[ L["DEFAULT_VALUE"] = "Default value: |cffffd200%s|r" ]]
+L["DEFAULT_VALUE"] = "기본값: |cffffd200%s|r"
 L["DND"] = "대기"
 L["DND_TOOLTIP"] = "대기 모드의 알림창은 전투 중에 표시되지 않고, 대신 시스템 내부에 대기하게 됩니다. 전투에서 벗어나면 대기 중이던 알림이 나타나기 시작합니다."
 L["FADE_OUT_DELAY"] = "페이드 아웃 지연 시간"
---[[ L["FLUSH_QUEUE"] = "Flush Queue" ]]
+L["FLUSH_QUEUE"] = "대기열 지우기"
 L["FONTS"] = "글꼴"
 L["GROWTH_DIR"] = "성장 방향"
 L["GROWTH_DIR_DOWN"] = "아래로"
@@ -42,14 +42,14 @@ L["TEST"] = "테스트"
 L["TEST_ALL"] = "모두 테스트"
 L["TOAST_NUM"] = "알림창의 갯수"
 L["TOAST_TYPES"] = "알림창 종류"
---[[ L["TOGGLE_ANCHORS"] = "Toggle Anchors" ]]
---[[ L["TRACK_LOSS"] = "Track Loss" ]]
---[[ L["TRACK_LOSS_DESC"] = "This option ignores set copper threshold." ]]
+L["TOGGLE_ANCHORS"] = "고정 전환"
+L["TRACK_LOSS"] = "손실 추적"
+L["TRACK_LOSS_DESC"] = "이 설정은 설정된 코퍼 임계값을 무시합니다."
 L["TYPE_LOOT_GOLD"] = "전리품 (골드)"
-L["X_OFFSET"] = "X 좌표"
-L["Y_OFFSET"] = "Y 좌표"
---[[ L["YOU_LOST"] = "You Lost" ]]
---[[ L["YOU_RECEIVED"] = "You Received" ]]
+L["X_OFFSET"] = "X 간격"
+L["Y_OFFSET"] = "Y 간격"
+L["YOU_LOST"] = "손실"
+L["YOU_RECEIVED"] = "획득"
 
 -- Retail
 L["COLLECTIONS_TAINT_WARNING"] = "이 설정을 사용하는 경우 전투중 \"수집창\"을 열게 되면 오류가 발생합니다."
