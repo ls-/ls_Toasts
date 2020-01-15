@@ -1,10 +1,21 @@
 # CHANGELOG
 
+## Version 80300.01
+
+- Added 8.3.0 support;
+- Added support for corrupted items;
+- Added BeautyCase-like skin;
+- Gold toast's icon now has three states: copper, bronze, and gold;
+- Updated Korean translation. Translated by blacknib@Curse;
+- Misc bug fixes and tweaks.
+
+NOTE: You'll have to restart WoW client to make things work after the update.
+
 ## Version 80205.01
 
 - Added 8.2.5 support;
-- Moved all Blizz store-related toasts to their own group: Shop. Revamped Recruit-a-Friend rewards will be handled by  
-  this group as well;
+- Moved all Blizz store-related toasts to their own group: Shop. Revamped Recruit-a-Friend rewards
+  will be handled by this group as well;
 - Misc bug fixes and tweaks.
 
 ## Version 80200.06
