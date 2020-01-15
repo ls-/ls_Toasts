@@ -104,7 +104,9 @@ end
 
 local function flush(t)
 	for _ = #t, 1, -1 do
-		t_remove(t, 1):Release()
+		if t[1] then
+			t_remove(t, 1):Release()
+		end
 	end
 end
 

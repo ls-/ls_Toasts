@@ -32,9 +32,16 @@ local function Toast_SetUp(event, quantity)
 			toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
 		end
 
+		local texture = "Interface\\Icons\\INV_Misc_Coin_02"
+		if m_abs(quantity) < 100 then
+			texture = "Interface\\Icons\\INV_Misc_Coin_06"
+		elseif m_abs(quantity) < 10000 then
+			texture = "Interface\\Icons\\INV_Misc_Coin_04"
+		end
+
 		toast.Title:SetText(quantity > 0 and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
 		toast.Text:SetAnimatedValue(quantity, true)
-		toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
+		toast.Icon:SetTexture(texture)
 		toast.IconBorder:Show()
 
 		toast._data.count = quantity
@@ -44,6 +51,14 @@ local function Toast_SetUp(event, quantity)
 		toast:Spawn(C.db.profile.types.loot_gold.anchor, C.db.profile.types.loot_gold.dnd)
 	else
 		toast._data.count = toast._data.count + quantity
+		if m_abs(toast._data.count) < 100 then
+			toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_06")
+		elseif m_abs(toast._data.count) < 10000 then
+			toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_04")
+		else
+			toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Coin_02")
+		end
+
 		toast.Title:SetText(toast._data.count > 0 and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
 
 		if isQueued then
