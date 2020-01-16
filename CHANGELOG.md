@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 80300.02
+
+- Fixed an issue where currency loss toasts were incorrectly treated and shown as gains.
+
 ## Version 80300.01
 
 - Added 8.3.0 support;
