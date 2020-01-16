@@ -13,7 +13,7 @@ local m_random = _G.math.random
 ]]
 
 -- Mine
-local NO_GAIN_SOURCE = 38
+local NO_GAIN_SOURCE = 42 -- Watch it! Changes from patch to patch, smh...
 
 -- https://wow.tools/dbc/?dbc=currencytypes&build=whatever
 local BLACKLIST = {
