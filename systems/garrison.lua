@@ -620,7 +620,7 @@ E:RegisterOptions("garrison_9_0", {
 	dnd = true,
 	sfx = true,
 }, {
-	name = "[WIP] Covenant",
+	name = L["TYPE_COVENANT"],
 	get = function(info)
 		return C.db.profile.types.garrison_9_0[info[#info]]
 	end,
