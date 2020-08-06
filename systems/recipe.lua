@@ -33,30 +33,29 @@ local function Toast_OnEnter(self)
 	end
 end
 
-local function Toast_SetUp(event, recipeID)
+local rankTextures = {
+	[1] = "|TInterface\\LootFrame\\toast-star:12:12:0:0:32:32:0:21:0:21|t",
+	[2] = "|TInterface\\LootFrame\\toast-star-2:12:24:0:0:64:32:0:42:0:21|t",
+	[3] = "|TInterface\\LootFrame\\toast-star-3:12:36:0:0:64:32:0:64:0:21|t",
+}
+
+local function Toast_SetUp(event, recipeID, recipeLevel)
 	local tradeSkillID = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
 	if tradeSkillID then
 		local recipeName = GetSpellInfo(recipeID)
 		if recipeName then
 			local toast = E:GetToast()
-			local rank = GetSpellRank(recipeID)
-			local rankTexture = ""
 
-			if rank == 1 then
-				rankTexture = "|TInterface\\LootFrame\\toast-star:12:12:0:0:32:32:0:21:0:21|t"
-			elseif rank == 2 then
-				rankTexture = "|TInterface\\LootFrame\\toast-star-2:12:24:0:0:64:32:0:42:0:21|t"
-			elseif rank == 3 then
-				rankTexture = "|TInterface\\LootFrame\\toast-star-3:12:36:0:0:64:32:0:64:0:21|t"
+			if recipeLevel then
+				toast.IconText1:SetText(rankTextures[recipeLevel])
+				toast.IconText1BG:Show()
 			end
 
 			toast:SetBackground("recipe")
-			toast.Title:SetText(rank and rank > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
+			toast.Title:SetText(recipeLevel and recipeLevel > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
 			toast.Text:SetText(recipeName)
 			toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(tradeSkillID))
 			toast.IconBorder:Show()
-			toast.IconText1:SetText(rankTexture)
-			toast.IconText1BG:SetShown(not not rank)
 
 			toast._data.event = event
 			toast._data.recipe_id = recipeID
@@ -70,8 +69,8 @@ local function Toast_SetUp(event, recipeID)
 	end
 end
 
-local function NEW_RECIPE_LEARNED(recipeID)
-	Toast_SetUp("NEW_RECIPE_LEARNED", recipeID)
+local function NEW_RECIPE_LEARNED(...) -- recipeID, recipeLevel
+	Toast_SetUp("NEW_RECIPE_LEARNED", ...)
 end
 
 local function Enable()
@@ -89,7 +88,7 @@ local function Test()
 	Toast_SetUp("RECIPE_TEST", 7183)
 
 	-- rank 2, Word of Critical Strike
-	Toast_SetUp("RECIPE_TEST", 190992)
+	Toast_SetUp("RECIPE_TEST", 190992, GetSpellRank(190992))
 end
 
 E:RegisterOptions("recipe", {
