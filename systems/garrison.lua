@@ -21,6 +21,13 @@ local C_Garrison = _G.C_Garrison
 -- Mine
 local PLAYER_CLASS = select(3, UnitClass("player"))
 
+local typeToKey = {
+	[Enum.GarrisonType.Type_6_0] = "garrison_6_0",
+	[Enum.GarrisonType.Type_7_0] = "garrison_7_0",
+	[Enum.GarrisonType.Type_8_0] = "garrison_8_0",
+	[Enum.GarrisonType.Type_9_0] = "garrison_9_0",
+}
+
 local function getGarrisonTypeByFollowerType(followerTypeID)
 	if followerTypeID == Enum.GarrisonFollowerType.FollowerType_9_0 then
 		return Enum.GarrisonType.Type_9_0
@@ -63,32 +70,14 @@ local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 
 	toast._data.event = event
 	toast._data.mission_id = missionID
+	toast._data.sound_file = C.db.profile.types[typeToKey[garrisonType]].sfx and 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
 
-	if garrisonType == Enum.GarrisonType.Type_9_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_9_0.sfx and 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
-
-		toast:Spawn(C.db.profile.types.garrison_9_0.anchor, C.db.profile.types.garrison_9_0.dnd)
-	elseif garrisonType == Enum.GarrisonType.Type_8_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_8_0.sfx and 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
-
-		toast:Spawn(C.db.profile.types.garrison_8_0.anchor, C.db.profile.types.garrison_8_0.dnd)
-	elseif garrisonType == Enum.GarrisonType.Type_7_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_7_0.sfx and 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
-
-		toast:Spawn(C.db.profile.types.garrison_7_0.anchor, C.db.profile.types.garrison_7_0.dnd)
-	elseif garrisonType == Enum.GarrisonType.Type_6_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_6_0.sfx and 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
-
-		toast:Spawn(C.db.profile.types.garrison_6_0.anchor, C.db.profile.types.garrison_6_0.dnd)
-	end
+	toast:Spawn(C.db.profile.types[typeToKey[garrisonType]].anchor, C.db.profile.types[typeToKey[garrisonType]].dnd)
 end
 
 local function GARRISON_MISSION_FINISHED(followerTypeID, missionID)
 	local garrisonType = getGarrisonTypeByFollowerType(followerTypeID)
-	if (garrisonType == Enum.GarrisonType.Type_9_0 and not C.db.profile.types.garrison_9_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_8_0 and not C.db.profile.types.garrison_8_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_7_0 and not C.db.profile.types.garrison_7_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
+	if not C.db.profile.types[typeToKey[garrisonType]].enabled then
 		return
 	end
 
@@ -106,10 +95,7 @@ end
 
 local function GARRISON_RANDOM_MISSION_ADDED(followerTypeID, missionID)
 	local garrisonType = getGarrisonTypeByFollowerType(followerTypeID)
-	if (garrisonType == Enum.GarrisonType.Type_9_0 and not C.db.profile.types.garrison_9_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_8_0 and not C.db.profile.types.garrison_8_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_7_0 and not C.db.profile.types.garrison_7_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
+	if not C.db.profile.types[typeToKey[garrisonType]].enabled then
 		return
 	end
 
@@ -220,34 +206,15 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 	toast._data.event = event
 	toast._data.follower_id = followerID
 	toast._data.show_arrows = isUpgraded
+	toast._data.sound_file = C.db.profile.types[typeToKey[garrisonType]].sfx and 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
 
 	toast:HookScript("OnEnter", FollowerToast_OnEnter)
-
-	if garrisonType == Enum.GarrisonType.Type_9_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_9_0.sfx and 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
-
-		toast:Spawn(C.db.profile.types.garrison_9_0.anchor, C.db.profile.types.garrison_9_0.dnd)
-	elseif garrisonType == Enum.GarrisonType.Type_8_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_8_0.sfx and 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
-
-		toast:Spawn(C.db.profile.types.garrison_8_0.anchor, C.db.profile.types.garrison_8_0.dnd)
-	elseif garrisonType == Enum.GarrisonType.Type_7_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_7_0.sfx and 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
-
-		toast:Spawn(C.db.profile.types.garrison_7_0.anchor, C.db.profile.types.garrison_7_0.dnd)
-	elseif garrisonType == Enum.GarrisonType.Type_6_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_6_0.sfx and 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
-
-		toast:Spawn(C.db.profile.types.garrison_6_0.anchor, C.db.profile.types.garrison_6_0.dnd)
-	end
+	toast:Spawn(C.db.profile.types[typeToKey[garrisonType]].anchor, C.db.profile.types[typeToKey[garrisonType]].dnd)
 end
 
 local function GARRISON_FOLLOWER_ADDED(followerID, name, _, level, quality, isUpgraded, textureKit, followerTypeID)
 	local garrisonType = getGarrisonTypeByFollowerType(followerTypeID)
-	if (garrisonType == Enum.GarrisonType.Type_9_0 and not C.db.profile.types.garrison_9_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_8_0 and not C.db.profile.types.garrison_8_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_7_0 and not C.db.profile.types.garrison_7_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_6_0 and not C.db.profile.types.garrison_6_0.enabled) then
+	if not C.db.profile.types[typeToKey[garrisonType]].enabled then
 		return
 	end
 
@@ -276,6 +243,12 @@ end
 
 ------
 
+local typeToTalentText = {
+	[Enum.GarrisonType.Type_7_0] = L["GARRISON_NEW_TALENT"],
+	[Enum.GarrisonType.Type_8_0] = L["GARRISON_NEW_TALENT"],
+	[Enum.GarrisonType.Type_9_0] = L["COVENANT_NEW_TALENT"],
+}
+
 local function TalentToast_OnEnter(self)
 	if self._data.talend_id then
 		local talent = C_Garrison.GetTalentInfo(self._data.talend_id)
@@ -289,35 +262,21 @@ local function TalentToast_SetUp(event, garrisonType, talentID)
 	local talent = C_Garrison.GetTalentInfo(talentID)
 	local toast = E:GetToast()
 
-	toast.Title:SetText(L["GARRISON_NEW_TALENT"])
+	toast.Title:SetText(typeToTalentText[garrisonType])
 	toast.Text:SetText(talent.name)
 	toast.Icon:SetTexture(talent.icon)
 	toast.IconBorder:Show()
 
 	toast._data.event = event
 	toast._data.talend_id = talentID
+	toast._data.sound_file = C.db.profile.types[typeToKey[garrisonType]].sfx and 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
 
 	toast:HookScript("OnEnter", TalentToast_OnEnter)
-
-	if garrisonType == Enum.GarrisonType.Type_9_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_9_0.sfx and 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
-
-		toast:Spawn(C.db.profile.types.garrison_9_0.anchor, C.db.profile.types.garrison_9_0.dnd)
-	elseif garrisonType == Enum.GarrisonType.Type_8_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_8_0.sfx and 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
-
-		toast:Spawn(C.db.profile.types.garrison_8_0.anchor, C.db.profile.types.garrison_8_0.dnd)
-	elseif garrisonType == Enum.GarrisonType.Type_7_0 then
-		toast._data.sound_file = C.db.profile.types.garrison_7_0.sfx and 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
-
-		toast:Spawn(C.db.profile.types.garrison_7_0.anchor, C.db.profile.types.garrison_7_0.dnd)
-	end
+	toast:Spawn(C.db.profile.types[typeToKey[garrisonType]].anchor, C.db.profile.types[typeToKey[garrisonType]].dnd)
 end
 
 local function GARRISON_TALENT_COMPLETE(garrisonType, doAlert)
-	if (garrisonType == Enum.GarrisonType.Type_9_0 and not C.db.profile.types.garrison_9_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_8_0 and not C.db.profile.types.garrison_8_0.enabled)
-		or (garrisonType == Enum.GarrisonType.Type_7_0 and not C.db.profile.types.garrison_7_0.enabled) then
+	if not C.db.profile.types[typeToKey[garrisonType]].enabled then
 		return
 	end
 
