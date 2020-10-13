@@ -4,20 +4,18 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 local next = _G.next
-local select = _G.select
 
 -- Blizz
-local C_Scenario = _G.C_Scenario
+local C_QuestLog = _G.C_QuestLog
 local C_TaskQuest = _G.C_TaskQuest
 local C_Timer = _G.C_Timer
+local C_TradeSkillUI = _G.C_TradeSkillUI
 
 --[[ luacheck: globals
-	GameTooltip GetItemInfo GetItemInfoInstant GetMoneyString GetNumQuestLogRewardCurrencies GetProfessionInfo
-	GetQuestLogRewardCurrencyInfo GetQuestLogRewardMoney GetQuestLogRewardXP GetQuestTagInfo HaveQuestData
-	HaveQuestRewardData QuestUtils_IsQuestWorldQuest UnitLevel
+	Enum GameTooltip GetItemInfo GetItemInfoInstant GetMoneyString GetNumQuestLogRewardCurrencies
+	GetQuestLogRewardCurrencyInfo GetQuestLogRewardMoney GetQuestLogRewardXP HaveQuestData HaveQuestRewardData UnitLevel
 
-	LE_QUEST_TAG_TYPE_DUNGEON LE_QUEST_TAG_TYPE_PET_BATTLE LE_QUEST_TAG_TYPE_PROFESSION LE_QUEST_TAG_TYPE_PVP
-	LE_QUEST_TAG_TYPE_RAID LE_SCENARIO_TYPE_LEGION_INVASION MAX_PLAYER_LEVEL WORLD_QUEST_QUALITY_COLORS
+	MAX_PLAYER_LEVEL WORLD_QUEST_QUALITY_COLORS
 ]]
 
 -- Mine
@@ -102,21 +100,27 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			end
 		end
 
-		local _, _, worldQuestType, rarity, _, tradeskillLineIndex = GetQuestTagInfo(questID)
-		if worldQuestType == LE_QUEST_TAG_TYPE_PVP then
+		local info =  C_QuestLog.GetQuestTagInfo(questID)
+		if not info then
+			toast:Release()
+
+			return
+		end
+
+		if info.worldQuestType == Enum.QuestTagType.PvP then
 			toast.Icon:SetTexture("Interface\\Icons\\achievement_arena_2v2_1")
-		elseif worldQuestType == LE_QUEST_TAG_TYPE_PET_BATTLE then
+		elseif info.worldQuestType == Enum.QuestTagType.PetBattle then
 			toast.Icon:SetTexture("Interface\\Icons\\INV_Pet_BattlePetTraining")
-		elseif worldQuestType == LE_QUEST_TAG_TYPE_PROFESSION and tradeskillLineIndex then
-			toast.Icon:SetTexture(select(2, GetProfessionInfo(tradeskillLineIndex)))
-		elseif worldQuestType == LE_QUEST_TAG_TYPE_DUNGEON or worldQuestType == LE_QUEST_TAG_TYPE_RAID then
+		elseif info.worldQuestType == Enum.QuestTagType.Profession then
+			toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(info.tradeskillLineID))
+		elseif info.worldQuestType == Enum.QuestTagType.Dungeon or info.worldQuestType == Enum.QuestTagType.Raid then
 			toast.Icon:SetTexture("Interface\\Icons\\INV_Misc_Bone_Skull_02")
 		else
 			toast.Icon:SetTexture("Interface\\Icons\\Achievement_Quests_Completed_TwilightHighlands")
 		end
 
-		if rarity >= C.db.profile.colors.threshold then
-			local color = WORLD_QUEST_QUALITY_COLORS[rarity] or WORLD_QUEST_QUALITY_COLORS[1]
+		if info.quality >= C.db.profile.colors.threshold then
+			local color = WORLD_QUEST_QUALITY_COLORS[info.quality] or WORLD_QUEST_QUALITY_COLORS[1]
 
 			if C.db.profile.colors.border then
 				toast.Border:SetVertexColor(color.r, color.g, color.b)
@@ -165,7 +169,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 end
 
 local function QUEST_TURNED_IN(questID)
-	if QuestUtils_IsQuestWorldQuest(questID) then
+	if C_QuestLog.IsWorldQuest(questID) then
 		if not HaveQuestRewardData(questID) then
 			C_TaskQuest.RequestPreloadRewardData(questID)
 			C_Timer.After(0.5, function() QUEST_TURNED_IN(questID) end)
@@ -236,7 +240,7 @@ local function Test()
 		if quests then
 			for _, quest in next, quests do
 				if HaveQuestData(quest.questId) then
-					if QuestUtils_IsQuestWorldQuest(quest.questId) then
+					if C_QuestLog.IsWorldQuest(quest.questId) then
 						Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest.GetQuestInfoByQuestID(quest.questId), 123456, 123456)
 						Toast_SetUp("WORLD_TEST", true, quest.questId, "scenario", nil, nil, nil, link)
 

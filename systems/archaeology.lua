@@ -7,9 +7,11 @@ local hooksecurefunc = _G.hooksecurefunc
 local m_abs = _G.math.abs
 local m_random = _G.math.random
 
+-- Blizz
+local C_CurrencyInfo = _G.C_CurrencyInfo
+
 --[[ luacheck: globals
 	ArchaeologyFrame ArcheologyDigsiteProgressBar FormatLargeNumber GameTooltip GetArchaeologyRaceInfoByID
-	GetCurrencyInfo
 ]]
 
 -- Mine
@@ -40,7 +42,7 @@ local function ARTIFACT_DIGSITE_COMPLETE(researchFieldID)
 end
 
 ------
-local NO_GAIN_SOURCE = 38
+local NO_GAIN_SOURCE = 44 -- Watch it! Changes from patch to patch, smh...
 
 -- https://wow.tools/dbc/?dbc=currencytypes&build=whatever
 local WHITELIST = {
@@ -82,8 +84,8 @@ end
 local function FragmentToast_SetUp(event, link, quantity)
 	local toast, isNew, isQueued = E:GetToast(event, "link", link)
 	if isNew then
-		local name, _, icon = GetCurrencyInfo(link)
-		if name then
+		local info = C_CurrencyInfo.GetCurrencyInfoFromLink(link)
+		if info then
 			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
 			if C.db.profile.colors.border then
@@ -95,8 +97,8 @@ local function FragmentToast_SetUp(event, link, quantity)
 			end
 
 			toast.Title:SetText(L["YOU_RECEIVED"])
-			toast.Text:SetText(name)
-			toast.Icon:SetTexture(icon)
+			toast.Text:SetText(info.name)
+			toast.Icon:SetTexture(info.iconFileID)
 			toast.IconBorder:Show()
 			toast.IconText1:SetAnimatedValue(quantity, true)
 

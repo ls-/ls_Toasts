@@ -6,14 +6,17 @@ local _G = getfenv(0)
 local m_abs = _G.math.abs
 local m_random = _G.math.random
 
+-- Blizz
+local C_CurrencyInfo = _G.C_CurrencyInfo
+
 --[[ luacheck: globals
-	FormatLargeNumber GameTooltip GetCurrencyInfo
+	FormatLargeNumber GameTooltip
 
 	ITEM_QUALITY_COLORS
 ]]
 
 -- Mine
-local NO_GAIN_SOURCE = 42 -- Watch it! Changes from patch to patch, smh...
+local NO_GAIN_SOURCE = 44 -- Watch it! Changes from patch to patch, smh...
 
 -- https://wow.tools/dbc/?dbc=currencytypes&build=whatever
 local BLACKLIST = {
@@ -112,13 +115,13 @@ end
 local function Toast_SetUp(event, link, quantity, isGain)
 	local toast, isNew, isQueued = E:GetToast(event, "link", link)
 	if isNew then
-		local name, _, icon, _, _, _, _, quality = GetCurrencyInfo(link)
-		if name then
-			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
+		local info = C_CurrencyInfo.GetCurrencyInfoFromLink(link)
+		if info then
+			local color = ITEM_QUALITY_COLORS[info.quality] or ITEM_QUALITY_COLORS[1]
 
 			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
-			if quality >= C.db.profile.colors.threshold then
+			if info.quality >= C.db.profile.colors.threshold then
 				if C.db.profile.colors.name then
 					toast.Text:SetTextColor(color.r, color.g, color.b)
 				end
@@ -133,8 +136,8 @@ local function Toast_SetUp(event, link, quantity, isGain)
 			end
 
 			toast.Title:SetText(isGain and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
-			toast.Text:SetText(name)
-			toast.Icon:SetTexture(icon)
+			toast.Text:SetText(info.name)
+			toast.Icon:SetTexture(info.iconFileID)
 			toast.IconBorder:Show()
 			toast.IconText1:SetAnimatedValue(quantity, true)
 
@@ -197,7 +200,7 @@ end
 
 local function Test()
 	-- Order Resources
-	Toast_SetUp("LOOT_CURRENCY_TEST", "currency:" .. 1220, m_random(300, 600), m_random(38, 39) == NO_GAIN_SOURCE)
+	Toast_SetUp("LOOT_CURRENCY_TEST", "currency:" .. 1220, m_random(300, 600), (NO_GAIN_SOURCE * m_random(0, 1)) == NO_GAIN_SOURCE)
 end
 
 E:RegisterOptions("loot_currency", {

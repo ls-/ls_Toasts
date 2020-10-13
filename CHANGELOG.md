@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 90001.01
+
+- Added 9.0.1 support.
+
 ## Version 80300.02
 
 - Fixed an issue where currency loss toasts were incorrectly treated and shown as gains.
