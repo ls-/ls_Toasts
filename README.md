@@ -1,4 +1,4 @@
-# ls: Toasts
+# LS: Toasts
 
 Replacement for the default alert system. Better toasts, cheers!
 
@@ -20,6 +20,11 @@ If you found a bug or want to share an idea on how to improve my addon, either u
 ## Localisation
 
 Feel free to add and/or review translations on [Curse](https://www.curseforge.com/wow/addons/ls-toasts/localization), alternatively, you may create a PR on [project's GitHub page](https://github.com/ls-/ls_Toasts/pulls).
+
+## FAQ
+
+**Q:** Is it possible to use the default achievement/loot/etc toast while using the addon?  
+**A:** No, the default system is written in a way that makes it hard or even impossible to toggle parts of it individually.
 
 ## License
 
