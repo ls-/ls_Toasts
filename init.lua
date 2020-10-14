@@ -50,6 +50,7 @@ local BLACKLISTED_EVENTS = {
 	["NEW_MOUNT_ADDED"] = true,
 	["NEW_PET_ADDED"] = true,
 	["NEW_RECIPE_LEARNED"] = true,
+	["NEW_RUNEFORGE_POWER_ADDED"] = true,
 	["NEW_TOY_ADDED"] = true,
 	["QUEST_LOOT_RECEIVED"] = true,
 	["QUEST_TURNED_IN"] = true,
