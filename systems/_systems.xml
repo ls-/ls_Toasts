@@ -9,6 +9,7 @@
 	<Script file="loot_gold.lua"/>
 	<Script file="loot_special.lua"/>
 	<Script file="recipe.lua"/>
+	<Script file="runecarving.lua"/>
 	<Script file="store.lua"/>
 	<Script file="transmog.lua"/>
 	<Script file="world.lua"/>
