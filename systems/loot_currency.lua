@@ -129,6 +129,10 @@ local BLACKLIST = {
 	[1586] = true, -- Honor Level
 }
 
+local THRESHOLD = {
+	[1792] = 20, --	Honor
+}
+
 local MULT = {
 	[ 944] = 0.01, -- Artifact Fragment
 	[1602] = 0.01, -- Conquest
@@ -210,6 +214,10 @@ local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
 	end
 
 	if not C.db.profile.types.loot_currency.track_loss and gainSource == NO_GAIN_SOURCE then
+		return
+	end
+
+	if THRESHOLD[id] and quantity < THRESHOLD[id] then
 		return
 	end
 
