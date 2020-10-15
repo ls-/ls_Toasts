@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 90001.02
+
+- Added support for runecarving toasts which become available later after SL launch;
+- Added honour throttling for currency toasts. For the time being any honour gains below 20
+  will be ignored to avoid any toast spam in BGs. It's a temporary measure, I'll replace it
+  with proper currency filtering later.
+
 ## Version 90001.01
 
 - Added 9.0.1 support.
