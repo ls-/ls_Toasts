@@ -6,7 +6,7 @@ local L = addonTable.L
 -- Lua
 local _G = getfenv(0)
 
-if GetLocale() ~= "esES" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 
 L["ANCHOR_FRAME_#"] = "Marco de anclaje #%d"
 L["ANCHOR_FRAMES"] = "Marcos de anclaje"
@@ -62,6 +62,7 @@ L["TYPE_ARCHAEOLOGY"] = "Arquelogía"
 L["TYPE_CLASS_HALL"] = "Sede de clase"
 L["TYPE_COLLECTION"] = "Colección"
 L["TYPE_COLLECTION_DESC"] = "Toasts para nuevas monturas, mascotas y juguetes."
+--[[ L["TYPE_COVENANT"] = "Covenant" ]]
 L["TYPE_DUNGEON"] = "Mazmorra"
 L["TYPE_GARRISON"] = "Ciudadela"
 L["TYPE_LOOT_COMMON"] = "Botín (Común)"
@@ -70,6 +71,7 @@ L["TYPE_LOOT_CURRENCY"] = "Botín (Moneda)"
 L["TYPE_LOOT_SPECIAL"] = "Botín (Especial)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Toasts activados por eventos de botín especial, ej. tiradas ganadas, caídas de legendarios, botín personal, etc."
 L["TYPE_RECIPE"] = "Receta"
+L["TYPE_RUNECARVING"] = "Talla de runas"
 L["TYPE_TRANSMOG"] = "Transmogrificación"
 L["TYPE_WAR_EFFORT"] = "Esfuerzo de guerra"
 L["TYPE_WORLD_QUEST"] = "Misión de mundo"
