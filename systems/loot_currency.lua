@@ -5,6 +5,12 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 local m_abs = _G.math.abs
 local m_random = _G.math.random
+local next = _G.next
+local t_insert = _G.table.insert
+local t_sort = _G.table.sort
+local t_wipe = _G.table.wipe
+local tonumber = _G.tonumber
+local tostring = _G.tostring
 
 -- Blizz
 local C_CurrencyInfo = _G.C_CurrencyInfo
@@ -16,7 +22,7 @@ local C_CurrencyInfo = _G.C_CurrencyInfo
 ]]
 
 -- Mine
-local NO_GAIN_SOURCE = 44 -- Watch it! Changes from patch to patch, smh...
+local NO_GAIN_SOURCE = 44 -- replace with Enum.CurrencySource.Last when it's added
 
 -- https://wow.tools/dbc/?dbc=currencytypes&build=whatever
 local BLACKLIST = {
@@ -129,10 +135,6 @@ local BLACKLIST = {
 	[1586] = true, -- Honor Level
 }
 
-local THRESHOLD = {
-	[1792] = 20, --	Honor
-}
-
 local MULT = {
 	[ 944] = 0.01, -- Artifact Fragment
 	[1602] = 0.01, -- Conquest
@@ -149,9 +151,16 @@ local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or FormatLargeNumber(m_abs(value)))
 end
 
-local function Toast_SetUp(event, link, quantity, isGain)
+local function Toast_SetUp(event, id, quantity, isGain)
+	local link = "currency:" .. id
 	local toast, isNew, isQueued = E:GetToast(event, "link", link)
 	if isNew then
+		if C.db.profile.types.loot_currency.filters[id] and quantity < C.db.profile.types.loot_currency.filters[id] then
+			toast:Recycle()
+
+			return
+		end
+
 		local info = C_CurrencyInfo.GetCurrencyInfoFromLink(link)
 		if info then
 			local color = ITEM_QUALITY_COLORS[info.quality] or ITEM_QUALITY_COLORS[1]
@@ -209,15 +218,11 @@ local function Toast_SetUp(event, link, quantity, isGain)
 end
 
 local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
-	if not id or BLACKLIST[id] then
+	if not id or BLACKLIST[id] or C.db.profile.types.loot_currency.filters[id] == -1 then
 		return
 	end
 
 	if not C.db.profile.types.loot_currency.track_loss and gainSource == NO_GAIN_SOURCE then
-		return
-	end
-
-	if THRESHOLD[id] and quantity < THRESHOLD[id] then
 		return
 	end
 
@@ -226,22 +231,123 @@ local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
 		return
 	end
 
-	Toast_SetUp("CURRENCY_DISPLAY_UPDATE", "currency:" .. id, quantity, gainSource ~= NO_GAIN_SOURCE)
+	Toast_SetUp("CURRENCY_DISPLAY_UPDATE", id, quantity, gainSource ~= NO_GAIN_SOURCE)
+end
+
+local listSize = 0
+local newID
+
+local function validateThreshold(_, value)
+	value = tonumber(value) or 0
+	return value >= -1
+end
+
+local function setThreshold(info, value)
+	value = tonumber(value)
+	C.db.profile.types.loot_currency.filters[tonumber(info[#info - 1])] = value
+end
+
+local function getThreshold(info)
+	return tostring(C.db.profile.types.loot_currency.filters[tonumber(info[#info - 1])])
+end
+
+local function populateFilters()
+	listSize = C_CurrencyInfo.GetCurrencyListSize()
+	if listSize > 0 then
+		local info, link, id
+
+		for i = 1, listSize do
+			info = C_CurrencyInfo.GetCurrencyListInfo(i)
+			if not info.isHeader then
+				link = C_CurrencyInfo.GetCurrencyListLink(i)
+				if link then
+					id = tonumber(link:match("currency:(%d+)"))
+					if id then
+						if not C.db.profile.types.loot_currency.filters[id] then
+							C.db.profile.types.loot_currency.filters[id] = 0 -- disabled by default
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+local function updateFilterOptions()
+	if not C.db.profile.types.loot_currency.enabled then
+		return
+	end
+
+	local options = t_wipe(C.options.args.types.args.loot_currency.plugins.filters)
+	local nameToIndex = {}
+	local info
+
+	for id in next, C.db.profile.types.loot_currency.filters do
+		info = C_CurrencyInfo.GetBasicCurrencyInfo(id)
+		t_insert(nameToIndex, info.name)
+	end
+
+	t_sort(nameToIndex)
+
+	for i = 1, #nameToIndex do
+		nameToIndex[nameToIndex[i]] = i
+	end
+
+	for id in next, C.db.profile.types.loot_currency.filters do
+		info = C_CurrencyInfo.GetBasicCurrencyInfo(id)
+
+		options[tostring(id)] = {
+			order = nameToIndex[info.name] + 10,
+			type = "group",
+			name = ("|T%s:0:0:0:0:64:64:4:60:4:60|t %s"):format(info.icon, info.name),
+			args = {
+				desc = {
+					order = 1,
+					type = "description",
+					name = info.description,
+				},
+				threshold = {
+					order = 2,
+					type = "input",
+					name = L["THRESHOLD"],
+					desc = L["CURRENCY_THRESHOLD_DESC"],
+					validate = validateThreshold,
+					set = setThreshold,
+					get = getThreshold,
+				},
+			},
+		}
+	end
+end
+
+-- Update filters and options when users discover new currencies
+local function updateFilters()
+	if C_CurrencyInfo.GetCurrencyListSize() == listSize then
+		return
+	end
+
+	populateFilters()
+	updateFilterOptions()
 end
 
 local function Enable()
 	if C.db.profile.types.loot_currency.enabled then
 		E:RegisterEvent("CURRENCY_DISPLAY_UPDATE", CURRENCY_DISPLAY_UPDATE)
+		E:RegisterEvent("CURRENCY_DISPLAY_UPDATE", updateFilters)
+
+		populateFilters()
+		updateFilterOptions()
 	end
 end
 
 local function Disable()
 	E:UnregisterEvent("CURRENCY_DISPLAY_UPDATE", CURRENCY_DISPLAY_UPDATE)
+	E:UnregisterEvent("CURRENCY_DISPLAY_UPDATE", updateFilters)
 end
 
 local function Test()
 	-- Order Resources
-	Toast_SetUp("LOOT_CURRENCY_TEST", "currency:" .. 1220, m_random(300, 600), (NO_GAIN_SOURCE * m_random(0, 1)) == NO_GAIN_SOURCE)
+	Toast_SetUp("LOOT_CURRENCY_TEST", 1220, m_random(300, 600), (NO_GAIN_SOURCE * m_random(0, 1)) == NO_GAIN_SOURCE)
 end
 
 E:RegisterOptions("loot_currency", {
@@ -250,6 +356,9 @@ E:RegisterOptions("loot_currency", {
 	dnd = false,
 	sfx = true,
 	track_loss = false,
+	filters = {
+		[1792] = 25,
+	},
 }, {
 	name = L["TYPE_LOOT_CURRENCY"],
 	get = function(info)
@@ -258,11 +367,19 @@ E:RegisterOptions("loot_currency", {
 	set = function(info, value)
 		C.db.profile.types.loot_currency[info[#info]] = value
 	end,
+	disabled = function(info)
+		if info[#info] == "loot_currency" then
+			return false
+		else
+			return not C.db.profile.types.loot_currency.enabled
+		end
+	end,
 	args = {
 		enabled = {
 			order = 1,
 			type = "toggle",
 			name = L["ENABLE"],
+			disabled = false,
 			set = function(_, value)
 				C.db.profile.types.loot_currency.enabled = value
 
@@ -271,7 +388,7 @@ E:RegisterOptions("loot_currency", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -291,11 +408,76 @@ E:RegisterOptions("loot_currency", {
 		},
 		test = {
 			type = "execute",
-			order = 99,
+			order = 7,
 			width = "full",
 			name = L["TEST"],
 			func = Test,
 		},
+		spacer_1 = {
+			order = 8,
+			type = "description",
+			name = " ",
+		},
+		header_1 = {
+			order = 9,
+			type = "description",
+			name = "   |cffffd200".. L["FILTERS"] .. "|r",
+			fontSize = "medium",
+		},
+		new = {
+			order = 10,
+			type = "group",
+			name = L["NEW"],
+			args = {
+				desc = {
+					order = 1,
+					type = "description",
+					name = L["NEW_CURRENCY_FILTER_DESC"],
+				},
+				id = {
+					order = 2,
+					type = "input",
+					name = L["ID"],
+					dialogControl = "LSPreviewBoxCurrency",
+					validate = function(_, value)
+						value = tonumber(value)
+						if value then
+							return not not C_CurrencyInfo.GetCurrencyLink(value, 0)
+						else
+							return true
+						end
+					end,
+					set = function(_, value)
+						value = tonumber(value)
+						if value and C_CurrencyInfo.GetCurrencyLink(value, 0) then
+							newID = value
+						else
+							newID = nil -- jic
+						end
+					end,
+					get = function()
+						return tostring(newID or "")
+					end,
+				},
+				add = {
+					type = "execute",
+					order = 3,
+					name = L["ADD"],
+					disabled = function()
+						return not newID or C.db.profile.types.loot_currency.filters[newID] or BLACKLIST[newID]
+					end,
+					func = function()
+						C.db.profile.types.loot_currency.filters[newID] = 0 -- disabled by default
+						newID = nil
+
+						updateFilterOptions()
+					end
+				},
+			},
+		},
+	},
+	plugins = {
+		filters = {},
 	},
 })
 
