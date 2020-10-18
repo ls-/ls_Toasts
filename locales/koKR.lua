@@ -53,8 +53,12 @@ L["YOU_RECEIVED"] = "획득"
 
 -- Retail
 L["COLLECTIONS_TAINT_WARNING"] = "이 설정을 사용하는 경우 전투중 \"수집창\"을 열게 되면 오류가 발생합니다."
+--[[ L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created." ]]
+--[[ L["FILTERS"] = "Filters" ]]
 L["HANDLE_LEFT_CLICK"] = "왼쪽 클릭으로 조정"
+--[[ L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID." ]]
 L["OPEN_CONFIG"] = "설정 열기"
+--[[ L["THRESHOLD"] = "Threshold" ]]
 L["TRANSMOG_ADDED"] = "형상이 추가되었습니다"
 L["TRANSMOG_REMOVED"] = "형상이 제거되었습니다"
 L["TYPE_ACHIEVEMENT"] = "업적"
