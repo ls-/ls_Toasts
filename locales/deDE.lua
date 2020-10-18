@@ -53,8 +53,12 @@ L["YOU_RECEIVED"] = "Ihr erhaltet"
 
 -- Retail
 L["COLLECTIONS_TAINT_WARNING"] = "Diese Option kann Probleme verursachen, wenn das Sammlungsfenster während des Kampfes geöffnet wird."
+--[[ L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created." ]]
+--[[ L["FILTERS"] = "Filters" ]]
 L["HANDLE_LEFT_CLICK"] = "Linksklick behandeln"
+--[[ L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID." ]]
 L["OPEN_CONFIG"] = "Konfiguration öffnen"
+--[[ L["THRESHOLD"] = "Threshold" ]]
 L["TRANSMOG_ADDED"] = "Vorlage hinzugefügt"
 L["TRANSMOG_REMOVED"] = "Vorlage entfernt"
 L["TYPE_ACHIEVEMENT"] = "Erfolg"

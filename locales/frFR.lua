@@ -53,8 +53,12 @@ L["YOU_RECEIVED"] = "Vous avez reçu"
 
 -- Retail
 L["COLLECTIONS_TAINT_WARNING"] = "Activer cette option peut provoquer des erreurs lors de l'ouverture de l'interface \"Collections\" en combat"
+--[[ L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created." ]]
+--[[ L["FILTERS"] = "Filters" ]]
 --[[ L["HANDLE_LEFT_CLICK"] = "Handle Left Click" ]]
+--[[ L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID." ]]
 L["OPEN_CONFIG"] = "Ouvrir Configuration"
+--[[ L["THRESHOLD"] = "Threshold" ]]
 L["TRANSMOG_ADDED"] = "Apparence ajoutée"
 L["TRANSMOG_REMOVED"] = "Apparence retirée"
 L["TYPE_ACHIEVEMENT"] = "Haut-Fait"
