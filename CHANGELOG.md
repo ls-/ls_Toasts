@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Version 90001.03
+
+- Added currency toast filters. They will allow you to blacklist certain currencies entirely and
+  to set thresholds below which toasts won't be generated. The addon will try to populate the
+  currency list with discovered currencies automatically, thus you should log in on a character
+  that discovered them most currencies at least once, but there's a way to add currency IDs
+  manually. Out of the box, the only active currency filter is for `"Honor"`, it's set to 25; 
+- Updated Traditional Chinese translation. Translated by RainbowUI@Curse.
+
+![](https://i.imgur.com/zpXx0KW.png)
+
 ## Version 90001.02
 
 - Added support for runecarving toasts which become available later after SL launch;
