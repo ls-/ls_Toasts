@@ -77,5 +77,5 @@ L["TYPE_LOOT_SPECIAL_DESC"] = "Toast innescati da eventi speciali di bottino, e.
 L["TYPE_RECIPE"] = "Ricette"
 L["TYPE_RUNECARVING"] = "Incisione runica"
 L["TYPE_TRANSMOG"] = "Trasmogrificazione"
-L["TYPE_WAR_EFFORT"] = "War Effort"
+L["TYPE_WAR_EFFORT"] = "Fronti di Guerra"
 L["TYPE_WORLD_QUEST"] = "Missioni mondali"
