@@ -53,12 +53,12 @@ L["YOU_RECEIVED"] = "你收到"
 
 -- Retail
 L["COLLECTIONS_TAINT_WARNING"] = "啟用這個選項時，若在戰鬥中點擊開啟了 \"收藏\" 視窗，會發生錯誤。"
---[[ L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created." ]]
---[[ L["FILTERS"] = "Filters" ]]
+L["CURRENCY_THRESHOLD_DESC"] = "輸入 |cffffd200-1|r 來忽略此貨幣。 |cffffd2000|r來停用此過濾，或|cffffd200 0以上的任何數字|r來設置閾值，低於該閾值將不建立與跳出提示。"
+L["FILTERS"] = "過濾方式"
 L["HANDLE_LEFT_CLICK"] = "允許左鍵點擊"
---[[ L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID." ]]
+L["NEW_CURRENCY_FILTER_DESC"] = "輸入兌換通貨 ID"
 L["OPEN_CONFIG"] = "開啟設定"
---[[ L["THRESHOLD"] = "Threshold" ]]
+L["THRESHOLD"] = "數量最少要"
 L["TRANSMOG_ADDED"] = "外觀已加入"
 L["TRANSMOG_REMOVED"] = "外觀已移除"
 L["TYPE_ACHIEVEMENT"] = "成就"

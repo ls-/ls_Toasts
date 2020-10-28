@@ -53,12 +53,12 @@ L["YOU_RECEIVED"] = "획득"
 
 -- Retail
 L["COLLECTIONS_TAINT_WARNING"] = "이 설정을 사용하는 경우 전투중 \"수집창\"을 열게 되면 오류가 발생합니다."
---[[ L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created." ]]
---[[ L["FILTERS"] = "Filters" ]]
+L["CURRENCY_THRESHOLD_DESC"] = "이 화폐를 무시하려면 |cffffd200-1|r 입력하세요. |cffffd2000|r 을 입력하면 팝업이 생성되지 않으며, |cffffd200 0보다 높은 숫자|r를 입력해야 팝업이 생성되는 최소값이 설정합니다."
+L["FILTERS"] = "분류"
 L["HANDLE_LEFT_CLICK"] = "왼쪽 클릭으로 조정"
---[[ L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID." ]]
+L["NEW_CURRENCY_FILTER_DESC"] = "화폐 ID를 입력하세요."
 L["OPEN_CONFIG"] = "설정 열기"
---[[ L["THRESHOLD"] = "Threshold" ]]
+L["THRESHOLD"] = "최소수량"
 L["TRANSMOG_ADDED"] = "형상이 추가되었습니다"
 L["TRANSMOG_REMOVED"] = "형상이 제거되었습니다"
 L["TYPE_ACHIEVEMENT"] = "업적"
@@ -66,7 +66,7 @@ L["TYPE_ARCHAEOLOGY"] = "고고학"
 L["TYPE_CLASS_HALL"] = "직업 전당"
 L["TYPE_COLLECTION"] = "수집품"
 L["TYPE_COLLECTION_DESC"] = "새로 수집한 탈것, 애완동물과 장난감의 알림창입니다."
---[[ L["TYPE_COVENANT"] = "Covenant" ]]
+L["TYPE_COVENANT"] = "계약"
 L["TYPE_DUNGEON"] = "던전"
 L["TYPE_GARRISON"] = "주둔지"
 L["TYPE_LOOT_COMMON"] = "전리품 (일반)"
