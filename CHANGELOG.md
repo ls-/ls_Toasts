@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 90001.04
+
+- Added Italian translation. Translated by vabatta@GitHub;
+- Updated Korean translation. Translated by unrealcrom96@Curse;
+- Updated Traditional Chinese translation. Translated by RainbowUI@Curse.
+
 ## Version 90001.03
 
 - Added currency toast filters. They will allow you to blacklist certain currencies entirely and
