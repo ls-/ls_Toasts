@@ -13,6 +13,7 @@ local tonumber = _G.tonumber
 local tostring = _G.tostring
 
 -- Blizz
+local Enum = _G.Enum
 local C_CurrencyInfo = _G.C_CurrencyInfo
 
 --[[ luacheck: globals
@@ -22,7 +23,7 @@ local C_CurrencyInfo = _G.C_CurrencyInfo
 ]]
 
 -- Mine
-local NO_GAIN_SOURCE = 44 -- replace with Enum.CurrencySource.Last when it's added
+local NO_GAIN_SOURCE = Enum.CurrencySource.Last
 
 -- https://wow.tools/dbc/?dbc=currencytypes&build=whatever
 local BLACKLIST = {
