@@ -9,14 +9,26 @@ local t_concat = _G. table.concat
 local C_LegendaryCrafting = _G.C_LegendaryCrafting
 
 --[[ luacheck: globals
-	Enum GameTooltip GameTooltip_AddBlankLineToTooltip GameTooltip_AddColoredLine
-	GameTooltip_AddErrorLine GameTooltip_AddHighlightLine GameTooltip_AddNormalLine
-	GameTooltip_SetTitle
+	EncounterJournal EncounterJournal_LoadUI EncounterJournal_OpenToPowerID Enum GameTooltip
+	GameTooltip_AddBlankLineToTooltip GameTooltip_AddColoredLine GameTooltip_AddErrorLine GameTooltip_AddHighlightLine
+	GameTooltip_AddNormalLine GameTooltip_SetTitle InCombatLockdown
 
-	GREEN_FONT_COLOR ITEM_QUALITY_COLORS LEGENDARY_ORANGE_COLOR LIST_DELIMITER
+	GREEN_FONT_COLOR HIGHLIGHT_FONT_COLOR ITEM_QUALITY_COLORS LEGENDARY_ORANGE_COLOR LIST_DELIMITER
 ]]
 
 -- Mine
+local function Toast_OnClick(self)
+	if self._data.runecarving_id and not InCombatLockdown() then
+		if not EncounterJournal then
+			EncounterJournal_LoadUI()
+		end
+
+		if EncounterJournal then
+			EncounterJournal_OpenToPowerID(self._data.runecarving_id)
+		end
+	end
+end
+
 -- based on function RuneforgePowerBaseMixin:OnEnter()
 local function Toast_OnEnter(self)
 	if self._data.runecarving_id then
@@ -27,14 +39,25 @@ local function Toast_OnEnter(self)
 
 		local slots = C_LegendaryCrafting.GetRuneforgePowerSlots(self._data.runecarving_id)
 		if #slots > 0 then
+			slots = HIGHLIGHT_FONT_COLOR:WrapTextInColorCode(t_concat(slots, LIST_DELIMITER))
+
 			GameTooltip_AddBlankLineToTooltip(GameTooltip)
-			GameTooltip_AddHighlightLine(GameTooltip, L["RUNECARVING_SLOT_HEADER"])
-			GameTooltip_AddNormalLine(GameTooltip, t_concat(slots, LIST_DELIMITER))
+			GameTooltip_AddNormalLine(GameTooltip, L["RUNECARVING_SLOT_FORMAT"]:format(slots))
 		end
 
 		if info.source then
 			GameTooltip_AddBlankLineToTooltip(GameTooltip)
-			GameTooltip_AddNormalLine(GameTooltip, info.source)
+			GameTooltip_AddNormalLine(GameTooltip, L["RUNECARVING_SOURCE_FORMAT"]:format(HIGHLIGHT_FONT_COLOR:WrapTextInColorCode(info.source)))
+		end
+
+		if info.specName then
+			GameTooltip_AddBlankLineToTooltip(GameTooltip)
+
+			if info.matchesSpec then
+				GameTooltip_AddNormalLine(GameTooltip, L["RUNECARVING_SPEC_FORMAT"]:format(HIGHLIGHT_FONT_COLOR:WrapTextInColorCode(info.specName)))
+			else
+				GameTooltip_AddErrorLine(GameTooltip, L["RUNECARVING_SPEC_FORMAT"]:format(info.specName))
+			end
 		end
 
 		if info.state ~= Enum.RuneforgePowerState.Available then
@@ -74,6 +97,7 @@ local function Toast_SetUp(event, powerID)
 		toast._data.runecarving_id = powerID
 		toast._data.sound_file = C.db.profile.types.runecarving.sfx and 166314 -- SOUNDKIT.UI_RUNECARVING_OPEN_MAIN_WINDOW
 
+		toast:HookScript("OnClick", Toast_OnClick)
 		toast:HookScript("OnEnter", Toast_OnEnter)
 		toast:Spawn(C.db.profile.types.runecarving.anchor, C.db.profile.types.runecarving.dnd)
 	end
