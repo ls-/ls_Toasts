@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 90002.01
+
+- Added 9.0.2 support.
+
 ## Version 90001.04
 
 - Added Italian translation. Translated by vabatta@GitHub;
