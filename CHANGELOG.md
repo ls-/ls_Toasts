@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 90005.01
+
+- Added 9.0.5 support.
+
 ## Version 90002.01
 
 - Added 9.0.2 support.
