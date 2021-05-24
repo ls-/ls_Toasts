@@ -1,7 +1,7 @@
-## Interface: 11303
+## Interface: 20501
 ## Author: lightspark
-## Version: 11303.01
 ## Title: ls: |cff1a9fc0Toasts|r
+## Version: 20501.01
 ## Notes: Better toasts, cheers!
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
 
