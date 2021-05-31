@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 20501.01
+
+- Added 2.5.1 support.
+
 ## Version 11303.01
 
 - Added 1.13.3 support;
