@@ -10,7 +10,7 @@ local C_TransmogCollection = _G.C_TransmogCollection
 
 --[[ luacheck: globals
 	CollectionsJournal CollectionsJournal_LoadUI DressUpVisual InCombatLockdown IsModifiedClick
-	WardrobeCollectionFrame_OpenTransmogLink
+	WardrobeCollectionFrame
 ]]
 
 -- Mine
@@ -23,7 +23,7 @@ local function Toast_OnClick(self)
 		end
 
 		if CollectionsJournal then
-			WardrobeCollectionFrame_OpenTransmogLink(self._data.link)
+			WardrobeCollectionFrame:OpenTransmogLink(self._data.link)
 		end
 	end
 end
