@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 90100.02
+
+- Fixed "Torghast - Scoreboard" toast spam.
+
 ## Version 90100.01
 
 - Added 9.1.0 support.
