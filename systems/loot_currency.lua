@@ -25,7 +25,7 @@ local C_CurrencyInfo = _G.C_CurrencyInfo
 -- Mine
 local NO_GAIN_SOURCE = Enum.CurrencySource.Last
 
--- https://wow.tools/dbc/?dbc=currencytypes&build=whatever
+-- https://wow.tools/dbc/?dbc=currencytypes
 local BLACKLIST = {
 	-- 41 (Test)
 	[  22] = true, -- Birmingham Test Item 3
@@ -205,6 +205,8 @@ local BLACKLIST = {
 	[1971] = true, -- Torghast - Scoreboard - Floor Par Time Floor 3
 	[1972] = true, -- Torghast - Scoreboard - Floor Par Time Floor 4
 	[1976] = true, -- Torghast - Scoreboard - Toast Display - Bonus - Phant Left Group
+	[1980] = true, -- Torghast - Scoreboard - Run Layer
+	[1981] = true, -- Torghast - Scoreboard - Run ID
 }
 
 local MULT = {
