@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 90100.03
+
+- Fixed "Torghast - Scoreboard" toast spam. Once again. Blizz continue adding
+  more info with hotfixes, so this most likely isn't the last spam fix. 
+
 ## Version 90100.02
 
 - Fixed "Torghast - Scoreboard" toast spam.
