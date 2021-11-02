@@ -96,7 +96,7 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 		end
 
 		toast:SetBackground("collection")
-		toast.Title:SetText(L["YOU_EARNED"])
+		toast.Title:SetText(L["YOU_COLLECTED"])
 		toast.Text:SetText(name)
 		toast.Icon:SetTexture(icon)
 		toast.IconBorder:Show()
