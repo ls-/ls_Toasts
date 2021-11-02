@@ -58,7 +58,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 
 		toast._data.event = event
 		toast._data.link = link
-		toast._data.sound_file = C.db.profile.types.transmog.sfx and 38326 -- SOUNDKIT.UI_DIG_SITE_COMPLETION_TOAST
+		toast._data.sound_file = C.db.profile.types.transmog.sfx and 187694 -- SOUNDKIT.UI_COSMETIC_ITEM_TOAST_SHOW
 		toast._data.source_id = sourceID
 		toast._data.visual_id = visualID
 
@@ -81,6 +81,16 @@ local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
 	end
 end
 
+-- I'm still not sure why this event was added, it always(?) fires alongside
+-- TRANSMOG_COLLECTION_SOURCE_ADDED with identical payload, but I'll keep it
+-- registered jic
+local function TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED(sourceID)
+	-- don't show toasts for sources that aren't in player's wardrobe
+	if C_TransmogCollection.PlayerKnowsSource(sourceID) then
+		Toast_SetUp("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
+	end
+end
+
 local function TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
 	-- don't show toasts for sources that aren't in player's wardrobe
 	if C_TransmogCollection.PlayerKnowsSource(sourceID) then
@@ -91,12 +101,14 @@ end
 local function Enable()
 	if C.db.profile.types.transmog.enabled then
 		E:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED", TRANSMOG_COLLECTION_SOURCE_ADDED)
+		E:RegisterEvent("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED)
 		E:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED", TRANSMOG_COLLECTION_SOURCE_REMOVED)
 	end
 end
 
 local function Disable()
 	E:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED", TRANSMOG_COLLECTION_SOURCE_ADDED)
+	E:UnregisterEvent("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED)
 	E:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED", TRANSMOG_COLLECTION_SOURCE_REMOVED)
 end
 

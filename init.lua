@@ -61,6 +61,7 @@ local BLACKLISTED_EVENTS = {
 	["SHOW_LOOT_TOAST_UPGRADE"] = true,
 	["SHOW_PVP_FACTION_LOOT_TOAST"] = true,
 	["SHOW_RATED_PVP_REWARD_TOAST"] = true,
+	["TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED"] = true,
 }
 
 local function updateCallback()
