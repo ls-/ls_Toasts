@@ -25,7 +25,7 @@ local C_CurrencyInfo = _G.C_CurrencyInfo
 -- Mine
 local NO_GAIN_SOURCE = Enum.CurrencySource.Last
 
--- https://wow.tools/dbc/?dbc=currencytypes
+-- https://wow.tools/dbc/?dbc=currencytypes&hotfixes=true
 local BLACKLIST = {
 	-- 41 (Test)
 	[  22] = true, -- Birmingham Test Item 3

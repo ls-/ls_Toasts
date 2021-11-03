@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 90105.01
+
+- Added 9.1.5 support.
+
 ## Version 90100.03
 
 - Fixed "Torghast - Scoreboard" toast spam. Once again. Blizz continue adding
