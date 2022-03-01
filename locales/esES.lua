@@ -53,12 +53,8 @@ L["YOU_RECEIVED"] = "Has recibido"
 
 -- Retail
 L["COLLECTIONS_TAINT_WARNING"] = "Activar esta opción puede causar problemas al abrir la ventana de \"Colecciones\" en combate."
---[[ L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created." ]]
---[[ L["FILTERS"] = "Filters" ]]
 L["HANDLE_LEFT_CLICK"] = "Utilizar clic izquierdo"
---[[ L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID." ]]
 L["OPEN_CONFIG"] = "Abrir Config"
---[[ L["THRESHOLD"] = "Threshold" ]]
 L["TRANSMOG_ADDED"] = "Appariencia añadida"
 L["TRANSMOG_REMOVED"] = "Apariencia eliminada"
 L["TYPE_ACHIEVEMENT"] = "Logro"
@@ -66,7 +62,6 @@ L["TYPE_ARCHAEOLOGY"] = "Arquelogía"
 L["TYPE_CLASS_HALL"] = "Sede de clase"
 L["TYPE_COLLECTION"] = "Colección"
 L["TYPE_COLLECTION_DESC"] = "Toasts para nuevas monturas, mascotas y juguetes."
---[[ L["TYPE_COVENANT"] = "Covenant" ]]
 L["TYPE_DUNGEON"] = "Mazmorra"
 L["TYPE_GARRISON"] = "Ciudadela"
 L["TYPE_LOOT_COMMON"] = "Botín (Común)"
