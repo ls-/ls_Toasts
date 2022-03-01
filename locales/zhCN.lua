@@ -53,12 +53,8 @@ L["YOU_RECEIVED"] = "你获得了"
 
 -- Retail
 L["COLLECTIONS_TAINT_WARNING"] = "战斗中打开收藏(包括坐骑、宠物和玩具)界面，会引起Blz内置插件报错(污染)。"
---[[ L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created." ]]
---[[ L["FILTERS"] = "Filters" ]]
 L["HANDLE_LEFT_CLICK"] = "支持左键点击"
---[[ L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID." ]]
 L["OPEN_CONFIG"] = "打开设置"
---[[ L["THRESHOLD"] = "Threshold" ]]
 L["TRANSMOG_ADDED"] = "幻化外观已添加"
 L["TRANSMOG_REMOVED"] = "幻化外观已移除"
 L["TYPE_ACHIEVEMENT"] = "成就"
@@ -66,7 +62,6 @@ L["TYPE_ARCHAEOLOGY"] = "考古"
 L["TYPE_CLASS_HALL"] = "职业大厅"
 L["TYPE_COLLECTION"] = "藏品"
 L["TYPE_COLLECTION_DESC"] = "对获取到的坐骑、宠物和玩具进行提示。"
---[[ L["TYPE_COVENANT"] = "Covenant" ]]
 L["TYPE_DUNGEON"] = "地下城"
 L["TYPE_GARRISON"] = "要塞"
 L["TYPE_LOOT_COMMON"] = "拾取(一般)"
