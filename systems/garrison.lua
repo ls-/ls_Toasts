@@ -243,10 +243,14 @@ end
 
 ------
 
-local typeToTalentText = {
+local garrTypeToTalentText = {
 	[Enum.GarrisonType.Type_7_0] = L["GARRISON_NEW_TALENT"],
 	[Enum.GarrisonType.Type_8_0] = L["GARRISON_NEW_TALENT"],
 	[Enum.GarrisonType.Type_9_0] = L["COVENANT_NEW_TALENT"],
+}
+
+local treeIDToTalentText = {
+	[474] = L["CYPHER_NEW_TALENT"] -- 9.2 Cypher Talents tree
 }
 
 local function TalentToast_OnEnter(self)
@@ -262,7 +266,7 @@ local function TalentToast_SetUp(event, garrisonType, talentID)
 	local talent = C_Garrison.GetTalentInfo(talentID)
 	local toast = E:GetToast()
 
-	toast.Title:SetText(typeToTalentText[garrisonType])
+	toast.Title:SetText(treeIDToTalentText[talent.treeID] or garrTypeToTalentText[garrisonType])
 	toast.Text:SetText(talent.name)
 	toast.Icon:SetTexture(talent.icon)
 	toast.IconBorder:Show()
@@ -419,11 +423,14 @@ local function TestCovenant()
 		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_9_0, missionID)
 	end
 
-	-- talent, Revendreth - Reservoir Upgrades
+	-- talent, Revendreth - Expanding Potential
 	local treeInfo = C_Garrison.GetTalentTreeInfo(326)
 	if treeInfo and treeInfo.talents and treeInfo.talents[1] then
-		TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_8_0, treeInfo.talents[1].id)
+		TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_9_0, treeInfo.talents[1].id)
 	end
+
+	-- cypher talent, Metrial Understanding
+	TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_9_0, 1901)
 end
 
 E:RegisterOptions("garrison_6_0", {
