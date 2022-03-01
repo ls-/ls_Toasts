@@ -141,6 +141,9 @@ local BLACKLIST = {
 	[1903] = true, -- Invisible Reward
 	[1907] = true, -- Death's Advance
 	[1947] = true, -- Bonus Valor
+	[1982] = true, -- The Enlightened
+	[1997] = true, -- Archivists' Codex
+	[2000] = true, -- Motes of Fate
 	-- 144 (Virtual)
 	[1553] = true, -- Azerite
 	[1585] = true, -- Account Wide Honor
