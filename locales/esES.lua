@@ -6,7 +6,7 @@ local L = addonTable.L
 -- Lua
 local _G = getfenv(0)
 
-if GetLocale() ~= "esES" then return end
+if GetLocale() ~= "esES" and GetLocale() ~= "esMX" then return end
 
 L["ANCHOR_FRAME_#"] = "Marco de anclaje #%d"
 L["ANCHOR_FRAMES"] = "Marcos de anclaje"
