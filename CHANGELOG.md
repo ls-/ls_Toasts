@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 90200.01
+
+- Added 9.2.0 support;
+- Updated French translation. Translated by agstegiel@Curse.
+
 ## Version 90105.01
 
 - Added 9.1.5 support.
