@@ -7,6 +7,7 @@ Replacement for the default alert system. Better toasts, cheers!
 ## Download
 
 - [Curse](https://www.curseforge.com/wow/addons/ls-toasts)
+- [Wago](https://addons.wago.io/addons/ls-toasts)
 
 ## Options
 
@@ -14,7 +15,7 @@ Use **`/LSTOASTS`** or **`/LST`** to open in-game config.
 
 ## Feedback and Feature Requests
 
-If you found a bug or want to share an idea on how to improve my addon, either use the issue tracker on [GitHub](https://github.com/ls-/ls_Toasts/issues), or post a comment on [Curse](https://www.curseforge.com/wow/addons/ls-toasts#comments).
+If you found a bug or want to share an idea on how to improve my addon, either use the issue tracker on [GitHub](https://github.com/ls-/ls_Toasts/issues) or simply DM me @ **ls-#9453** on Discord.
 
 ## Localisation
 
