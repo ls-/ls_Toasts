@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 11402.01 & 20503.01
+
+- Added 1.14.2 and 2.5.1 support;
+- Added partial Italian translations. Translated by vabatta@GitHub;
+- Updated French translations. Translated by agstegiel@Curse;
+- Updated embeds.
+
 ## Version 20501.01
 
 - Added 2.5.1 support.
