@@ -53,3 +53,7 @@ L["YOU_RECEIVED"] = "你获得了"
 
 -- Classic
 L["TYPE_LOOT_ITEMS"] = "拾取(物品)"
+
+-- WotLK
+L["TYPE_ACHIEVEMENT"] = "成就"
+L["TYPE_LOOT_CURRENCY"] = "拾取(货币)"

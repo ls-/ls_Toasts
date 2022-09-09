@@ -43,3 +43,11 @@ L["TRACK_LOSS_DESC"] = "Con questa opzione ignori la soglia di rame."
 L["TYPE_LOOT_GOLD"] = "Bottino (Oro)"
 L["YOU_LOST"] = "Hai perso"
 L["YOU_RECEIVED"] = "Hai ricevuto"
+
+-- WotLK
+L["CURRENCY_THRESHOLD_DESC"] = "Inserisci |cffffd200-1|r per ignorare la valuta, |cffffd2000|r per disabilitare il filtro, o |cffffd200un qualsiasi numero sopra 0|r per impostare una soglia sotto la quale i toast non verranno creati."
+L["FILTERS"] = "Filtri"
+L["NEW_CURRENCY_FILTER_DESC"] = "Inserici l'ID della valuta."
+L["THRESHOLD"] = "Soglia"
+L["TYPE_ACHIEVEMENT"] = "Imprese"
+L["TYPE_LOOT_CURRENCY"] = "Bottino (Valute)"

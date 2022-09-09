@@ -73,9 +73,9 @@ L["YOU_RECEIVED"] = "You Received"
 L["TYPE_LOOT_ITEMS"] = "Loot (Items)"
 
 -- WotLK
-L["FILTERS"] = "Filters"
-L["TYPE_LOOT_CURRENCY"] = "Loot (Currency)"
-L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID."
 L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created."
+L["FILTERS"] = "Filters"
+L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID."
 L["THRESHOLD"] = "Threshold"
 L["TYPE_ACHIEVEMENT"] = "Achievement"
+L["TYPE_LOOT_CURRENCY"] = "Loot (Currency)"

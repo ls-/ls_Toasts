@@ -45,3 +45,9 @@ L["YOU_RECEIVED"] = "Vous avez reçu"
 
 -- Classic
 L["TYPE_LOOT_ITEMS"] = "Butin (Objets)"
+
+-- WotLK
+L["FILTERS"] = "Filtres"
+L["THRESHOLD"] = "Rareté"
+L["TYPE_ACHIEVEMENT"] = "Haut-Fait"
+L["TYPE_LOOT_CURRENCY"] = "Butin (Breloques)"

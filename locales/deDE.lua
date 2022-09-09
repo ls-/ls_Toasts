@@ -53,3 +53,7 @@ L["YOU_RECEIVED"] = "Ihr erhaltet"
 
 -- Classic
 L["TYPE_LOOT_ITEMS"] = "Beute (Gegenstände)"
+
+-- WotLK
+L["TYPE_ACHIEVEMENT"] = "Erfolg"
+L["TYPE_LOOT_CURRENCY"] = "Beute (Abzeichen)"

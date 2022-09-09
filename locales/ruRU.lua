@@ -53,3 +53,11 @@ L["YOU_RECEIVED"] = "Вы получили"
 
 -- Classic
 L["TYPE_LOOT_ITEMS"] = "Добыча (Предметы)"
+
+-- WotLK
+L["CURRENCY_THRESHOLD_DESC"] = "Введите |cffffd200-1|r, чтобы игнорировать валюту, |cffffd2000|r, чтобы отключить фильтр, или |cffffd200любое число больше 0|r, чтобы установить порог, ниже которого уведомления не будут показываться."
+L["FILTERS"] = "Фильтры"
+L["NEW_CURRENCY_FILTER_DESC"] = "Введите ID валюты."
+L["THRESHOLD"] = "Порог"
+L["TYPE_ACHIEVEMENT"] = "Достижение"
+L["TYPE_LOOT_CURRENCY"] = "Добыча (Валюта)"
