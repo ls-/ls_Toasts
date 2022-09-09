@@ -87,7 +87,7 @@ local function Toast_SetUp(event, id, quantity)
 			toast._data.count = quantity
 			toast._data.event = event
 			toast._data.id = id
-			toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			toast._data.sound_file = C.db.profile.types.loot_currency.sfx and "Interface\\AddOns\\ls_Toasts\\assets\\ui-common-loot-toast.OGG"
 			toast._data.tooltip_link = "currency:" .. id
 
 			toast:HookScript("OnEnter", Toast_OnEnter)
