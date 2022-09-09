@@ -11,29 +11,15 @@ Set-Alias 7z "C:\PROGRA~1\7-Zip\7z.exe"
 $name = (Get-Item .).Name
 
 if (-Not (Test-Path (".\" + $name + ".toc"))) {
-	Write-Host "Classic .toc not found"
+	Write-Host ".toc not found"
 
 	return Read-Host
 }
 
 if (Get-Content (".\" + $name + ".toc") | Where { $_ -match "(Version: +)([a-zA-Z0-9.-]+)" }) {
-	$versionClassic = $matches[2]
+	$version = $matches[2]
 } else {
-	Write-Host "Bad Classic version format"
-
-	return Read-Host
-}
-
-if (-Not (Test-Path (".\" + $name + "_TBC.toc"))) {
-	Write-Host "TBC .toc not found"
-
-	return Read-Host
-}
-
-if (Get-Content (".\" + $name + "_TBC.toc") | Where { $_ -match "(Version: +)([a-zA-Z0-9.-]+)" }) {
-	$versionTBC = $matches[2]
-} else {
-	Write-Host "Bad TBC version format"
+	Write-Host "Bad version format"
 
 	return Read-Host
 }
@@ -42,7 +28,6 @@ $includedFiles = @(
 	".\init.lua",
 	".\LICENSE.txt",
 	".\ls_Toasts.toc",
-	".\ls_Toasts_TBC.toc",
 	".\assets\",
 	".\core\",
 	".\embeds\"
@@ -60,7 +45,7 @@ Copy-Item $includedFiles -Destination (".\temp\" + $name) -Recurse
 
 Set-Location ".\temp\"
 
-7z a -tzip -mx9 ($name + "-" + $versionClassic + "_" + $versionTBC + ".zip") (Get-ChildItem -Path "..\temp")
+7z a -tzip -mx9 ($name + "-" + $version + ".zip") (Get-ChildItem -Path "..\temp")
 
 Set-Location "..\"
 
