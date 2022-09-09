@@ -1,31 +1,8 @@
 # CHANGELOG
 
-## Version 11402.01 & 20503.01
+## Version 30400.01
 
-- Added 1.14.2 and 2.5.1 support;
-- Added partial Italian translations. Translated by vabatta@GitHub;
-- Updated French translations. Translated by agstegiel@Curse;
+- Added 3.4.0 support;
+- Added achievement toasts;
+- Added currency toasts;
 - Updated embeds.
-
-## Version 20501.01
-
-- Added 2.5.1 support.
-
-## Version 11303.01
-
-- Added 1.13.3 support;
-- Added BeautyCase-like skin;
-- Gold toast's icon now has three states: copper, bronze, and gold;
-- Updated Korean translation. Translated by blacknib@Curse;
-- Misc bug fixes and tweaks.
-
-NOTE: You'll have to restart WoW client to make things work after the update.
-
-## Version 11302.02
-
-- Renamed "Loot (Common)" to "Loot (Items)". There's no special loot toasts in Classic, so previous  
-  name made little sense.
-
-## Version 11302.01
-
-- Release released.

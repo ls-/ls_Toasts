@@ -9,13 +9,17 @@ local _G = getfenv(0)
 local L = {}
 addonTable.L = L
 
+L["ACHIEVEMENT_UNLOCKED"] = _G.ACHIEVEMENT_UNLOCKED
 L["ADD"] = _G.ADD
 L["DELETE"] = _G.DELETE
 L["ENABLE"] = _G.ENABLE
 L["GENERAL"] = _G.GENERAL_LABEL
+L["GUILD_ACHIEVEMENT_UNLOCKED"] = _G.GUILD_ACHIEVEMENT_UNLOCKED
+L["ID"] = _G.ID
 L["ITEM_LEGENDARY"] = _G.LEGENDARY_ITEM_LOOT_LABEL
 L["LOOT_THRESHOLD"] = _G.LOOT_THRESHOLD
 L["LS_TOASTS"] = "LS: |cff1a9fc0Toasts|r"
+L["NEW"] = _G.NEW
 L["OKAY"] = _G.OKAY
 L["RELOADUI"] = _G.RELOADUI
 L["RESET"] = _G.RESET
@@ -67,3 +71,11 @@ L["YOU_RECEIVED"] = "You Received"
 
 -- Classic
 L["TYPE_LOOT_ITEMS"] = "Loot (Items)"
+
+-- WotLK
+L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created."
+L["FILTERS"] = "Filters"
+L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID."
+L["THRESHOLD"] = "Threshold"
+L["TYPE_ACHIEVEMENT"] = "Achievement"
+L["TYPE_LOOT_CURRENCY"] = "Loot (Currency)"

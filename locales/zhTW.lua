@@ -53,3 +53,11 @@ L["YOU_RECEIVED"] = "你收到"
 
 -- Classic
 L["TYPE_LOOT_ITEMS"] = "拾取(物品)"
+
+-- WotLK
+L["CURRENCY_THRESHOLD_DESC"] = "輸入 |cffffd200-1|r 來忽略此貨幣。 |cffffd2000|r來停用此過濾，或|cffffd200 0以上的任何數字|r來設置閾值，低於該閾值將不建立與跳出提示。"
+L["FILTERS"] = "過濾方式"
+L["NEW_CURRENCY_FILTER_DESC"] = "輸入兌換通貨 ID"
+L["THRESHOLD"] = "數量最少要"
+L["TYPE_ACHIEVEMENT"] = "成就"
+L["TYPE_LOOT_CURRENCY"] = "拾取(貨幣)"
