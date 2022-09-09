@@ -36,6 +36,8 @@ local STRATA_INDICES ={
 }
 
 local BLACKLISTED_EVENTS = {
+	["ACHIEVEMENT_EARNED"] = true,
+	["CRITERIA_EARNED"] = true,
 	["LOOT_ITEM_ROLL_WON"] = true,
 	["NEW_RECIPE_LEARNED"] = true,
 	["QUEST_TURNED_IN"] = true,
