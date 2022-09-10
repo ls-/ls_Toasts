@@ -42,9 +42,9 @@ local function ARTIFACT_DIGSITE_COMPLETE(researchFieldID)
 end
 
 ------
-local NO_GAIN_SOURCE = 44 -- Watch it! Changes from patch to patch, smh...
+local NO_GAIN_SOURCE = Enum.CurrencySource.Last
 
--- https://wow.tools/dbc/?dbc=currencytypes&build=whatever
+-- https://wow.tools/dbc/?dbc=currencytypes#colFilter[3]=82
 local WHITELIST = {
 	-- 82 (Archaeology)
 	[ 384] = true, -- Dwarf Archaeology Fragment
