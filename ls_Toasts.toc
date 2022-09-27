@@ -1,6 +1,6 @@
-## Interface: 90200
+## Interface: 90207
 ## Author: lightspark
-## Version: 90200.01
+## Version: 90207.01
 ## Title: LS: |cff1a9fc0Toasts|r
 ## Notes: Better toasts, cheers!
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG

@@ -53,7 +53,7 @@ L["YOU_RECEIVED"] = "你收到"
 
 -- Retail
 L["COLLECTIONS_TAINT_WARNING"] = "啟用這個選項時，若在戰鬥中點擊開啟了 \"收藏\" 視窗，會發生錯誤。"
-L["CURRENCY_THRESHOLD_DESC"] = "輸入 |cffffd200-1|r 來忽略此貨幣。 |cffffd2000|r來停用此過濾，或|cffffd200 0以上的任何數字|r來設置閾值，低於該閾值將不建立與跳出提示。"
+L["CURRENCY_THRESHOLD_DESC"] = "輸入 |cffffd200-1|r 來忽略此貨幣，|cffffd2000|r 來停用過濾，或|cffffd200任何大於 0 的數字|r來設定值臨界值，低於這個數值將不會顯示通知。"
 L["FILTERS"] = "過濾方式"
 L["HANDLE_LEFT_CLICK"] = "允許左鍵點擊"
 L["NEW_CURRENCY_FILTER_DESC"] = "輸入兌換通貨 ID"

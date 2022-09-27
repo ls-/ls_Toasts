@@ -4,6 +4,7 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 local m_abs = _G.math.abs
+local m_floor = _G.math.floor
 local m_random = _G.math.random
 local next = _G.next
 local t_insert = _G.table.insert
@@ -303,7 +304,7 @@ local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
 		return
 	end
 
-	quantity = quantity * (MULT[id] or 1)
+	quantity = m_floor(quantity * (MULT[id] or 1))
 	if quantity < 1 then
 		return
 	end
