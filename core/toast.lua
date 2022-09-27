@@ -14,13 +14,6 @@ local unpack = _G.unpack
 
 -- Blizz
 local C_Timer = _G.C_Timer
-local Lerp = _G.Lerp
-
---[[ luacheck: globals
-	BattlePetTooltip CreateFrame GameTooltip GameTooltip_ShowCompareItem GarrisonFollowerTooltip
-	GarrisonShipyardFollowerTooltip GetCVarBool IsModifiedClick PlaySound ShoppingTooltip1
-	ShoppingTooltip2 UIParent
-]]
 
 -- Mine
 local freeToasts = {}
@@ -158,6 +151,10 @@ end
 -- Animated Text
 local textsToAnimate = {}
 
+local function lerp(v1, v2, perc)
+	return v1 + (v2 - v1) * perc
+end
+
 C_Timer.NewTicker(0.05, function()
 	for text, targetValue in next, textsToAnimate do
 		local newValue
@@ -165,9 +162,9 @@ C_Timer.NewTicker(0.05, function()
 		text._elapsed = text._elapsed + 0.05
 
 		if text._value >= targetValue then
-			newValue = m_floor(Lerp(text._value, targetValue, text._elapsed / 0.6))
+			newValue = m_floor(lerp(text._value, targetValue, text._elapsed / 0.6))
 		else
-			newValue = m_ceil(Lerp(text._value, targetValue, text._elapsed / 0.6))
+			newValue = m_ceil(lerp(text._value, targetValue, text._elapsed / 0.6))
 		end
 
 		if newValue == targetValue then
@@ -427,12 +424,15 @@ local function constructToast()
 
 	local title = toast:CreateFontString(nil, "ARTWORK")
 	title:SetPoint("TOPLEFT", 50, -2)
-	title:SetPoint("BOTTOMRIGHT", toast, "TOPRIGHT", -2, -22)
+	title:SetPoint("TOPRIGHT", -2, -2)
+	title:SetHeight(14)
 	toast.Title = title
 
 	local text = toast:CreateFontString(nil, "ARTWORK")
 	text:SetPoint("BOTTOMLEFT", 50, 2)
-	text:SetPoint("TOPRIGHT", toast, "BOTTOMRIGHT", -2, 22)
+	text:SetPoint("BOTTOMRIGHT", -2, 2)
+	text:SetHeight(28)
+	text:SetMaxLines(2)
 	text.SetAnimatedValue = text_SetAnimatedValue
 	toast.Text = text
 
