@@ -4,29 +4,23 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 
--- Blizz
-local C_TradeSkillUI = _G.C_TradeSkillUI
-
---[[ luacheck: globals
-	GameTooltip GetSpellInfo GetSpellRank InCombatLockdown TradeSkillFrame TradeSkillFrame_LoadUI
-]]
-
 -- Mine
-local function Toast_OnClick(self)
-	if self._data.tradeskill_id and not InCombatLockdown() then
-		if not TradeSkillFrame then
-			TradeSkillFrame_LoadUI()
-		end
+local function RecipeToast_OnClick(self)
+	if self._data.tradeskill_id then
+		if C.db.profile.types.recipe.left_click and not InCombatLockdown() then
+			if not ProfessionsFrame then
+				ProfessionsFrame_LoadUI()
+			end
 
-		if TradeSkillFrame then
-			if C_TradeSkillUI.OpenTradeSkill(self._data.tradeskill_id) then
-				TradeSkillFrame:SelectRecipe(self._data.recipe_id)
+			if ProfessionsFrame then
+				ProfessionsFrame:SetOpenRecipeResponse(self._data.skillline_id, self._data.recipe_id)
+				C_TradeSkillUI.OpenTradeSkill(self._data.tradeskill_id)
 			end
 		end
 	end
 end
 
-local function Toast_OnEnter(self)
+local function RecipeToast_OnEnter(self)
 	if self._data.recipe_id then
 		GameTooltip:SetSpellByID(self._data.recipe_id)
 		GameTooltip:Show()
@@ -39,9 +33,9 @@ local rankTextures = {
 	[3] = "|TInterface\\LootFrame\\toast-star-3:12:36:0:0:64:32:0:64:0:21|t",
 }
 
-local function Toast_SetUp(event, recipeID, recipeLevel)
-	local tradeSkillID = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
-	if tradeSkillID then
+local function RecipeToast_SetUp(event, recipeID, recipeLevel)
+	local skillLineID, _, tradeSkillID = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
+	if skillLineID then
 		local recipeName = GetSpellInfo(recipeID)
 		if recipeName then
 			local toast = E:GetToast()
@@ -54,41 +48,87 @@ local function Toast_SetUp(event, recipeID, recipeLevel)
 			toast:SetBackground("recipe")
 			toast.Title:SetText(recipeLevel and recipeLevel > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
 			toast.Text:SetText(recipeName)
-			toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(tradeSkillID))
+			toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(skillLineID))
 			toast.IconBorder:Show()
 
 			toast._data.event = event
 			toast._data.recipe_id = recipeID
+			toast._data.skillline_id = skillLineID
 			toast._data.sound_file = C.db.profile.types.recipe.sfx and 73919 -- SOUNDKIT.UI_PROFESSIONS_NEW_RECIPE_LEARNED_TOAST
-			toast._data.tradeskill_id = tradeSkillID
+			toast._data.tradeskill_id = tradeSkillID or skillLineID
 
-			toast:HookScript("OnClick", Toast_OnClick)
-			toast:HookScript("OnEnter", Toast_OnEnter)
+			toast:HookScript("OnClick", RecipeToast_OnClick)
+			toast:HookScript("OnEnter", RecipeToast_OnEnter)
 			toast:Spawn(C.db.profile.types.recipe.anchor, C.db.profile.types.recipe.dnd)
 		end
 	end
 end
 
 local function NEW_RECIPE_LEARNED(...) -- recipeID, recipeLevel
-	Toast_SetUp("NEW_RECIPE_LEARNED", ...)
+	RecipeToast_SetUp("NEW_RECIPE_LEARNED", ...)
+end
+
+local function SkillLineToast_OnClick(self)
+	if self._data.tradeskill_id then
+		if C.db.profile.types.recipe.left_click and not InCombatLockdown() then
+			if not ProfessionsFrame then
+				ProfessionsFrame_LoadUI()
+			end
+
+			if ProfessionsFrame then
+				ProfessionsFrame:SetOpenRecipeResponse(self._data.skillline_id, nil, true)
+				C_TradeSkillUI.OpenTradeSkill(self._data.tradeskill_id)
+			end
+		end
+	end
+end
+
+local function SkillLineToast_SetUp(event, skillLineID, tradeSkillID)
+	local name = C_TradeSkillUI.GetTradeSkillDisplayName(skillLineID)
+	if name then
+		local toast = E:GetToast()
+
+		toast:SetBackground("recipe")
+		toast.Title:SetText(L["FEATURE_UNLOCKED"])
+		toast.Text:SetFormattedText(L["PROFESSION_SPECIALIZATION"], C_TradeSkillUI.GetTradeSkillDisplayName(skillLineID))
+		toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(skillLineID))
+		toast.IconBorder:Show()
+
+		toast._data.event = event
+		toast._data.skillline_id = skillLineID
+		toast._data.sound_file = C.db.profile.types.recipe.sfx and 73919 -- SOUNDKIT.UI_PROFESSIONS_NEW_RECIPE_LEARNED_TOAST
+		toast._data.tradeskill_id = tradeSkillID or skillLineID
+
+		toast:HookScript("OnClick", SkillLineToast_OnClick)
+		toast:Spawn(C.db.profile.types.recipe.anchor, C.db.profile.types.recipe.dnd)
+	end
+end
+
+local function SKILL_LINE_SPECS_UNLOCKED(...) -- skillLineID, tradeSkillID
+	SkillLineToast_SetUp("SKILL_LINE_SPECS_UNLOCKED", ...)
 end
 
 local function Enable()
 	if C.db.profile.types.recipe.enabled then
 		E:RegisterEvent("NEW_RECIPE_LEARNED", NEW_RECIPE_LEARNED)
+		E:RegisterEvent("SKILL_LINE_SPECS_UNLOCKED", SKILL_LINE_SPECS_UNLOCKED)
 	end
 end
 
 local function Disable()
 	E:UnregisterEvent("NEW_RECIPE_LEARNED", NEW_RECIPE_LEARNED)
+	E:UnregisterEvent("SKILL_LINE_SPECS_UNLOCKED", SKILL_LINE_SPECS_UNLOCKED)
 end
 
 local function Test()
 	-- no rank, Elixir of Minor Defence
-	Toast_SetUp("RECIPE_TEST", 7183)
+	RecipeToast_SetUp("RECIPE_TEST", 7183)
 
 	-- rank 2, Word of Critical Strike
-	Toast_SetUp("RECIPE_TEST", 190992, GetSpellRank(190992))
+	RecipeToast_SetUp("RECIPE_TEST", 190992, GetSpellRank(190992))
+
+	-- Dragon Isles Enchanting
+	SkillLineToast_SetUp("RECIPE_TEST", 2825, 333)
 end
 
 E:RegisterOptions("recipe", {
@@ -96,6 +136,7 @@ E:RegisterOptions("recipe", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	left_click = false,
 }, {
 	name = L["TYPE_RECIPE"],
 	get = function(info)
@@ -129,6 +170,13 @@ E:RegisterOptions("recipe", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		left_click = {
+			order = 4,
+			type = "toggle",
+			name = L["HANDLE_LEFT_CLICK"],
+			desc = L["TAINT_WARNING"],
+			image = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew",
 		},
 		test = {
 			type = "execute",
