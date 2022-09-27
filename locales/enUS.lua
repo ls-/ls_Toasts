@@ -95,7 +95,6 @@ L["YOU_LOST"] = "You Lost"
 L["YOU_RECEIVED"] = "You Received"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "Enabling this option may cause errors when opening \"Collections\" panel in combat."
 L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created."
 L["FILTERS"] = "Filters"
 L["HANDLE_LEFT_CLICK"] = "Handle Left Click"

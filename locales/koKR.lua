@@ -52,7 +52,6 @@ L["YOU_LOST"] = "손실"
 L["YOU_RECEIVED"] = "획득"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "이 설정을 사용하는 경우 전투중 \"수집창\"을 열게 되면 오류가 발생합니다."
 L["CURRENCY_THRESHOLD_DESC"] = "이 화폐를 무시하려면 |cffffd200-1|r 입력하세요. |cffffd2000|r 을 입력하면 팝업이 생성되지 않으며, |cffffd200 0보다 높은 숫자|r를 입력해야 팝업이 생성되는 최소값이 설정합니다."
 L["FILTERS"] = "분류"
 L["HANDLE_LEFT_CLICK"] = "왼쪽 클릭으로 조정"

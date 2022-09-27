@@ -52,7 +52,6 @@ L["YOU_LOST"] = "你损失了"
 L["YOU_RECEIVED"] = "你获得了"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "战斗中打开收藏(包括坐骑、宠物和玩具)界面，会引起Blz内置插件报错(污染)。"
 L["HANDLE_LEFT_CLICK"] = "支持左键点击"
 L["OPEN_CONFIG"] = "打开设置"
 L["TRANSMOG_ADDED"] = "幻化外观已添加"

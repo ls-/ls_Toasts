@@ -52,7 +52,6 @@ L["YOU_LOST"] = "Has perdido"
 L["YOU_RECEIVED"] = "Has recibido"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "Activar esta opción puede causar problemas al abrir la ventana de \"Colecciones\" en combate."
 L["HANDLE_LEFT_CLICK"] = "Utilizar clic izquierdo"
 L["OPEN_CONFIG"] = "Abrir Config"
 L["TRANSMOG_ADDED"] = "Appariencia añadida"

@@ -52,7 +52,6 @@ L["YOU_LOST"] = "Ihr verliert"
 L["YOU_RECEIVED"] = "Ihr erhaltet"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "Diese Option kann Probleme verursachen, wenn das Sammlungsfenster während des Kampfes geöffnet wird."
 L["HANDLE_LEFT_CLICK"] = "Linksklick behandeln"
 L["OPEN_CONFIG"] = "Konfiguration öffnen"
 L["TRANSMOG_ADDED"] = "Vorlage hinzugefügt"

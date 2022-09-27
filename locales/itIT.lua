@@ -45,7 +45,7 @@ L["YOU_LOST"] = "Hai perso"
 L["YOU_RECEIVED"] = "Hai ricevuto"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "Abilitare questa opziona può causare errori durante l'apertura del pannello \"Collezioni\" durante il combattimento."
+L[""] = "Abilitare questa opziona può causare errori durante l'apertura del pannello \"Collezioni\" durante il combattimento."
 L["CURRENCY_THRESHOLD_DESC"] = "Inserisci |cffffd200-1|r per ignorare la valuta, |cffffd2000|r per disabilitare il filtro, o |cffffd200un qualsiasi numero sopra 0|r per impostare una soglia sotto la quale i toast non verranno creati."
 L["FILTERS"] = "Filtri"
 L["HANDLE_LEFT_CLICK"] = "Gestisci click sinistro"
