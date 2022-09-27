@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 90207.01
+
+- Added 9.2.7 support;
+- Fixed an issue where archaeology toasts would show the loss of fragments;
+- Fixed an issue where currency toasts would show decimals for quantities;
+- Updated Traditional Chinese translation. Translated by RainbowUI@Curse.
+
 ## Version 90200.01
 
 - Added 9.2.0 support;
