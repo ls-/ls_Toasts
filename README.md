@@ -16,7 +16,7 @@ Use **`/LSTOASTS`** or **`/LST`** to open in-game config.
 
 ## Feedback and Feature Requests
 
-If you found a bug or want to share an idea on how to improve my addon, either use the issue tracker on [GitHub](https://github.com/ls-/ls_Toasts/issues), post a comment on [WoWInterfrace](http://www.wowinterface.com/downloads/info24123.html#comments), or simply DM me @ **ls-#9453** on Discord.
+If you found a bug or want to share an idea on how to improve my addon, either use the issue tracker on [GitHub](https://github.com/ls-/ls_Toasts/issues) or join our [Discord](https://discord.gg/7QcJgQkDYD) server.
 
 ## Localisation
 
