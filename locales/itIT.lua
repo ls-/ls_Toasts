@@ -45,7 +45,6 @@ L["YOU_LOST"] = "Hai perso"
 L["YOU_RECEIVED"] = "Hai ricevuto"
 
 -- Retail
-L[""] = "Abilitare questa opziona può causare errori durante l'apertura del pannello \"Collezioni\" durante il combattimento."
 L["CURRENCY_THRESHOLD_DESC"] = "Inserisci |cffffd200-1|r per ignorare la valuta, |cffffd2000|r per disabilitare il filtro, o |cffffd200un qualsiasi numero sopra 0|r per impostare una soglia sotto la quale i toast non verranno creati."
 L["FILTERS"] = "Filtri"
 L["HANDLE_LEFT_CLICK"] = "Gestisci click sinistro"
@@ -66,7 +65,6 @@ L["TYPE_LOOT_COMMON_DESC"] = "Toast innescati da eventi chat, e.g. verdi, blu, a
 L["TYPE_LOOT_CURRENCY"] = "Bottino (Valute)"
 L["TYPE_LOOT_SPECIAL"] = "Bottino (Speciali)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Toast innescati da eventi speciali di bottino, e.g. bottini vinti, bottini leggendari, bottino personale, etc."
-L["TYPE_RECIPE"] = "Ricette"
 L["TYPE_RUNECARVING"] = "Incisione runica"
 L["TYPE_TRANSMOG"] = "Trasmogrificazione"
 L["TYPE_WAR_EFFORT"] = "Fronti di Guerra"

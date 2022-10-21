@@ -73,7 +73,6 @@ L["TYPE_LOOT_COMMON_DESC"] = "알림창이 대화 이벤트에 의해 발생됩�
 L["TYPE_LOOT_CURRENCY"] = "전리품 (화폐)"
 L["TYPE_LOOT_SPECIAL"] = "전리품 (특별)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "알림창이 특별 전리품 이벤트에 의해 발생됩니다, 즉. 주사위 우승, 전설 획득, 개인 획득 등입니다."
-L["TYPE_RECIPE"] = "제조법"
 L["TYPE_RUNECARVING"] = "룬조각술"
 L["TYPE_TRANSMOG"] = "형상변환"
 L["TYPE_WAR_EFFORT"] = "전쟁 효과"

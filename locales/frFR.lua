@@ -62,7 +62,6 @@ L["TYPE_LOOT_COMMON_DESC"] = "Toasts générés par le tchat, ex: verts, bleus, 
 L["TYPE_LOOT_CURRENCY"] = "Butin (Breloques)"
 L["TYPE_LOOT_SPECIAL"] = "Butin (Special)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Toasts générés par les Butins spéciaux, ex: Jets de Butin, Butin Légendaire ou Personnel, etc."
-L["TYPE_RECIPE"] = "Recettes"
 L["TYPE_RUNECARVING"] = "Gravure runique"
 L["TYPE_TRANSMOG"] = "Transmogrification"
 L["TYPE_WAR_EFFORT"] = "Effort de guerre"

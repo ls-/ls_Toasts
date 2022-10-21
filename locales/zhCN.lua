@@ -68,7 +68,6 @@ L["TYPE_LOOT_COMMON_DESC"] = "由聊天事件触发的通知，例如：绿色�
 L["TYPE_LOOT_CURRENCY"] = "拾取(货币)"
 L["TYPE_LOOT_SPECIAL"] = "拾取(特殊)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "由特殊战利品触发的通知，例如：贏得Roll、橙装、个人拾取..等等。"
-L["TYPE_RECIPE"] = "专业图纸"
 L["TYPE_RUNECARVING"] = "符文铭刻"
 L["TYPE_TRANSMOG"] = "幻化收藏"
 L["TYPE_WAR_EFFORT"] = "前线战役"

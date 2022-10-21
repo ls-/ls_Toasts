@@ -138,7 +138,7 @@ E:RegisterOptions("recipe", {
 	sfx = true,
 	left_click = false,
 }, {
-	name = L["TYPE_RECIPE"],
+	name = L["TYPE_PROFESSION"],
 	get = function(info)
 		return C.db.profile.types.recipe[info[#info]]
 	end,

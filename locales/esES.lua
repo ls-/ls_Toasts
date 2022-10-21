@@ -68,7 +68,6 @@ L["TYPE_LOOT_COMMON_DESC"] = "Toasts activados por eventos de chat, ej. verdes, 
 L["TYPE_LOOT_CURRENCY"] = "Botín (Moneda)"
 L["TYPE_LOOT_SPECIAL"] = "Botín (Especial)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Toasts activados por eventos de botín especial, ej. tiradas ganadas, caídas de legendarios, botín personal, etc."
-L["TYPE_RECIPE"] = "Receta"
 L["TYPE_RUNECARVING"] = "Talla de runas"
 L["TYPE_TRANSMOG"] = "Transmogrificación"
 L["TYPE_WAR_EFFORT"] = "Esfuerzo de guerra"
