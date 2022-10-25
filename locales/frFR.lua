@@ -44,7 +44,6 @@ L["YOU_LOST"] = "Vous avez perdu"
 L["YOU_RECEIVED"] = "Vous avez reçu"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "Activer cette option peut provoquer des erreurs lors de l'ouverture de l'interface \"Collections\" en combat"
 L["FILTERS"] = "Filtres"
 L["HANDLE_LEFT_CLICK"] = "Gestion du clic gauche"
 L["OPEN_CONFIG"] = "Ouvrir Configuration"
@@ -63,7 +62,6 @@ L["TYPE_LOOT_COMMON_DESC"] = "Toasts générés par le tchat, ex: verts, bleus, 
 L["TYPE_LOOT_CURRENCY"] = "Butin (Breloques)"
 L["TYPE_LOOT_SPECIAL"] = "Butin (Special)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Toasts générés par les Butins spéciaux, ex: Jets de Butin, Butin Légendaire ou Personnel, etc."
-L["TYPE_RECIPE"] = "Recettes"
 L["TYPE_RUNECARVING"] = "Gravure runique"
 L["TYPE_TRANSMOG"] = "Transmogrification"
 L["TYPE_WAR_EFFORT"] = "Effort de guerre"

@@ -52,7 +52,6 @@ L["YOU_LOST"] = "你损失了"
 L["YOU_RECEIVED"] = "你获得了"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "战斗中打开收藏(包括坐骑、宠物和玩具)界面，会引起Blz内置插件报错(污染)。"
 L["HANDLE_LEFT_CLICK"] = "支持左键点击"
 L["OPEN_CONFIG"] = "打开设置"
 L["TRANSMOG_ADDED"] = "幻化外观已添加"
@@ -69,7 +68,6 @@ L["TYPE_LOOT_COMMON_DESC"] = "由聊天事件触发的通知，例如：绿色�
 L["TYPE_LOOT_CURRENCY"] = "拾取(货币)"
 L["TYPE_LOOT_SPECIAL"] = "拾取(特殊)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "由特殊战利品触发的通知，例如：贏得Roll、橙装、个人拾取..等等。"
-L["TYPE_RECIPE"] = "专业图纸"
 L["TYPE_RUNECARVING"] = "符文铭刻"
 L["TYPE_TRANSMOG"] = "幻化收藏"
 L["TYPE_WAR_EFFORT"] = "前线战役"

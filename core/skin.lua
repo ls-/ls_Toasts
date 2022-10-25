@@ -82,7 +82,7 @@ function P:SetSkin(toast, id)
 	text:SetVertexColor(unpack(skin.text.color))
 	text:SetJustifyH("CENTER")
 	text:SetJustifyV("MIDDLE")
-	text:SetWordWrap(false)
+	text:SetWordWrap(true)
 	text:SetShadowOffset(skin.text.shadow and 1 or 0, skin.text.shadow and -1 or 0)
 
 	-- .TextBG

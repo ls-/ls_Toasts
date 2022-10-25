@@ -52,7 +52,6 @@ L["YOU_LOST"] = "손실"
 L["YOU_RECEIVED"] = "획득"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "이 설정을 사용하는 경우 전투중 \"수집창\"을 열게 되면 오류가 발생합니다."
 L["CURRENCY_THRESHOLD_DESC"] = "이 화폐를 무시하려면 |cffffd200-1|r 입력하세요. |cffffd2000|r 을 입력하면 팝업이 생성되지 않으며, |cffffd200 0보다 높은 숫자|r를 입력해야 팝업이 생성되는 최소값이 설정합니다."
 L["FILTERS"] = "분류"
 L["HANDLE_LEFT_CLICK"] = "왼쪽 클릭으로 조정"
@@ -74,7 +73,6 @@ L["TYPE_LOOT_COMMON_DESC"] = "알림창이 대화 이벤트에 의해 발생됩�
 L["TYPE_LOOT_CURRENCY"] = "전리품 (화폐)"
 L["TYPE_LOOT_SPECIAL"] = "전리품 (특별)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "알림창이 특별 전리품 이벤트에 의해 발생됩니다, 즉. 주사위 우승, 전설 획득, 개인 획득 등입니다."
-L["TYPE_RECIPE"] = "제조법"
 L["TYPE_RUNECARVING"] = "룬조각술"
 L["TYPE_TRANSMOG"] = "형상변환"
 L["TYPE_WAR_EFFORT"] = "전쟁 효과"

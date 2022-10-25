@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version 100000.01
+
+- Added 10.0.0 support;
+- Added new "Info" panel to the config. It has links to various resourced including my Discord
+  server dedicated to LS: * addons;
+- Renamed "Recipe" toasts to "Profession". Added profession skill line toasts;
+- Updated "Collection" toasts;
+- Updated embeds.
+
 ## Version 90207.01
 
 - Added 9.2.7 support;

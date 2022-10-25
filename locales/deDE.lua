@@ -52,7 +52,6 @@ L["YOU_LOST"] = "Ihr verliert"
 L["YOU_RECEIVED"] = "Ihr erhaltet"
 
 -- Retail
-L["COLLECTIONS_TAINT_WARNING"] = "Diese Option kann Probleme verursachen, wenn das Sammlungsfenster während des Kampfes geöffnet wird."
 L["HANDLE_LEFT_CLICK"] = "Linksklick behandeln"
 L["OPEN_CONFIG"] = "Konfiguration öffnen"
 L["TRANSMOG_ADDED"] = "Vorlage hinzugefügt"
@@ -70,7 +69,6 @@ L["TYPE_LOOT_COMMON_DESC"] = "Benachrichtigungen, die von Chatereignissen ausgel
 L["TYPE_LOOT_CURRENCY"] = "Beute (Abzeichen)"
 L["TYPE_LOOT_SPECIAL"] = "Beute (Spezial)"
 L["TYPE_LOOT_SPECIAL_DESC"] = "Benachrichtigungen, die von besonderen Beuteereignissen wie gewonnene Würfe, legendäre Gegenstände, persönliche Beute etc. ausgelöst werden."
-L["TYPE_RECIPE"] = "Rezept"
 L["TYPE_RUNECARVING"] = "Runenschnitzen"
 L["TYPE_TRANSMOG"] = "Transmogrifikation"
 L["TYPE_WAR_EFFORT"] = "Kriegsanstrengungen"

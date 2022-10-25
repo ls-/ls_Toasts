@@ -230,7 +230,7 @@ E:RegisterOptions("store", {
 			order = 4,
 			type = "toggle",
 			name = L["HANDLE_LEFT_CLICK"],
-			desc = L["COLLECTIONS_TAINT_WARNING"],
+			desc = L["TAINT_WARNING"],
 			image = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew",
 		},
 		test = {
