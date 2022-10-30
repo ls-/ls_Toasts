@@ -67,11 +67,13 @@ local function Toast_OnEnter(self)
 end
 
 local function Toast_SetUp(event, entitlementType, textureID, name, payloadID, payloadLink)
-	local toast, quality, _
+	local toast, isNew, quality, _
 
 	if payloadLink then
 		local sanitizedLink, originalLink = E:SanitizeLink(payloadLink)
-		toast = E:GetToast(event, "link", sanitizedLink)
+		toast, isNew = E:GetToast(event, "link", sanitizedLink)
+		if not isNew then return end
+
 		_, _, quality = GetItemInfo(originalLink)
 
 		toast._data.link = sanitizedLink
