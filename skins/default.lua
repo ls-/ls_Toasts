@@ -29,6 +29,15 @@ E:RegisterSkin("default", {
 	bonus = {
 		hidden = false,
 	},
+	leaves = {
+		color = {1, 1, 1},
+		points = {
+			{p = "TOPLEFT", rP = "TOPLEFT", x = -1, y = 16}, -- topleft
+			{p = "TOPRIGHT", rP = "TOPRIGHT", x = 10, y = 10}, -- topright
+			{p = "BOTTOMRIGHT", rP = "BOTTOMRIGHT", x = -32, y = -12}, -- bottomright
+		},
+		hidden = false,
+	},
 	dragon = {
 		hidden = false,
 	},
