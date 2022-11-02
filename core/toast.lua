@@ -334,6 +334,7 @@ local function toast_Release(self)
 	self.AnimIn:Stop()
 	self.AnimOut:Stop()
 	self.Bonus:Hide()
+	self:HideLeaves()
 	self.Dragon:Hide()
 	self.Icon:ClearAllPoints()
 	self.Icon:SetPoint("TOPLEFT", 0, 0)
@@ -449,6 +450,60 @@ local function constructToast()
 	bonus:SetPoint("TOPRIGHT", 0, 4)
 	bonus:Hide()
 	toast.Bonus = bonus
+
+	-- .Leaves
+	do
+		local leaves = {}
+		toast.Leaves = leaves
+
+		local leafTL = toast:CreateTexture(nil, "BACKGROUND", nil, 2)
+		leafTL:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-overlay-leaves")
+		leafTL:SetTexCoord(1 / 512, 213 / 512, 1 / 128, 81 / 128)
+		leafTL:SetSize(212 / 2, 80 / 2)
+		leafTL:Hide()
+		t_insert(leaves, leafTL)
+
+		local leafTR = toast:CreateTexture(nil, "BACKGROUND", nil, 2)
+		leafTR:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-overlay-leaves")
+		leafTR:SetTexCoord(213 / 512, 301 / 512, 1 / 128, 61 / 128)
+		leafTR:SetSize(88 / 2, 60 / 2)
+		leafTR:Hide()
+		t_insert(leaves, leafTR)
+
+		local leafBR = toast:CreateTexture(nil, "BACKGROUND", nil, 2)
+		leafBR:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\toast-overlay-leaves")
+		leafBR:SetTexCoord(301 / 512, 365 / 512, 1 / 128, 37 / 128)
+		leafBR:SetSize(64 / 2, 36 / 2)
+		leafBR:Hide()
+		t_insert(leaves, leafBR)
+
+		-- TODO: Rewrite toasts with mixin and object pools
+		function toast:ShowLeaves()
+			for i = 1, #self.Leaves do
+				self.Leaves[i]:Show()
+			end
+		end
+
+		function toast:HideLeaves()
+			for i = 1, #self.Leaves do
+				self.Leaves[i]:Hide()
+			end
+		end
+
+		function toast:AreLeavesShown()
+			return self.Leaves[1]:IsShown()
+		end
+
+		function toast:SetLeavesVertexColor(...)
+			for i = 1, #self.Leaves do
+				self.Leaves[i]:SetVertexColor(...)
+			end
+		end
+
+		function toast:ShouldHideLeaves()
+			return self.Leaves.isHidden
+		end
+	end
 
 	local iconParent = CreateFrame("Frame", nil, toast)
 	iconParent:SetFlattensRenderLayers(true)

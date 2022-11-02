@@ -93,6 +93,17 @@ function P:SetSkin(toast, id)
 	-- .Bonus
 	toast.Bonus.isHidden = skin.bonus.hidden
 
+	-- .Leaves
+	toast:SetLeavesVertexColor(unpack(skin.leaves.color))
+
+	local leavesPoints = skin.leaves.points
+	for i = 1, #toast.Leaves do
+		toast.Leaves[i]:ClearAllPoints()
+		toast.Leaves[i]:SetPoint(leavesPoints[i].p, toast, leavesPoints[i].rP, leavesPoints[i].x, leavesPoints[i].y)
+	end
+
+	toast.Leaves.isHidden = skin.leaves.hidden
+
 	-- .Dragon
 	toast.Dragon.isHidden = skin.dragon.hidden
 
@@ -197,8 +208,12 @@ function P:ResetSkin(toast)
 
 	-- .Title
 	toast.Title:SetVertexColor(unpack(skin.title.color))
+
 	-- .Text
 	toast.Text:SetVertexColor(unpack(skin.text.color))
+
+	-- .Leaves
+	toast:SetLeavesVertexColor(unpack(skin.leaves.color))
 
 	-- .Icon
 	toast.Icon:SetTexCoord(unpack(skin.icon.tex_coords))
