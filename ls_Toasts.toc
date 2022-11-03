@@ -1,6 +1,6 @@
 ## Interface: 30400
 ## Author: lightspark
-## Version: 30400.02
+## Version: 30400.03
 ## Title: LS: |cff1a9fc0Toasts|r
 ## Notes: Better toasts, cheers!
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
