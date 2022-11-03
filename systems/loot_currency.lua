@@ -234,6 +234,12 @@ end
 
 local function Test()
 	-- Emblem of Heroism
+	if not C.db.profile.types.loot_currency.filters[101] then
+		C.db.profile.types.loot_currency.filters[101] = 0
+
+		updateFilterOptions()
+	end
+
 	Toast_SetUp("LOOT_CURRENCY_TEST", 101, m_random(-250, 250))
 end
 
