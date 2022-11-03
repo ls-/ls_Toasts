@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 30400.03
+
+- Fixed file loading order.
+
 ## Version 30400.02
 
 - Added an option to show poor quality quality items via common loot toasts. Thanks to Faqar@GitHub.
