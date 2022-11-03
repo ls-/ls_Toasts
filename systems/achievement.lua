@@ -7,14 +7,8 @@ local _G = getfenv(0)
 -- Mine
 local function Toast_OnClick(self)
 	if self._data.ach_id and not InCombatLockdown() then
-		if not AchievementFrame then
-			AchievementFrame_LoadUI()
-		end
-
-		if AchievementFrame then
-			ShowUIPanel(AchievementFrame)
-			AchievementFrame_SelectAchievement(self._data.ach_id)
-		end
+		ShowUIPanel(AchievementFrame)
+		AchievementFrame_SelectAchievement(self._data.ach_id)
 	end
 end
 
@@ -44,15 +38,20 @@ local function Toast_SetUp(event, achievementID, flag)
 		toast.Title:SetText(isGuildAchievement and L["GUILD_ACHIEVEMENT_UNLOCKED"] or L["ACHIEVEMENT_UNLOCKED"])
 		toast.Text:SetText(name)
 
+		if not toast:ShouldHideLeaves() then
+			toast:ShowLeaves()
+		end
+
 		if flag then
 			toast.IconText1:SetText("")
 		else
 			if C.db.profile.colors.border then
-				toast.Border:SetVertexColor(0.9, 0.75, 0.26)
+				toast.Border:SetVertexColor(ACHIEVEMENT_GOLD_BORDER_COLOR:GetRGB())
+				toast:SetLeavesVertexColor(ACHIEVEMENT_GOLD_BORDER_COLOR:GetRGB())
 			end
 
 			if C.db.profile.colors.icon_border then
-				toast.IconBorder:SetVertexColor(0.9, 0.75, 0.26)
+				toast.IconBorder:SetVertexColor(ACHIEVEMENT_GOLD_BORDER_COLOR:GetRGB())
 			end
 
 			toast.IconText1:SetText(points == 0 and "" or points)
@@ -76,6 +75,10 @@ end
 
 local function Enable()
 	if C.db.profile.types.achievement.enabled then
+		if not AchievementFrame then
+			AchievementFrame_LoadUI()
+		end
+
 		E:RegisterEvent("ACHIEVEMENT_EARNED", ACHIEVEMENT_EARNED)
 	end
 end

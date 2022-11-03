@@ -6,6 +6,7 @@ local _G = getfenv(0)
 local hooksecurefunc = _G.hooksecurefunc
 local next = _G.next
 local print = _G.print
+local s_format = _G.string.format
 local tonumber = _G.tonumber
 
 --[[ luacheck: globals
@@ -17,7 +18,9 @@ local tonumber = _G.tonumber
 ]]
 
 -- Mine
-E.VER = tonumber(GetAddOnMetadata(addonName, "Version"):gsub("%D", ""), nil)
+E.VER = {}
+E.VER.string = GetAddOnMetadata(addonName, "Version")
+E.VER.number = tonumber(E.VER.string:gsub("%D", ""), nil)
 
 local STRATAS = {
 	[1] = "BACKGROUND",
@@ -53,7 +56,64 @@ local function updateCallback()
 end
 
 local function shutdownCallback()
-	C.db.profile.version = E.VER
+	C.db.profile.version = E.VER.number
+end
+
+local showLinkCopyPopup
+do
+	local link = ""
+
+	local popup = CreateFrame("Frame", nil, UIParent)
+	popup:Hide()
+	popup:SetPoint("CENTER", UIParent, "CENTER")
+	popup:SetSize(320, 78)
+	popup:EnableMouse(true)
+	popup:SetFrameStrata("TOOLTIP")
+	popup:SetFixedFrameStrata(true)
+	popup:SetFrameLevel(100)
+	popup:SetFixedFrameLevel(true)
+
+	local border = CreateFrame("Frame", nil, popup, "DialogBorderTranslucentTemplate")
+	border:SetAllPoints(popup)
+
+	local editBox = CreateFrame("EditBox", nil, popup, "InputBoxTemplate")
+	editBox:SetHeight(32)
+	editBox:SetPoint("TOPLEFT", 22, -10)
+	editBox:SetPoint("TOPRIGHT", -16, -10)
+	editBox:SetScript("OnChar", function(self)
+		self:SetText(link)
+		self:HighlightText()
+	end)
+	editBox:SetScript("OnMouseUp", function(self)
+		self:HighlightText()
+	end)
+	editBox:SetScript("OnEscapePressed", function(self)
+		popup:Hide()
+	end)
+
+	local button = CreateFrame("Button", nil, popup, "UIPanelButtonNoTooltipTemplate")
+	button:SetText(L["OKAY"])
+	button:SetSize(90, 22)
+	button:SetPoint("BOTTOM", 0, 16)
+	button:SetScript("OnClick", function()
+		popup:Hide()
+	end)
+
+	popup:SetScript("OnHide", function()
+		link = ""
+		editBox:SetText(link)
+	end)
+	popup:SetScript("OnShow", function()
+		editBox:SetText(link)
+		editBox:SetFocus()
+		editBox:HighlightText()
+	end)
+
+	function showLinkCopyPopup(text)
+		popup:Hide()
+		link = text
+		popup:Show()
+	end
 end
 
 E:RegisterEvent("ADDON_LOADED", function(arg1)
@@ -166,6 +226,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 								type = "select",
 								name = L["RARITY_THRESHOLD"],
 								values = {
+									[0] = ITEM_QUALITY_COLORS[0].hex .. ITEM_QUALITY0_DESC .. "|r",
 									[1] = ITEM_QUALITY_COLORS[1].hex .. ITEM_QUALITY1_DESC .. "|r",
 									[2] = ITEM_QUALITY_COLORS[2].hex .. ITEM_QUALITY2_DESC .. "|r",
 									[3] = ITEM_QUALITY_COLORS[3].hex .. ITEM_QUALITY3_DESC .. "|r",
@@ -244,6 +305,124 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				name = L["TOAST_TYPES"],
 				childGroups = "tab",
 				args = {},
+			},
+			-- profiles = {}, -- 100
+			about = {
+				order = 110,
+				type = "group",
+				name = "|cff1a9fc0" .. L["INFORMATION"] .. "|r",
+				args = {
+					desc = {
+						order = 1,
+						type = "description",
+						name = s_format("|cffffd200%s v|r%s", L["LS_TOASTS"], E.VER.string),
+						width = "full",
+						fontSize = "medium",
+					},
+					spacer_1 = {
+						order = 2,
+						type = "description",
+						name = " ",
+						width = "full",
+					},
+					support = {
+						order = 3,
+						type = "group",
+						name = L["SUPPORT"],
+						inline = true,
+						args = {
+							discord = {
+								order = 1,
+								type = "execute",
+								name = L["DISCORD"],
+								func = function()
+									showLinkCopyPopup("https://discord.gg/7QcJgQkDYD")
+								end,
+							},
+							github = {
+								order = 2,
+								type = "execute",
+								name = L["GITHUB"],
+								func = function()
+									showLinkCopyPopup("https://github.com/ls-/ls_Toasts/issues")
+								end,
+							},
+						},
+					},
+					spacer_2 = {
+						order = 4,
+						type = "description",
+						name = " ",
+						width = "full",
+					},
+					downloads = {
+						order = 5,
+						type = "group",
+						name = L["DOWNLOADS"],
+						inline = true,
+						args = {
+							-- wowi = {
+							-- 	order = 1,
+							-- 	type = "execute",
+							-- 	name = L["WOWINTERFACE"],
+							-- 	func = function()
+							-- 		showLinkCopyPopup("https://www.wowinterface.com/downloads/info24123.html")
+							-- 	end,
+							-- },
+							cf = {
+								order = 2,
+								type = "execute",
+								name = L["CURSEFORGE"],
+								func = function()
+									showLinkCopyPopup("https://www.curseforge.com/wow/addons/ls-toasts")
+								end,
+							},
+							wago = {
+								order = 3,
+								type = "execute",
+								name = L["WAGO"],
+								func = function()
+									showLinkCopyPopup("https://addons.wago.io/addons/ls-toasts")
+								end,
+							},
+						},
+					},
+					spacer_3 = {
+						order = 6,
+						type = "description",
+						name = " ",
+						width = "full",
+					},
+					CHANGELOG = {
+						order = 7,
+						type = "group",
+						name = L["CHANGELOG"],
+						inline = true,
+						args = {
+							latest = {
+								order = 1,
+								type = "description",
+								name = E.CHANGELOG,
+								width = "full",
+								fontSize = "medium",
+							},
+							spacer_1 = {
+								order = 2,
+								type = "description",
+								name = " ",
+								width = "full",
+							},
+							cf = {
+								order = 3,
+								type = "execute",
+								name = L["CHANGELOG_FULL"],
+								func = function()
+									showLinkCopyPopup("https://github.com/ls-/ls_Toasts/blob/wotlk/master/CHANGELOG.md")
+								end,
+							},
+						},
+					},
+				},
 			},
 		},
 	}

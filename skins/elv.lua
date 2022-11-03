@@ -13,6 +13,14 @@ E:RegisterSkin("elv", {
 		size = 1,
 		texture = {1, 1, 1, 1},
 	},
+	leaves = {
+		color = {0, 0, 0},
+		points = {
+			{y = 15}, -- topleft
+			{x = 9, y = 9}, -- topright
+			{y = -11}, -- bottomright
+		},
+	},
 	icon = {
 		tex_coords = {5 / 64, 59 / 64, 5 / 64, 59 / 64},
 	},
@@ -67,6 +75,9 @@ E:RegisterSkin("elv-no-art", {
 	name = "ElvUI (No Artwork)",
 	template = "elv",
 	text_bg = {
+		hidden = true,
+	},
+	leaves = {
 		hidden = true,
 	},
 	dragon = {
