@@ -66,7 +66,7 @@ do
 			registeredEvents[event] = {}
 
 			if unit1 then
-				P:Call(dispatcher.RegisterEvent, dispatcher, event, unit1, unit2)
+				P:Call(dispatcher.RegisterUnitEvent, dispatcher, event, unit1, unit2)
 			else
 				P:Call(dispatcher.RegisterEvent, dispatcher, event)
 			end
