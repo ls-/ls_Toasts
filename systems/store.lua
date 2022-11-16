@@ -24,7 +24,7 @@ local Enum = _G.Enum
 local function Toast_OnClick(self)
 	if IsModifiedClick("DRESSUP") then
 		if self._data.link then
-			E:DressUpLink(self._data.link)
+			DressUpLink(self._data.link)
 		elseif self._data.entitlement_type == Enum.WoWEntitlementType.Mount then
 			DressUpMount(self._data.entitlement_id)
 		elseif self._data.entitlement_type == Enum.WoWEntitlementType.Battlepet then
@@ -33,7 +33,7 @@ local function Toast_OnClick(self)
 		end
 	elseif self._data.entitlement_id then
 		if self._data.entitlement_type == Enum.WoWEntitlementType.Item then
-			local slot = E:SearchBagsForItemID(self._data.entitlement_id)
+			local slot = SearchBagsForItem(self._data.entitlement_id)
 			if slot >= 0 then
 				OpenBag(slot)
 			end

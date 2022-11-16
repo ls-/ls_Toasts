@@ -18,9 +18,9 @@ local tonumber = _G.tonumber
 -- Mine
 local function Toast_OnClick(self)
 	if self._data.link and IsModifiedClick("DRESSUP") then
-		E:DressUpLink(self._data.link)
+		DressUpLink(self._data.link)
 	elseif self._data.item_id then
-		local slot = E:SearchBagsForItemID(self._data.item_id)
+		local slot = SearchBagsForItem(self._data.item_id)
 		if slot >= 0 then
 			OpenBag(slot)
 		end
