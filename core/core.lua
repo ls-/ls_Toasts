@@ -15,19 +15,6 @@ local tonumber = _G.tonumber
 local type = _G.type
 local xpcall = _G.xpcall
 
--- Blizz
-local C_MountJournal = _G.C_MountJournal
-local C_PetJournal = _G.C_PetJournal
-
---[[ luacheck: globals
-	CreateFrame DressUpBattlePet DressUpMount DressUpVisual GetContainerItemID GetContainerNumSlots
-	GetDetailedItemLevelInfo GetItemInfo IsDressableItem LibStub UIParent
-
-	INVSLOT_BACK INVSLOT_CHEST INVSLOT_FEET INVSLOT_FINGER1 INVSLOT_FINGER2 INVSLOT_HAND
-	INVSLOT_HEAD INVSLOT_LEGS INVSLOT_MAINHAND INVSLOT_NECK INVSLOT_OFFHAND INVSLOT_RANGED
-	INVSLOT_SHOULDER INVSLOT_TRINKET1 INVSLOT_TRINKET2 INVSLOT_WAIST INVSLOT_WRIST NUM_BAG_SLOTS
-]]
-
 -- Mine
 local E, P = {}, {}
 addonTable.E, addonTable.P = E, P
