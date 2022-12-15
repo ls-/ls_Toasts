@@ -13,16 +13,6 @@ local t_wipe = _G.table.wipe
 local tonumber = _G.tonumber
 local tostring = _G.tostring
 
--- Blizz
-local Enum = _G.Enum
-local C_CurrencyInfo = _G.C_CurrencyInfo
-
---[[ luacheck: globals
-	FormatLargeNumber GameTooltip
-
-	ITEM_QUALITY_COLORS
-]]
-
 -- Mine
 local NO_GAIN_SOURCE = Enum.CurrencySource.Last
 

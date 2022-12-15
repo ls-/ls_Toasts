@@ -7,19 +7,6 @@ local m_random = _G.math.random
 local s_split = _G.string.split
 local tonumber = _G.tonumber
 
--- Blizz
-local C_PetJournal = _G.C_PetJournal
-local C_Timer = _G.C_Timer
-
---[[ luacheck: globals
-	BattlePetToolTip_Show DressUpBattlePet DressUpMount DressUpVisual GameTooltip GetItemInfo IsDressableItem
-	IsModifiedClick OpenBag UnitGUID
-
-	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC
-	LOOT_ITEM_CREATED_SELF LOOT_ITEM_CREATED_SELF_MULTIPLE LOOT_ITEM_PUSHED_SELF LOOT_ITEM_PUSHED_SELF_MULTIPLE
-	LOOT_ITEM_SELF LOOT_ITEM_SELF_MULTIPLE
-]]
-
 -- Mine
 local PLAYER_GUID = UnitGUID("player")
 

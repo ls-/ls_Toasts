@@ -4,20 +4,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 
--- Blizz
-local C_MountJournal = _G.C_MountJournal
-local C_PetJournal = _G.C_PetJournal
-local C_ToyBox = _G.C_ToyBox
-
---[[ luacheck: globals
-	CollectionsJournal CollectionsJournal_LoadUI DressUpBattlePet DressUpMount InCombatLockdown IsModifiedClick
-	MountJournal_SelectByMountID PetJournal PetJournal_SelectPet SetCollectionsJournalShown ToyBox
-	ToyBox_FindPageForToyID
-
-	COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS COLLECTIONS_JOURNAL_TAB_INDEX_PETS COLLECTIONS_JOURNAL_TAB_INDEX_TOYS
-	ITEM_QUALITY_COLORS
-]]
-
 -- Mine
 local function Toast_OnClick(self)
 	if self._data.collection_id then

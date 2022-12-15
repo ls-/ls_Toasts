@@ -7,14 +7,6 @@ local s_lower = _G.string.lower
 local s_split = _G.string.split
 local tonumber = _G.tonumber
 
---[[ luacheck: globals
-	BattlePetToolTip_Show BonusRollFrame DressUpBattlePet DressUpMount DressUpVisual GameTooltip GetItemInfo
-	GroupLootContainer GroupLootContainer_RemoveFrame IsDressableItem IsModifiedClick OpenBag UnitFactionGroup
-
-	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC ITEM_QUALITY5_DESC
-	LOOTUPGRADEFRAME_QUALITY_TEXTURES
-]]
-
 -- Mine
 local function Toast_OnClick(self)
 	if self._data.link and IsModifiedClick("DRESSUP") then

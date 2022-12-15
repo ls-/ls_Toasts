@@ -5,19 +5,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 local next = _G.next
 
--- Blizz
-local C_QuestLog = _G.C_QuestLog
-local C_TaskQuest = _G.C_TaskQuest
-local C_Timer = _G.C_Timer
-local C_TradeSkillUI = _G.C_TradeSkillUI
-
---[[ luacheck: globals
-	Enum GameTooltip GetItemInfo GetItemInfoInstant GetMoneyString GetNumQuestLogRewardCurrencies
-	GetQuestLogRewardCurrencyInfo GetQuestLogRewardMoney GetQuestLogRewardXP HaveQuestData HaveQuestRewardData UnitLevel
-
-	MAX_PLAYER_LEVEL WORLD_QUEST_QUALITY_COLORS
-]]
-
 -- Mine
 local CURRENCY_TEMPLATE = "%s|T%s:0|t"
 

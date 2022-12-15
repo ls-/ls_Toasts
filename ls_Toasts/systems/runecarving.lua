@@ -5,17 +5,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 local t_concat = _G. table.concat
 
--- Blizz
-local C_LegendaryCrafting = _G.C_LegendaryCrafting
-
---[[ luacheck: globals
-	EncounterJournal EncounterJournal_LoadUI EncounterJournal_OpenToPowerID Enum GameTooltip
-	GameTooltip_AddBlankLineToTooltip GameTooltip_AddColoredLine GameTooltip_AddErrorLine GameTooltip_AddHighlightLine
-	GameTooltip_AddNormalLine GameTooltip_SetTitle InCombatLockdown
-
-	GREEN_FONT_COLOR HIGHLIGHT_FONT_COLOR ITEM_QUALITY_COLORS LEGENDARY_ORANGE_COLOR LIST_DELIMITER
-]]
-
 -- Mine
 local function Toast_OnClick(self)
 	if self._data.runecarving_id and not InCombatLockdown() then

@@ -5,21 +5,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 local select = _G.select
 
--- Blizz
-local C_MountJournal = _G.C_MountJournal
-local C_PetJournal = _G.C_PetJournal
-local C_Timer = _G.C_Timer
-local Enum = _G.Enum
-
---[[ luacheck: globals
-	BattlePetToolTip_Show CollectionsJournal CollectionsJournal_LoadUI DressUpBattlePet DressUpMount GameTooltip
-	GetItemInfo GetItemInfoInstant InCombatLockdown IsModifiedClick MountJournal_SelectByMountID OpenBag PetJournal
-	PetJournal_SelectPet SetCollectionsJournalShown ToyBox WardrobeCollectionFrame_OpenTransmogLink
-
-	COLLECTIONS_JOURNAL_TAB_INDEX_APPEARANCES COLLECTIONS_JOURNAL_TAB_INDEX_MOUNTS COLLECTIONS_JOURNAL_TAB_INDEX_PETS
-	COLLECTIONS_JOURNAL_TAB_INDEX_TOYS ITEM_QUALITY_COLORS
-]]
-
 -- Mine
 local function Toast_OnClick(self)
 	if IsModifiedClick("DRESSUP") then

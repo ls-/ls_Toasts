@@ -4,16 +4,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 
--- Blizz
-local C_Scenario = _G.C_Scenario
-
---[[ luacheck: globals
-	GameTooltip GetLFGCompletionReward GetLFGCompletionRewardItem GetLFGCompletionRewardItemLink GetLFGDungeonInfo
-	GetMoneyString UnitLevel
-
-	LE_SCENARIO_TYPE_LEGION_INVASION LFG_SUBTYPEID_HEROIC MAX_PLAYER_LEVEL
-]]
-
 -- Mine
 local function Slot_OnEnter(self)
 	if self._data.type then

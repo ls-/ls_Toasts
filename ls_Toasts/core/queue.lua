@@ -8,10 +8,6 @@ local t_insert = _G.table.insert
 local t_remove = _G.table.remove
 local t_sort = _G.table.sort
 
---[[ luacheck: globals
-	InCombatLockdown
-]]
-
 -- Mine
 local activeToasts = {}
 local queuedToasts = {}
