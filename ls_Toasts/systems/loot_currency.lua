@@ -338,6 +338,7 @@ local BLACKLIST = {
 	[2160] = true, -- Dragon Racing - Best Time Display - Advanced - Fraction 1
 	[2161] = true, -- Dragon Racing - Best Time Display - Advanced - Fraction 10
 	[2162] = true, -- Dragon Racing - Best Time Display - Advanced - Fraction 100
+	[2235] = true, -- 10.0 Dragonrider PVP - Whirling Surge Dismounts [DNT]
 	-- 252 (Tuskarr - Fishing Nets (Hidden))
 	[2113] = true, -- Tuskarr - Fishing Net - Location 01 - Net 01 - Loot
 	[2114] = true, -- Tuskarr - Fishing Net - Location 01 - Net 04 (Quest) - Loot
