@@ -6,7 +6,7 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 10.0.2 support.
-- Fixed an issue where the addon would load the achievement UI too early which in turn could cause
-  errors.
+- Fixed "10.0 Dragonrider PVP - Whirling Surge Dismounts" spam.
+- Updated French translation. Translated by agstegiel@Curse and Braincell1980@Curse.
+- Updated German translation. Translated by MrKimab@Curse.
 ]]

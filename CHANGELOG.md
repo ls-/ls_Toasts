@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 100002.02
+
+- Fixed "10.0 Dragonrider PVP - Whirling Surge Dismounts" spam.
+- Updated French translation. Translated by agstegiel@Curse and Braincell1980@Curse.
+- Updated German translation. Translated by MrKimab@Curse.
+
 ## Version 100002.01
 
 - Added 10.0.2 support.
