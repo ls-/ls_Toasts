@@ -7,13 +7,6 @@ local hooksecurefunc = _G.hooksecurefunc
 local m_abs = _G.math.abs
 local m_random = _G.math.random
 
--- Blizz
-local C_CurrencyInfo = _G.C_CurrencyInfo
-
---[[ luacheck: globals
-	ArchaeologyFrame ArcheologyDigsiteProgressBar FormatLargeNumber GameTooltip GetArchaeologyRaceInfoByID
-]]
-
 -- Mine
 local function DigsiteToast_SetUp(event, researchFieldID)
 	local toast = E:GetToast()

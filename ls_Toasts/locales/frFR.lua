@@ -1,4 +1,4 @@
--- Contributors: Daniel8513@Curse, agstegiel@Curse
+-- Contributors: Daniel8513@Curse, agstegiel@Curse, Braincell1980@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -8,7 +8,12 @@ local _G = getfenv(0)
 
 if GetLocale() ~= "frFR" then return end
 
+L["ANCHOR_FRAME_#"] = "Fenêtre d'ancrage #%d"
+L["ANCHOR_FRAMES"] = "Fenêtres d'ancrage"
+L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r pour réinitialiser la position."
 L["BORDER"] = "Bordure"
+L["CHANGELOG"] = "Liste des changements "
+L["CHANGELOG_FULL"] = "Tout"
 L["COLORS"] = "Couleurs"
 L["COORDS"] = "Coordonnées"
 L["COPPER_THRESHOLD"] = "Seuil (en pièces de cuivre)"
@@ -16,6 +21,7 @@ L["COPPER_THRESHOLD_DESC"] = "Seuil minimum en pièce de cuivre permettant de g�
 L["DEFAULT_VALUE"] = "Valeur par défaut : |cffffd200%s|r"
 L["DND"] = "NPD"
 L["DND_TOOLTIP"] = "Les 'Toast' en mode NPD (Ne Pas Déranger) ne s'afficheront pas en combat mais seront stockés dans le système. Quand le combat s'achève, les 'Toast' s'affichent."
+L["DOWNLOADS"] = "Téléchargements"
 L["FADE_OUT_DELAY"] = "Délai de disparition en fondu"
 L["FLUSH_QUEUE"] = "Vider la file d'attente"
 L["FONTS"] = "Polices"
@@ -25,6 +31,7 @@ L["GROWTH_DIR_LEFT"] = "Gauche"
 L["GROWTH_DIR_RIGHT"] = "Droite"
 L["GROWTH_DIR_UP"] = "Haut"
 L["ICON_BORDER"] = "Bordure d'icône"
+L["INFORMATION"] = "Info"
 L["NAME"] = "Nom"
 L["RARITY_THRESHOLD"] = "Seuil de rareté"
 L["SCALE"] = "Echelle"
@@ -35,18 +42,27 @@ L["SHOW_QUEST_ITEMS_DESC"] = "Montrer les objets de quête sans tenir compte de 
 L["SIZE"] = "Taille"
 L["SKIN"] = "Apparence"
 L["STRATA"] = "Strate"
+L["SUPPORT"] = "Assistance"
 L["TEST"] = "Test"
 L["TEST_ALL"] = "Tester tout"
 L["TOAST_NUM"] = "Nombre de 'Toast' simultanés"
 L["TOAST_TYPES"] = "Types de 'Toast'"
+L["TOGGLE_ANCHORS"] = "Basculer les Ancres"
+L["TRACK_LOSS"] = "Suivre les pertes"
+L["TRACK_LOSS_DESC"] = "Cette option ignore le seuil défini pour le Cuivre."
 L["TYPE_LOOT_GOLD"] = "Butin (Gold)"
+L["X_OFFSET"] = "xOffset"
+L["Y_OFFSET"] = "yOffset"
 L["YOU_LOST"] = "Vous avez perdu"
 L["YOU_RECEIVED"] = "Vous avez reçu"
 
 -- Retail
+L["CURRENCY_THRESHOLD_DESC"] = "Entrez |cffffd200-1|r pour ignorer la devise, |cffffd2000|r pour désactiver le filtre, ou |cffffd200tout nombre supérieur à 0|r pour définir le seuil en dessous duquel aucun toast ne sera créé."
 L["FILTERS"] = "Filtres"
 L["HANDLE_LEFT_CLICK"] = "Gestion du clic gauche"
+L["NEW_CURRENCY_FILTER_DESC"] = "Entrez un ID de monnaie."
 L["OPEN_CONFIG"] = "Ouvrir Configuration"
+L["TAINT_WARNING"] = "Activer cette option peut causer des erreurs lors de l'ouverture ou de la fermeture de certaines fenêtres en combat."
 L["THRESHOLD"] = "Rareté"
 L["TRANSMOG_ADDED"] = "Apparence ajoutée"
 L["TRANSMOG_REMOVED"] = "Apparence retirée"
@@ -55,6 +71,7 @@ L["TYPE_ARCHAEOLOGY"] = "Archéologie"
 L["TYPE_CLASS_HALL"] = "Hall de Classe"
 L["TYPE_COLLECTION"] = "Collection"
 L["TYPE_COLLECTION_DESC"] = "Toasts pour les nouveaux Compagnons, Jouets et Montures collectés."
+L["TYPE_COVENANT"] = "Congrégation"
 L["TYPE_DUNGEON"] = "Donjon"
 L["TYPE_GARRISON"] = "Fief"
 L["TYPE_LOOT_COMMON"] = "Butin (Commun)"

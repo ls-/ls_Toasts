@@ -12,9 +12,6 @@ local t_wipe = _G.table.wipe
 local type = _G.type
 local unpack = _G.unpack
 
--- Blizz
-local C_Timer = _G.C_Timer
-
 -- Mine
 local freeToasts = {}
 local toasts = {}

@@ -8,16 +8,6 @@ local s_split = _G.string.split
 local select = _G.select
 local tonumber = _G.tonumber
 
--- Blizz
-local C_Garrison = _G.C_Garrison
-
---[[ luacheck: globals
-	Enum GameTooltip GarrisonFollowerOptions GarrisonFollowerTooltip GarrisonFollowerTooltipTemplate_SetGarrisonFollower
-	GarrisonFollowerTooltipTemplate_SetShipyardFollower GarrisonShipyardFollowerTooltip GetInstanceInfo UnitClass
-
-	ITEM_QUALITY_COLORS	LOOTUPGRADEFRAME_QUALITY_TEXTURES
-]]
-
 -- Mine
 local PLAYER_CLASS = select(3, UnitClass("player"))
 

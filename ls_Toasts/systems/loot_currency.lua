@@ -13,16 +13,6 @@ local t_wipe = _G.table.wipe
 local tonumber = _G.tonumber
 local tostring = _G.tostring
 
--- Blizz
-local Enum = _G.Enum
-local C_CurrencyInfo = _G.C_CurrencyInfo
-
---[[ luacheck: globals
-	FormatLargeNumber GameTooltip
-
-	ITEM_QUALITY_COLORS
-]]
-
 -- Mine
 local NO_GAIN_SOURCE = Enum.CurrencySource.Last
 
@@ -338,6 +328,7 @@ local BLACKLIST = {
 	[2160] = true, -- Dragon Racing - Best Time Display - Advanced - Fraction 1
 	[2161] = true, -- Dragon Racing - Best Time Display - Advanced - Fraction 10
 	[2162] = true, -- Dragon Racing - Best Time Display - Advanced - Fraction 100
+	[2235] = true, -- 10.0 Dragonrider PVP - Whirling Surge Dismounts [DNT]
 	-- 252 (Tuskarr - Fishing Nets (Hidden))
 	[2113] = true, -- Tuskarr - Fishing Net - Location 01 - Net 01 - Loot
 	[2114] = true, -- Tuskarr - Fishing Net - Location 01 - Net 04 (Quest) - Loot

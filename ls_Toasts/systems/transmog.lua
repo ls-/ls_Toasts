@@ -4,15 +4,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 
--- Blizz
-local C_Timer = _G.C_Timer
-local C_TransmogCollection = _G.C_TransmogCollection
-
---[[ luacheck: globals
-	CollectionsJournal CollectionsJournal_LoadUI DressUpVisual InCombatLockdown IsModifiedClick
-	WardrobeCollectionFrame
-]]
-
 -- Mine
 local function Toast_OnClick(self)
 	if self._data.source_id and IsModifiedClick("DRESSUP") then

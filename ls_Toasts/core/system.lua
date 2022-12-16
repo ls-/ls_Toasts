@@ -9,10 +9,6 @@ local next = _G.next
 local s_format = _G.string.format
 local type = _G.type
 
---[[ luacheck: globals
-	IsLoggedIn
-]]
-
 -- Mine
 local systems = {}
 local function dummy() end
