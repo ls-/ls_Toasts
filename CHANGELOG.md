@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Version 100005.01
+
+- Added 10.0.5 support.
+
+### Loot (Common)
+
+- Added support for reagent ranks.
+
+### Loot (Currency)
+
+- Updated the currency blacklist.
+
 ## Version 100002.02
 
 - Fixed "10.0 Dragonrider PVP - Whirling Surge Dismounts" spam.
