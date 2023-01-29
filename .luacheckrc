@@ -52,6 +52,7 @@ read_globals = {
 	"C_QuestLog",
 	"C_Scenario",
 	"C_TaskQuest",
+	"C_Texture",
 	"C_Timer",
 	"C_ToyBox",
 	"C_TradeSkillUI",
