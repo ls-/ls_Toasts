@@ -103,14 +103,14 @@ local function Toast_SetUp(event, link, quantity)
 	end
 
 	if isNew then
-		local name, quality, icon, _, classID, subClassID, bindType, isQuestItem
+		local name, quality, icon, _, classID, subClassID, bindType, isQuestItem, isCraftingReagent
 
 		if linkType == "battlepet" then
 			local _, speciesID, _, breedQuality, _ = s_split(":", originalLink)
 			name, icon = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 			quality = tonumber(breedQuality)
 		else
-			name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
+			name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType, _, _, isCraftingReagent = GetItemInfo(originalLink)
 			isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 		end
 
@@ -152,6 +152,16 @@ local function Toast_SetUp(event, link, quantity)
 
 				if not toast.Dragon.isHidden then
 					toast.Dragon:Show()
+				end
+			end
+
+			if isCraftingReagent then
+				local reagentQuality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemID)
+				if reagentQuality then
+					reagentQuality = C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
+					if reagentQuality then
+						name = name .. " " .. reagentQuality
+					end
 				end
 			end
 
@@ -242,6 +252,12 @@ end
 local function Test()
 	-- item, Chaos Crystal
 	local _, link = GetItemInfo(124442)
+	if link then
+		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
+	end
+
+	-- item, Hochenblume, Rank 3
+	_, link = GetItemInfo(191462)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
 	end
