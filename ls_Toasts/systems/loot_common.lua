@@ -103,14 +103,14 @@ local function Toast_SetUp(event, link, quantity)
 	end
 
 	if isNew then
-		local name, quality, icon, _, classID, subClassID, bindType, isQuestItem, isCraftingReagent
+		local name, quality, icon, _, classID, subClassID, bindType, isQuestItem
 
 		if linkType == "battlepet" then
 			local _, speciesID, _, breedQuality, _ = s_split(":", originalLink)
 			name, icon = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 			quality = tonumber(breedQuality)
 		else
-			name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType, _, _, isCraftingReagent = GetItemInfo(originalLink)
+			name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
 			isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 		end
 
@@ -155,18 +155,21 @@ local function Toast_SetUp(event, link, quantity)
 				end
 			end
 
-			if isCraftingReagent then
-				local reagentQuality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(itemID)
-				if reagentQuality then
-					reagentQuality = C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
-					if reagentQuality then
-						name = name .. " " .. reagentQuality
-					end
-				end
-			end
-
 			if not toast.IconHL.isHidden then
 				toast.IconHL:SetShown(isQuestItem)
+			end
+
+			local reagentQuality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(originalLink)
+			if not reagentQuality then
+				reagentQuality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(originalLink)
+			end
+
+			if reagentQuality then
+				reagentQuality = C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
+				if reagentQuality then
+					toast.IconText3:SetText(reagentQuality)
+					toast.IconText3BG:Show()
+				end
 			end
 
 			toast.Title:SetText(title)
@@ -261,6 +264,9 @@ local function Test()
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
 	end
+
+	-- Obsidian Seared Facesmasher, Rank 5
+	Toast_SetUp("COMMON_LOOT_TEST", "item:190513:6643:::::::70:263::13:6:8836:8840:8902:8802:8846:8793:7:28:2164:29:40:30:36:38:8:40:185:45:198046:46:194566:::::", 1)
 
 	-- battlepet, Anubisath Idol
 	Toast_SetUp("COMMON_LOOT_TEST", "battlepet:1155:25:3:1725:276:244:0000000000000000", 1)
