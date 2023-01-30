@@ -145,6 +145,14 @@ function P:SetSkin(toast, id)
 	iconText2:SetJustifyH("RIGHT")
 	iconText2:SetShadowOffset(skin.icon_text_2.shadow and 1 or 0, skin.icon_text_2.shadow and -1 or 0)
 
+	-- .IconText3
+	local iconText3 = toast.IconText3
+	iconText3:SetFont(fontPath, fontSize, skin.icon_text_3.flags)
+	iconText3:SetVertexColor(unpack(skin.icon_text_3.color))
+	iconText3:SetPoint("TOPLEFT", 0, -1)
+	iconText3:SetJustifyH("LEFT")
+	iconText3:SetShadowOffset(skin.icon_text_3.shadow and 1 or 0, skin.icon_text_3.shadow and -1 or 0)
+
 	-- .Skull
 	toast.Skull.isHidden = skin.skull.hidden
 

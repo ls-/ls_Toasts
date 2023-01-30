@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 100005.02
+
+### Loot (Common)
+
+- Reworked the reagent and crafted item quality icon.
+
+![Imgur](https://i.imgur.com/oZomyJR.png)
+
 ## Version 100005.01
 
 - Added 10.0.5 support.

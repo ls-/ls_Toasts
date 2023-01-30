@@ -341,6 +341,9 @@ local function toast_Release(self)
 	self.IconText2:SetText("")
 	self.IconText2.Blink:Stop()
 	self.IconText2.PostSetAnimatedValue = nil
+	self.IconText3:SetText("")
+	self.IconText3.PostSetAnimatedValue = nil
+	self.IconText3BG:Hide()
 	self.Skull:Hide()
 	self.Text:SetText("")
 	self.Text.PostSetAnimatedValue = nil
@@ -540,7 +543,8 @@ local function constructToast()
 	iconText1BG:SetPoint("LEFT", 0, 0)
 	iconText1BG:SetPoint("TOP", iconText1, "TOP", 0, 1)
 	iconText1BG:SetPoint("BOTTOMRIGHT", 0, 0)
-	iconText1BG:SetColorTexture(0, 0, 0, 0.6)
+	iconText1BG:SetColorTexture(1, 1, 1, 1)
+	iconText1BG:SetGradient("VERTICAL", {r = 0, g = 0, b = 0, a = 0.8}, {r = 0, g = 0, b = 0, a = 0})
 	iconText1BG:Hide()
 	toast.IconText1BG = iconText1BG
 
@@ -576,6 +580,19 @@ local function constructToast()
 		anim:SetStartDelay(0.4)
 		anim:SetDuration(0.4)
 	end
+
+	local iconText3 = iconParent:CreateFontString(nil, "ARTWORK")
+	iconText3.SetAnimatedValue = text_SetAnimatedValue
+	toast.IconText3 = iconText3
+
+	local iconText3BG = iconParent:CreateTexture(nil, "BACKGROUND", nil, 4)
+	iconText3BG:SetPoint("LEFT", 0, 0)
+	iconText3BG:SetPoint("BOTTOM", iconText3, "BOTTOM", 0, -1)
+	iconText3BG:SetPoint("TOPRIGHT", 0, 0)
+	iconText3BG:SetColorTexture(1, 1, 1, 1)
+	iconText3BG:SetGradient("VERTICAL", {r = 0, g = 0, b = 0, a = 0}, {r = 0, g = 0, b = 0, a = 0.8})
+	iconText3BG:Hide()
+	toast.IconText3BG = iconText3BG
 
 	local skull = iconParent:CreateTexture(nil, "ARTWORK", nil, 2)
 	skull:SetSize(16, 20)
