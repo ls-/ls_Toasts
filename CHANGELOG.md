@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 100005.02
+
+### Loot (Common)
+
+- Reworked the reagent and crafted item quality icon.
+
 ## Version 100005.01
 
 - Added 10.0.5 support.
