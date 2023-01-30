@@ -543,7 +543,8 @@ local function constructToast()
 	iconText1BG:SetPoint("LEFT", 0, 0)
 	iconText1BG:SetPoint("TOP", iconText1, "TOP", 0, 1)
 	iconText1BG:SetPoint("BOTTOMRIGHT", 0, 0)
-	iconText1BG:SetColorTexture(0, 0, 0, 0.6)
+	iconText1BG:SetColorTexture(1, 1, 1, 1)
+	iconText1BG:SetGradient("VERTICAL", {r = 0, g = 0, b = 0, a = 0.8}, {r = 0, g = 0, b = 0, a = 0})
 	iconText1BG:Hide()
 	toast.IconText1BG = iconText1BG
 
