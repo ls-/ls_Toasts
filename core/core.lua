@@ -212,8 +212,8 @@ end
 
 function E:SearchBagsForItemID(itemID)
 	for i = 0, NUM_BAG_SLOTS do
-		for j = 1, GetContainerNumSlots(i) do
-			if GetContainerItemID(i, j) == itemID then
+		for j = 1, C_Container.GetContainerNumSlots(i) do
+			if C_Container.GetContainerItemID(i, j) == itemID then
 				return i, j
 			end
 		end
