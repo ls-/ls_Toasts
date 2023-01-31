@@ -10,38 +10,41 @@ Set-Alias 7z "C:\PROGRA~1\7-Zip\7z.exe"
 
 $name = (Get-Item .).Name
 
-if (-Not (Test-Path (".\" + $name + ".toc"))) {
+if (-Not (Test-Path (".\" + $name + "\" + $name + ".toc"))) {
 	Write-Host ".toc not found"
 
 	return Read-Host
 }
 
-if (Get-Content (".\" + $name + ".toc") | Where { $_ -match "(Version: +)([a-zA-Z0-9.-]+)" }) {
-	$version = $matches[2]
+if (Get-Content (".\" + $name + "\" + $name + ".toc") | Where-Object { $_ -match "Version:\s*([a-zA-Z0-9.-]+)" }) {
+	$version = $matches[1]
 } else {
 	Write-Host "Bad version format"
 
 	return Read-Host
 }
 
-$includedFiles = @(
-	".\init.lua",
-	".\LICENSE.txt",
-	".\ls_Toasts.toc",
-	".\assets\",
-	".\core\",
-	".\embeds\"
-	".\locales\",
-	".\skins\",
-	".\systems\"
+$includedItems = @(
+	".\" + $name
+)
+
+$filesToRemove = @(
+	"*.doc*"
+	"*.editorconfig",
+	"*.git*",
+	"*.luacheck*",
+	"*.pkg*",
+	"*.ps1",
+	"*.yml"
 )
 
 if (Test-Path ".\temp\") {
 	Remove-Item ".\temp\" -Recurse -Force
 }
 
-New-Item -Path (".\temp\" + $name) -ItemType Directory | Out-Null
-Copy-Item $includedFiles -Destination (".\temp\" + $name) -Recurse
+New-Item -Path (".\temp\") -ItemType Directory | Out-Null
+Copy-Item $includedItems -Destination (".\temp\") -Recurse
+Remove-Item ".\temp" -Include $filesToRemove -Recurse -Force
 
 Set-Location ".\temp\"
 
