@@ -65,6 +65,11 @@ E:RegisterSkin("default", {
 		flags = "THINOUTLINE",
 		shadow = false,
 	},
+	icon_text_3 = {
+		color = {1, 1, 1},
+		flags = "THINOUTLINE",
+		shadow = false,
+	},
 	skull = {
 		hidden = false,
 	},

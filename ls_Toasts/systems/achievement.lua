@@ -7,8 +7,14 @@ local _G = getfenv(0)
 -- Mine
 local function Toast_OnClick(self)
 	if self._data.ach_id and not InCombatLockdown() then
-		ShowUIPanel(AchievementFrame)
-		AchievementFrame_SelectAchievement(self._data.ach_id)
+		if not AchievementFrame then
+			AchievementFrame_LoadUI()
+		end
+
+		if AchievementFrame then
+			ShowUIPanel(AchievementFrame)
+			AchievementFrame_SelectAchievement(self._data.ach_id)
+		end
 	end
 end
 
@@ -46,12 +52,12 @@ local function Toast_SetUp(event, achievementID, flag)
 			toast.IconText1:SetText("")
 		else
 			if C.db.profile.colors.border then
-				toast.Border:SetVertexColor(ACHIEVEMENT_GOLD_BORDER_COLOR:GetRGB())
-				toast:SetLeavesVertexColor(ACHIEVEMENT_GOLD_BORDER_COLOR:GetRGB())
+				toast.Border:SetVertexColor(1, 0.675, 0.125) -- ACHIEVEMENT_GOLD_BORDER_COLOR
+				toast:SetLeavesVertexColor(1, 0.675, 0.125)
 			end
 
 			if C.db.profile.colors.icon_border then
-				toast.IconBorder:SetVertexColor(ACHIEVEMENT_GOLD_BORDER_COLOR:GetRGB())
+				toast.IconBorder:SetVertexColor(1, 0.675, 0.125)
 			end
 
 			toast.IconText1:SetText(points == 0 and "" or points)
@@ -75,10 +81,6 @@ end
 
 local function Enable()
 	if C.db.profile.types.achievement.enabled then
-		if not AchievementFrame then
-			AchievementFrame_LoadUI()
-		end
-
 		E:RegisterEvent("ACHIEVEMENT_EARNED", ACHIEVEMENT_EARNED)
 	end
 end

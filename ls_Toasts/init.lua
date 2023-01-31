@@ -427,12 +427,12 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	C.options.args.profiles.desc = nil
 
 	for event in next, BLACKLISTED_EVENTS do
-		AlertFrame:UnregisterEvent(event)
+		P:Call(AlertFrame.UnregisterEvent, AlertFrame, event)
 	end
 
 	hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
 		if event and BLACKLISTED_EVENTS[event] then
-			self:UnregisterEvent(event)
+			P:Call(self.UnregisterEvent, self, event)
 		end
 	end)
 

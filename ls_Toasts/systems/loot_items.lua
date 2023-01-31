@@ -60,22 +60,9 @@ local function delayedUpdatePatterns()
 	C_Timer.After(0.1, updatePatterns)
 end
 
-local function dressUp(link)
-	if not link then
-		return
-	end
-
-	-- item
-	if IsDressableItem(link) then
-		if DressUpVisual(link) then
-			return
-		end
-	end
-end
-
 local function Toast_OnClick(self)
 	if self._data.link and IsModifiedClick("DRESSUP") then
-		dressUp(self._data.link)
+		DressUpItemLink(self._data.link)
 	elseif self._data.item_id then
 		local slot = E:SearchBagsForItemID(self._data.item_id)
 		if slot >= 0 then

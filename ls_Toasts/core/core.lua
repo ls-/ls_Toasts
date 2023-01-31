@@ -4,6 +4,7 @@ local C, L = addonTable.C, addonTable.L
 -- Lua
 local _G = getfenv(0)
 local error = _G.error
+local geterrorhandler = _G.geterrorhandler
 local next = _G.next
 local s_format = _G.string.format
 local s_match = _G.string.match
@@ -12,6 +13,7 @@ local t_concat = _G.table.concat
 local t_remove = _G.table.remove
 local tonumber = _G.tonumber
 local type = _G.type
+local xpcall = _G.xpcall
 
 -- Mine
 local E, P = {}, {}
@@ -51,9 +53,9 @@ do
 			registeredEvents[event] = {}
 
 			if unit1 then
-				dispatcher:RegisterUnitEvent(event, unit1, unit2)
+				P:Call(dispatcher.RegisterUnitEvent, dispatcher, event, unit1, unit2)
 			else
-				dispatcher:RegisterEvent(event)
+				P:Call(dispatcher.RegisterEvent, dispatcher, event)
 			end
 		end
 
@@ -69,7 +71,7 @@ do
 			if not next(funcs) then
 				registeredEvents[event] = nil
 
-				dispatcher:UnregisterEvent(event)
+				P:Call(dispatcher.UnregisterEvent, dispatcher, event)
 			end
 		end
 	end
@@ -91,6 +93,16 @@ function P:UpdateTable(src, dest)
 	end
 
 	return dest
+end
+
+do
+	local function errorHandler(err)
+		return geterrorhandler()(err)
+	end
+
+	function P:Call(func, ...)
+		return xpcall(func, errorHandler, ...)
+	end
 end
 
 -- Libs
