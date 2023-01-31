@@ -8,9 +8,6 @@ local s_format = _G.string.format
 local type = _G.type
 local unpack = _G.unpack
 
---[[ luacheck: globals
-]]
-
 -- Mine
 local skins = {}
 local skinList = {}

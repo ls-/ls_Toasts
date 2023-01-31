@@ -12,15 +12,6 @@ local t_wipe = _G.table.wipe
 local type = _G.type
 local unpack = _G.unpack
 
--- Blizz
-local C_Timer = _G.C_Timer
-local Lerp = _G.Lerp
-
---[[ luacheck: globals
-	CreateFrame GameTooltip GameTooltip_ShowCompareItem GetCVarBool IsModifiedClick PlaySound PlaySoundFile
-	ShoppingTooltip1 ShoppingTooltip2 UIParent
-]]
-
 -- Mine
 local freeToasts = {}
 local toasts = {}

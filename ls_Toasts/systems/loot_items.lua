@@ -5,17 +5,6 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 local _G = getfenv(0)
 local tonumber = _G.tonumber
 
--- Blizz
-local C_Timer = _G.C_Timer
-
---[[ luacheck: globals
-	DressUpVisual GameTooltip GetItemInfo IsDressableItem IsModifiedClick OpenBag UnitGUID UnitName
-
-	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC
-	LOOT_ITEM_CREATED_SELF LOOT_ITEM_CREATED_SELF_MULTIPLE LOOT_ITEM_PUSHED_SELF LOOT_ITEM_PUSHED_SELF_MULTIPLE
-	LOOT_ITEM_SELF LOOT_ITEM_SELF_MULTIPLE
-]]
-
 -- Mine
 local PLAYER_GUID = UnitGUID("player")
 local PLAYER_NAME = UnitName("player")

@@ -13,15 +13,6 @@ local t_remove = _G.table.remove
 local tonumber = _G.tonumber
 local type = _G.type
 
---[[ luacheck: globals
-	CreateFrame GetContainerItemID GetContainerNumSlots GetDetailedItemLevelInfo GetItemInfo
-	LibStub UIParent
-
-	INVSLOT_BACK INVSLOT_CHEST INVSLOT_FEET INVSLOT_FINGER1 INVSLOT_FINGER2 INVSLOT_HAND
-	INVSLOT_HEAD INVSLOT_LEGS INVSLOT_MAINHAND INVSLOT_NECK INVSLOT_OFFHAND INVSLOT_RANGED
-	INVSLOT_SHOULDER INVSLOT_TRINKET1 INVSLOT_TRINKET2 INVSLOT_WAIST INVSLOT_WRIST NUM_BAG_SLOTS
-]]
-
 -- Mine
 local E, P = {}, {}
 addonTable.E, addonTable.P = E, P

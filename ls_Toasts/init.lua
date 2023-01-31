@@ -9,14 +9,6 @@ local print = _G.print
 local s_format = _G.string.format
 local tonumber = _G.tonumber
 
---[[ luacheck: globals
-	AlertFrame CreateFrame GetAddOnMetadata InCombatLockdown InterfaceOptions_AddCategory
-	InterfaceOptionsFrame_Show InterfaceOptionsFramePanelContainer LibStub SlashCmdList
-
-	ITEM_QUALITY_COLORS ITEM_QUALITY1_DESC ITEM_QUALITY2_DESC ITEM_QUALITY3_DESC ITEM_QUALITY4_DESC
-	ITEM_QUALITY5_DESC LS_TOASTS_CFG LS_TOASTS_CFG_GLOBAL SLASH_LSTOASTS1 SLASH_LSTOASTS2
-]]
-
 -- Mine
 E.VER = {}
 E.VER.string = GetAddOnMetadata(addonName, "Version")

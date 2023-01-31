@@ -12,9 +12,6 @@ local t_wipe = _G.table.wipe
 local tonumber = _G.tonumber
 local tostring = _G.tostring
 
--- Blizz
-local C_CurrencyInfo = _G.C_CurrencyInfo
-
 -- Mine
 local currencies = {}
 local listSize = 0
