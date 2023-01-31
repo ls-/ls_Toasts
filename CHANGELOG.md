@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 30401.01
+
+- Added 3.4.1 support.
+- Updated French translation. Translated by Braincell1980@Curse.
+- Updated German translation. Translated by MrKimab@Curse.
+- Updated Traditional Chinese translation. Translated by RainbowUI@Curse.
+
 ## Version 30400.03
 
 - Fixed file loading order.

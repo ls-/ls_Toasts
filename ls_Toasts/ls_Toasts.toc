@@ -1,0 +1,13 @@
+## Interface: 30401
+## Author: lightspark
+## Version: 30401.01
+## Title: LS: |cff1a9fc0Toasts|r
+## Notes: Better toasts, cheers!
+## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
+
+embeds\_embeds.xml
+locales\_locales.xml
+core\_core.xml
+skins\_skins.xml
+systems\_systems.xml
+init.lua
