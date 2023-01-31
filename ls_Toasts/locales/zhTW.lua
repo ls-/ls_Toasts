@@ -1,4 +1,4 @@
-﻿-- Contributors: BNS333@Curse, 彩虹の多多@Curse
+﻿-- Contributors: BNS333@Curse, 彩虹の多多@Curse, RainbowUI@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -60,7 +60,7 @@ L["YOU_RECEIVED"] = "你收到"
 L["TYPE_LOOT_ITEMS"] = "拾取(物品)"
 
 -- WotLK
-L["CURRENCY_THRESHOLD_DESC"] = "輸入 |cffffd200-1|r 來忽略此貨幣。 |cffffd2000|r來停用此過濾，或|cffffd200 0以上的任何數字|r來設置閾值，低於該閾值將不建立與跳出提示。"
+L["CURRENCY_THRESHOLD_DESC"] = "輸入 |cffffd200-1|r 來忽略此貨幣，|cffffd2000|r 來停用過濾，或|cffffd200任何大於 0 的數字|r來設定值臨界值，低於這個數值將不會顯示通知。"
 L["FILTERS"] = "過濾方式"
 L["NEW_CURRENCY_FILTER_DESC"] = "輸入兌換通貨 ID"
 L["THRESHOLD"] = "數量最少要"
