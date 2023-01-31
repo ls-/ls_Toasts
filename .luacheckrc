@@ -35,7 +35,6 @@ globals = {
 }
 
 read_globals = {
-	"ACHIEVEMENT_GOLD_BORDER_COLOR",
 	"AchievementFrame",
 	"AchievementFrame_LoadUI",
 	"AchievementFrame_SelectAchievement",
@@ -44,7 +43,7 @@ read_globals = {
 	"C_CurrencyInfo",
 	"C_Timer",
 	"CreateFrame",
-	"DressUpVisual",
+	"DressUpItemLink",
 	"FormatLargeNumber",
 	"FormatShortDate",
 	"GameTooltip",
@@ -77,7 +76,6 @@ read_globals = {
 	"INVSLOT_TRINKET2",
 	"INVSLOT_WAIST",
 	"INVSLOT_WRIST",
-	"IsDressableItem",
 	"IsLoggedIn",
 	"IsModifiedClick",
 	"IsShiftKeyDown",
@@ -88,7 +86,6 @@ read_globals = {
 	"ITEM_QUALITY3_DESC",
 	"ITEM_QUALITY4_DESC",
 	"ITEM_QUALITY5_DESC",
-	"Lerp",
 	"LibStub",
 	"LOOT_ITEM_CREATED_SELF",
 	"LOOT_ITEM_CREATED_SELF_MULTIPLE",
