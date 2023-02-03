@@ -1,5 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="achievement.lua"/>
+	<Script file="activities.lua"/>
 	<Script file="archaeology.lua"/>
 	<Script file="collection.lua"/>
 	<Script file="garrison.lua"/>
