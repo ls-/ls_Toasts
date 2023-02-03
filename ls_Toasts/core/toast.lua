@@ -874,6 +874,9 @@ function P:UpdateFont()
 
 		-- .IconText2
 		toast.IconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags)
+
+		-- .IconText3
+		toast.IconText3:SetFont(fontPath, fontSize, skin.icon_text_3.flags)
 	end
 end
 
