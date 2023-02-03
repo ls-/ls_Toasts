@@ -25,6 +25,7 @@ local function Toast_SetUp(event, perksActivityID)
 		toast.Title:SetText(L["ACTIVITIES_PROGRESSED"])
 		toast.Text:SetText(info.activityName)
 		toast.Icon:SetAtlas("activities-toast-icon")
+		toast.IconText1:SetText(info.thresholdContributionAmount)
 		toast.IconBorder:Show()
 
 		toast._data.event = event
