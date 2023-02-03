@@ -67,7 +67,8 @@ end
 
 local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
 	-- don't show toasts for sources that aren't in player's wardrobe
-	if C_TransmogCollection.PlayerKnowsSource(sourceID) then
+	local _, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
+	if canCollect then
 		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 	end
 end
@@ -77,14 +78,16 @@ end
 -- registered jic
 local function TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED(sourceID)
 	-- don't show toasts for sources that aren't in player's wardrobe
-	if C_TransmogCollection.PlayerKnowsSource(sourceID) then
+	local _, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
+	if canCollect then
 		Toast_SetUp("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 	end
 end
 
 local function TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
 	-- don't show toasts for sources that aren't in player's wardrobe
-	if C_TransmogCollection.PlayerKnowsSource(sourceID) then
+	local _, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
+	if canCollect then
 		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
 	end
 end
