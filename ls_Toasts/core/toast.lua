@@ -318,6 +318,7 @@ local function toast_Spawn(self, anchorID, isDND)
 end
 
 local function toast_Release(self)
+	self:SetParent(UIParent)
 	self:ClearAllPoints()
 	self:SetAlpha(1)
 	self:Hide()

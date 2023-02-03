@@ -3,6 +3,7 @@ local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, ad
 
 -- Lua
 local _G = getfenv(0)
+local hooksecurefunc = _G.hooksecurefunc
 local next = _G.next
 local t_insert = _G.table.insert
 local t_remove = _G.table.remove
@@ -11,9 +12,10 @@ local t_sort = _G.table.sort
 -- Mine
 local activeToasts = {}
 local queuedToasts = {}
+local fullscreenParent = UIParent
 
 function P:RefreshQueues()
-	if not UIParent:IsShown() then return end
+	if not fullscreenParent:IsShown() then return end
 
 	for anchorID, queued in next, queuedToasts do
 		local config = C.db.profile.anchors[anchorID]
@@ -34,6 +36,8 @@ function P:RefreshQueues()
 		end
 
 		for i = 1, #active do
+			active[i]:SetParent(fullscreenParent)
+			active[i]:SetFrameStrata(C.db.profile.strata)
 			active[i]:ClearAllPoints()
 
 			if i == 1 then
@@ -139,3 +143,11 @@ end
 E:RegisterEvent("PLAYER_REGEN_ENABLED", P.RefreshQueues)
 
 UIParent:HookScript("OnShow", P.RefreshQueues)
+
+hooksecurefunc(AlertFrame, "SetFullScreenFrame", function(_, frame)
+	fullscreenParent = frame
+end)
+
+hooksecurefunc(AlertFrame, "ClearFullScreenFrame", function()
+	fullscreenParent = UIParent
+end)
