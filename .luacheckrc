@@ -63,6 +63,7 @@ read_globals = {
 	"COLLECTIONS_JOURNAL_TAB_INDEX_TOYS",
 	"CollectionsJournal",
 	"CollectionsJournal_LoadUI",
+	"Constants",
 	"CreateFrame",
 	"DressUpBattlePet",
 	"DressUpLink",

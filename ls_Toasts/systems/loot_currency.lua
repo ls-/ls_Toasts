@@ -18,6 +18,8 @@ local NO_GAIN_SOURCE = Enum.CurrencySource.Last
 
 -- https://wow.tools/dbc/?dbc=currencytypes&hotfixes=true
 local BLACKLIST = {
+	-- 1 (Miscellaneous)
+	[2032] = true, -- Trader's Tender, handled via PERKS_PROGRAM_CURRENCY_REFRESH
 	-- 41 (Test)
 	[  22] = true, -- Birmingham Test Item 3
 	-- 82 (Archaeology)
@@ -480,6 +482,25 @@ local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
 	Toast_SetUp("CURRENCY_DISPLAY_UPDATE", id, quantity, gainSource ~= NO_GAIN_SOURCE)
 end
 
+local TRADE_POST_TOKEN_ID = Constants.CurrencyConsts.CURRENCY_ID_PERKS_PROGRAM_DISPLAY_INFO
+
+local function PERKS_PROGRAM_CURRENCY_REFRESH(old, new)
+	if C.db.profile.types.loot_currency.filters[TRADE_POST_TOKEN_ID] == -1 then
+		return
+	end
+
+	local quantity = new - old
+	if quantity == 0 then
+		return
+	end
+
+	if not C.db.profile.types.loot_currency.track_loss and quantity < 0 then
+		return
+	end
+
+	Toast_SetUp("PERKS_PROGRAM_CURRENCY_REFRESH", TRADE_POST_TOKEN_ID, m_abs(quantity), quantity > 0)
+end
+
 local listSize = 0
 local newID
 
@@ -580,6 +601,7 @@ local function Enable()
 	if C.db.profile.types.loot_currency.enabled then
 		E:RegisterEvent("CURRENCY_DISPLAY_UPDATE", CURRENCY_DISPLAY_UPDATE)
 		E:RegisterEvent("CURRENCY_DISPLAY_UPDATE", updateFilters)
+		E:RegisterEvent("PERKS_PROGRAM_CURRENCY_REFRESH", PERKS_PROGRAM_CURRENCY_REFRESH)
 
 		populateFilters()
 		updateFilterOptions()
@@ -589,6 +611,7 @@ end
 local function Disable()
 	E:UnregisterEvent("CURRENCY_DISPLAY_UPDATE", CURRENCY_DISPLAY_UPDATE)
 	E:UnregisterEvent("CURRENCY_DISPLAY_UPDATE", updateFilters)
+	E:UnregisterEvent("PERKS_PROGRAM_CURRENCY_REFRESH", PERKS_PROGRAM_CURRENCY_REFRESH)
 end
 
 local function Test()
