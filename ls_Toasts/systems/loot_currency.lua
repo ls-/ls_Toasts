@@ -483,8 +483,18 @@ local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
 end
 
 local TRADE_POST_TOKEN_ID = Constants.CurrencyConsts.CURRENCY_ID_PERKS_PROGRAM_DISPLAY_INFO
+local isTradingPostInit = false
 
 local function PERKS_PROGRAM_CURRENCY_REFRESH(old, new)
+	if not isTradingPostInit then
+		isTradingPostInit = true
+
+		-- skip the initial update because it's just an acc-char sync
+		if old == 0 then
+			return
+		end
+	end
+
 	if C.db.profile.types.loot_currency.filters[TRADE_POST_TOKEN_ID] == -1 then
 		return
 	end
