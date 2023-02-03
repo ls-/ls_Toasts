@@ -6,13 +6,13 @@ local _G = getfenv(0)
 
 -- Mine
 local function Toast_OnClick(self)
-	if self._data.activities_id and not InCombatLockdown() then
+	if self._data.activity_id and not InCombatLockdown() then
 		if not EncounterJournal then
 			EncounterJournal_LoadUI()
 		end
 
 		if EncounterJournal then
-			MonthlyActivitiesFrame_OpenFrameToActivity(self._data.activities_id)
+			MonthlyActivitiesFrame_OpenFrameToActivity(self._data.activity_id)
 		end
 	end
 end
@@ -28,7 +28,7 @@ local function Toast_SetUp(event, perksActivityID)
 		toast.IconBorder:Show()
 
 		toast._data.event = event
-		toast._data.activities_id = perksActivityID
+		toast._data.activity_id = perksActivityID
 		toast._data.sound_file = C.db.profile.types.activities.sfx and 219929 -- SOUNDKIT.TRADING_POST_UI_COMPLETED_ACTIVITY_TOAST
 
 		toast:HookScript("OnClick", Toast_OnClick)
