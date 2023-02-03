@@ -13,6 +13,8 @@ local activeToasts = {}
 local queuedToasts = {}
 
 function P:RefreshQueues()
+	if not UIParent:IsShown() then return end
+
 	for anchorID, queued in next, queuedToasts do
 		local config = C.db.profile.anchors[anchorID]
 		if not config then return end
@@ -135,3 +137,5 @@ function P:GetQueuedToasts(anchorID)
 end
 
 E:RegisterEvent("PLAYER_REGEN_ENABLED", P.RefreshQueues)
+
+UIParent:HookScript("OnShow", P.RefreshQueues)
