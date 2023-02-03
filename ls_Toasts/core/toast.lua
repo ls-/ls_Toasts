@@ -222,10 +222,6 @@ local function slot_OnLeave(self)
 	GameTooltip:Hide()
 end
 
-local function slot_OnHide(self)
-	t_wipe(self._data)
-end
-
 -- Base Toast
 local function MODIFIER_STATE_CHANGED()
 	if IsModifiedClick("COMPAREITEMS") or GetCVarBool("alwaysCompareItems") then
@@ -237,12 +233,16 @@ local function MODIFIER_STATE_CHANGED()
 end
 
 local function toast_OnShow(self)
-	if self._data.sound_file then
-		PlaySound(self._data.sound_file)
-	end
+	if self._data.init_show then
+		if self._data.sound_file then
+			PlaySound(self._data.sound_file)
+		end
 
-	self.AnimIn:Play()
-	self.AnimOut:Play()
+		self.AnimIn:Play()
+		self.AnimOut:Play()
+
+		self._data.init_show = false
+	end
 end
 
 local function toast_OnClick(self, button)
@@ -368,6 +368,8 @@ local function toast_Release(self)
 
 	t_wipe(self._data)
 	t_insert(freeToasts, self)
+
+	self._data.init_show = true
 
 	P.CallbackHandler:Fire("ToastReleased", self)
 end
@@ -745,7 +747,6 @@ local function constructToast()
 		slot:Hide()
 		slot:SetScript("OnEnter", slot_OnEnter)
 		slot:SetScript("OnLeave", slot_OnLeave)
-		slot:SetScript("OnHide", slot_OnHide)
 		toast["Slot" .. i] = slot
 
 		local slotIcon = slot:CreateTexture(nil, "BACKGROUND", nil, 1)
@@ -764,7 +765,10 @@ local function constructToast()
 		slot._data = {}
 	end
 
-	toast._data = {}
+	toast._data = {
+		init_show = true,
+	}
+
 	toast.Release = toast_Release
 	toast.Recycle = toast_Release -- Deprecated
 	toast.Spawn = toast_Spawn
