@@ -12,21 +12,21 @@ local tonumber = _G.tonumber
 local PLAYER_CLASS = select(3, UnitClass("player"))
 
 local typeToKey = {
-	[Enum.GarrisonType.Type_6_0] = "garrison_6_0",
-	[Enum.GarrisonType.Type_7_0] = "garrison_7_0",
-	[Enum.GarrisonType.Type_8_0] = "garrison_8_0",
-	[Enum.GarrisonType.Type_9_0] = "garrison_9_0",
+	[Enum.GarrisonType.Type_6_0_Garrison] = "garrison_6_0",
+	[Enum.GarrisonType.Type_7_0_Garrison] = "garrison_7_0",
+	[Enum.GarrisonType.Type_8_0_Garrison] = "garrison_8_0",
+	[Enum.GarrisonType.Type_9_0_Garrison] = "garrison_9_0",
 }
 
 local function getGarrisonTypeByFollowerType(followerTypeID)
-	if followerTypeID == Enum.GarrisonFollowerType.FollowerType_9_0 then
-		return Enum.GarrisonType.Type_9_0
-	elseif followerTypeID == Enum.GarrisonFollowerType.FollowerType_8_0 then
-		return Enum.GarrisonType.Type_8_0
-	elseif followerTypeID == Enum.GarrisonFollowerType.FollowerType_7_0 then
-		return Enum.GarrisonType.Type_7_0
-	elseif followerTypeID == Enum.GarrisonFollowerType.FollowerType_6_0 or followerTypeID == Enum.GarrisonFollowerType.FollowerType_6_2 then
-		return Enum.GarrisonType.Type_6_0
+	if followerTypeID == Enum.GarrisonFollowerType.FollowerType_9_0_GarrisonFollower then
+		return Enum.GarrisonType.Type_9_0_Garrison
+	elseif followerTypeID == Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower then
+		return Enum.GarrisonType.Type_8_0_Garrison
+	elseif followerTypeID == Enum.GarrisonFollowerType.FollowerType_7_0_GarrisonFollower then
+		return Enum.GarrisonType.Type_7_0_Garrison
+	elseif followerTypeID == Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower or followerTypeID == Enum.GarrisonFollowerType.FollowerType_6_0_Boat then
+		return Enum.GarrisonType.Type_6_0_Garrison
 	end
 end
 
@@ -130,7 +130,7 @@ local function FollowerToast_OnEnter(self)
 			}
 
 			local tooltip
-			if data.followerTypeID == Enum.GarrisonFollowerType.FollowerType_6_2 then
+			if data.followerTypeID == Enum.GarrisonFollowerType.FollowerType_6_0_Boat then
 				tooltip = GarrisonShipyardFollowerTooltip
 				GarrisonFollowerTooltipTemplate_SetShipyardFollower(tooltip, data)
 			else
@@ -152,7 +152,7 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 	local color = ITEM_QUALITY_COLORS[quality]
 	local toast = E:GetToast()
 
-	if followerTypeID == Enum.GarrisonFollowerType.FollowerType_6_2 then
+	if followerTypeID == Enum.GarrisonFollowerType.FollowerType_6_0_Boat then
 		toast.Icon:SetPoint("TOPLEFT", -2, -1)
 		toast.Icon:SetSize(46, 40)
 		toast.Icon:SetTexCoord(0, 1, 0, 1)
@@ -234,9 +234,9 @@ end
 ------
 
 local garrTypeToTalentText = {
-	[Enum.GarrisonType.Type_7_0] = L["GARRISON_NEW_TALENT"],
-	[Enum.GarrisonType.Type_8_0] = L["GARRISON_NEW_TALENT"],
-	[Enum.GarrisonType.Type_9_0] = L["COVENANT_NEW_TALENT"],
+	[Enum.GarrisonType.Type_7_0_Garrison] = L["GARRISON_NEW_TALENT"],
+	[Enum.GarrisonType.Type_8_0_Garrison] = L["GARRISON_NEW_TALENT"],
+	[Enum.GarrisonType.Type_9_0_Garrison] = L["COVENANT_NEW_TALENT"],
 }
 
 local treeIDToTalentText = {
@@ -313,35 +313,35 @@ end
 
 local function TestGarrison()
 	-- follower
-	local followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_6_0)
+	local followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower)
 	local follower = followers and followers[1] or nil
 	if follower then
-		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_6_0, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
+		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_6_0_Garrison, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
 	end
 
 	-- ship
-	followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_6_2)
+	followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_6_0_Boat)
 	follower = followers and followers[1] or nil
 	if follower then
-		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_6_0, follower.followerTypeID, follower.followerID, follower.name, follower.textureKit, follower.level, follower.quality, false)
+		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_6_0_Garrison, follower.followerTypeID, follower.followerID, follower.name, follower.textureKit, follower.level, follower.quality, false)
 	end
 
 	-- garrison mission
-	local missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_6_0)
+	local missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_6_0_GarrisonFollower)
 	local missionID = missions and missions[1] and missions[1].missionID or nil
 	if missionID then
-		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_6_0, missionID)
+		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_6_0_Garrison, missionID)
 	end
 
 	-- shipyard mission
-	missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_6_2)
+	missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_6_0_Boat)
 	missionID = missions and missions[1] and missions[1].missionID or nil
 	if missionID then
-		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_6_0, missionID)
+		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_6_0_Garrison, missionID)
 	end
 
 	-- building
-	local buildings = C_Garrison.GetBuildings(Enum.GarrisonType.Type_6_0)
+	local buildings = C_Garrison.GetBuildings(Enum.GarrisonType.Type_6_0_Garrison)
 	local buildingID = buildings and buildings[1] and buildings[1].buildingID or nil
 	if buildingID then
 		BuildingToast_SetUp("GARRISON_BUILDING_TEST", select(2, C_Garrison.GetBuildingInfo(buildingID)))
@@ -350,77 +350,77 @@ end
 
 local function TestClassHall()
 	-- champion
-	local followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_7_0)
+	local followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_7_0_GarrisonFollower)
 	local follower = followers and followers[1] or nil
 	if follower then
-		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_7_0, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
+		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_7_0_Garrison, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
 	end
 
 	-- mission
-	local missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_7_0)
+	local missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_7_0_GarrisonFollower)
 	local missionID = missions and missions[1] and missions[1].missionID or nil
 	if missionID then
-		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_7_0, missionID)
+		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_7_0_Garrison, missionID)
 	end
 
 	-- talent
-	local talentTreeIDs = C_Garrison.GetTalentTreeIDsByClassID(Enum.GarrisonType.Type_7_0, PLAYER_CLASS)
+	local talentTreeIDs = C_Garrison.GetTalentTreeIDsByClassID(Enum.GarrisonType.Type_7_0_Garrison, PLAYER_CLASS)
 	if talentTreeIDs and talentTreeIDs[1] then
 		local treeInfo = C_Garrison.GetTalentTreeInfo(talentTreeIDs[1])
 		if treeInfo and treeInfo.talents and treeInfo.talents[1] then
-			TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_7_0, treeInfo.talents[1].id)
+			TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_7_0_Garrison, treeInfo.talents[1].id)
 		end
 	end
 end
 
 local function TestWarEffort()
 	-- champion
-	local followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_8_0)
+	local followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower)
 	local follower = followers and followers[1] or nil
 	if follower then
-		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_8_0, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
+		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_8_0_Garrison, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
 	end
 
 	-- mission
-	local missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_8_0)
+	local missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_8_0_GarrisonFollower)
 	local missionID = missions and missions[1] and missions[1].missionID or nil
 	if missionID then
-		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_8_0, missionID)
+		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_8_0_Garrison, missionID)
 	end
 
 	-- talent
-	local talentTreeIDs = C_Garrison.GetTalentTreeIDsByClassID(Enum.GarrisonType.Type_8_0, PLAYER_CLASS)
+	local talentTreeIDs = C_Garrison.GetTalentTreeIDsByClassID(Enum.GarrisonType.Type_8_0_Garrison, PLAYER_CLASS)
 	if talentTreeIDs and talentTreeIDs[1] then
 		local treeInfo = C_Garrison.GetTalentTreeInfo(talentTreeIDs[1])
 		if treeInfo and treeInfo.talents and treeInfo.talents[1] then
-			TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_8_0, treeInfo.talents[1].id)
+			TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_8_0_Garrison, treeInfo.talents[1].id)
 		end
 	end
 end
 
 local function TestCovenant()
 	-- champion
-	local followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_9_0)
+	local followers = C_Garrison.GetFollowers(Enum.GarrisonFollowerType.FollowerType_9_0_GarrisonFollower)
 	local follower = followers and followers[1] or nil
 	if follower then
-		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_9_0, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
+		FollowerToast_SetUp("GARRISON_FOLLOWER_TEST", Enum.GarrisonType.Type_9_0_Garrison, follower.followerTypeID, follower.followerID, follower.name, nil, follower.level, follower.quality, false)
 	end
 
 	-- mission
-	local missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_9_0)
+	local missions = C_Garrison.GetAvailableMissions(Enum.GarrisonFollowerType.FollowerType_9_0_GarrisonFollower)
 	local missionID = missions and missions[1] and missions[1].missionID or nil
 	if missionID then
-		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_9_0, missionID)
+		MissionToast_SetUp("GARRISON_MISSION_TEST", Enum.GarrisonType.Type_9_0_Garrison, missionID)
 	end
 
 	-- talent, Revendreth - Expanding Potential
 	local treeInfo = C_Garrison.GetTalentTreeInfo(326)
 	if treeInfo and treeInfo.talents and treeInfo.talents[1] then
-		TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_9_0, treeInfo.talents[1].id)
+		TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_9_0_Garrison, treeInfo.talents[1].id)
 	end
 
 	-- cypher talent, Metrial Understanding
-	TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_9_0, 1901)
+	TalentToast_SetUp("GARRISON_TALENT_TEST", Enum.GarrisonType.Type_9_0_Garrison, 1901)
 end
 
 E:RegisterOptions("garrison_6_0", {
