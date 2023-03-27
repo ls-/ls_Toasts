@@ -175,6 +175,7 @@ local BLACKLIST = {
 	[2173] = true, -- Profession - Public Order Capacity - Enchanting
 	[2174] = true, -- Profession - Public Order Capacity - Jewelcrafting
 	[2175] = true, -- Profession - Public Order Capacity - Inscription
+	[2244] = true, -- Forbidden Reach Return - Renown Dailies Completed
 	-- 144 (Virtual)
 	[1553] = true, -- Azerite
 	[1585] = true, -- Account Wide Honor
@@ -375,6 +376,7 @@ local BLACKLIST = {
 	[2140] = true, -- Tuskarr - Fishing Net - Location 04 - Net 02 - Loot
 	[2141] = true, -- Tuskarr - Fishing Net - Location 05 - Net 01 - Loot
 	[2142] = true, -- Tuskarr - Fishing Net - Location 05 - Net 02 - Loot
+	[2228] = true, -- Tuskarr - Fishing Net - Location 06 - Net 01 - Loot
 }
 
 -- flag[0] = 0x8

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 100007.01
+
+- Added 10.0.7 support.
+
 ## Version 100005.03
 
 - Added "Traveler's Log" toasts for monthly activities.
