@@ -156,7 +156,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 end
 
 local function QUEST_TURNED_IN(questID)
-	if C_QuestLog.IsWorldQuest(questID) then
+	if C_QuestInfoSystem.GetQuestShouldToastCompletion(questID) then
 		if not HaveQuestRewardData(questID) then
 			C_TaskQuest.RequestPreloadRewardData(questID)
 			C_Timer.After(0.5, function() QUEST_TURNED_IN(questID) end)
