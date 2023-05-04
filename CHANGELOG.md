@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 100100.02
+
+- Fixed world quest toasts.
+
 ## Version 100100.01
 
 - Added 10.1.0 support.

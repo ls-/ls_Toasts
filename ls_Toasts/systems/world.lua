@@ -106,7 +106,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			toast.Icon:SetTexture("Interface\\Icons\\Achievement_Quests_Completed_TwilightHighlands")
 		end
 
-		if info.quality >= C.db.profile.colors.threshold then
+		if info.quality and info.quality >= C.db.profile.colors.threshold then
 			local color = WORLD_QUEST_QUALITY_COLORS[info.quality] or WORLD_QUEST_QUALITY_COLORS[1]
 
 			if C.db.profile.colors.border then
