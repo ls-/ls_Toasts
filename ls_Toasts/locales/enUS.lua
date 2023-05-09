@@ -9,7 +9,7 @@ local _G = getfenv(0)
 local L = {}
 addonTable.L = L
 
-L["LS_TOASTS"] = "LS: |cff1a9fc0Toasts|r"
+L["LS_TOASTS"] = "LS: |cff00cc99Toasts|r"
 L["CURSEFORGE"] = "CurseForge"
 L["DISCORD"] = "Discord"
 L["GITHUB"] = "GitHub"
