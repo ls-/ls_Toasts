@@ -3,6 +3,7 @@
 ## Version: 100100.02
 ## Title: LS: |cff00cc99Toasts|r
 ## Notes: Better toasts, cheers!
+## IconTexture: Interface\AddOns\ls_Toasts\assets\logo-64
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
 
 embeds\_embeds.xml
