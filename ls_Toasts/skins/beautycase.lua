@@ -40,3 +40,19 @@ E:RegisterSkin("beautycase-no-art", {
 		},
 	},
 })
+
+E:RegisterSkin("beautycase-twotone", {
+	name = "Beautycase (Two Tone)",
+	template = "beautycase",
+	title = {
+		color = {0.15, 0.15, 0.15},
+	},
+	text_bg = {
+		hidden = true,
+	},
+	bg = {
+		default = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default-as",
+		},
+	},
+})
