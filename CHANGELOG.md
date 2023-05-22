@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 100100.03
+
+- Added "Two Tone" variants to all built-in skins. They have a two tone background that's similar to that of Blizz
+  achievement toasts. I might tweak the textures depending on the feedback.
+- Updated Spanish translation. Translated by Shacoulrophobia@Curse.
+
+![Imgur](https://i.imgur.com/2QWIHCd.png)
+
 ## Version 100100.02
 
 - Fixed world quest toasts.

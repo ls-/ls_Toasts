@@ -44,6 +44,7 @@ local BLACKLIST = {
 	[1172] = true, -- Highborne Archaeology Fragment
 	[1173] = true, -- Highmountain Tauren Archaeology Fragment
 	[1174] = true, -- Demonic Archaeology Fragment
+	[1191] = true, -- Valor
 	[1324] = true, -- Horde Qiraji Commendation
 	[1325] = true, -- Alliance Qiraji Commendation
 	[1347] = true, -- Legionfall Building - Personal Tracker - Mage Tower (Hidden)

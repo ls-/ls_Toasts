@@ -206,3 +206,19 @@ E:RegisterSkin("default-legacy", {
 		},
 	},
 })
+
+E:RegisterSkin("default-twotone", {
+	name = "Default (Two Tone)",
+	template = "default",
+	title = {
+		color = {0.15, 0.15, 0.15},
+	},
+	text_bg = {
+		hidden = true,
+	},
+	bg = {
+		default = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default-as",
+		},
+	},
+})

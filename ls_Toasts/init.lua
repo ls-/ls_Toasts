@@ -360,7 +360,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 			about = {
 				order = 110,
 				type = "group",
-				name = "|cff1a9fc0" .. L["INFORMATION"] .. "|r",
+				name = "|cff00cc99" .. L["INFORMATION"] .. "|r",
 				args = {
 					desc = {
 						order = 1,
