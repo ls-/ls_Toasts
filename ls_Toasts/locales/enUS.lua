@@ -9,7 +9,7 @@ local _G = getfenv(0)
 local L = {}
 addonTable.L = L
 
-L["LS_TOASTS"] = "LS: |cff1a9fc0Toasts|r"
+L["LS_TOASTS"] = "LS: |cff00cc99Toasts|r"
 L["CURSEFORGE"] = "CurseForge"
 L["DISCORD"] = "Discord"
 L["GITHUB"] = "GitHub"
@@ -57,6 +57,7 @@ L["GROWTH_DIR_UP"] = "Up"
 L["ICON_BORDER"] = "Icon Border"
 L["INFORMATION"] = "Info"
 L["NAME"] = "Name"
+L["OPEN_CONFIG"] = "Open Config"
 L["RARITY_THRESHOLD"] = "Rarity Threshold"
 L["SCALE"] = "Scale"
 L["SHOW_ILVL"] = "Show iLvl"

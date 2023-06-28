@@ -33,6 +33,7 @@ L["GROWTH_DIR_UP"] = "Вверх"
 L["ICON_BORDER"] = "Рамка иконки"
 L["INFORMATION"] = "Информация"
 L["NAME"] = "Название"
+L["OPEN_CONFIG"] = "Открыть настройки"
 L["RARITY_THRESHOLD"] = "Порог редкости"
 L["SCALE"] = "Масштаб"
 L["SHOW_ILVL"] = "Показывать ур. пр."
@@ -55,6 +56,7 @@ L["X_OFFSET"] = "Смещение по X"
 L["Y_OFFSET"] = "Смещение по Y"
 L["YOU_LOST"] = "Вы потеряли"
 L["YOU_RECEIVED"] = "Вы получили"
+
 
 -- Classic
 L["TYPE_LOOT_ITEMS"] = "Добыча (Предметы)"

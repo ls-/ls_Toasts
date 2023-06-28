@@ -92,3 +92,19 @@ E:RegisterSkin("elv-no-art", {
 		},
 	},
 })
+
+E:RegisterSkin("elv-twotone", {
+	name = "ElvUI (Two Tone)",
+	template = "elv",
+	title = {
+		color = {0.15, 0.15, 0.15},
+	},
+	text_bg = {
+		hidden = true,
+	},
+	bg = {
+		default = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default-as",
+		},
+	},
+})
