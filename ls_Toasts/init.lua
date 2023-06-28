@@ -442,6 +442,23 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		P:UpdateOptions()
 		P:EnableAllSystems()
 
+		local panel = CreateFrame("Frame", "LSTConfigPanel")
+		panel:Hide()
+
+		local button = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
+		button:SetText(L["OPEN_CONFIG"])
+		button:SetWidth(button:GetTextWidth() + 18)
+		button:SetPoint("TOPLEFT", 16, -16)
+		button:SetScript("OnClick", function()
+			if not InCombatLockdown() then
+				HideUIPanel(SettingsPanel)
+
+				LibStub("AceConfigDialog-3.0"):Open(addonName)
+			end
+		end)
+
+		Settings.RegisterAddOnCategory(Settings.RegisterCanvasLayoutCategory(panel, L["LS_TOASTS"]))
+
 		E:RegisterEvent("PLAYER_REGEN_DISABLED", function()
 			LibStub("AceConfigDialog-3.0"):Close(addonName)
 		end)
