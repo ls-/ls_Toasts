@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 100105.01
+
+- Added 10.1.5 support.
+
 ## Version 100100.03
 
 - Added "Two Tone" variants to all built-in skins. They have a two tone background that's similar to that of Blizz
