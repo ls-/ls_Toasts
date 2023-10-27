@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 30403.01
+
+- Added 3.4.3 support.
+- Added an option to whitelist all pets.
+- Added an option to whitelist items by their IDs.
+
+![Imgur](https://i.imgur.com/aLgabJC.png)
+
 ## Version 30402.01
 
 - Added 3.4.2 support.

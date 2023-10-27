@@ -112,6 +112,7 @@ local methods = {
 	end,
 
 	["OnRelease"] = function(self)
+		self:SetText()
 		self:ClearFocus()
 	end,
 
@@ -250,40 +251,80 @@ end
 --------------
 -- Subtypes --
 --------------
+do
+	local Subtype = Type .. "Currency"
 
-local Subtype = Type .. "Currency"
-
-local function previewCurrency(self, value)
-	local id = tonumber(value)
-	if id then
-		id = "currency:" .. id
-		local info = C_CurrencyInfo.GetCurrencyInfoFromLink(id, 0)
-		if info then
-			self.preview:SetOwner(self.frame, "ANCHOR_NONE")
-			self.preview:SetPoint("TOPLEFT", self.frame, "BOTTOMLEFT", 1, 1)
-			self.preview:SetHyperlink(id)
-			self.preview:Show()
+	local function previewCurrency(self, value)
+		local id = tonumber(value)
+		if id then
+			id = "currency:" .. id
+			local info = C_CurrencyInfo.GetCurrencyInfoFromLink(id, 0)
+			if info then
+				self.preview:SetOwner(self.frame, "ANCHOR_NONE")
+				self.preview:SetPoint("TOPLEFT", self.frame, "BOTTOMLEFT", 1, 1)
+				self.preview:SetHyperlink(id)
+				self.preview:Show()
+			else
+				self.preview:Hide()
+			end
 		else
 			self.preview:Hide()
 		end
-	else
-		self.preview:Hide()
-	end
-end
-
-local function Constructor()
-	local widget = getBaseWidget(Subtype)
-
-	for method, func in next, methods do
-		widget[method] = func
 	end
 
-	widget.SetPreview = previewCurrency
+	local function Constructor()
+		local widget = getBaseWidget(Subtype)
 
-	widget.editbox.obj = widget
-	widget.button.obj = widget
+		for method, func in next, methods do
+			widget[method] = func
+		end
 
-	return AceGUI:RegisterAsWidget(widget)
+		widget.SetPreview = previewCurrency
+
+		widget.editbox.obj = widget
+		widget.button.obj = widget
+
+		return AceGUI:RegisterAsWidget(widget)
+	end
+
+	AceGUI:RegisterWidgetType(Subtype, Constructor, Version)
 end
 
-AceGUI:RegisterWidgetType(Subtype, Constructor, Version)
+do
+	local Subtype = Type .. "Item"
+
+	local function previewItem(self, value)
+		local id = tonumber(value)
+		if id then
+			id = "item:" .. id
+			local info = GetItemInfoInstant(id)
+			if info then
+				self.preview:SetOwner(self.frame, "ANCHOR_NONE")
+				self.preview:SetPoint("TOPLEFT", self.frame, "BOTTOMLEFT", 1, 1)
+				self.preview:SetHyperlink(id)
+				self.preview:Show()
+			else
+				self.preview:Hide()
+			end
+		else
+			self.preview:Hide()
+		end
+	end
+
+	local function Constructor()
+		local widget = getBaseWidget(Subtype)
+
+		for method, func in next, methods do
+			widget[method] = func
+		end
+
+		widget.SetPreview = previewItem
+
+		widget.editbox.obj = widget
+		widget.button.obj = widget
+
+		return AceGUI:RegisterAsWidget(widget)
+	end
+
+	AceGUI:RegisterWidgetType(Subtype, Constructor, Version)
+end

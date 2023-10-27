@@ -55,6 +55,7 @@ read_globals = {
 	"GetCVarBool",
 	"GetDetailedItemLevelInfo",
 	"GetItemInfo",
+	"GetItemInfoInstant",
 	"GetLocale",
 	"GetMoney",
 	"GetMoneyString",
