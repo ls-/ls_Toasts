@@ -3,7 +3,12 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local next = _G.next
+local t_insert = _G.table.insert
+local t_sort = _G.table.sort
+local t_wipe = _G.table.wipe
 local tonumber = _G.tonumber
+local tostring = _G.tostring
 
 -- Mine
 local PLAYER_GUID = UnitGUID("player")
@@ -87,28 +92,29 @@ local function Toast_SetUp(event, link, quantity)
 	local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
 	if isNew then
 		local name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
+		local isPet = classID == 15 and subClassID == 2
 		local isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 
 		if name and ((quality and quality >= C.db.profile.types.loot_items.threshold and quality <= 5)
-			or (C.db.profile.types.loot_items.quest and isQuestItem)) then
+			or (isPet and C.db.profile.types.loot_items.pet)
+			or (isQuestItem and C.db.profile.types.loot_items.quest)
+			or C.db.profile.types.loot_items.filters[itemID]) then
 			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 			local title = L["YOU_RECEIVED"]
 			local soundFile = "Interface\\AddOns\\ls_Toasts\\assets\\ui-common-loot-toast.OGG"
 
 			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
 
-			if quality >= C.db.profile.colors.threshold then
-				if C.db.profile.colors.name then
-					name = color.hex .. name .. "|r"
-				end
+			if C.db.profile.colors.name then
+				name = color.hex .. name .. "|r"
+			end
 
-				if C.db.profile.colors.border then
-					toast.Border:SetVertexColor(color.r, color.g, color.b)
-				end
+			if C.db.profile.colors.border then
+				toast.Border:SetVertexColor(color.r, color.g, color.b)
+			end
 
-				if C.db.profile.colors.icon_border then
-					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-				end
+			if C.db.profile.colors.icon_border then
+				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
 			end
 
 			if C.db.profile.types.loot_items.ilvl then
@@ -200,12 +206,91 @@ local function CHAT_MSG_LOOT(message, _, _, _, name, _, _, _, _, _, _, guid)
 	Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0)
 end
 
+local newID
+local pendingItemIDs = {}
+local handleItemInfo, updateFilterOptions
+
+local function removeFilter(info)
+	C.db.profile.types.loot_items.filters[tonumber(info[#info - 1])] = nil
+
+	updateFilterOptions()
+end
+
+function handleItemInfo(id, isOk)
+	if isOk then
+		pendingItemIDs[id] = nil
+	end
+
+	if not next(pendingItemIDs) then
+		updateFilterOptions()
+	end
+end
+
+function updateFilterOptions()
+	if not C.db.profile.types.loot_items.enabled then
+		return
+	end
+
+	local options = t_wipe(C.options.args.types.args.loot_items.plugins.filters)
+	local nameToIndex = {}
+	local name, quaility, icon, color, _
+
+	for id in next, C.db.profile.types.loot_items.filters do
+		if not GetItemInfoInstant(id) then
+			-- remove invalid IDs, some people do stuff...
+			C.db.profile.types.loot_items.filters[id] = nil
+		else
+			name = GetItemInfo(id)
+			if name then
+				t_insert(nameToIndex, name)
+			else
+				pendingItemIDs[id] = true
+			end
+		end
+	end
+
+	t_sort(nameToIndex)
+
+	for i = 1, #nameToIndex do
+		nameToIndex[nameToIndex[i]] = i
+	end
+
+	for id in next, C.db.profile.types.loot_items.filters do
+		if not pendingItemIDs[id] then
+			name, _, quaility, _, _, _, _, _, _, icon = GetItemInfo(id)
+			color = ITEM_QUALITY_COLORS[quaility] or ITEM_QUALITY_COLORS[1]
+
+			options[tostring(id)] = {
+				order = nameToIndex[name] + 20,
+				type = "group",
+				name = ("|T%s:0:0:0:0:64:64:4:60:4:60|t %s%s|r"):format(icon, color.hex, name),
+				args = {
+					delete = {
+						type = "execute",
+						order = 1,
+						name = L["DELETE"],
+						func = removeFilter,
+					},
+				},
+			}
+		end
+	end
+
+	if next(pendingItemIDs) then
+		E:RegisterEvent("GET_ITEM_INFO_RECEIVED", handleItemInfo)
+	else
+		E:UnregisterEvent("GET_ITEM_INFO_RECEIVED", handleItemInfo)
+	end
+end
+
 local function Enable()
 	updatePatterns()
 
 	if C.db.profile.types.loot_items.enabled then
 		E:RegisterEvent("CHAT_MSG_LOOT", CHAT_MSG_LOOT)
 		E:RegisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
+
+		updateFilterOptions()
 	end
 end
 
@@ -217,6 +302,12 @@ end
 local function Test()
 	-- common, Hearthstone
 	local _, link = GetItemInfo(6948)
+	if link then
+		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
+	end
+
+	-- common, pet, Tiny Crimson Whelpling
+	_, link = GetItemInfo(8499)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
 	end
@@ -252,8 +343,10 @@ E:RegisterOptions("loot_items", {
 	dnd = false,
 	sfx = true,
 	ilvl = true,
+	pet = false,
 	quest = false,
 	threshold = 1,
+	filters = {},
 }, {
 	name = L["TYPE_LOOT_ITEMS"],
 	get = function(info)
@@ -306,19 +399,100 @@ E:RegisterOptions("loot_items", {
 				[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r",
 			},
 		},
-		quest = {
-			order = 6,
-			type = "toggle",
-			name = L["SHOW_QUEST_ITEMS"],
-			desc = L["SHOW_QUEST_ITEMS_DESC"],
-		},
 		test = {
 			type = "execute",
-			order = 99,
+			order = 9,
 			width = "full",
 			name = L["TEST"],
 			func = Test,
 		},
+		spacer_1 = {
+			order = 10,
+			type = "description",
+			name = " ",
+		},
+		filters = {
+			order = 11,
+			type = "group",
+			name = L["FILTERS"],
+			inline = true,
+			args = {
+				desc = {
+					order = 1,
+					type = "description",
+					name = L["ITEM_FILTERS_DESC"],
+				},
+				spacer_1 = {
+					order = 2,
+					type = "description",
+					name = " ",
+				},
+				quest = {
+					order = 3,
+					type = "toggle",
+					name = L["QUEST_ITEMS"],
+				},
+				pet = {
+					order = 4,
+					type = "toggle",
+					name = L["PETS"],
+				},
+			},
+		},
+		new = {
+			order = 12,
+			type = "group",
+			name = L["NEW"],
+			args = {
+				desc = {
+					order = 1,
+					type = "description",
+					name = L["NEW_ITEM_FILTER_DESC"],
+				},
+				id = {
+					order = 2,
+					type = "input",
+					name = L["ID"],
+					dialogControl = "LSPreviewBoxItem",
+					validate = function(_, value)
+						value = tonumber(value)
+						if value then
+							return not not GetItemInfoInstant(value)
+						else
+							return true
+						end
+					end,
+					set = function(_, value)
+						value = tonumber(value)
+						if value and GetItemInfoInstant(value) then
+							newID = value
+						else
+							newID = nil -- jic
+						end
+					end,
+					get = function()
+						return tostring(newID or "")
+					end,
+				},
+				add = {
+					type = "execute",
+					order = 3,
+					name = L["ADD"],
+					disabled = function()
+						return not newID or C.db.profile.types.loot_items.filters[newID]
+					end,
+					func = function()
+						C.db.profile.types.loot_items.filters[newID] = true
+						newID = nil
+
+						updateFilterOptions()
+					end,
+				},
+			},
+		},
+	},
+	plugins = {
+		filters = {},
 	},
 })
 

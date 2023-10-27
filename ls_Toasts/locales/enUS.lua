@@ -27,6 +27,8 @@ L["ITEM_LEGENDARY"] = _G.LEGENDARY_ITEM_LOOT_LABEL
 L["LOOT_THRESHOLD"] = _G.LOOT_THRESHOLD
 L["NEW"] = _G.NEW
 L["OKAY"] = _G.OKAY
+L["PETS"] = _G.PETS
+L["QUEST_ITEMS"] = _G.AUCTION_CATEGORY_QUEST_ITEMS
 L["RELOADUI"] = _G.RELOADUI
 L["RESET"] = _G.RESET
 L["SFX"] = _G.ENABLE_SOUNDFX
@@ -47,6 +49,7 @@ L["DND"] = "DND"
 L["DND_TOOLTIP"] = "Toasts in DND mode won't be displayed in combat, but will be queued up in the system. Once you leave combat, they'll start popping up."
 L["DOWNLOADS"] = "Downloads"
 L["FADE_OUT_DELAY"] = "Fade Out Delay"
+L["FILTERS"] = "Filters"
 L["FLUSH_QUEUE"] = "Flush Queue"
 L["FONTS"] = "Fonts"
 L["GROWTH_DIR"] = "Growth Direction"
@@ -62,8 +65,6 @@ L["RARITY_THRESHOLD"] = "Rarity Threshold"
 L["SCALE"] = "Scale"
 L["SHOW_ILVL"] = "Show iLvl"
 L["SHOW_ILVL_DESC"] = "Show item level next to item name."
-L["SHOW_QUEST_ITEMS"] = "Show Quest Items"
-L["SHOW_QUEST_ITEMS_DESC"] = "Show quest items regardless of their quality."
 L["SIZE"] = "Size"
 L["SKIN"] = "Skin"
 L["STRATA"] = "Strata"
@@ -82,11 +83,12 @@ L["YOU_LOST"] = "You Lost"
 L["YOU_RECEIVED"] = "You Received"
 
 -- Classic
+L["ITEM_FILTERS_DESC"] = "These items ignore the loot quality threshold."
+L["NEW_ITEM_FILTER_DESC"] = "Enter an item ID."
 L["TYPE_LOOT_ITEMS"] = "Loot (Items)"
 
 -- WotLK
 L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created."
-L["FILTERS"] = "Filters"
 L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID."
 L["THRESHOLD"] = "Threshold"
 L["TYPE_ACHIEVEMENT"] = "Achievement"
