@@ -1,36 +1,23 @@
---[[-----------------------------------------------------------------------------
-EditBox Widget
--------------------------------------------------------------------------------]]
-local Type, Version = "EditBox", 28
-local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
+-- Based on AceGUIWidget-EditBox supplied with AceGUI-3.0
+
+local Type, Version = "LSPreviewBox", 1
+local AceGUI = LibStub("AceGUI-3.0")
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
--- Lua APIs
-local tostring, pairs = tostring, pairs
+-- Lua
+local _G = getfenv(0)
+local next = _G.next
+local tonumber = _G.tonumber
+local tostring = _G.tostring
 
--- WoW APIs
-local PlaySound = PlaySound
-local GetCursorInfo, ClearCursor, GetSpellInfo = GetCursorInfo, ClearCursor, GetSpellInfo
-local CreateFrame, UIParent = CreateFrame, UIParent
-local _G = _G
+-- Blizz
+local C_CurrencyInfo = _G.C_CurrencyInfo
 
---[[-----------------------------------------------------------------------------
-Support functions
--------------------------------------------------------------------------------]]
-if not AceGUIEditBoxInsertLink then
-	-- upgradeable hook
-	hooksecurefunc("ChatEdit_InsertLink", function(...) return _G.AceGUIEditBoxInsertLink(...) end)
-end
+--[[ luacheck: globals
+ChatFontNormal ClearCursor CreateFrame GetCursorInfo GetMacroInfo GetSpellInfo PlaySound UIParent
 
-function _G.AceGUIEditBoxInsertLink(text)
-	for i = 1, AceGUI:GetWidgetCount(Type) do
-		local editbox = _G["AceGUI-3.0EditBox"..i]
-		if editbox and editbox:IsVisible() and editbox:HasFocus() then
-			editbox:Insert(text)
-			return true
-		end
-	end
-end
+OKAY
+]]
 
 local function ShowButton(self)
 	if not self.disablebutton then
@@ -44,9 +31,6 @@ local function HideButton(self)
 	self.editbox:SetTextInsets(0, 0, 3, 3)
 end
 
---[[-----------------------------------------------------------------------------
-Scripts
--------------------------------------------------------------------------------]]
 local function Control_OnEnter(frame)
 	frame.obj:Fire("OnEnter")
 end
@@ -99,6 +83,7 @@ local function EditBox_OnTextChanged(frame)
 	local value = frame:GetText()
 	if tostring(value) ~= tostring(self.lasttext) then
 		self:Fire("OnTextChanged", value)
+		self:SetPreview(value)
 		self.lasttext = value
 		ShowButton(self)
 	end
@@ -114,9 +99,6 @@ local function Button_OnClick(frame)
 	EditBox_OnEnterPressed(editbox)
 end
 
---[[-----------------------------------------------------------------------------
-Methods
--------------------------------------------------------------------------------]]
 local methods = {
 	["OnAcquire"] = function(self)
 		-- height is controlled by SetLabel
@@ -124,11 +106,13 @@ local methods = {
 		self:SetDisabled(false)
 		self:SetLabel()
 		self:SetText()
+		self:SetPreview()
 		self:DisableButton(false)
 		self:SetMaxLetters(0)
 	end,
 
 	["OnRelease"] = function(self)
+		self:SetText()
 		self:ClearFocus()
 	end,
 
@@ -153,7 +137,7 @@ local methods = {
 		HideButton(self)
 	end,
 
-	["GetText"] = function(self, text)
+	["GetText"] = function(self)
 		return self.editbox:GetText()
 	end,
 
@@ -198,18 +182,27 @@ local methods = {
 
 	["HighlightText"] = function(self, from, to)
 		self.editbox:HighlightText(from, to)
-	end
+	end,
+
+	["SetPreview"] = function(self, value)
+		if value and value ~= "" then
+			self.preview:SetOwner(self, "ANCHOR_NONE")
+			self.preview:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 1, 1)
+			self.preview:SetText(value, 1, 0.82, 0, true)
+			self.preview:Show()
+		else
+			self.preview:Hide()
+		end
+	end,
 }
 
---[[-----------------------------------------------------------------------------
-Constructor
--------------------------------------------------------------------------------]]
-local function Constructor()
-	local num  = AceGUI:GetNextWidgetNum(Type)
+local function getBaseWidget(widgetType)
 	local frame = CreateFrame("Frame", nil, UIParent)
 	frame:Hide()
 
-	local editbox = CreateFrame("EditBox", "AceGUI-3.0EditBox"..num, frame, "InputBoxTemplate")
+	local name = "AceGUI30" .. widgetType .. AceGUI:GetNextWidgetNum(Type)
+
+	local editbox = CreateFrame("EditBox", name, frame, "InputBoxTemplate")
 	editbox:SetAutoFocus(false)
 	editbox:SetFontObject(ChatFontNormal)
 	editbox:SetScript("OnEnter", Control_OnEnter)
@@ -232,6 +225,10 @@ local function Constructor()
 	label:SetJustifyH("LEFT")
 	label:SetHeight(18)
 
+	local preview = CreateFrame("GameTooltip", name .. "Preview", frame, "GameTooltipTemplate")
+	preview:SetFrameLevel(99) -- it should be above other widgets
+	preview:Hide()
+
 	local button = CreateFrame("Button", nil, editbox, "UIPanelButtonTemplate")
 	button:SetWidth(40)
 	button:SetHeight(20)
@@ -240,20 +237,94 @@ local function Constructor()
 	button:SetScript("OnClick", Button_OnClick)
 	button:Hide()
 
-	local widget = {
+	return {
 		alignoffset = 30,
 		editbox     = editbox,
 		label       = label,
+		preview     = preview,
 		button      = button,
 		frame       = frame,
-		type        = Type
+		type        = widgetType
 	}
-	for method, func in pairs(methods) do
-		widget[method] = func
-	end
-	editbox.obj, button.obj = widget, widget
-
-	return AceGUI:RegisterAsWidget(widget)
 end
 
-AceGUI:RegisterWidgetType(Type, Constructor, Version)
+--------------
+-- Subtypes --
+--------------
+do
+	local Subtype = Type .. "Currency"
+
+	local function previewCurrency(self, value)
+		local id = tonumber(value)
+		if id then
+			id = "currency:" .. id
+			local info = C_CurrencyInfo.GetCurrencyInfoFromLink(id, 0)
+			if info then
+				self.preview:SetOwner(self.frame, "ANCHOR_NONE")
+				self.preview:SetPoint("TOPLEFT", self.frame, "BOTTOMLEFT", 1, 1)
+				self.preview:SetHyperlink(id)
+				self.preview:Show()
+			else
+				self.preview:Hide()
+			end
+		else
+			self.preview:Hide()
+		end
+	end
+
+	local function Constructor()
+		local widget = getBaseWidget(Subtype)
+
+		for method, func in next, methods do
+			widget[method] = func
+		end
+
+		widget.SetPreview = previewCurrency
+
+		widget.editbox.obj = widget
+		widget.button.obj = widget
+
+		return AceGUI:RegisterAsWidget(widget)
+	end
+
+	AceGUI:RegisterWidgetType(Subtype, Constructor, Version)
+end
+
+do
+	local Subtype = Type .. "Item"
+
+	local function previewItem(self, value)
+		local id = tonumber(value)
+		if id then
+			id = "item:" .. id
+			local info = GetItemInfoInstant(id)
+			if info then
+				self.preview:SetOwner(self.frame, "ANCHOR_NONE")
+				self.preview:SetPoint("TOPLEFT", self.frame, "BOTTOMLEFT", 1, 1)
+				self.preview:SetHyperlink(id)
+				self.preview:Show()
+			else
+				self.preview:Hide()
+			end
+		else
+			self.preview:Hide()
+		end
+	end
+
+	local function Constructor()
+		local widget = getBaseWidget(Subtype)
+
+		for method, func in next, methods do
+			widget[method] = func
+		end
+
+		widget.SetPreview = previewItem
+
+		widget.editbox.obj = widget
+		widget.button.obj = widget
+
+		return AceGUI:RegisterAsWidget(widget)
+	end
+
+	AceGUI:RegisterWidgetType(Subtype, Constructor, Version)
+end
