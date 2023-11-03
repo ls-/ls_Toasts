@@ -109,6 +109,8 @@ local function createBorder(self, drawLayer, drawSubLevel)
 
 	for _, v in next, sections do
 		border[v] = self:CreateTexture(nil, drawLayer or "OVERLAY", nil, drawSubLevel or 1)
+		border[v]:SetTexelSnappingBias(0)
+		border[v]:SetSnapToPixelGrid(false)
 	end
 
 	border.TOPLEFT:SetTexCoord(0.5, 0.625, 0, 1)
