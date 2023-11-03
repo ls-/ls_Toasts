@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 30403.02
+
+- Tweaked toast borders so that the texture looks more consistent with no warping or shifting.
+  Doesn't affect ElvUI skins.
+
+  ![Imgur](https://i.imgur.com/VbQfaNq.png)
+
 ## Version 30403.01
 
 - Added 3.4.3 support.
