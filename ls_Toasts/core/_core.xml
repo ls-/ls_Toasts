@@ -1,0 +1,11 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="defaults.lua"/>
+	<Script file="core.lua"/>
+	<!-- can sort -->
+	<Script file="anchor.lua"/>
+	<Script file="changelog.lua"/>
+	<Script file="queue.lua"/>
+	<Script file="skin.lua"/>
+	<Script file="system.lua"/>
+	<Script file="toast.lua"/>
+</Ui>
