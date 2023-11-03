@@ -10,10 +10,6 @@ local t_insert = _G.table.insert
 local tonumber = _G.tonumber
 local tostring = _G.tostring
 
---[[ luacheck: globals
-	CreateFrame GameTooltip IsShiftKeyDown SquareButton_SetIcon UIParent
-]]
-
 -- Mine
 local anchors = {}
 local activeAnchors = {}

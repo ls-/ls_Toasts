@@ -36,6 +36,7 @@ globals = {
 
 read_globals = {
 	"AlertFrame",
+	"C_Timer",
 	"CreateFrame",
 	"DressUpVisual",
 	"GameTooltip",
@@ -77,6 +78,7 @@ read_globals = {
 	"ITEM_QUALITY3_DESC",
 	"ITEM_QUALITY4_DESC",
 	"ITEM_QUALITY5_DESC",
+	"Lerp",
 	"LibStub",
 	"LOOT_ITEM_CREATED_SELF",
 	"LOOT_ITEM_CREATED_SELF_MULTIPLE",

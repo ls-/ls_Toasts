@@ -8,10 +8,6 @@ local m_random = _G.math.random
 local tonumber = _G.tonumber
 local tostring = _G.tostring
 
---[[ luacheck: globals
-	GetMoney GetMoneyString
-]]
-
 -- Mine
 local old
 
