@@ -13,6 +13,14 @@ E:RegisterSkin("elv", {
 		size = 1,
 		texture = {1, 1, 1, 1},
 	},
+	leaves = {
+		color = {0, 0, 0},
+		points = {
+			{y = 15}, -- topleft
+			{x = 9, y = 9}, -- topright
+			{y = -11}, -- bottomright
+		},
+	},
 	icon = {
 		tex_coords = {5 / 64, 59 / 64, 5 / 64, 59 / 64},
 	},
@@ -69,6 +77,9 @@ E:RegisterSkin("elv-no-art", {
 	text_bg = {
 		hidden = true,
 	},
+	leaves = {
+		hidden = true,
+	},
 	dragon = {
 		hidden = true,
 	},
@@ -78,6 +89,22 @@ E:RegisterSkin("elv-no-art", {
 	bg = {
 		default = {
 			texture = {0.06, 0.06, 0.06, 0.8},
+		},
+	},
+})
+
+E:RegisterSkin("elv-twotone", {
+	name = "ElvUI (Two Tone)",
+	template = "elv",
+	title = {
+		color = {0.15, 0.15, 0.15},
+	},
+	text_bg = {
+		hidden = true,
+	},
+	bg = {
+		default = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default-as",
 		},
 	},
 })

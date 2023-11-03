@@ -29,6 +29,15 @@ E:RegisterSkin("default", {
 	bonus = {
 		hidden = false,
 	},
+	leaves = {
+		color = {1, 1, 1},
+		points = {
+			{p = "TOPLEFT", rP = "TOPLEFT", x = -1, y = 16}, -- topleft
+			{p = "TOPRIGHT", rP = "TOPRIGHT", x = 10, y = 10}, -- topright
+			{p = "BOTTOMRIGHT", rP = "BOTTOMRIGHT", x = -32, y = -12}, -- bottomright
+		},
+		hidden = false,
+	},
 	dragon = {
 		hidden = false,
 	},
@@ -52,6 +61,11 @@ E:RegisterSkin("default", {
 		shadow = false,
 	},
 	icon_text_2 = {
+		color = {1, 1, 1},
+		flags = "THINOUTLINE",
+		shadow = false,
+	},
+	icon_text_3 = {
 		color = {1, 1, 1},
 		flags = "THINOUTLINE",
 		shadow = false,
@@ -117,6 +131,22 @@ E:RegisterSkin("default-legacy", {
 			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-legendary",
 			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
 			tile = false,
+		},
+	},
+})
+
+E:RegisterSkin("default-twotone", {
+	name = "Default (Two Tone)",
+	template = "default",
+	title = {
+		color = {0.15, 0.15, 0.15},
+	},
+	text_bg = {
+		hidden = true,
+	},
+	bg = {
+		default = {
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-bg-default-as",
 		},
 	},
 })
