@@ -518,6 +518,18 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 
 		Settings.RegisterAddOnCategory(Settings.RegisterCanvasLayoutCategory(panel, L["LS_TOASTS"]))
 
+		AddonCompartmentFrame:RegisterAddon({
+			text = L["LS_TOASTS"],
+			icon = "Interface\\AddOns\\ls_Toasts\\assets\\logo-32",
+			notCheckable = true,
+			registerForAnyClick = true,
+			func = function()
+				if not InCombatLockdown() then
+					LibStub("AceConfigDialog-3.0"):Open(addonName)
+				end
+			end,
+		})
+
 		E:RegisterEvent("PLAYER_REGEN_DISABLED", function()
 			LibStub("AceConfigDialog-3.0"):Close(addonName)
 		end)
