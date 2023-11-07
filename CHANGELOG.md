@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## Version 100200.01
+
+- Added 10.2 support.
+- Added "LS: Toasts" entry to the addon compartment in the top right corner of the minimap.
+- Tweaked toast borders so that the texture looks more consistent with no warping or shifting.
+  Doesn't affect ElvUI skins.
+
+### Transmogrification
+
+- Fixed an issue where sometimes a toast wouldn't show up. It's primarily affecting "Quantum Items" that unlock
+  a random appearance on use.
+
+![Imgur](https://i.imgur.com/VbQfaNq.png)
+![Imgur](https://i.imgur.com/iwnsoda.png)
+
 ## Version 100105.01
 
 - Added 10.1.5 support.

@@ -38,6 +38,7 @@ read_globals = {
 	"AchievementFrame",
 	"AchievementFrame_LoadUI",
 	"AchievementFrame_SelectAchievement",
+	"AddonCompartmentFrame",
 	"AlertFrame",
 	"ArchaeologyFrame",
 	"ArcheologyDigsiteProgressBar",

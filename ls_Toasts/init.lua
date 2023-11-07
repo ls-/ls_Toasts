@@ -58,6 +58,7 @@ local BLACKLISTED_EVENTS = {
 	["SHOW_LOOT_TOAST_UPGRADE"] = true,
 	["SHOW_PVP_FACTION_LOOT_TOAST"] = true,
 	["SHOW_RATED_PVP_REWARD_TOAST"] = true,
+	["SKILL_LINE_SPECS_UNLOCKED"] = true,
 	["TRANSMOG_COLLECTION_SOURCE_ADDED"] = true,
 	["TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED"] = true,
 }
@@ -516,6 +517,18 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		end)
 
 		Settings.RegisterAddOnCategory(Settings.RegisterCanvasLayoutCategory(panel, L["LS_TOASTS"]))
+
+		AddonCompartmentFrame:RegisterAddon({
+			text = L["LS_TOASTS"],
+			icon = "Interface\\AddOns\\ls_Toasts\\assets\\logo-32",
+			notCheckable = true,
+			registerForAnyClick = true,
+			func = function()
+				if not InCombatLockdown() then
+					LibStub("AceConfigDialog-3.0"):Open(addonName)
+				end
+			end,
+		})
 
 		E:RegisterEvent("PLAYER_REGEN_DISABLED", function()
 			LibStub("AceConfigDialog-3.0"):Close(addonName)

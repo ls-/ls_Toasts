@@ -1,3 +1,5 @@
+Set-Location $PSScriptRoot
+
 $csv = Invoke-WebRequest "https://wago.tools/db2/CurrencyTypes/csv" | ConvertFrom-Csv
 
 $currenciesToBlacklist = @(
