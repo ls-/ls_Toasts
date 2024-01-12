@@ -845,6 +845,10 @@ local BLACKLIST = {
 	[2774] = true, -- 10.2 Professions - Personal Tracker - S3 Spark Drops (Hidden)
 	[2780] = true, -- Echoed Ephemera Tracker [DNT]
 	[2796] = true, -- Renascent Dream
+	[2819] = true, -- Azerothian Archives
+	[2878] = true, -- 10.2 Professions - Personal Tracker - Legendary - Restored Leaf
+	[2710] = true, -- Study of Shadowflame
+	[2784] = true, -- 10.2 Legendary - Progressive Advance - Tracker
 }
 
 local MULT = {
