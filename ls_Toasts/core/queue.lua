@@ -59,6 +59,16 @@ function P:RefreshQueues()
 	end
 end
 
+function P:SetUpQueues(anchorID)
+	if not queuedToasts[anchorID] then
+		queuedToasts[anchorID] = {}
+	end
+
+	if not activeToasts[anchorID] then
+		activeToasts[anchorID] = {}
+	end
+end
+
 local function sortFunc(a, b)
 	if a._data.dnd == b._data.dnd then
 		return a._data.order < b._data.order
@@ -70,14 +80,6 @@ local function sortFunc(a, b)
 end
 
 function P:Queue(toast, anchorID)
-	if not queuedToasts[anchorID] then
-		queuedToasts[anchorID] = {}
-	end
-
-	if not activeToasts[anchorID] then
-		activeToasts[anchorID] = {}
-	end
-
 	t_insert(queuedToasts[anchorID], toast)
 	t_sort(queuedToasts[anchorID], sortFunc)
 
