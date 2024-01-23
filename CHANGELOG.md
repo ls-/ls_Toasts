@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 100205.02
+
+- Added partial Brazilian Portuguese translation. Translated by paulovnas@GitHub.
+
 ## Version 100205.01
 
 - Added 10.2.5 support.
