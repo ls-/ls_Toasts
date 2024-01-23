@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 11500.01
+
+- Added 1.15.0 support.
+- Added Brazilian Portuguese translation. Translated by paulovnas@GitHub.
+
 ## Version 11404.01
 
 - Added 1.14.4 support.
