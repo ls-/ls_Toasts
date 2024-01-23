@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 30403.03
+
+- Added Brazilian Portuguese translation. Translated by paulovnas@GitHub.
+
 ## Version 30403.02
 
 - Tweaked toast borders so that the texture looks more consistent with no warping or shifting.
