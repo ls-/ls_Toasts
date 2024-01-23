@@ -1,4 +1,4 @@
-﻿-- Contributors:
+﻿-- Contributors: paulovnas@GitHub
 
 local _, addonTable = ...
 local L = addonTable.L
