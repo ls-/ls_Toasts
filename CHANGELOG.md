@@ -1,8 +1,13 @@
 # CHANGELOG
 
+## Version 11500.01
+
+- Added 1.15.0 support.
+- Added Brazilian Portuguese translation. Translated by paulovnas@GitHub.
+
 ## Version 11404.01
 
-- Added 1.14.4 support;
+- Added 1.14.4 support.
 - Added "Two Tone" variants to all built-in skins. They have a two tone background that's similar
   to that of Blizz achievement toasts.
 - Added an option to show toasts for poor quality items. 
