@@ -3,11 +3,21 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local m_random = _G.math.random
 local s_lower = _G.string.lower
 local s_split = _G.string.split
 local tonumber = _G.tonumber
 
 -- Mine
+local ROLL_TEMPLATE = "%s|A:lootroll-icon-%s:0:0:0:0|a"
+
+local rollTypes = {
+	[1] = "need",
+	[2] = "greed",
+	[3] = "disenchant",
+	[4] = "transmog", -- no idea if it's even a thing, but I'll just assume that it is
+}
+
 local function Toast_OnClick(self)
 	if self._data.link and IsModifiedClick("DRESSUP") then
 		DressUpLink(self._data.link)
@@ -35,7 +45,7 @@ local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or value)
 end
 
-local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isUpgraded, baseQuality, isLegendary, isAzerite, isCorrupted)
+local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isUpgraded, baseQuality, isLegendary, isAzerite, isCorrupted, rollType, roll)
 	if link then
 		local sanitizedLink, originalLink, _, itemID = E:SanitizeLink(link)
 		local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
@@ -81,6 +91,14 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 				elseif isCorrupted then
 					title = L["ITEM_CORRUPTED"]
 					soundFile = 147833 -- SOUNDKIT.UI_CORRUPTED_ITEM_LOOT_TOAST
+				end
+
+				if rollType then
+					rollType = rollTypes[rollType]
+					if rollType then
+						toast.IconText3:SetFormattedText(ROLL_TEMPLATE, roll, rollType)
+						toast.IconText3BG:Show()
+					end
 				end
 
 				if factionGroup then
@@ -156,8 +174,8 @@ local function AZERITE_EMPOWERED_ITEM_LOOTED(link)
 	Toast_SetUp("AZERITE_EMPOWERED_ITEM_LOOTED", link, 1, nil, nil, nil, nil, nil, nil, true)
 end
 
-local function LOOT_ITEM_ROLL_WON(link, quantity, _, _, isUpgraded)
-	Toast_SetUp("LOOT_ITEM_ROLL_WON", link, quantity, nil, nil, isUpgraded)
+local function LOOT_ITEM_ROLL_WON(link, quantity, rollType, roll, isUpgraded)
+	Toast_SetUp("LOOT_ITEM_ROLL_WON", link, quantity, nil, nil, isUpgraded, nil, nil, nil, nil, rollType, roll)
 end
 
 local function SHOW_LOOT_TOAST(typeID, link, quantity, _, _, _, _, lessAwesome, isUpgraded, isCorrupted)
@@ -271,6 +289,12 @@ local function Test()
 	_, link = GetItemInfo("item:172187::::::::20:71::3:1:3524:::")
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, nil, true)
+	end
+
+	-- roll, Rhinestone Sunglasses
+	_, link = GetItemInfo(52489)
+	if link then
+		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, nil, nil, m_random(1, 4), m_random(1, 100))
 	end
 end
 
