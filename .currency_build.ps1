@@ -23,12 +23,14 @@ $categoriesToBlacklist = @(
 	252  # Tuskarr - Fishing Nets (Hidden)
 )
 
+# convert IDs to int because sorting strings sucks ass
+$ID = @{ l = "ID"; e = { $_.ID -as [int] } }
+
 $blackist = $csv |
 	Where-Object {
 		($currenciesToBlacklist -contains $_.ID -or $categoriesToBlacklist -contains $_.CategoryID) -and $currenciesToWhitelist -notcontains $_.ID
 	} |
-	# convert IDs to int because sorting strings sucks ass
-	Select-Object @{ l = "ID"; e = { $_.ID -as [int] } }, Name_lang |
+	Select-Object $ID, Name_lang |
 	Sort-Object ID
 # $blackist | ForEach-Object {
 # 	Write-Host "[$($_.ID.ToString().PadLeft(4))] = true, -- $($_.Name_lang)"
@@ -39,7 +41,7 @@ $mult = $csv |
 	Where-Object {
 		$_.Flags_0 -band 8 -and -not (($currenciesToBlacklist -contains $_.ID -or $categoriesToBlacklist -contains $_.CategoryID) -and $currenciesToWhitelist -notcontains $_.ID)
 	} |
-	Select-Object @{ l = "ID"; e = { $_.ID -as [int] } }, Name_lang |
+	Select-Object $ID, Name_lang |
 	Sort-Object ID
 # $mult | ForEach-Object {
 # 	Write-Host "[$($_.ID.ToString().PadLeft(4))] = 0.01, -- $($_.Name_lang)"
