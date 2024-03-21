@@ -135,7 +135,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			local slot = toast["Slot" .. toast._data.used_slots]
 
 			if slot then
-				local _, _, _, _, texture = GetItemInfoInstant(itemReward)
+				local _, _, _, _, texture = C_Item.GetItemInfoInstant(itemReward)
 				texture = texture or "Interface\\Icons\\INV_Box_02"
 
 				slot.Icon:SetTexture(texture)
@@ -198,7 +198,7 @@ end
 
 local function Test()
 	-- reward, Blood of Sargeras
-	local _, link = GetItemInfo(124124)
+	local _, link = C_Item.GetItemInfo(124124)
 	if link then
 		-- world quest, may not work
 		local quests = C_TaskQuest.GetQuestsForPlayerByMapID(1014)

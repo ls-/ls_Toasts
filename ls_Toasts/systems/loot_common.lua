@@ -110,7 +110,7 @@ local function Toast_SetUp(event, link, quantity)
 			name, icon = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 			quality = tonumber(breedQuality)
 		else
-			name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
+			name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = C_Item.GetItemInfo(originalLink)
 			isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 		end
 
@@ -254,13 +254,13 @@ end
 
 local function Test()
 	-- item, Chaos Crystal
-	local _, link = GetItemInfo(124442)
+	local _, link = C_Item.GetItemInfo(124442)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
 	end
 
 	-- item, Hochenblume, Rank 3
-	_, link = GetItemInfo(191462)
+	_, link = C_Item.GetItemInfo(191462)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
 	end

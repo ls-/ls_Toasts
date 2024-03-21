@@ -23,15 +23,28 @@ $categoriesToBlacklist = @(
 	252  # Tuskarr - Fishing Nets (Hidden)
 )
 
-$blackist = $csv | Where-Object { ($currenciesToBlacklist -contains $_.ID -or $categoriesToBlacklist -contains $_.CategoryID) -and $currenciesToWhitelist -notcontains $_.ID } | Select-Object -Property ID, Name_lang
+# convert IDs to int because sorting strings sucks ass
+$ID = @{ l = "ID"; e = { $_.ID -as [int] } }
+
+$blackist = $csv |
+	Where-Object {
+		($currenciesToBlacklist -contains $_.ID -or $categoriesToBlacklist -contains $_.CategoryID) -and $currenciesToWhitelist -notcontains $_.ID
+	} |
+	Select-Object $ID, Name_lang |
+	Sort-Object ID
 # $blackist | ForEach-Object {
-# 	Write-Host "[$($_.ID.PadLeft(4))] = true, -- $($_.Name_lang)"
+# 	Write-Host "[$($_.ID.ToString().PadLeft(4))] = true, -- $($_.Name_lang)"
 # }
 
 # 0x8 - 1/100 scalar for display
-$mult = $csv | Where-Object { $_.Flags_0 -band 8 -and -not (($currenciesToBlacklist -contains $_.ID -or $categoriesToBlacklist -contains $_.CategoryID) -and $currenciesToWhitelist -notcontains $_.ID) } | Select-Object -Property ID, Name_lang
+$mult = $csv |
+	Where-Object {
+		$_.Flags_0 -band 8 -and -not (($currenciesToBlacklist -contains $_.ID -or $categoriesToBlacklist -contains $_.CategoryID) -and $currenciesToWhitelist -notcontains $_.ID)
+	} |
+	Select-Object $ID, Name_lang |
+	Sort-Object ID
 # $mult | ForEach-Object {
-# 	Write-Host "[$($_.ID.PadLeft(4))] = 0.01, -- $($_.Name_lang)"
+# 	Write-Host "[$($_.ID.ToString().PadLeft(4))] = 0.01, -- $($_.Name_lang)"
 # }
 
 $lua = ".\ls_Toasts\systems\loot_currency.lua"
@@ -47,7 +60,7 @@ foreach ($line in Get-Content $lua) {
 $out += "local BLACKLIST = {`n"
 
 $blackist | ForEach-Object {
-	$out += "`t[$($_.ID.PadLeft(4))] = true, -- $($_.Name_lang)`n"
+	$out += "`t[$($_.ID.ToString().PadLeft(4))] = true, -- $($_.Name_lang)`n"
 }
 
 $out += "}`n`n"
@@ -55,7 +68,7 @@ $out += "}`n`n"
 $out += "local MULT = {`n"
 
 $mult | ForEach-Object {
-	$out += "`t[$($_.ID.PadLeft(4))] = 0.01, -- $($_.Name_lang)`n"
+	$out += "`t[$($_.ID.ToString().PadLeft(4))] = 0.01, -- $($_.Name_lang)`n"
 }
 
 $out += "}`n"

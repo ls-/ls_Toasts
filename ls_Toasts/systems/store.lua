@@ -59,7 +59,7 @@ local function Toast_SetUp(event, entitlementType, textureID, name, payloadID, p
 		toast, isNew = E:GetToast(event, "link", sanitizedLink)
 		if not isNew then return end
 
-		_, _, quality = GetItemInfo(originalLink)
+		_, _, quality = C_Item.GetItemInfo(originalLink)
 
 		toast._data.link = sanitizedLink
 		toast._data.tooltip_link = originalLink
@@ -110,8 +110,8 @@ end
 
 local function getItemLink(itemID, textureID)
 	if itemID then
-		if select(5, GetItemInfoInstant(itemID)) == textureID then
-			local _, link = GetItemInfo(itemID)
+		if select(5, C_Item.GetItemInfoInstant(itemID)) == textureID then
+			local _, link = C_Item.GetItemInfo(itemID)
 			if link then
 				return link, false
 			end
@@ -163,7 +163,7 @@ end
 
 local function Test()
 	-- WoW Token
-	local name, link, _, _, _, _, _, _, _, icon = GetItemInfo(122270)
+	local name, link, _, _, _, _, _, _, _, icon = C_Item.GetItemInfo(122270)
 	if link then
 		Toast_SetUp("ENTITLEMENT_TEST", Enum.WoWEntitlementType.Item, icon, name, 122270, link)
 	end

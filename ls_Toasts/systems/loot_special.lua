@@ -50,7 +50,7 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 		local sanitizedLink, originalLink, _, itemID = E:SanitizeLink(link)
 		local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
 		if isNew then
-			local name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(originalLink)
+			local name, _, quality, _, _, _, _, _, _, icon = C_Item.GetItemInfo(originalLink)
 			if name and (quality and quality >= C.db.profile.types.loot_special.threshold and quality <= 5) then
 				local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
 				local title = L["YOU_RECEIVED"]
@@ -256,43 +256,43 @@ local function Test()
 	factionGroup = factionGroup ~= "Neutral" and factionGroup or "Horde"
 
 	-- pvp, Fearless Gladiator's Dreadplate Girdle
-	local _, link = GetItemInfo(142679)
+	local _, link = C_Item.GetItemInfo(142679)
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, factionGroup)
 	end
 
 	-- titanforged, Bonespeaker Bracers
-	_, link = GetItemInfo("item:134222::::::::110:63::36:4:3432:41:1527:3337:::")
+	_, link = C_Item.GetItemInfo("item:134222::::::::110:63::36:4:3432:41:1527:3337:::")
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, true)
 	end
 
 	-- upgraded from uncommon to epic, Nightsfall Brestplate
-	_, link = GetItemInfo("item:139055::::::::110:70::36:3:3432:1507:3336:::")
+	_, link = C_Item.GetItemInfo("item:139055::::::::110:70::36:3:3432:1507:3336:::")
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, true, 2)
 	end
 
 	-- legendary, Aman'Thul's Vision
-	_, link = GetItemInfo("item:154172::::::::110:64:::1:3571:::")
+	_, link = C_Item.GetItemInfo("item:154172::::::::110:64:::1:3571:::")
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, true)
 	end
 
 	-- azerite, Vest of the Champion
-	_, link = GetItemInfo("item:159906::::::::110:581::11::::")
+	_, link = C_Item.GetItemInfo("item:159906::::::::110:581::11::::")
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, true)
 	end
 
 	-- corrupted, Devastation's Hour
-	_, link = GetItemInfo("item:172187::::::::20:71::3:1:3524:::")
+	_, link = C_Item.GetItemInfo("item:172187::::::::20:71::3:1:3524:::")
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, nil, true)
 	end
 
 	-- roll, Rhinestone Sunglasses
-	_, link = GetItemInfo(52489)
+	_, link = C_Item.GetItemInfo(52489)
 	if link then
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, nil, nil, nil, m_random(1, 4), m_random(1, 100))
 	end
