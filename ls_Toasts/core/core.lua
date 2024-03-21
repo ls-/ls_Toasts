@@ -202,11 +202,11 @@ do
 	}
 
 	function E:GetItemLevel(itemLink)
-		local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, itemSubClassID = GetItemInfo(itemLink)
+		local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, itemSubClassID = C_Item.GetItemInfo(itemLink)
 
 		-- 3:11 is artefact relic
 		if (itemClassID == 3 and itemSubClassID == 11) or slots[itemEquipLoc] then
-			return GetDetailedItemLevelInfo(itemLink) or 0
+			return C_Item.GetDetailedItemLevelInfo(itemLink) or 0
 		end
 
 		return 0
