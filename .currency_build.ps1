@@ -13,11 +13,13 @@ $currenciesToWhitelist = @(
 )
 
 $categoriesToBlacklist = @(
+	3,   # Unused
 	41,  # Test
 	82,  # Archaeology
 	89,  # Meta
 	142, # Hidden
 	144, # Virtual
+	246, # Debug
 	248, # Torghast UI (Hidden)
 	251, # Dragon Racing UI (Hidden)
 	252  # Tuskarr - Fishing Nets (Hidden)
