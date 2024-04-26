@@ -1,13 +1,5 @@
 Set-Location $PSScriptRoot
 
-if (-Not (Test-Path "C:\PROGRA~1\7-Zip\7z.exe")) {
-	Write-Host "7z.exe not found"
-
-	return Read-Host
-}
-
-Set-Alias 7z "C:\PROGRA~1\7-Zip\7z.exe"
-
 $name = (Get-Item .).Name
 
 if (-Not (Test-Path (".\" + $name + "\" + $name + ".toc"))) {
@@ -24,33 +16,28 @@ if (Get-Content (".\" + $name + "\" + $name + ".toc") | Where-Object { $_ -match
 	return Read-Host
 }
 
-$includedItems = @(
-	".\" + $name
+$foldersToInclude = @(
+	".\$name"
 )
 
-$filesToRemove = @(
+$filesToExclude = @(
 	"*.doc*"
 	"*.editorconfig",
 	"*.git*",
 	"*.luacheck*",
 	"*.pkg*",
 	"*.ps1",
+	"*.sh",
 	"*.yml"
 )
 
-if (Test-Path ".\temp\") {
-	Remove-Item ".\temp\" -Recurse -Force
+$temp = ".\temp\"
+
+if (Test-Path $temp) {
+	Remove-Item $temp -Recurse -Force
 }
 
-New-Item -Path (".\temp\") -ItemType Directory | Out-Null
-Copy-Item $includedItems -Destination (".\temp\") -Recurse
-Remove-Item ".\temp" -Include $filesToRemove -Recurse -Force
-
-Set-Location ".\temp\"
-
-7z a -tzip -mx9 ($name + "-" + $version + ".zip") (Get-ChildItem -Path "..\temp")
-
-Set-Location "..\"
-
-Move-Item ".\temp\*.zip" -Destination "..\" -Force
-Remove-Item ".\temp" -Recurse -Force
+New-Item -Path $temp -ItemType Directory | Out-Null
+Copy-Item $foldersToInclude -Destination $temp -Exclude $filesToExclude -Recurse
+Get-ChildItem $temp | Compress-Archive -DestinationPath ("..\$name-$version.zip") -Force
+Remove-Item $temp -Recurse -Force
