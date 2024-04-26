@@ -54,7 +54,7 @@ $lua = ".\ls_Toasts\systems\loot_currency.lua"
 $out = ""
 
 foreach ($line in Get-Content $lua) {
-	$out += "$($line)`n"
+	$out += "$line`n"
 
 	if ($line -match "GENERATED-DATA-START") { break }
 }
@@ -83,7 +83,7 @@ foreach ($line in Get-Content $lua) {
 	}
 
 	if ($canWrite) {
-		$out += "$($line)`n"
+		$out += "$line`n"
 	}
 }
 
