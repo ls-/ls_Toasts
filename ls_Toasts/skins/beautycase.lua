@@ -41,6 +41,49 @@ E:RegisterSkin("beautycase-no-art", {
 	},
 })
 
+E:RegisterSkin("beautycase-legacy", {
+	name = "Beautycase (Legacy)",
+	template = "beautycase",
+	bg = {
+		archaeology = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-archaeology",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		collection = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-collection",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		default = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-default",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		legendary = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-legendary",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		store = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-store",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+		transmog = {
+			color = {1, 1, 1},
+			texture = "Interface\\AddOns\\ls_Toasts\\assets\\legacy\\toast-bg-transmog",
+			tex_coords = {1 / 256, 225 / 256, 1 / 64, 49 / 64},
+			tile = false,
+		},
+	},
+})
+
 E:RegisterSkin("beautycase-twotone", {
 	name = "Beautycase (Two Tone)",
 	template = "beautycase",
