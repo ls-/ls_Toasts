@@ -1,6 +1,6 @@
 Set-Location $PSScriptRoot
 
-$csv = Invoke-WebRequest "https://wago.tools/db2/CurrencyTypes/csv" | ConvertFrom-Csv
+$csv = (Test-Path ".\CurrencyTypes.csv") ? (Import-Csv ".\CurrencyTypes.csv") : (Invoke-WebRequest "https://wago.tools/db2/CurrencyTypes/csv" | ConvertFrom-Csv)
 
 $currenciesToBlacklist = @(
 	2032 # Trader's Tender
@@ -13,11 +13,13 @@ $currenciesToWhitelist = @(
 )
 
 $categoriesToBlacklist = @(
+	3,   # Unused
 	41,  # Test
 	82,  # Archaeology
 	89,  # Meta
 	142, # Hidden
 	144, # Virtual
+	246, # Debug
 	248, # Torghast UI (Hidden)
 	251, # Dragon Racing UI (Hidden)
 	252  # Tuskarr - Fishing Nets (Hidden)
@@ -52,7 +54,7 @@ $lua = ".\ls_Toasts\systems\loot_currency.lua"
 $out = ""
 
 foreach ($line in Get-Content $lua) {
-	$out += "$($line)`n"
+	$out += "$line`n"
 
 	if ($line -match "GENERATED-DATA-START") { break }
 }
@@ -81,7 +83,7 @@ foreach ($line in Get-Content $lua) {
 	}
 
 	if ($canWrite) {
-		$out += "$($line)`n"
+		$out += "$line`n"
 	}
 }
 
