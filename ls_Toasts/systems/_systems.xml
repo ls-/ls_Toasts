@@ -1,6 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="achievement.lua"/>
 	<Script file="archaeology.lua"/>
+	<Script file="collection.lua"/>
 	<Script file="loot_currency.lua"/>
 	<Script file="loot_gold.lua"/>
 	<Script file="loot_items.lua"/>
