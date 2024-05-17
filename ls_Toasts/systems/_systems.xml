@@ -5,4 +5,5 @@
 	<Script file="loot_currency.lua"/>
 	<Script file="loot_gold.lua"/>
 	<Script file="loot_items.lua"/>
+	<Script file="store.lua"/>
 </Ui>
