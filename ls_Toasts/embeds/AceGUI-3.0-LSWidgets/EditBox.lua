@@ -297,7 +297,7 @@ do
 		local id = tonumber(value)
 		if id then
 			id = "item:" .. id
-			local info = GetItemInfoInstant(id)
+			local info = C_Item.GetItemInfoInstant(id)
 			if info then
 				self.preview:SetOwner(self.frame, "ANCHOR_NONE")
 				self.preview:SetPoint("TOPLEFT", self.frame, "BOTTOMLEFT", 1, 1)
