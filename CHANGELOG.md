@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 11502.01
+
+- Added 1.15.2 support.
+- Updated Simplified Chinese translation. Translated by kuaishan@Curse.
+
 ## Version 11500.01
 
 - Added 1.15.0 support.

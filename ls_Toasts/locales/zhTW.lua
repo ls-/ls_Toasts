@@ -56,5 +56,5 @@ L["Y_OFFSET"] = "垂直位置"
 L["YOU_LOST"] = "你失去"
 L["YOU_RECEIVED"] = "你收到"
 
--- Classic
+-- Classic Era
 L["TYPE_LOOT_ITEMS"] = "拾取(物品)"

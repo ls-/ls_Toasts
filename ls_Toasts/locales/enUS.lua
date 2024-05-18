@@ -82,7 +82,7 @@ L["Y_OFFSET"] = "yOffset"
 L["YOU_LOST"] = "You Lost"
 L["YOU_RECEIVED"] = "You Received"
 
--- Classic
+-- Classic Era
 L["ITEM_FILTERS_DESC"] = "These items ignore the loot quality threshold."
 L["NEW_ITEM_FILTER_DESC"] = "Enter an item ID."
 L["TYPE_LOOT_ITEMS"] = "Loot (Items)"

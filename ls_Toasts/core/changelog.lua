@@ -6,6 +6,6 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 1.15.0 support.
-- Added Brazilian Portuguese translation. Translated by paulovnas@GitHub.
+- Added 1.15.2 support.
+- Updated Simplified Chinese translation. Translated by kuaishan@Curse.
 ]]

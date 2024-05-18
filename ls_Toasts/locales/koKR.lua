@@ -51,5 +51,5 @@ L["Y_OFFSET"] = "Y 간격"
 L["YOU_LOST"] = "손실"
 L["YOU_RECEIVED"] = "획득"
 
--- Classic
+-- Classic Era
 L["TYPE_LOOT_ITEMS"] = "전리품 (아이템)"
