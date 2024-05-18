@@ -18,7 +18,6 @@ L["WOWINTERFACE"] = "WoWInterface"
 
 L["ACHIEVEMENT_UNLOCKED"] = _G.ACHIEVEMENT_UNLOCKED
 L["ADD"] = _G.ADD
-L["BLIZZARD_STORE"] = _G.BLIZZARD_STORE
 L["BLIZZARD_STORE_PURCHASE_DELIVERED"] = _G.BLIZZARD_STORE_PURCHASE_COMPLETE
 L["DELETE"] = _G.DELETE
 L["DIGSITE_COMPLETED"] = _G.ARCHAEOLOGY_DIGSITE_COMPLETE_TOAST_FRAME_TITLE
@@ -35,6 +34,8 @@ L["QUEST_ITEMS"] = _G.AUCTION_CATEGORY_QUEST_ITEMS
 L["RELOADUI"] = _G.RELOADUI
 L["RESET"] = _G.RESET
 L["SFX"] = _G.ENABLE_SOUNDFX
+L["TYPE_ARCHAEOLOGY"] = _G.PROFESSIONS_ARCHAEOLOGY
+L["TYPE_BLIZZARD_STORE"] = _G.BLIZZARD_STORE
 
 -- Require translation
 L["ANCHOR_FRAME_#"] = "Anchor Frame #%d"
@@ -101,7 +102,6 @@ L["HANDLE_LEFT_CLICK"] = "Handle Left Click"
 L["TAINT_WARNING"] = "Enabling this option may cause errors when opening or closing certain UI panels while in combat."
 L["TRANSMOG_ADDED"] = "Appearance Added"
 L["TRANSMOG_REMOVED"] = "Appearance Removed"
-L["TYPE_ARCHAEOLOGY"] = "Archaeology"
 L["TYPE_COLLECTION"] = "Collection"
 L["TYPE_COLLECTION_DESC"] = "Toasts for newly collected mounts, pets and toys."
 L["TYPE_TRANSMOG"] = "Transmogrification"

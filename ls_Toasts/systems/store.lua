@@ -181,7 +181,7 @@ E:RegisterOptions("store", {
 	sfx = true,
 	left_click = false,
 }, {
-	name = L["BLIZZARD_STORE"],
+	name = L["TYPE_BLIZZARD_STORE"],
 	get = function(info)
 		return C.db.profile.types.store[info[#info]]
 	end,
