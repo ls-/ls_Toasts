@@ -91,7 +91,7 @@ local function Toast_SetUp(event, link, quantity)
 	local sanitizedLink, originalLink, _, itemID = E:SanitizeLink(link)
 	local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
 	if isNew then
-		local name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = GetItemInfo(originalLink)
+		local name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = C_Item.GetItemInfo(originalLink)
 		local isPet = classID == 15 and subClassID == 2
 		local isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 
@@ -236,11 +236,11 @@ function updateFilterOptions()
 	local name, quaility, icon, color, _
 
 	for id in next, C.db.profile.types.loot_items.filters do
-		if not GetItemInfoInstant(id) then
+		if not C_Item.GetItemInfoInstant(id) then
 			-- remove invalid IDs, some people do stuff...
 			C.db.profile.types.loot_items.filters[id] = nil
 		else
-			name = GetItemInfo(id)
+			name = C_Item.GetItemInfo(id)
 			if name then
 				t_insert(nameToIndex, name)
 			else
@@ -257,7 +257,7 @@ function updateFilterOptions()
 
 	for id in next, C.db.profile.types.loot_items.filters do
 		if not pendingItemIDs[id] then
-			name, _, quaility, _, _, _, _, _, _, icon = GetItemInfo(id)
+			name, _, quaility, _, _, _, _, _, _, icon = C_Item.GetItemInfo(id)
 			color = ITEM_QUALITY_COLORS[quaility] or ITEM_QUALITY_COLORS[1]
 
 			options[tostring(id)] = {
@@ -301,37 +301,37 @@ end
 
 local function Test()
 	-- common, Hearthstone
-	local _, link = GetItemInfo(6948)
+	local _, link = C_Item.GetItemInfo(6948)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
 	end
 
 	-- common, pet, Tiny Crimson Whelpling
-	_, link = GetItemInfo(8499)
+	_, link = C_Item.GetItemInfo(8499)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
 	end
 
 	-- uncommon, Chromatic Sword
-	_, link = GetItemInfo(1604)
+	_, link = C_Item.GetItemInfo(1604)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
 	end
 
 	-- rare, Arcanite Reaper
-	_, link = GetItemInfo(12784)
+	_, link = C_Item.GetItemInfo(12784)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
 	end
 
 	-- epic, Corrupted Ashbringer
-	_, link = GetItemInfo(22691)
+	_, link = C_Item.GetItemInfo(22691)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
 	end
 
 	-- legendary, Atiesh, Greatstaff of the Guardian
-	_, link = GetItemInfo(22589)
+	_, link = C_Item.GetItemInfo(22589)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
 	end
@@ -457,14 +457,14 @@ E:RegisterOptions("loot_items", {
 					validate = function(_, value)
 						value = tonumber(value)
 						if value then
-							return not not GetItemInfoInstant(value)
+							return not not C_Item.GetItemInfoInstant(value)
 						else
 							return true
 						end
 					end,
 					set = function(_, value)
 						value = tonumber(value)
-						if value and GetItemInfoInstant(value) then
+						if value and C_Item.GetItemInfoInstant(value) then
 							newID = value
 						else
 							newID = nil -- jic
