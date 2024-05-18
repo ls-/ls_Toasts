@@ -56,5 +56,5 @@ L["Y_OFFSET"] = "yOffset"
 L["YOU_LOST"] = "Vous avez perdu"
 L["YOU_RECEIVED"] = "Vous avez reçu"
 
--- Classic
+-- Classic Era
 L["TYPE_LOOT_ITEMS"] = "Butin (Objets)"

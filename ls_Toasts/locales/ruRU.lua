@@ -56,7 +56,7 @@ L["Y_OFFSET"] = "Смещение по Y"
 L["YOU_LOST"] = "Вы потеряли"
 L["YOU_RECEIVED"] = "Вы получили"
 
--- Classic
+-- Classic Era
 L["ITEM_FILTERS_DESC"] = "Эти предметы игнорируют установленный порог ценности."
 L["NEW_ITEM_FILTER_DESC"] = "Введите ID предмета."
 L["TYPE_LOOT_ITEMS"] = "Добыча (Предметы)"
