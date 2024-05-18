@@ -56,14 +56,22 @@ L["Y_OFFSET"] = "Смещение по Y"
 L["YOU_LOST"] = "Вы потеряли"
 L["YOU_RECEIVED"] = "Вы получили"
 
--- Classic
+-- Classic Era
 L["ITEM_FILTERS_DESC"] = "Эти предметы игнорируют установленный порог ценности."
 L["NEW_ITEM_FILTER_DESC"] = "Введите ID предмета."
 L["TYPE_LOOT_ITEMS"] = "Добыча (Предметы)"
 
--- WotLK
+-- Classic
 L["CURRENCY_THRESHOLD_DESC"] = "Введите |cffffd200-1|r, чтобы игнорировать валюту, |cffffd2000|r, чтобы отключить фильтр, или |cffffd200любое число больше 0|r, чтобы установить порог, ниже которого уведомления не будут показываться."
+L["HANDLE_LEFT_CLICK"] = "Обрабатывать левый щелчок"
 L["NEW_CURRENCY_FILTER_DESC"] = "Введите ID валюты."
+L["TAINT_WARNING"] = "Включение данной настройки может вызвать ошибки при открытии или закрытии определенных панелей интерфейса в бою."
 L["THRESHOLD"] = "Порог"
+L["TRANSMOG_ADDED"] = "Модель добавлена"
+L["TRANSMOG_REMOVED"] = "Модель удалена"
 L["TYPE_ACHIEVEMENT"] = "Достижение"
+L["TYPE_COLLECTION"] = "Коллекция"
+L["TYPE_COLLECTION_DESC"] = "Уведомления для недавно добавленных средств передвижений, питомцев и игрушек."
 L["TYPE_LOOT_CURRENCY"] = "Добыча (Валюта)"
+L["TYPE_TRANSMOG"] = "Трансмогрификация"
+L["YOU_COLLECTED"] = "Вы получили"

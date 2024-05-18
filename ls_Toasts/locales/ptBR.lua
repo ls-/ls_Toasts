@@ -56,7 +56,10 @@ L["Y_OFFSET"] = "Deslocamento Y"
 L["YOU_LOST"] = "Você Perdeu"
 L["YOU_RECEIVED"] = "Você Recebeu"
 
--- Classic
+-- Classic Era
 L["ITEM_FILTERS_DESC"] = "Estes itens ignoram o limite de qualidade do saque."
 L["NEW_ITEM_FILTER_DESC"] = "Digite um ID de item."
 L["TYPE_LOOT_ITEMS"] = "Saque (Itens)"
+
+-- Classic
+L["YOU_COLLECTED"] = "Obtido"

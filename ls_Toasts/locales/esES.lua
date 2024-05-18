@@ -56,11 +56,19 @@ L["Y_OFFSET"] = "yOffset"
 L["YOU_LOST"] = "Has perdido"
 L["YOU_RECEIVED"] = "Has recibido"
 
--- Classic
+-- Classic Era
 L["TYPE_LOOT_ITEMS"] = "Botín (Objetos)"
 
--- WotLK
+-- Classic
+L["HANDLE_LEFT_CLICK"] = "Utilizar clic izquierdo"
 L["NEW_CURRENCY_FILTER_DESC"] = "Introduce el ID de una moneda"
+L["TAINT_WARNING"] = "Activar esta opción puede causar errores al abrir o cerrar ciertos paneles de la UI en combate."
 L["THRESHOLD"] = "Umbral"
+L["TRANSMOG_ADDED"] = "Appariencia añadida"
+L["TRANSMOG_REMOVED"] = "Apariencia eliminada"
 L["TYPE_ACHIEVEMENT"] = "Logro"
+L["TYPE_COLLECTION"] = "Colección"
+L["TYPE_COLLECTION_DESC"] = "Toasts para nuevas monturas, mascotas y juguetes."
 L["TYPE_LOOT_CURRENCY"] = "Botín (Moneda)"
+L["TYPE_TRANSMOG"] = "Transmogrificación"
+L["YOU_COLLECTED"] = "Recolectaste"

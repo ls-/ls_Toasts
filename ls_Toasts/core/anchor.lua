@@ -301,6 +301,8 @@ function P:AddAnchor(index)
 	if not activeAnchors[index] then
 		activeAnchors[index] = anchors[index] or costructAnchor(index)
 
+		P:SetUpQueues(index)
+
 		C.db.profile.anchors[index] = P:UpdateTable(D.profile.anchors[1], C.db.profile.anchors[index])
 
 		if not options[index] then

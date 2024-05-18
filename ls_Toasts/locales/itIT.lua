@@ -44,9 +44,16 @@ L["TYPE_LOOT_GOLD"] = "Bottino (Oro)"
 L["YOU_LOST"] = "Hai perso"
 L["YOU_RECEIVED"] = "Hai ricevuto"
 
--- WotLK
+-- Classic
 L["CURRENCY_THRESHOLD_DESC"] = "Inserisci |cffffd200-1|r per ignorare la valuta, |cffffd2000|r per disabilitare il filtro, o |cffffd200un qualsiasi numero sopra 0|r per impostare una soglia sotto la quale i toast non verranno creati."
+L["HANDLE_LEFT_CLICK"] = "Gestisci click sinistro"
 L["NEW_CURRENCY_FILTER_DESC"] = "Inserici l'ID della valuta."
 L["THRESHOLD"] = "Soglia"
+L["TRANSMOG_ADDED"] = "Aspetto aggiunto"
+L["TRANSMOG_REMOVED"] = "Aspetto rimosso"
 L["TYPE_ACHIEVEMENT"] = "Imprese"
+L["TYPE_COLLECTION"] = "Collezione"
+L["TYPE_COLLECTION_DESC"] = "Toast per nuove cavalcature, mascotte e giocattoli."
 L["TYPE_LOOT_CURRENCY"] = "Bottino (Valute)"
+L["TYPE_TRANSMOG"] = "Trasmogrificazione"
+L["YOU_COLLECTED"] = "Collezionati"

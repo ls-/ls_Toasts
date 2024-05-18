@@ -1,4 +1,4 @@
-﻿-- Contributors: y368413@Curse, dxlmike@Curse, vk1103ing@Curse
+﻿-- Contributors: y368413@Curse, dxlmike@Curse, vk1103ing@Curse, kuaishan@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -12,6 +12,7 @@ L["ANCHOR_FRAME_#"] = "锚点框架#%d"
 L["ANCHOR_FRAMES"] = "锚点框架"
 L["ANCHOR_RESET_DESC"] = "|cffffffffShift-点击左键|r 重置位置。"
 L["BORDER"] = "边框"
+L["CHANGELOG"] = "更新日志"
 L["COLORS"] = "着色"
 L["COORDS"] = "方位"
 L["COPPER_THRESHOLD"] = "拾取最小值(铜)"
@@ -19,7 +20,9 @@ L["COPPER_THRESHOLD_DESC"] = "至少要多少銅才会显示拾取提示面板�
 L["DEFAULT_VALUE"] = "默认参数：|cffffd200%s|r"
 L["DND"] = "勿扰"
 L["DND_TOOLTIP"] = "提示处于勿扰模式将不会在战斗中显示，但仍在后台队列，一旦你离开战斗，就会开始弹出提示。"
+L["DOWNLOADS"] = "下载"
 L["FADE_OUT_DELAY"] = "淡出延迟"
+L["FILTERS"] = "过滤器"
 L["FLUSH_QUEUE"] = "刷新分组"
 L["FONTS"] = "字体"
 L["GROWTH_DIR"] = "延伸方向"
@@ -28,6 +31,7 @@ L["GROWTH_DIR_LEFT"] = "左"
 L["GROWTH_DIR_RIGHT"] = "右"
 L["GROWTH_DIR_UP"] = "上"
 L["ICON_BORDER"] = "图标边框"
+L["INFORMATION"] = "信息"
 L["NAME"] = "名称"
 L["OPEN_CONFIG"] = "打开设置"
 L["RARITY_THRESHOLD"] = "品质限定"
@@ -37,6 +41,7 @@ L["SHOW_ILVL_DESC"] = "在装备名称前显示装备等级"
 L["SIZE"] = "大小"
 L["SKIN"] = "皮肤"
 L["STRATA"] = "层级"
+L["SUPPORT"] = "支持"
 L["TEST"] = "测试"
 L["TEST_ALL"] = "测试全部"
 L["TOAST_NUM"] = "提示框数量"
@@ -50,9 +55,22 @@ L["Y_OFFSET"] = "垂直偏移量"
 L["YOU_LOST"] = "你损失了"
 L["YOU_RECEIVED"] = "你获得了"
 
--- Classic
+-- Classic Era
+L["ITEM_FILTERS_DESC"] = "这些物品会忽略战利品质量阈值。"
+L["NEW_ITEM_FILTER_DESC"] = "输入项目 ID。"
 L["TYPE_LOOT_ITEMS"] = "拾取(物品)"
 
--- WotLK
+-- Classic
+L["CURRENCY_THRESHOLD_DESC"] = "输入 |cffffd200-1|r 可忽略货币，输入 |cffffd2000|r 可禁用筛选器，或输入 |cffffd200 大于 0|r 的任意数字可设置阈值，低于该阈值将不创建 Toast。"
+L["HANDLE_LEFT_CLICK"] = "支持左键点击"
+L["NEW_CURRENCY_FILTER_DESC"] = "输入货币 ID。"
+L["TAINT_WARNING"] = "启用此选项可能会导致在战斗中打开或关闭某些 UI 面板时出现错误。"
+L["THRESHOLD"] = "临界点"
+L["TRANSMOG_ADDED"] = "幻化外观已添加"
+L["TRANSMOG_REMOVED"] = "幻化外观已移除"
 L["TYPE_ACHIEVEMENT"] = "成就"
+L["TYPE_COLLECTION"] = "藏品"
+L["TYPE_COLLECTION_DESC"] = "对获取到的坐骑、宠物和玩具进行提示。"
 L["TYPE_LOOT_CURRENCY"] = "拾取(货币)"
+L["TYPE_TRANSMOG"] = "幻化收藏"
+L["YOU_COLLECTED"] = "你收集到了"

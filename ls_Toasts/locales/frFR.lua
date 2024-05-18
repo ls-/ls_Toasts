@@ -56,12 +56,20 @@ L["Y_OFFSET"] = "yOffset"
 L["YOU_LOST"] = "Vous avez perdu"
 L["YOU_RECEIVED"] = "Vous avez reçu"
 
--- Classic
+-- Classic Era
 L["TYPE_LOOT_ITEMS"] = "Butin (Objets)"
 
--- WotLK
+-- Classic
 L["CURRENCY_THRESHOLD_DESC"] = "Entrez |cffffd200-1|r pour ignorer la devise, |cffffd2000|r pour désactiver le filtre, ou |cffffd200tout nombre supérieur à 0|r pour définir le seuil en dessous duquel aucun toast ne sera créé."
+L["HANDLE_LEFT_CLICK"] = "Gestion du clic gauche"
 L["NEW_CURRENCY_FILTER_DESC"] = "Entrez un ID de monnaie."
+L["TAINT_WARNING"] = "Activer cette option peut causer des erreurs lors de l'ouverture ou de la fermeture de certaines fenêtres en combat."
 L["THRESHOLD"] = "Rareté"
+L["TRANSMOG_ADDED"] = "Apparence ajoutée"
+L["TRANSMOG_REMOVED"] = "Apparence retirée"
 L["TYPE_ACHIEVEMENT"] = "Haut-Fait"
+L["TYPE_COLLECTION"] = "Collection"
+L["TYPE_COLLECTION_DESC"] = "Toasts pour les nouveaux Compagnons, Jouets et Montures collectés."
 L["TYPE_LOOT_CURRENCY"] = "Butin (Breloques)"
+L["TYPE_TRANSMOG"] = "Transmogrification"
+L["YOU_COLLECTED"] = "Vous avez obtenu"

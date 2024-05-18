@@ -56,12 +56,20 @@ L["Y_OFFSET"] = "Y-Versatz"
 L["YOU_LOST"] = "Ihr verliert"
 L["YOU_RECEIVED"] = "Ihr erhaltet"
 
--- Classic
+-- Classic Era
 L["TYPE_LOOT_ITEMS"] = "Beute (Gegenstände)"
 
--- WotLK
+-- Classic
 L["CURRENCY_THRESHOLD_DESC"] = "Gib |cffffd200-1|r zum Ignorieren der Währung, |cffffd2000|r zum deaktivieren der Filter oder |cffffd200any number above 0|r um den Schwellenwert einzustellen unter dem keine Beanchrichtigungen erstellt werden, ein."
+L["HANDLE_LEFT_CLICK"] = "Linksklick behandeln"
 L["NEW_CURRENCY_FILTER_DESC"] = "Gib eine Währungs ID ein."
+L["TAINT_WARNING"] = "Diese Option führt beim Öffnen oder Schließen von bestimmten UI Fenstern während des Kampfes möglicher zu Fehlern."
 L["THRESHOLD"] = "Schwellenwert"
+L["TRANSMOG_ADDED"] = "Vorlage hinzugefügt"
+L["TRANSMOG_REMOVED"] = "Vorlage entfernt"
 L["TYPE_ACHIEVEMENT"] = "Erfolg"
+L["TYPE_COLLECTION"] = "Sammlung"
+L["TYPE_COLLECTION_DESC"] = "Benachrichtigungen für erhaltene Reittiere, Haustiere und Spielzeuge."
 L["TYPE_LOOT_CURRENCY"] = "Beute (Abzeichen)"
+L["TYPE_TRANSMOG"] = "Transmogrifikation"
+L["YOU_COLLECTED"] = "Gesammelt:"

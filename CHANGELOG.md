@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version 40400.01
+
+- Added 4.4.0 support.
+- Added archaeology toasts.
+- Added collection toasts.
+- Added Blizz store toasts.
+- Added transmog toasts.
+- Updated Simplified Chinese translation. Translated by kuaishan@Curse.
+
 ## Version 30403.03
 
 - Added Brazilian Portuguese translation. Translated by paulovnas@GitHub.

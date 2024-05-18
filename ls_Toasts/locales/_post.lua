@@ -8,4 +8,5 @@ local _G = getfenv(0)
 
 -- Mine
 -- These rely on custom strings
+L["TRANSMOG_REMOVED_RED"] = "|cffdc4436" .. L["TRANSMOG_REMOVED"] .. "|r"
 L["YOU_LOST_RED"] = "|cffdc4436" .. L["YOU_LOST"] .. "|r"
