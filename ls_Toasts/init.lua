@@ -409,7 +409,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 								type = "execute",
 								name = L["CHANGELOG_FULL"],
 								func = function()
-									showLinkCopyPopup("https://github.com/ls-/ls_Toasts/blob/wotlk/master/CHANGELOG.md")
+									showLinkCopyPopup("https://github.com/ls-/ls_Toasts/blob/classic/master/CHANGELOG.md")
 								end,
 							},
 						},
