@@ -86,23 +86,22 @@ L["Y_OFFSET"] = "yOffset"
 L["YOU_LOST"] = "You Lost"
 L["YOU_RECEIVED"] = "You Received"
 
--- Classic
+-- Classic Era
 L["ITEM_FILTERS_DESC"] = "These items ignore the loot quality threshold."
 L["NEW_ITEM_FILTER_DESC"] = "Enter an item ID."
 L["TYPE_LOOT_ITEMS"] = "Loot (Items)"
 
--- WotLK
+-- Classic
 L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created."
-L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID."
-L["THRESHOLD"] = "Threshold"
-L["TYPE_ACHIEVEMENT"] = "Achievement"
-L["TYPE_LOOT_CURRENCY"] = "Loot (Currency)"
-
 L["HANDLE_LEFT_CLICK"] = "Handle Left Click"
+L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID."
 L["TAINT_WARNING"] = "Enabling this option may cause errors when opening or closing certain UI panels while in combat."
+L["THRESHOLD"] = "Threshold"
 L["TRANSMOG_ADDED"] = "Appearance Added"
 L["TRANSMOG_REMOVED"] = "Appearance Removed"
+L["TYPE_ACHIEVEMENT"] = "Achievement"
 L["TYPE_COLLECTION"] = "Collection"
 L["TYPE_COLLECTION_DESC"] = "Toasts for newly collected mounts, pets and toys."
+L["TYPE_LOOT_CURRENCY"] = "Loot (Currency)"
 L["TYPE_TRANSMOG"] = "Transmogrification"
 L["YOU_COLLECTED"] = "You Collected"

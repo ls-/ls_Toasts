@@ -51,12 +51,19 @@ L["Y_OFFSET"] = "Y 간격"
 L["YOU_LOST"] = "손실"
 L["YOU_RECEIVED"] = "획득"
 
--- Classic
+-- Classic Era
 L["TYPE_LOOT_ITEMS"] = "전리품 (아이템)"
 
--- WotLK
+-- Classic
 L["CURRENCY_THRESHOLD_DESC"] = "이 화폐를 무시하려면 |cffffd200-1|r 입력하세요. |cffffd2000|r 을 입력하면 팝업이 생성되지 않으며, |cffffd200 0보다 높은 숫자|r를 입력해야 팝업이 생성되는 최소값이 설정합니다."
+L["HANDLE_LEFT_CLICK"] = "왼쪽 클릭으로 조정"
 L["NEW_CURRENCY_FILTER_DESC"] = "화폐 ID를 입력하세요."
 L["THRESHOLD"] = "최소수량"
+L["TRANSMOG_ADDED"] = "형상이 추가되었습니다"
+L["TRANSMOG_REMOVED"] = "형상이 제거되었습니다"
 L["TYPE_ACHIEVEMENT"] = "업적"
+L["TYPE_COLLECTION"] = "수집품"
+L["TYPE_COLLECTION_DESC"] = "새로 수집한 탈것, 애완동물과 장난감의 알림창입니다."
 L["TYPE_LOOT_CURRENCY"] = "전리품 (화폐)"
+L["TYPE_TRANSMOG"] = "형상변환"
+L["YOU_COLLECTED"] = "획득함:"

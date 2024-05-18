@@ -56,12 +56,20 @@ L["Y_OFFSET"] = "垂直位置"
 L["YOU_LOST"] = "你失去"
 L["YOU_RECEIVED"] = "你收到"
 
--- Classic
+-- Classic Era
 L["TYPE_LOOT_ITEMS"] = "拾取(物品)"
 
--- WotLK
+-- Classic
 L["CURRENCY_THRESHOLD_DESC"] = "輸入 |cffffd200-1|r 來忽略此貨幣，|cffffd2000|r 來停用過濾，或|cffffd200任何大於 0 的數字|r來設定值臨界值，低於這個數值將不會顯示通知。"
+L["HANDLE_LEFT_CLICK"] = "允許左鍵點擊"
 L["NEW_CURRENCY_FILTER_DESC"] = "輸入兌換通貨 ID"
+L["TAINT_WARNING"] = "啟用此選項可能會在戰鬥中打開或關閉某些UI面板時導致錯誤。"
 L["THRESHOLD"] = "數量最少要"
+L["TRANSMOG_ADDED"] = "外觀已加入"
+L["TRANSMOG_REMOVED"] = "外觀已移除"
 L["TYPE_ACHIEVEMENT"] = "成就"
+L["TYPE_COLLECTION"] = "收藏"
+L["TYPE_COLLECTION_DESC"] = "最新收集到的坐騎、寵物和玩具通知。"
 L["TYPE_LOOT_CURRENCY"] = "拾取(貨幣)"
+L["TYPE_TRANSMOG"] = "塑形提醒"
+L["YOU_COLLECTED"] = "你已蒐集"
