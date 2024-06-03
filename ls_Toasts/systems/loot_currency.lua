@@ -4,6 +4,7 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 local m_abs = _G.math.abs
+local m_floor = _G.math.floor
 local m_random = _G.math.random
 local next = _G.next
 local t_insert = _G.table.insert
@@ -13,6 +14,14 @@ local tonumber = _G.tonumber
 local tostring = _G.tostring
 
 -- Mine
+local MULT = {
+	[ 390] = 0.01, -- Conquest Points
+	[ 392] = 0.01, -- Honor Deprecated 3
+	[ 395] = 0.01, -- Justice Points
+	[ 396] = 0.01, -- Valor Points
+	[1901] = 0.01, -- Honor Points
+}
+
 local currencies = {}
 local listSize = 0
 
@@ -34,6 +43,85 @@ local function populateCurrencyLists()
 	end
 end
 
+local newID, updateFilterOptions
+do
+	local function validateThreshold(_, value)
+		value = tonumber(value) or 0
+		return value >= -1
+	end
+
+	local function setThreshold(info, value)
+		value = tonumber(value)
+		C.db.profile.types.loot_currency.filters[tonumber(info[#info - 1])] = value
+	end
+
+	local function getThreshold(info)
+		return tostring(C.db.profile.types.loot_currency.filters[tonumber(info[#info - 1])])
+	end
+
+	function updateFilterOptions()
+		if not C.db.profile.types.loot_currency.enabled then
+			return
+		end
+
+		local options = t_wipe(C.options.args.types.args.loot_currency.plugins.filters)
+		local nameToIndex = {}
+		local info
+
+		for id in next, C.db.profile.types.loot_currency.filters do
+			info = C_CurrencyInfo.GetBasicCurrencyInfo(id)
+			if info then
+				t_insert(nameToIndex, info.name)
+			else
+				-- remove invalid IDs, some people do stuff...
+				C.db.profile.types.loot_currency.filters[id] = nil
+			end
+		end
+
+		t_sort(nameToIndex)
+
+		for i = 1, #nameToIndex do
+			nameToIndex[nameToIndex[i]] = i
+		end
+
+		for id in next, C.db.profile.types.loot_currency.filters do
+			info = C_CurrencyInfo.GetBasicCurrencyInfo(id)
+
+			options[tostring(id)] = {
+				order = nameToIndex[info.name] + 10,
+				type = "group",
+				name = ("|T%s:0:0:0:0:64:64:4:60:4:60|t %s"):format(info.icon, info.name),
+				args = {
+					desc = {
+						order = 1,
+						type = "description",
+						name = info.description,
+					},
+					threshold = {
+						order = 2,
+						type = "input",
+						name = L["THRESHOLD"],
+						desc = L["CURRENCY_THRESHOLD_DESC"],
+						validate = validateThreshold,
+						set = setThreshold,
+						get = getThreshold,
+					},
+				},
+			}
+		end
+	end
+end
+
+-- Update filters and options only when users discover new currencies
+local function updateFilters()
+	if GetCurrencyListSize() == listSize then
+		return
+	end
+
+	populateCurrencyLists()
+	updateFilterOptions()
+end
+
 local function Toast_OnEnter(self)
 	if self._data.tooltip_link then
 		GameTooltip:SetHyperlink(self._data.tooltip_link)
@@ -42,7 +130,8 @@ local function Toast_OnEnter(self)
 end
 
 local function PostSetAnimatedValue(self, value)
-	self:SetText(value == 1 and "" or FormatLargeNumber(m_abs(value)))
+	value = m_abs(value)
+	self:SetText(value > 1 and FormatLargeNumber(value) or  "")
 end
 
 local function Toast_SetUp(event, id, quantity)
@@ -115,10 +204,18 @@ local function CURRENCY_DISPLAY_UPDATE(id, cur)
 		return
 	end
 
-	if not currencies[id] then
-		populateCurrencyLists()
+	cur = m_floor(cur * (MULT[id] or 1))
+	if cur < 1 then
+		return
+	end
 
-		if not currencies[id] then
+	if not currencies[id] then
+		updateFilters()
+
+		if currencies[id] then
+			-- it's just discovered, so I need to adjust the value
+			currencies[id] = currencies[id] - cur
+		else
 			return
 		end
 	end
@@ -140,88 +237,9 @@ local function CURRENCY_DISPLAY_UPDATE(id, cur)
 	Toast_SetUp("CURRENCY_DISPLAY_UPDATE", id, quantity)
 end
 
-local newID
-
-local function validateThreshold(_, value)
-	value = tonumber(value) or 0
-	return value >= -1
-end
-
-local function setThreshold(info, value)
-	value = tonumber(value)
-	C.db.profile.types.loot_currency.filters[tonumber(info[#info - 1])] = value
-end
-
-local function getThreshold(info)
-	return tostring(C.db.profile.types.loot_currency.filters[tonumber(info[#info - 1])])
-end
-
-local function updateFilterOptions()
-	if not C.db.profile.types.loot_currency.enabled then
-		return
-	end
-
-	local options = t_wipe(C.options.args.types.args.loot_currency.plugins.filters)
-	local nameToIndex = {}
-	local info
-
-	for id in next, C.db.profile.types.loot_currency.filters do
-		info = C_CurrencyInfo.GetBasicCurrencyInfo(id)
-		if info then
-			t_insert(nameToIndex, info.name)
-		else
-			-- remove invalid IDs, some people do stuff...
-			C.db.profile.types.loot_currency.filters[id] = nil
-		end
-	end
-
-	t_sort(nameToIndex)
-
-	for i = 1, #nameToIndex do
-		nameToIndex[nameToIndex[i]] = i
-	end
-
-	for id in next, C.db.profile.types.loot_currency.filters do
-		info = C_CurrencyInfo.GetBasicCurrencyInfo(id)
-
-		options[tostring(id)] = {
-			order = nameToIndex[info.name] + 10,
-			type = "group",
-			name = ("|T%s:0:0:0:0:64:64:4:60:4:60|t %s"):format(info.icon, info.name),
-			args = {
-				desc = {
-					order = 1,
-					type = "description",
-					name = info.description,
-				},
-				threshold = {
-					order = 2,
-					type = "input",
-					name = L["THRESHOLD"],
-					desc = L["CURRENCY_THRESHOLD_DESC"],
-					validate = validateThreshold,
-					set = setThreshold,
-					get = getThreshold,
-				},
-			},
-		}
-	end
-end
-
--- Update filters and options when users discover new currencies
-local function updateFilters()
-	if GetCurrencyListSize() == listSize then
-		return
-	end
-
-	populateCurrencyLists()
-	updateFilterOptions()
-end
-
 local function Enable()
 	if C.db.profile.types.loot_currency.enabled then
 		E:RegisterEvent("CURRENCY_DISPLAY_UPDATE", CURRENCY_DISPLAY_UPDATE)
-		E:RegisterEvent("CURRENCY_DISPLAY_UPDATE", updateFilters)
 
 		populateCurrencyLists()
 		updateFilterOptions()
@@ -230,7 +248,6 @@ end
 
 local function Disable()
 	E:UnregisterEvent("CURRENCY_DISPLAY_UPDATE", CURRENCY_DISPLAY_UPDATE)
-	E:UnregisterEvent("CURRENCY_DISPLAY_UPDATE", updateFilters)
 end
 
 local function Test()
