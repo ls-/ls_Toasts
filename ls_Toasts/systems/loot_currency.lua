@@ -131,7 +131,7 @@ end
 
 local function PostSetAnimatedValue(self, value)
 	value = m_abs(value)
-	self:SetText(value > 1 and FormatLargeNumber(value) or  "")
+	self:SetText(value > 1 and FormatLargeNumber(value) or "")
 end
 
 local function Toast_SetUp(event, id, quantity)
@@ -228,7 +228,6 @@ local function CURRENCY_DISPLAY_UPDATE(id, cur)
 
 	local quantity = cur - currencies[id]
 	currencies[id] = cur
-
 
 	if not C.db.profile.types.loot_currency.track_loss and quantity < 0 then
 		return
