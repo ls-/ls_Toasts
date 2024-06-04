@@ -6,5 +6,5 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 10.2.7 support.
+- Fixed an issue where the archive wouldn't extract properly for Mac and Linux users.
 ]]
