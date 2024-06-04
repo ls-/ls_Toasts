@@ -6,6 +6,5 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 1.15.2 support.
-- Updated Simplified Chinese translation. Translated by kuaishan@Curse.
+- Added "Profession Materials" filter to item toasts. It should catch most mats, if it doesn't, use the ID filter.
 ]]

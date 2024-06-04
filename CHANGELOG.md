@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 11502.02
+
+- Added "Profession Materials" filter to item toasts. It should catch most mats, if it doesn't, use the ID filter.
+
 ## Version 11502.01
 
 - Added 1.15.2 support.
