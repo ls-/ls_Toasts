@@ -91,10 +91,12 @@ local function Toast_SetUp(event, link, quantity)
 	local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
 	if isNew then
 		local name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = C_Item.GetItemInfo(originalLink)
+		local isMaterial = classID == 7 and subClassID == 0
 		local isPet = classID == 15 and subClassID == 2
 		local isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 
 		if name and ((quality and quality >= C.db.profile.types.loot_items.threshold and quality <= 5)
+			or (isMaterial and C.db.profile.types.loot_items.material)
 			or (isPet and C.db.profile.types.loot_items.pet)
 			or (isQuestItem and C.db.profile.types.loot_items.quest)
 			or C.db.profile.types.loot_items.filters[itemID]) then
@@ -342,6 +344,7 @@ E:RegisterOptions("loot_items", {
 	dnd = false,
 	sfx = true,
 	ilvl = true,
+	material = false,
 	pet = false,
 	quest = false,
 	threshold = 1,
@@ -435,6 +438,11 @@ E:RegisterOptions("loot_items", {
 					order = 4,
 					type = "toggle",
 					name = L["PETS"],
+				},
+				material = {
+					order = 5,
+					type = "toggle",
+					name = L["MATERIALS"],
 				},
 			},
 		},
