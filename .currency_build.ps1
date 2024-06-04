@@ -22,7 +22,11 @@ $categoriesToBlacklist = @(
 	246, # Debug
 	248, # Torghast UI (Hidden)
 	251, # Dragon Racing UI (Hidden)
-	252  # Tuskarr - Fishing Nets (Hidden)
+	252, # Tuskarr - Fishing Nets (Hidden)
+	253, # Test Subcategory 1
+	254, # Test Subcategory 2
+	255, # Test Subcategory 3
+	256  # Test Subcategory 4
 )
 
 # convert IDs to int because sorting strings sucks ass
