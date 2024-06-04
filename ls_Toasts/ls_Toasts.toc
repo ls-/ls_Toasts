@@ -1,6 +1,6 @@
 ## Interface: 11502
 ## Author: lightspark
-## Version: 11502.01
+## Version: 11502.02
 ## Title: LS: |cff00cc99Toasts|r
 ## Notes: Better toasts, cheers!
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
