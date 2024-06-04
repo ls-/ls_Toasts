@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 40400.02
+
+- Added "Profession Materials" filter to item toasts. It should catch most mats, if it doesn't, use the ID filter.
+- Fixed an issue where currency toasts would display bogus values. It primarily affected honour, valour, justice, and
+  conquest points.
+
 ## Version 40400.01
 
 - Added 4.4.0 support.

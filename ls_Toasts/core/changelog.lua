@@ -6,10 +6,7 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 4.4.0 support.
-- Added archaeology toasts.
-- Added collection toasts.
-- Added Blizz store toasts.
-- Added transmog toasts.
-- Updated Simplified Chinese translation. Translated by kuaishan@Curse.
+- Added "Profession Materials" filter to item toasts. It should catch most mats, if it doesn't, use the ID filter.
+- Fixed an issue where currency toasts would display bogus values. It primarily affected honour, valour, justice, and
+  conquest points.
 ]]
