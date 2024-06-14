@@ -36,8 +36,8 @@ local rankTextures = {
 local function RecipeToast_SetUp(event, recipeID, recipeLevel)
 	local skillLineID, _, tradeSkillID = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
 	if skillLineID then
-		local recipeName = GetSpellInfo(recipeID)
-		if recipeName then
+		local spellInfo = C_Spell.GetSpellInfo(recipeID)
+		if spellInfo then
 			local toast = E:GetToast()
 
 			if recipeLevel then
@@ -47,7 +47,7 @@ local function RecipeToast_SetUp(event, recipeID, recipeLevel)
 
 			toast:SetBackground("recipe")
 			toast.Title:SetText(recipeLevel and recipeLevel > 1 and L["RECIPE_UPGRADED"] or L["RECIPE_LEARNED"])
-			toast.Text:SetText(recipeName)
+			toast.Text:SetText(spellInfo.name)
 			toast.Icon:SetTexture(C_TradeSkillUI.GetTradeSkillTexture(skillLineID))
 			toast.IconBorder:Show()
 
@@ -125,7 +125,7 @@ local function Test()
 	RecipeToast_SetUp("RECIPE_TEST", 7183)
 
 	-- rank 2, Word of Critical Strike
-	RecipeToast_SetUp("RECIPE_TEST", 190992, GetSpellRank(190992))
+	RecipeToast_SetUp("RECIPE_TEST", 190992, C_Spell.GetSpellSkillLineAbilityRank(190992))
 
 	-- Dragon Isles Enchanting
 	SkillLineToast_SetUp("RECIPE_TEST", 2825, 333)
