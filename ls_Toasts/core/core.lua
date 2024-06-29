@@ -126,10 +126,15 @@ function E:SanitizeLink(link)
 		return link, link, linkTable[1], tonumber(linkTable[2]), name
 	end
 
-	if linkTable[12] ~= "" then
-		linkTable[12] = ""
-
-		t_remove(linkTable, 15 + (tonumber(linkTable[14]) or 0))
+	-- remove modifier types and values due to inconsistencies
+	local numBonusIDs = tonumber(linkTable[14])
+	if numBonusIDs then
+		local numModifiers = tonumber(linkTable[15 + numBonusIDs])
+		if numModifiers then
+			for i = 16 + numBonusIDs, 16 + numBonusIDs + numModifiers * 2 - 1 do
+				linkTable[i] = ""
+			end
+		end
 	end
 
 	return t_concat(linkTable, ":"), link, linkTable[1], tonumber(linkTable[2]), name
