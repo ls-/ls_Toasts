@@ -10,7 +10,6 @@ local s_format = _G.string.format
 local s_match = _G.string.match
 local s_split = _G.string.split
 local t_concat = _G.table.concat
-local t_remove = _G.table.remove
 local tonumber = _G.tonumber
 local type = _G.type
 local xpcall = _G.xpcall
