@@ -1036,7 +1036,7 @@ local BLACKLIST = {
 	[3065] = true, -- 11.0 Professions - Tracker - Weekly Mining Knowledge
 	[3066] = true, -- 11.0 Professions - Tracker - Weekly Skinning Knowledge
 	[3067] = true, -- 11.0 Professions - Tracker - Weekly Tailoring Knowledge
-	[3068] = true, -- Renown - Season 1 Delves
+	[3068] = true, -- Delver's Journey
 	[3069] = true, -- 11.0 Professions - Tailoring - Fishing - Khaz Algar - Skill
 	[3070] = true, -- 11.0 Professions - Fishing - Algari Weaverthread - Perception
 	[3071] = true, -- 11.0 Professions - Fishing - Algari Weaverthread - Skill
@@ -1053,11 +1053,12 @@ local BLACKLIST = {
 	[3082] = true, -- 11.0 Professions - Tracker - Insc Book - Blacksmithing Knowledge
 	[3083] = true, -- 11.0 Professions - Tracker - Insc Book - Alchemy Knowledge
 	[3084] = true, -- 11.0 Professions - Tracker - Insc Book - Inscription Knowledge
-	[3085] = true, -- 11.0 Delves - Personal Tracker - S1 Treasure Trove Key (Hidden)
+	[3085] = true, -- 11.0 Delves - Personal Tracker - S1 Weekly Elise Turn-In(Hidden)
 	[3086] = true, -- DPS
 	[3087] = true, -- Tank
 	[3088] = true, -- Healer
 	[3094] = true, -- 11.0 Raid - Nerubian - Account Quest Complete Tracker (Hidden)
+	[3099] = true, -- 11.0 Raid - Nerubian - Nerubar Finery Tracking Currency (Hidden)
 }
 
 local MULT = {
