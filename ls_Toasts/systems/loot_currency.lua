@@ -1059,6 +1059,8 @@ local BLACKLIST = {
 	[3088] = true, -- Healer
 	[3094] = true, -- 11.0 Raid - Nerubian - Account Quest Complete Tracker (Hidden)
 	[3099] = true, -- 11.0 Raid - Nerubian - Nerubar Finery Tracking Currency (Hidden)
+	[3103] = true, -- 11.0 Delves - System - Seasonal Affix - Events Active
+	[3104] = true, -- 11.0 Delves - System - Seasonal Affix - Events Maximum
 }
 
 local MULT = {
