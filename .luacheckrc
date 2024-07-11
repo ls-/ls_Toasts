@@ -105,8 +105,6 @@ read_globals = {
 	"GetMaxPlayerLevel",
 	"GetMoney",
 	"GetMoneyString",
-	"GetNumQuestLogRewardCurrencies",
-	"GetQuestLogRewardCurrencyInfo",
 	"GetQuestLogRewardMoney",
 	"GetQuestLogRewardXP",
 	"GREEN_FONT_COLOR",
