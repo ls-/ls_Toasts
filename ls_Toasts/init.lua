@@ -58,11 +58,19 @@ local function shutdownCallback()
 	C.db.profile.version = E.VER.number
 end
 
-
-
 E:RegisterEvent("ADDON_LOADED", function(arg1)
-	if arg1 ~= addonName then
-		return
+	if arg1 ~= addonName then return end
+
+	-- very old, but keep do it jic
+	LS_TOASTS_CFG = nil
+	LS_TOASTS_CFG_GLOBAL = nil
+
+	if LS_TOASTS_GLOBAL_CONFIG then
+		if LS_TOASTS_GLOBAL_CONFIG.profiles then
+			for profile, data in next, LS_TOASTS_GLOBAL_CONFIG.profiles do
+				P:Modernize(data, profile, "profile")
+			end
+		end
 	end
 
 	C.db = LibStub("AceDB-3.0"):New("LS_TOASTS_GLOBAL_CONFIG", D, true)
@@ -72,45 +80,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	C.db:RegisterCallback("OnProfileShutdown", shutdownCallback)
 	C.db:RegisterCallback("OnDatabaseShutdown", shutdownCallback)
 
-	-- cleanup
-	LS_TOASTS_CFG = nil
-	LS_TOASTS_CFG_GLOBAL = nil
-
-	-- ->80100.03
-	if not C.db.profile.version or C.db.profile.version < 8010003 then
-		if C.db.profile.fadeout_delay then
-			C.db.profile.anchors[1].fadeout_delay = C.db.profile.fadeout_delay
-			C.db.profile.fadeout_delay = nil
-		end
-
-		if C.db.profile.growth_direction then
-			C.db.profile.anchors[1].growth_direction = C.db.profile.growth_direction
-			C.db.profile.growth_direction = nil
-		end
-
-		if C.db.profile.max_active_toasts then
-			C.db.profile.anchors[1].max_active_toasts = C.db.profile.max_active_toasts
-			C.db.profile.max_active_toasts = nil
-		end
-
-		if C.db.profile.scale then
-			C.db.profile.anchors[1].scale = C.db.profile.scale
-			C.db.profile.scale = nil
-		end
-
-		if C.db.profile.point then
-			C.db.profile.anchors[1].point.p = C.db.profile.point.p
-			C.db.profile.anchors[1].point.rP = C.db.profile.point.rP
-			C.db.profile.anchors[1].point.x = C.db.profile.point.x
-			C.db.profile.anchors[1].point.y = C.db.profile.point.y
-			C.db.profile.point = nil
-		end
-	end
-
-	-- ->80100.05
-	if not C.db.profile.version or C.db.profile.version < 8010005 then
-		C.db.profile.point = nil
-	end
 	for event in next, BLACKLISTED_EVENTS do
 		P:Call(AlertFrame.UnregisterEvent, AlertFrame, event)
 	end
