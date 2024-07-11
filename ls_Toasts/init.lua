@@ -61,7 +61,7 @@ end
 E:RegisterEvent("ADDON_LOADED", function(arg1)
 	if arg1 ~= addonName then return end
 
-	-- very old, but keep do it jic
+	-- very old, but keep it jic
 	LS_TOASTS_CFG = nil
 	LS_TOASTS_CFG_GLOBAL = nil
 
