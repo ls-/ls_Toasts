@@ -29,7 +29,7 @@ do
 	local popup = CreateFrame("Frame", nil, UIParent)
 	popup:Hide()
 	popup:SetPoint("CENTER", UIParent, "CENTER")
-	popup:SetSize(320, 78)
+	popup:SetSize(384, 78)
 	popup:EnableMouse(true)
 	popup:SetFrameStrata("TOOLTIP")
 	popup:SetFixedFrameStrata(true)
