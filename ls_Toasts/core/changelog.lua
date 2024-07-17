@@ -6,5 +6,5 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Beta beta beta.
+- Added 11.0.0 support.
 ]]

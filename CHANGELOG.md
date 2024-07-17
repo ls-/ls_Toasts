@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 110000.01
+
+- Added 11.0.0 support.
+
 ## Version 100207.02
 
 - Fixed an issue where the archive wouldn't extract properly for Mac and Linux users.
