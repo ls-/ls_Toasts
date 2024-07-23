@@ -14,8 +14,6 @@ local tonumber = _G.tonumber
 local tostring = _G.tostring
 
 -- Mine
-local NO_GAIN_SOURCE = Enum.CurrencySource.Last
-
 -- GENERATED-DATA-START
 local BLACKLIST = {
 	[  22] = true, -- Birmingham Test Item 3
@@ -56,7 +54,7 @@ local BLACKLIST = {
 	[1535] = true, -- Drust Archaeology Fragment
 	[1553] = true, -- Azerite
 	[1579] = true, -- Champions of Azeroth
-	[1585] = true, -- Account Wide Honor
+	[1585] = true, -- Warband Wide Honor
 	[1586] = true, -- Honor Level
 	[1592] = true, -- Order of Embers
 	[1593] = true, -- Proudmoore Admiralty
@@ -262,7 +260,7 @@ local BLACKLIST = {
 	[2084] = true, -- Dragon Racing - Personal Best Record - Azure Span 04 Hard
 	[2085] = true, -- Dragon Racing - Personal Best Record - Azure Span 05 Easy
 	[2086] = true, -- Dragon Racing - Personal Best Record - Azure Span 05 Hard
-	[2087] = true, -- Renown-Tuskarr
+	[2087] = true, -- Renown-Iskaara Tuskarr
 	[2088] = true, -- Renown-Valdrakken
 	[2089] = true, -- Dragon Racing - Personal Best Record - Azure Span 06 Easy
 	[2090] = true, -- Dragon Racing - Personal Best Record - Azure Span 06 Hard
@@ -281,7 +279,7 @@ local BLACKLIST = {
 	[2103] = true, -- Dragon Racing - Personal Best Record - Thaldraszus 06 Easy
 	[2104] = true, -- Dragon Racing - Personal Best Record - Thaldraszus 06 Hard
 	[2106] = true, -- Valdrakken Accord
-	[2107] = true, -- Artisan's Consortium
+	[2107] = true, -- Artisan's Consortium - Dragon Isles Branch
 	[2108] = true, -- Maruuk Centaur
 	[2109] = true, -- Iskaara Tuskarr
 	[2110] = true, -- Dragon Racing - Personal Best Record - Ohn'ahran Plains MP 1
@@ -739,6 +737,7 @@ local BLACKLIST = {
 	[2652] = true, -- Dream Wardens
 	[2653] = true, -- Renown - Dream Wardens
 	[2654] = true, -- Dragon Racing - Kalimdor Cup Preferred Mount
+	[2655] = true, -- Revives
 	[2658] = true, -- Dragon Racing - Personal Best Record - Outland 16
 	[2659] = true, -- Dragon Racing - Personal Best Record - Outland 17
 	[2660] = true, -- Dragon Racing - Personal Best Record - Outland 18
@@ -853,12 +852,25 @@ local BLACKLIST = {
 	[2774] = true, -- 10.2 Professions - Personal Tracker - S3 Spark Drops (Hidden)
 	[2780] = true, -- Echoed Ephemera Tracker [DNT]
 	[2784] = true, -- 10.2 Legendary - Progressive Advance - Tracker
+	[2785] = true, -- Khaz Algar Alchemy Knowledge
+	[2786] = true, -- Khaz Algar Blacksmithing Knowledge
+	[2787] = true, -- Khaz Algar Enchanting Knowledge
+	[2788] = true, -- Khaz Algar Engineering Knowledge
+	[2789] = true, -- Khaz Algar Herbalism Knowledge
+	[2790] = true, -- Khaz Algar Inscription Knowledge
+	[2791] = true, -- Khaz Algar Jewelcrafting Knowledge
+	[2792] = true, -- Khaz Algar Leatherworking Knowledge
+	[2793] = true, -- Khaz Algar Mining Knowledge
+	[2794] = true, -- Khaz Algar Skinning Knowledge
+	[2795] = true, -- Khaz Algar Tailoring Knowledge
 	[2796] = true, -- Renascent Dream
+	[2799] = true, -- [DNT] Beetle Ranch Invisible Currency
 	[2800] = true, -- 10.2.6 Professions - Personal Tracker - S4 Spark Drops (Hidden)
 	[2805] = true, -- Whelpling's Awakened Crest
 	[2808] = true, -- Drake's Awakened Crest
 	[2810] = true, -- Wyrm's Awakened Crest
 	[2811] = true, -- Aspect's Awakened Crest
+	[2813] = true, -- Harmonzed Silk
 	[2814] = true, -- Renown-Keg Leg's Crew
 	[2819] = true, -- Azerothian Archives
 	[2822] = true, -- [DNT] Corgi Cache
@@ -887,6 +899,14 @@ local BLACKLIST = {
 	[2875] = true, -- 10.2.7 Timewalking Season - Artifact - Waist - Shadow
 	[2876] = true, -- 10.2.7 Timewalking Season - Artifact - Waist - Nature
 	[2878] = true, -- 10.2 Professions - Personal Tracker - Legendary - Restored Leaf
+	[2897] = true, -- Council of Dornogal
+	[2898] = true, -- Renown - The Assembly of the Deeps
+	[2899] = true, -- Hallowfall Arathi
+	[2900] = true, -- Renown - Council of Dornogal
+	[2901] = true, -- Renown - Hallowfall Arathi
+	[2902] = true, -- The Assembly of the Deeps
+	[2903] = true, -- The Severed Threads
+	[2904] = true, -- Renown - The Severed Threads
 	[2906] = true, -- Plunder
 	[2907] = true, -- Pirate Booty Visual
 	[2908] = true, -- Dominance Offensive
@@ -895,15 +915,152 @@ local BLACKLIST = {
 	[2911] = true, -- Order of the Cloud Serpent
 	[2912] = true, -- Renascent Awakening
 	[2913] = true, -- Shado-Pan
+	[2918] = true, -- Weathered Harbinger Crest
+	[2919] = true, -- Carved Harbinger Crest
+	[2920] = true, -- Runed Harbinger Crest
+	[2921] = true, -- Gilded Harbinger Crest
 	[2922] = true, -- Plunder
+	[2923] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R1 Easy
+	[2924] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R2 Easy
+	[2925] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R3 Easy
+	[2926] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R4 Easy
+	[2927] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R5 Easy
+	[2928] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R6 Easy
+	[2929] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R1 Advanced
+	[2930] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R2 Advanced
+	[2931] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R3 Advanced
+	[2932] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R4 Advanced
+	[2933] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R5 Advanced
+	[2934] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R6 Advanced
+	[2935] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R1 Reverse
+	[2936] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R2 Reverse
+	[2937] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R3 Reverse
+	[2938] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R4 Reverse
+	[2939] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R5 Reverse
+	[2940] = true, -- Dragon Racing - Personal Best Record - 11 Z1 R6 Reverse
+	[2941] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R1 Easy
+	[2942] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R2 Easy
+	[2943] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R3 Easy
+	[2944] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R4 Easy
+	[2945] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R5 Easy
+	[2946] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R6 Easy
+	[2947] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R1 Advanced
+	[2948] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R2 Advanced
+	[2949] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R3 Advanced
+	[2950] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R4 Advanced
+	[2951] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R5 Advanced
+	[2952] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R6 Advanced
+	[2953] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R1 Reverse
+	[2954] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R2 Reverse
+	[2955] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R3 Reverse
+	[2956] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R4 Reverse
+	[2957] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R5 Reverse
+	[2958] = true, -- Dragon Racing - Personal Best Record - 11 Z2 R6 Reverse
+	[2959] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R1 Easy
+	[2960] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R2 Easy
+	[2961] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R3 Easy
+	[2962] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R4 Easy
+	[2963] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R5 Easy
+	[2964] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R6 Easy
+	[2965] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R1 Advanced
+	[2966] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R2 Advanced
+	[2967] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R3 Advanced
+	[2968] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R4 Advanced
+	[2969] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R5 Advanced
+	[2970] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R6 Advanced
+	[2971] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R1 Reverse
+	[2972] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R2 Reverse
+	[2973] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R3 Reverse
+	[2974] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R4 Reverse
+	[2975] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R5 Reverse
+	[2976] = true, -- Dragon Racing - Personal Best Record - 11 Z3 R6 Reverse
+	[2977] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R1 Easy
+	[2978] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R2 Easy
+	[2979] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R3 Easy
+	[2980] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R4 Easy
+	[2981] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R5 Easy
+	[2982] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R6 Easy
+	[2983] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R1 Advanced
+	[2984] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R2 Advanced
+	[2985] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R3 Advanced
+	[2986] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R4 Advanced
+	[2987] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R5 Advanced
+	[2988] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R6 Advanced
+	[2989] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R1 Reverse
+	[2990] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R2 Reverse
+	[2991] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R3 Reverse
+	[2992] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R4 Reverse
+	[2993] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R5 Reverse
+	[2994] = true, -- Dragon Racing - Personal Best Record - 11 Z5 R6 Reverse
 	[3000] = true, -- 10.2.7 Timewalking Season - Random Gem Counter
 	[3001] = true, -- 10.2.7 Timewalking Season - Artifact - Cloak - Experience Gain
+	[3002] = true, -- The Weaver (Notoriety)
+	[3003] = true, -- The General (Notoriety)
+	[3004] = true, -- The Vizier (Notoriety)
+	[3005] = true, -- The General (Notoriety)
+	[3006] = true, -- The Vizier (Notoriety)
+	[3007] = true, -- The Weaver (Notoriety)
+	[3009] = true, -- Bonus Valorstones
 	[3010] = true, -- 10.2.6 Rewards - Personal Tracker - S4 Dinar Drops (Hidden)
 	[3011] = true, -- Plunder
+	[3013] = true, -- Jewelcrafting Concentration
+	[3022] = true, -- Renown - Season 1 Delves
+	[3023] = true, -- 11.0 Professions - Personal Tracker - S1 Spark Drops (Hidden)
 	[3024] = true, -- Cosmetic
 	[3025] = true, -- Cosmetic
 	[3026] = true, -- Cosmetic
 	[3027] = true, -- Cosmetic
+	[3040] = true, -- Blacksmithing Concentration
+	[3041] = true, -- Tailoring Concentration
+	[3042] = true, -- Leatherworking Concentration
+	[3043] = true, -- Inscription Concentration
+	[3044] = true, -- Engineering Concentration
+	[3045] = true, -- Alchemy Concentration
+	[3046] = true, -- Enchanting Concentration
+	[3047] = true, -- Jewelcrafting Concentration
+	[3048] = true, -- Tailoring Concentration
+	[3049] = true, -- Leatherworking Concentration
+	[3050] = true, -- Blacksmithing Concentration
+	[3051] = true, -- Enchanting Concentration
+	[3052] = true, -- Engineering Concentration
+	[3053] = true, -- Inscription Concentration
+	[3054] = true, -- Alchemy Concentration
+	[3057] = true, -- 11.0 Professions - Tracker - Weekly Alchemy Knowledge
+	[3058] = true, -- 11.0 Professions - Tracker - Weekly Blacksmithing Knowledge
+	[3059] = true, -- 11.0 Professions - Tracker - Weekly Enchanting Knowledge
+	[3060] = true, -- 11.0 Professions - Tracker - Weekly Engineering Knowledge
+	[3061] = true, -- 11.0 Professions - Tracker - Weekly Herbalism Knowledge
+	[3062] = true, -- 11.0 Professions - Tracker - Weekly Inscription Knowledge
+	[3063] = true, -- 11.0 Professions - Tracker - Weekly Jewelcrafting Knowledge
+	[3064] = true, -- 11.0 Professions - Tracker - Weekly Leatherworking Knowledge
+	[3065] = true, -- 11.0 Professions - Tracker - Weekly Mining Knowledge
+	[3066] = true, -- 11.0 Professions - Tracker - Weekly Skinning Knowledge
+	[3067] = true, -- 11.0 Professions - Tracker - Weekly Tailoring Knowledge
+	[3068] = true, -- Delver's Journey
+	[3069] = true, -- 11.0 Professions - Tailoring - Fishing - Khaz Algar - Skill
+	[3070] = true, -- 11.0 Professions - Fishing - Algari Weaverthread - Perception
+	[3071] = true, -- 11.0 Professions - Fishing - Algari Weaverthread - Skill
+	[3072] = true, -- Everburning Ignition Refund
+	[3073] = true, -- 11.0 Professions - Tracker - Insc Book - Tailoring Knowledge
+	[3074] = true, -- 11.0 Professions - Tracker - Insc Book - Skinning Knowledge
+	[3075] = true, -- 11.0 Professions - Tracker - Insc Book - Mining Knowledge
+	[3076] = true, -- 11.0 Professions - Tracker - Insc Book - Leatherworking Know.
+	[3077] = true, -- 11.0 Professions - Tracker - Insc Book - Jewelcrafting Knowledge
+	[3078] = true, -- 11.0 Professions - Tracker - Insc Book - Inscription Knowledge
+	[3079] = true, -- 11.0 Professions - Tracker - Insc Book - Herbalism Knowledge
+	[3080] = true, -- 11.0 Professions - Tracker - Insc Book - Engineering Knowledge
+	[3081] = true, -- 11.0 Professions - Tracker - Insc Book - Enchanting Knowledge
+	[3082] = true, -- 11.0 Professions - Tracker - Insc Book - Blacksmithing Knowledge
+	[3083] = true, -- 11.0 Professions - Tracker - Insc Book - Alchemy Knowledge
+	[3084] = true, -- 11.0 Professions - Tracker - Insc Book - Inscription Knowledge
+	[3085] = true, -- 11.0 Delves - Personal Tracker - S1 Weekly Elise Turn-In(Hidden)
+	[3086] = true, -- DPS
+	[3087] = true, -- Tank
+	[3088] = true, -- Healer
+	[3094] = true, -- 11.0 Raid - Nerubian - Account Quest Complete Tracker (Hidden)
+	[3099] = true, -- 11.0 Raid - Nerubian - Nerubar Finery Tracking Currency (Hidden)
+	[3103] = true, -- 11.0 Delves - System - Seasonal Affix - Events Active
+	[3104] = true, -- 11.0 Delves - System - Seasonal Affix - Events Maximum
 }
 
 local MULT = {
@@ -928,11 +1085,11 @@ local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or FormatLargeNumber(m_abs(value)))
 end
 
-local function Toast_SetUp(event, id, quantity, isGain)
+local function Toast_SetUp(event, id, quantity)
 	local link = "currency:" .. id
 	local toast, isNew, isQueued = E:GetToast(event, "link", link)
 	if isNew then
-		if C.db.profile.types.loot_currency.filters[id] and quantity < C.db.profile.types.loot_currency.filters[id] then
+		if C.db.profile.types.loot_currency.filters[id] and m_abs(quantity) < C.db.profile.types.loot_currency.filters[id] then
 			toast:Recycle()
 
 			return
@@ -958,13 +1115,13 @@ local function Toast_SetUp(event, id, quantity, isGain)
 				end
 			end
 
-			toast.Title:SetText(isGain and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
+			toast.Title:SetText(quantity > 0 and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
 			toast.Text:SetText(info.name)
 			toast.Icon:SetTexture(info.iconFileID)
 			toast.IconBorder:Show()
 			toast.IconText1:SetAnimatedValue(quantity, true)
 
-			toast._data.count = quantity * (isGain and 1 or -1)
+			toast._data.count = quantity
 			toast._data.event = event
 			toast._data.link = link
 			toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
@@ -976,7 +1133,7 @@ local function Toast_SetUp(event, id, quantity, isGain)
 			toast:Recycle()
 		end
 	else
-		toast._data.count = toast._data.count + quantity * (isGain and 1 or -1)
+		toast._data.count = toast._data.count + quantity
 		toast.Title:SetText(toast._data.count > 0 and L["YOU_RECEIVED"] or L["YOU_LOST_RED"])
 
 		if isQueued then
@@ -984,7 +1141,7 @@ local function Toast_SetUp(event, id, quantity, isGain)
 		else
 			toast.IconText1:SetAnimatedValue(toast._data.count)
 
-			toast.IconText2:SetText((isGain and "+" or "-") .. quantity)
+			toast.IconText2:SetText(quantity)
 			toast.IconText2.Blink:Stop()
 			toast.IconText2.Blink:Play()
 
@@ -994,21 +1151,21 @@ local function Toast_SetUp(event, id, quantity, isGain)
 	end
 end
 
-local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
+local function CURRENCY_DISPLAY_UPDATE(id, _, quantity)
 	if not id or BLACKLIST[id] or C.db.profile.types.loot_currency.filters[id] == -1 then
 		return
 	end
 
-	if not C.db.profile.types.loot_currency.track_loss and gainSource == NO_GAIN_SOURCE then
+	if not C.db.profile.types.loot_currency.track_loss and quantity < 0 then
 		return
 	end
 
 	quantity = m_floor(quantity * (MULT[id] or 1))
-	if quantity < 1 then
+	if m_abs(quantity) < 1 then
 		return
 	end
 
-	Toast_SetUp("CURRENCY_DISPLAY_UPDATE", id, quantity, gainSource ~= NO_GAIN_SOURCE)
+	Toast_SetUp("CURRENCY_DISPLAY_UPDATE", id, quantity)
 end
 
 local TRADE_POST_TOKEN_ID = Constants.CurrencyConsts.CURRENCY_ID_PERKS_PROGRAM_DISPLAY_INFO
@@ -1037,7 +1194,7 @@ local function PERKS_PROGRAM_CURRENCY_REFRESH(old, new)
 		return
 	end
 
-	Toast_SetUp("PERKS_PROGRAM_CURRENCY_REFRESH", TRADE_POST_TOKEN_ID, m_abs(quantity), quantity > 0)
+	Toast_SetUp("PERKS_PROGRAM_CURRENCY_REFRESH", TRADE_POST_TOKEN_ID, quantity)
 end
 
 local listSize = 0
@@ -1155,7 +1312,7 @@ end
 
 local function Test()
 	-- Order Resources
-	Toast_SetUp("LOOT_CURRENCY_TEST", 1220, m_random(300, 600), (NO_GAIN_SOURCE * m_random(0, 1)) == NO_GAIN_SOURCE)
+	Toast_SetUp("LOOT_CURRENCY_TEST", 1220, m_random(-600, 600))
 end
 
 E:RegisterOptions("loot_currency", {

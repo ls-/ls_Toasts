@@ -41,7 +41,7 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 		end
 	end
 
-	if xpReward and xpReward > 0 and UnitLevel("player") < MAX_PLAYER_LEVEL then
+	if xpReward and xpReward > 0 and UnitLevel("player") < GetMaxPlayerLevel() then
 		usedSlots = usedSlots + 1
 
 		local slot = toast["Slot" .. usedSlots]

@@ -3,19 +3,16 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local next = _G.next
 local t_wipe = _G.table.wipe
 
 -- Mine
 local function Toast_OnClick(self)
-	if self._data.source_id and IsModifiedClick("DRESSUP") then
-		DressUpVisual(self._data.source_id)
-	elseif C.db.profile.types.transmog.left_click and self._data.link and not InCombatLockdown() then
-		if not CollectionsJournal then
-			CollectionsJournal_LoadUI()
-		end
-
-		if CollectionsJournal then
-			WardrobeCollectionFrame:OpenTransmogLink(self._data.link)
+	if self._data.source_id then
+		if IsModifiedClick("DRESSUP") then
+			DressUpVisual(self._data.source_id)
+		elseif C.db.profile.types.transmog.left_click and not InCombatLockdown() then
+			TransmogUtil.OpenCollectionToItem(self._data.source_id)
 		end
 	end
 end
@@ -66,73 +63,82 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 	end
 end
 
-local pendingSourceIDs = {}
-local wipeTimer
+local RESULT_NO_DATA = 1
+local RESULT_YES = 2
 
-local function wiper()
-	t_wipe(pendingSourceIDs)
-end
+local function isCollectedFromAnotherSource(sourceID)
+	local _, visualID = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+	if not visualID then return RESULT_NO_DATA end
 
-local function resetWipeTimer()
-	if not wipeTimer then
-		wipeTimer = C_Timer.NewTimer(5, wiper)
-	else
-		wipeTimer:Cancel()
+	-- C_TransmogCollection.GetAllAppearanceSources returns all sources, known and unknown
+	-- C_TransmogCollection.GetAppearanceSources only returns known sources
+	local sources = C_TransmogCollection.GetAppearanceSources(visualID)
+	if not sources then return RESULT_NO_DATA end
 
-		wipeTimer = C_Timer.NewTimer(5, wiper)
+	for _, source in next, sources do
+		if source.sourceID ~= sourceID and source.isCollected then
+			return RESULT_YES
+		end
 	end
 end
+
+local pendingSources = {}
 
 local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
-	-- don't show toasts for sources that aren't in player's wardrobe
-	local _, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
-	if canCollect then
-		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
-	else
-		-- however, they may become available shortly after when
-		-- TRANSMOG_SOURCE_COLLECTABILITY_UPDATE fires
-		pendingSourceIDs[sourceID] = "TRANSMOG_COLLECTION_SOURCE_ADDED"
+	local result = isCollectedFromAnotherSource(sourceID)
+	if result == RESULT_NO_DATA then
+		pendingSources[sourceID] = (pendingSources[sourceID] or 0) + 1
+		if pendingSources[sourceID] > 3 then
+			pendingSources[sourceID] = nil
 
-		resetWipeTimer()
+			return
+		end
+
+		C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID) end)
+
+	elseif result ~= RESULT_YES then
+		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 	end
+
+	pendingSources[sourceID] = nil
 end
 
--- I'm still not sure why this event was added, it always(?) fires alongside
--- TRANSMOG_COLLECTION_SOURCE_ADDED with identical payload, but I'll keep it
--- registered jic
+-- I'm still not sure why this event was added, it always(?) fires alongside TRANSMOG_COLLECTION_SOURCE_ADDED with
+-- identical payload, but I'll keep it registered jic
 local function TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED(sourceID)
-	-- don't show toasts for sources that aren't in player's wardrobe
-	local _, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
-	if canCollect then
-		Toast_SetUp("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
-	else
-		-- however, they may become available shortly after when
-		-- TRANSMOG_SOURCE_COLLECTABILITY_UPDATE fires
-		pendingSourceIDs[sourceID] = "TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED"
+	local result = isCollectedFromAnotherSource(sourceID)
+	if result == RESULT_NO_DATA then
+		pendingSources[sourceID] = (pendingSources[sourceID] or 0) + 1
+		if pendingSources[sourceID] > 3 then
+			pendingSources[sourceID] = nil
 
-		resetWipeTimer()
+			return
+		end
+
+		C_Timer.After(0.25, function() TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED(sourceID) end)
+	elseif result ~= RESULT_YES then
+		Toast_SetUp("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 	end
+
+	pendingSources[sourceID] = nil
 end
 
 local function TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
-	-- don't show toasts for sources that aren't in player's wardrobe
-	local _, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
-	if canCollect then
+	local result = isCollectedFromAnotherSource(sourceID)
+	if result == RESULT_NO_DATA then
+		pendingSources[sourceID] = (pendingSources[sourceID] or 0) + 1
+		if pendingSources[sourceID] > 3 then
+			pendingSources[sourceID] = nil
+
+			return
+		end
+
+		C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID) end)
+	elseif result ~= RESULT_YES then
 		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
 	end
-end
 
--- in some cases, for instance, quantum items, the source is marked as
--- collectable only after the _ADDED events fire
--- TRANSMOG_SOURCE_COLLECTABILITY_UPDATE usually fires a second or so later
-local function TRANSMOG_SOURCE_COLLECTABILITY_UPDATE(sourceID, isCollectable)
-	if isCollectable and pendingSourceIDs[sourceID] then
-		Toast_SetUp(pendingSourceIDs[sourceID], sourceID, true, 1)
-
-		pendingSourceIDs[sourceID] = nil
-
-		resetWipeTimer()
-	end
+	pendingSources[sourceID] = nil
 end
 
 local function Enable()
@@ -140,7 +146,6 @@ local function Enable()
 		E:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED", TRANSMOG_COLLECTION_SOURCE_ADDED)
 		E:RegisterEvent("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED)
 		E:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED", TRANSMOG_COLLECTION_SOURCE_REMOVED)
-		E:RegisterEvent("TRANSMOG_SOURCE_COLLECTABILITY_UPDATE", TRANSMOG_SOURCE_COLLECTABILITY_UPDATE)
 	end
 end
 
@@ -148,7 +153,8 @@ local function Disable()
 	E:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED", TRANSMOG_COLLECTION_SOURCE_ADDED)
 	E:UnregisterEvent("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED)
 	E:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED", TRANSMOG_COLLECTION_SOURCE_REMOVED)
-	E:UnregisterEvent("TRANSMOG_SOURCE_COLLECTABILITY_UPDATE", TRANSMOG_SOURCE_COLLECTABILITY_UPDATE)
+
+	t_wipe(pendingSources)
 end
 
 local function Test()

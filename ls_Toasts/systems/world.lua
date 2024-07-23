@@ -3,6 +3,7 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local ipairs = _G.ipairs
 local next = _G.next
 
 -- Mine
@@ -27,7 +28,7 @@ local function Slot_OnEnter(self)
 	end
 end
 
-local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward, numCurrencyRewards, itemReward)
+local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward, currencyRewards, itemReward)
 	local toast, isNew, isQueued = E:GetToast(nil, "quest_id", questID)
 	if isUpdate and isNew then
 		toast:Release()
@@ -36,6 +37,13 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 	end
 
 	if isNew then
+		local info =  C_QuestLog.GetQuestTagInfo(questID)
+		if not info then
+			toast:Release()
+
+			return
+		end
+
 		local usedSlots = 0
 
 		if moneyReward and moneyReward > 0 then
@@ -53,7 +61,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			end
 		end
 
-		if xpReward and xpReward > 0 and UnitLevel("player") < MAX_PLAYER_LEVEL then
+		if xpReward and xpReward > 0 and UnitLevel("player") < GetMaxPlayerLevel() then
 			usedSlots = usedSlots + 1
 
 			local slot = toast["Slot" .. usedSlots]
@@ -68,30 +76,24 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			end
 		end
 
-		for i = 1, numCurrencyRewards or 0 do
-			usedSlots = usedSlots + 1
+		if currencyRewards then
+			for _, currencyReward in ipairs(currencyRewards) do
+				usedSlots = usedSlots + 1
 
-			local slot = toast["Slot" .. usedSlots]
-			if slot then
-				local _, texture, count = GetQuestLogRewardCurrencyInfo(i, questID)
-				texture = texture or "Interface\\Icons\\INV_Box_02"
+				local slot = toast["Slot" .. usedSlots]
+				if slot then
+					local texture = currencyReward.texture or "Interface\\Icons\\INV_Box_02" -- this shouldn't ever happen, but...
 
-				slot.Icon:SetTexture(texture)
+					slot.Icon:SetTexture(texture)
 
-				slot._data.type = "currency"
-				slot._data.count = count
-				slot._data.texture = texture
+					slot._data.type = "currency"
+					slot._data.count = currencyReward.totalRewardAmount
+					slot._data.texture = texture
 
-				slot:HookScript("OnEnter", Slot_OnEnter)
-				slot:Show()
+					slot:HookScript("OnEnter", Slot_OnEnter)
+					slot:Show()
+				end
 			end
-		end
-
-		local info =  C_QuestLog.GetQuestTagInfo(questID)
-		if not info then
-			toast:Release()
-
-			return
 		end
 
 		if info.worldQuestType == Enum.QuestTagType.PvP then
@@ -164,7 +166,7 @@ local function QUEST_TURNED_IN(questID)
 			return
 		end
 
-		Toast_SetUp("QUEST_TURNED_IN", false, questID, C_TaskQuest.GetQuestInfoByQuestID(questID), GetQuestLogRewardMoney(questID), GetQuestLogRewardXP(questID), GetNumQuestLogRewardCurrencies(questID))
+		Toast_SetUp("QUEST_TURNED_IN", false, questID, C_TaskQuest.GetQuestInfoByQuestID(questID), GetQuestLogRewardMoney(questID), GetQuestLogRewardXP(questID), C_QuestInfoSystem.GetQuestRewardCurrencies(questID))
 	end
 end
 
@@ -228,7 +230,7 @@ local function Test()
 			for _, quest in next, quests do
 				if HaveQuestData(quest.questId) then
 					if C_QuestLog.IsWorldQuest(quest.questId) then
-						Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest.GetQuestInfoByQuestID(quest.questId), 123456, 123456)
+						Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest.GetQuestInfoByQuestID(quest.questId), 123456, 123456, C_QuestInfoSystem.GetQuestRewardCurrencies(quest.questId))
 						Toast_SetUp("WORLD_TEST", true, quest.questId, "scenario", nil, nil, nil, link)
 
 						return
