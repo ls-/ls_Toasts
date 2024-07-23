@@ -172,12 +172,12 @@ read_globals = {
 	"SquareButton_SetIcon",
 	"ToyBox",
 	"ToyBox_FindPageForToyID",
+	"TransmogUtil",
 	"UIParent",
 	"UnitClass",
 	"UnitFactionGroup",
 	"UnitGUID",
 	"UnitLevel",
-	"WardrobeCollectionFrame",
 	"WardrobeCollectionFrame_OpenTransmogLink",
 	"WORLD_QUEST_QUALITY_COLORS",
 }

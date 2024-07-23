@@ -3,19 +3,14 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
-local t_wipe = _G.table.wipe
 
 -- Mine
 local function Toast_OnClick(self)
-	if self._data.source_id and IsModifiedClick("DRESSUP") then
-		DressUpVisual(self._data.source_id)
-	elseif C.db.profile.types.transmog.left_click and self._data.link and not InCombatLockdown() then
-		if not CollectionsJournal then
-			CollectionsJournal_LoadUI()
-		end
-
-		if CollectionsJournal then
-			WardrobeCollectionFrame:OpenTransmogLink(self._data.link)
+	if self._data.source_id then
+		if IsModifiedClick("DRESSUP") then
+			DressUpVisual(self._data.source_id)
+		elseif C.db.profile.types.transmog.left_click and not InCombatLockdown() then
+			TransmogUtil.OpenCollectionToItem(self._data.source_id)
 		end
 	end
 end
@@ -66,73 +61,18 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 	end
 end
 
-local pendingSourceIDs = {}
-local wipeTimer
-
-local function wiper()
-	t_wipe(pendingSourceIDs)
-end
-
-local function resetWipeTimer()
-	if not wipeTimer then
-		wipeTimer = C_Timer.NewTimer(5, wiper)
-	else
-		wipeTimer:Cancel()
-
-		wipeTimer = C_Timer.NewTimer(5, wiper)
-	end
-end
-
 local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
-	-- don't show toasts for sources that aren't in player's wardrobe
-	local _, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
-	if canCollect then
-		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
-	else
-		-- however, they may become available shortly after when
-		-- TRANSMOG_SOURCE_COLLECTABILITY_UPDATE fires
-		pendingSourceIDs[sourceID] = "TRANSMOG_COLLECTION_SOURCE_ADDED"
-
-		resetWipeTimer()
-	end
+	Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 end
 
--- I'm still not sure why this event was added, it always(?) fires alongside
--- TRANSMOG_COLLECTION_SOURCE_ADDED with identical payload, but I'll keep it
--- registered jic
+-- I'm still not sure why this event was added, it always(?) fires alongside TRANSMOG_COLLECTION_SOURCE_ADDED with
+-- identical payload, but I'll keep it registered jic
 local function TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED(sourceID)
-	-- don't show toasts for sources that aren't in player's wardrobe
-	local _, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
-	if canCollect then
-		Toast_SetUp("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
-	else
-		-- however, they may become available shortly after when
-		-- TRANSMOG_SOURCE_COLLECTABILITY_UPDATE fires
-		pendingSourceIDs[sourceID] = "TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED"
-
-		resetWipeTimer()
-	end
+	Toast_SetUp("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 end
 
 local function TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
-	-- don't show toasts for sources that aren't in player's wardrobe
-	local _, canCollect = C_TransmogCollection.PlayerCanCollectSource(sourceID)
-	if canCollect then
-		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
-	end
-end
-
--- in some cases, for instance, quantum items, the source is marked as
--- collectable only after the _ADDED events fire
--- TRANSMOG_SOURCE_COLLECTABILITY_UPDATE usually fires a second or so later
-local function TRANSMOG_SOURCE_COLLECTABILITY_UPDATE(sourceID, isCollectable)
-	if isCollectable and pendingSourceIDs[sourceID] then
-		Toast_SetUp(pendingSourceIDs[sourceID], sourceID, true, 1)
-
-		pendingSourceIDs[sourceID] = nil
-
-		resetWipeTimer()
-	end
+	Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
 end
 
 local function Enable()
@@ -140,7 +80,6 @@ local function Enable()
 		E:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED", TRANSMOG_COLLECTION_SOURCE_ADDED)
 		E:RegisterEvent("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED)
 		E:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED", TRANSMOG_COLLECTION_SOURCE_REMOVED)
-		E:RegisterEvent("TRANSMOG_SOURCE_COLLECTABILITY_UPDATE", TRANSMOG_SOURCE_COLLECTABILITY_UPDATE)
 	end
 end
 
@@ -148,7 +87,6 @@ local function Disable()
 	E:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED", TRANSMOG_COLLECTION_SOURCE_ADDED)
 	E:UnregisterEvent("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED)
 	E:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED", TRANSMOG_COLLECTION_SOURCE_REMOVED)
-	E:UnregisterEvent("TRANSMOG_SOURCE_COLLECTABILITY_UPDATE", TRANSMOG_SOURCE_COLLECTABILITY_UPDATE)
 end
 
 local function Test()
