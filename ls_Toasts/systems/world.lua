@@ -37,6 +37,13 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 	end
 
 	if isNew then
+		local info =  C_QuestLog.GetQuestTagInfo(questID)
+		if not info then
+			toast:Release()
+
+			return
+		end
+
 		local usedSlots = 0
 
 		if moneyReward and moneyReward > 0 then
@@ -87,13 +94,6 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 					slot:Show()
 				end
 			end
-		end
-
-		local info =  C_QuestLog.GetQuestTagInfo(questID)
-		if not info then
-			toast:Release()
-
-			return
 		end
 
 		if info.worldQuestType == Enum.QuestTagType.PvP then
