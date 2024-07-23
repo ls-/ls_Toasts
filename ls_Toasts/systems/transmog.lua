@@ -3,6 +3,8 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local next = _G.next
+local t_wipe = _G.table.wipe
 
 -- Mine
 local function Toast_OnClick(self)
@@ -61,18 +63,82 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 	end
 end
 
+local RESULT_NO_DATA = 1
+local RESULT_YES = 2
+
+local function isCollectedFromAnotherSource(sourceID)
+	local _, visualID = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+	if not visualID then return RESULT_NO_DATA end
+
+	-- C_TransmogCollection.GetAllAppearanceSources returns all sources, known and unknown
+	-- C_TransmogCollection.GetAppearanceSources only returns known sources
+	local sources = C_TransmogCollection.GetAppearanceSources(visualID)
+	if not sources then return RESULT_NO_DATA end
+
+	for _, source in next, sources do
+		if source.sourceID ~= sourceID and source.isCollected then
+			return RESULT_YES
+		end
+	end
+end
+
+local pendingSources = {}
+
 local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
-	Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
+	local result = isCollectedFromAnotherSource(sourceID)
+	if result == RESULT_NO_DATA then
+		pendingSources[sourceID] = (pendingSources[sourceID] or 0) + 1
+		if pendingSources[sourceID] > 3 then
+			pendingSources[sourceID] = nil
+
+			return
+		end
+
+		C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID) end)
+
+	elseif result ~= RESULT_YES then
+		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
+	end
+
+	pendingSources[sourceID] = nil
 end
 
 -- I'm still not sure why this event was added, it always(?) fires alongside TRANSMOG_COLLECTION_SOURCE_ADDED with
 -- identical payload, but I'll keep it registered jic
 local function TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED(sourceID)
-	Toast_SetUp("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
+	local result = isCollectedFromAnotherSource(sourceID)
+	if result == RESULT_NO_DATA then
+		pendingSources[sourceID] = (pendingSources[sourceID] or 0) + 1
+		if pendingSources[sourceID] > 3 then
+			pendingSources[sourceID] = nil
+
+			return
+		end
+
+		C_Timer.After(0.25, function() TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED(sourceID) end)
+	elseif result ~= RESULT_YES then
+		Toast_SetUp("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
+	end
+
+	pendingSources[sourceID] = nil
 end
 
 local function TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID)
-	Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
+	local result = isCollectedFromAnotherSource(sourceID)
+	if result == RESULT_NO_DATA then
+		pendingSources[sourceID] = (pendingSources[sourceID] or 0) + 1
+		if pendingSources[sourceID] > 3 then
+			pendingSources[sourceID] = nil
+
+			return
+		end
+
+		C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_REMOVED(sourceID) end)
+	elseif result ~= RESULT_YES then
+		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_REMOVED", sourceID, nil, 1)
+	end
+
+	pendingSources[sourceID] = nil
 end
 
 local function Enable()
@@ -87,6 +153,8 @@ local function Disable()
 	E:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED", TRANSMOG_COLLECTION_SOURCE_ADDED)
 	E:UnregisterEvent("TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED", TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED)
 	E:UnregisterEvent("TRANSMOG_COLLECTION_SOURCE_REMOVED", TRANSMOG_COLLECTION_SOURCE_REMOVED)
+
+	t_wipe(pendingSources)
 end
 
 local function Test()
