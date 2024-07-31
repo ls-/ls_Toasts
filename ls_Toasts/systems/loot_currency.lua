@@ -870,7 +870,7 @@ local BLACKLIST = {
 	[2808] = true, -- Drake's Awakened Crest
 	[2810] = true, -- Wyrm's Awakened Crest
 	[2811] = true, -- Aspect's Awakened Crest
-	[2813] = true, -- Harmonzed Silk
+	[2813] = true, -- Harmonized Silk
 	[2814] = true, -- Renown-Keg Leg's Crew
 	[2819] = true, -- Azerothian Archives
 	[2822] = true, -- [DNT] Corgi Cache
@@ -1061,6 +1061,7 @@ local BLACKLIST = {
 	[3099] = true, -- 11.0 Raid - Nerubian - Nerubar Finery Tracking Currency (Hidden)
 	[3103] = true, -- 11.0 Delves - System - Seasonal Affix - Events Active
 	[3104] = true, -- 11.0 Delves - System - Seasonal Affix - Events Maximum
+	[3115] = true, -- [DNT] Worldsoul Memory Score
 }
 
 local MULT = {

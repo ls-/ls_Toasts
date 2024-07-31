@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 110000.02
+
+- Fixed "[DNT] Worldsoul Memory Score" toasts.
+
 ## Version 110000.01
 
 - Added 11.0.0 support.
