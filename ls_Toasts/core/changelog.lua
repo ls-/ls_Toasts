@@ -6,5 +6,5 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 11.0.0 support.
+- Fixed "[DNT] Worldsoul Memory Score" toasts.
 ]]
