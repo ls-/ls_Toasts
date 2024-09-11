@@ -185,7 +185,7 @@ function P:CreateConfig()
 									[5] = ITEM_QUALITY_COLORS[5].hex .. ITEM_QUALITY5_DESC .. "|r",
 								},
 							},
-						}
+						},
 					},
 					font = {
 						order = 21,
@@ -206,7 +206,7 @@ function P:CreateConfig()
 									C.db.profile.font.name = value
 
 									P:UpdateFont()
-								end
+								end,
 							},
 							size = {
 								order = 2,
