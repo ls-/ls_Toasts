@@ -37,7 +37,7 @@ end
 ------
 local NO_GAIN_SOURCE = Enum.CurrencySource.Last
 
--- https://wow.tools/dbc/?dbc=currencytypes#colFilter[3]=82
+-- https://wago.tools/db2/CurrencyTypes?filter%5BCategoryID%5D=82
 local WHITELIST = {
 	-- 82 (Archaeology)
 	[ 384] = true, -- Dwarf Archaeology Fragment
@@ -196,7 +196,7 @@ E:RegisterOptions("archaeology", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,

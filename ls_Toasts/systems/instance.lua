@@ -173,7 +173,7 @@ E:RegisterOptions("instance", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,

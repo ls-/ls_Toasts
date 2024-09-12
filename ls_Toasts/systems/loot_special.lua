@@ -331,7 +331,7 @@ E:RegisterOptions("loot_special", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 3,

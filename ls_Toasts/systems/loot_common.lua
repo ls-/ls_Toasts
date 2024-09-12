@@ -306,7 +306,7 @@ E:RegisterOptions("loot_common", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 3,

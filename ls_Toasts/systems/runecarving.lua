@@ -142,7 +142,7 @@ E:RegisterOptions("runecarving", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,

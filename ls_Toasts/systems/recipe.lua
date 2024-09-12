@@ -158,7 +158,7 @@ E:RegisterOptions("recipe", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,

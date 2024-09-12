@@ -449,7 +449,7 @@ E:RegisterOptions("garrison_6_0", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -498,7 +498,7 @@ E:RegisterOptions("garrison_7_0", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -547,7 +547,7 @@ E:RegisterOptions("garrison_8_0", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -596,7 +596,7 @@ E:RegisterOptions("garrison_9_0", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,

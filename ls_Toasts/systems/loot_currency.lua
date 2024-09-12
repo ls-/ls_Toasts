@@ -1438,7 +1438,7 @@ E:RegisterOptions("loot_currency", {
 						newID = nil
 
 						updateFilterOptions()
-					end
+					end,
 				},
 			},
 		},
