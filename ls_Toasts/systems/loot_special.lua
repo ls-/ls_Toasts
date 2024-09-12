@@ -15,7 +15,7 @@ local rollTypes = {
 	[1] = "need",
 	[2] = "greed",
 	[3] = "disenchant",
-	[4] = "transmog", -- no idea if it's even a thing, but I'll just assume that it is
+	[4] = "transmog",
 }
 
 local function Toast_OnClick(self)
