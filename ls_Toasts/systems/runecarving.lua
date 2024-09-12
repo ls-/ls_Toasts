@@ -86,8 +86,11 @@ local function Toast_SetUp(event, powerID)
 		toast._data.runecarving_id = powerID
 		toast._data.sound_file = C.db.profile.types.runecarving.sfx and 166314 -- SOUNDKIT.UI_RUNECARVING_OPEN_MAIN_WINDOW
 
+		if C.db.profile.types.runecarving.tooltip then
+			toast:HookScript("OnEnter", Toast_OnEnter)
+		end
+
 		toast:HookScript("OnClick", Toast_OnClick)
-		toast:HookScript("OnEnter", Toast_OnEnter)
 		toast:Spawn(C.db.profile.types.runecarving.anchor, C.db.profile.types.runecarving.dnd)
 	end
 end
@@ -121,6 +124,7 @@ E:RegisterOptions("runecarving", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	tooltip = true,
 }, {
 	name = L["TYPE_RUNECARVING"],
 	get = function(info)
@@ -142,7 +146,7 @@ E:RegisterOptions("runecarving", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -154,6 +158,11 @@ E:RegisterOptions("runecarving", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		tooltip = {
+			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		test = {
 			type = "execute",

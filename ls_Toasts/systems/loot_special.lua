@@ -15,7 +15,7 @@ local rollTypes = {
 	[1] = "need",
 	[2] = "greed",
 	[3] = "disenchant",
-	[4] = "transmog", -- no idea if it's even a thing, but I'll just assume that it is
+	[4] = "transmog",
 }
 
 local function Toast_OnClick(self)
@@ -145,8 +145,11 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 				toast._data.sound_file = C.db.profile.types.loot_special.sfx and soundFile
 				toast._data.tooltip_link = originalLink
 
+				if C.db.profile.types.loot_special.tooltip then
+					toast:HookScript("OnEnter", Toast_OnEnter)
+				end
+
 				toast:HookScript("OnClick", Toast_OnClick)
-				toast:HookScript("OnEnter", Toast_OnEnter)
 				toast:Spawn(C.db.profile.types.loot_special.anchor, C.db.profile.types.loot_special.dnd)
 			else
 				toast:Release()
@@ -303,6 +306,7 @@ E:RegisterOptions("loot_special", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	tooltip = true,
 	ilvl = true,
 	threshold = 1,
 }, {
@@ -331,7 +335,7 @@ E:RegisterOptions("loot_special", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 3,
@@ -343,6 +347,11 @@ E:RegisterOptions("loot_special", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		tooltip = {
+			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		ilvl = {
 			order = 5,

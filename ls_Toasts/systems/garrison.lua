@@ -198,7 +198,10 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 	toast._data.show_arrows = isUpgraded
 	toast._data.sound_file = C.db.profile.types[typeToKey[garrisonType]].sfx and 44296 -- SOUNDKIT.UI_GARRISON_TOAST_FOLLOWER_GAINED
 
-	toast:HookScript("OnEnter", FollowerToast_OnEnter)
+	if C.db.profile.types[typeToKey[garrisonType]].tooltip then
+		toast:HookScript("OnEnter", FollowerToast_OnEnter)
+	end
+
 	toast:Spawn(C.db.profile.types[typeToKey[garrisonType]].anchor, C.db.profile.types[typeToKey[garrisonType]].dnd)
 end
 
@@ -265,7 +268,10 @@ local function TalentToast_SetUp(event, garrisonType, talentID)
 	toast._data.talend_id = talentID
 	toast._data.sound_file = C.db.profile.types[typeToKey[garrisonType]].sfx and 73280 -- SOUNDKIT.UI_ORDERHALL_TALENT_READY_TOAST
 
-	toast:HookScript("OnEnter", TalentToast_OnEnter)
+	if C.db.profile.types[typeToKey[garrisonType]].tooltip then
+		toast:HookScript("OnEnter", TalentToast_OnEnter)
+	end
+
 	toast:Spawn(C.db.profile.types[typeToKey[garrisonType]].anchor, C.db.profile.types[typeToKey[garrisonType]].dnd)
 end
 
@@ -428,6 +434,7 @@ E:RegisterOptions("garrison_6_0", {
 	anchor = 1,
 	dnd = true,
 	sfx = true,
+	tooltip = true,
 }, {
 	name = L["TYPE_GARRISON"],
 	get = function(info)
@@ -449,7 +456,7 @@ E:RegisterOptions("garrison_6_0", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -461,6 +468,11 @@ E:RegisterOptions("garrison_6_0", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		tooltip = {
+			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		test = {
 			type = "execute",
@@ -477,6 +489,7 @@ E:RegisterOptions("garrison_7_0", {
 	anchor = 1,
 	dnd = true,
 	sfx = true,
+	tooltip = true,
 }, {
 	name = L["TYPE_CLASS_HALL"],
 	get = function(info)
@@ -498,7 +511,7 @@ E:RegisterOptions("garrison_7_0", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -510,6 +523,11 @@ E:RegisterOptions("garrison_7_0", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		tooltip = {
+			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		test = {
 			type = "execute",
@@ -526,6 +544,7 @@ E:RegisterOptions("garrison_8_0", {
 	anchor = 1,
 	dnd = true,
 	sfx = true,
+	tooltip = true,
 }, {
 	name = L["TYPE_WAR_EFFORT"],
 	get = function(info)
@@ -547,7 +566,7 @@ E:RegisterOptions("garrison_8_0", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -559,6 +578,11 @@ E:RegisterOptions("garrison_8_0", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		tooltip = {
+			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		test = {
 			type = "execute",
@@ -575,6 +599,7 @@ E:RegisterOptions("garrison_9_0", {
 	anchor = 1,
 	dnd = true,
 	sfx = true,
+	tooltip = true,
 }, {
 	name = L["TYPE_COVENANT"],
 	get = function(info)
@@ -596,7 +621,7 @@ E:RegisterOptions("garrison_9_0", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -608,6 +633,11 @@ E:RegisterOptions("garrison_9_0", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		tooltip = {
+			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		test = {
 			type = "execute",

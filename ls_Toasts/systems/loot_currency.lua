@@ -196,7 +196,7 @@ local BLACKLIST = {
 	[2002] = true, -- Renown-Maruuk Centaur
 	[2016] = true, -- Dragon Racing - Scoreboard - Race Complete Time
 	[2017] = true, -- Dragon Racing - Scoreboard - Race Complete Time - Fraction 1
-	[2018] = true, -- Dragon Racing - Scoreboard - Race Quest ID
+	[2018] = true, -- Dragon Racing - Temp Storage - Race Quest ID
 	[2019] = true, -- Dragon Racing - Scoreboard - Race Complete Time - Silver
 	[2020] = true, -- Dragon Racing - Scoreboard - Race Complete Time - Gold
 	[2021] = true, -- Renown-Dragonscale Expedition
@@ -1059,9 +1059,15 @@ local BLACKLIST = {
 	[3088] = true, -- Healer
 	[3094] = true, -- 11.0 Raid - Nerubian - Account Quest Complete Tracker (Hidden)
 	[3099] = true, -- 11.0 Raid - Nerubian - Nerubar Finery Tracking Currency (Hidden)
+	[3102] = true, -- Bronze Celebration Token
 	[3103] = true, -- 11.0 Delves - System - Seasonal Affix - Events Active
 	[3104] = true, -- 11.0 Delves - System - Seasonal Affix - Events Maximum
 	[3115] = true, -- [DNT] Worldsoul Memory Score
+	[3142] = true, -- 11.0 Delves - Bountiful Tracker - Brann EXP Cap
+	[3143] = true, -- 11.0 Delves - Bountiful Tracker - Delver's Journey Cap
+	[3144] = true, -- 11.0.5 20th Anniversary - Tracker
+	[3145] = true, -- 11.0.5 20th Anniversary - Tracker
+	[3146] = true, -- 11.0.5 20th Anniversary - Tracker
 }
 
 local MULT = {
@@ -1128,7 +1134,10 @@ local function Toast_SetUp(event, id, quantity)
 			toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 			toast._data.tooltip_link = link
 
-			toast:HookScript("OnEnter", Toast_OnEnter)
+			if C.db.profile.types.loot_currency.tooltip then
+				toast:HookScript("OnEnter", Toast_OnEnter)
+			end
+
 			toast:Spawn(C.db.profile.types.loot_currency.anchor, C.db.profile.types.loot_currency.dnd)
 		else
 			toast:Recycle()
@@ -1321,6 +1330,7 @@ E:RegisterOptions("loot_currency", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	tooltip = true,
 	track_loss = false,
 	filters = {
 		[1792] = 25,
@@ -1367,31 +1377,36 @@ E:RegisterOptions("loot_currency", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		track_loss = {
+		tooltip = {
 			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
+		},
+		track_loss = {
+			order = 5,
 			type = "toggle",
 			name = L["TRACK_LOSS"],
 		},
 		test = {
 			type = "execute",
-			order = 7,
+			order = 6,
 			width = "full",
 			name = L["TEST"],
 			func = Test,
 		},
 		spacer_1 = {
-			order = 8,
+			order = 7,
 			type = "description",
 			name = " ",
 		},
 		header_1 = {
-			order = 9,
+			order = 8,
 			type = "description",
 			name = "   |cffffd200".. L["FILTERS"] .. "|r",
 			fontSize = "medium",
 		},
 		new = {
-			order = 10,
+			order = 9,
 			type = "group",
 			name = L["NEW"],
 			args = {
@@ -1437,7 +1452,7 @@ E:RegisterOptions("loot_currency", {
 						newID = nil
 
 						updateFilterOptions()
-					end
+					end,
 				},
 			},
 		},

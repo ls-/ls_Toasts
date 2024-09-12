@@ -117,8 +117,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		AddonCompartmentFrame:RegisterAddon({
 			text = L["LS_TOASTS"],
 			icon = "Interface\\AddOns\\ls_Toasts\\assets\\logo-32",
-			notCheckable = true,
-			registerForAnyClick = true,
 			func = function()
 				if not InCombatLockdown() then
 					LibStub("AceConfigDialog-3.0"):Open(addonName)

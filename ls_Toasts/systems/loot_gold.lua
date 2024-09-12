@@ -122,7 +122,7 @@ E:RegisterOptions("loot_gold", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,

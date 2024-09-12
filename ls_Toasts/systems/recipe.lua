@@ -57,8 +57,11 @@ local function RecipeToast_SetUp(event, recipeID, recipeLevel)
 			toast._data.sound_file = C.db.profile.types.recipe.sfx and 73919 -- SOUNDKIT.UI_PROFESSIONS_NEW_RECIPE_LEARNED_TOAST
 			toast._data.tradeskill_id = tradeSkillID or skillLineID
 
+			if C.db.profile.types.recipe.tooltip then
+				toast:HookScript("OnEnter", RecipeToast_OnEnter)
+			end
+
 			toast:HookScript("OnClick", RecipeToast_OnClick)
-			toast:HookScript("OnEnter", RecipeToast_OnEnter)
 			toast:Spawn(C.db.profile.types.recipe.anchor, C.db.profile.types.recipe.dnd)
 		end
 	end
@@ -136,6 +139,7 @@ E:RegisterOptions("recipe", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	tooltip = true,
 	left_click = false,
 }, {
 	name = L["TYPE_PROFESSION"],
@@ -158,7 +162,7 @@ E:RegisterOptions("recipe", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -171,8 +175,13 @@ E:RegisterOptions("recipe", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		left_click = {
+		tooltip = {
 			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
+		},
+		left_click = {
+			order = 5,
 			type = "toggle",
 			name = L["HANDLE_LEFT_CLICK"],
 			desc = L["TAINT_WARNING"],

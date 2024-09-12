@@ -103,8 +103,11 @@ local function Toast_SetUp(event, entitlementType, textureID, name, payloadID, p
 	toast._data.event = event
 	toast._data.sound_file = C.db.profile.types.store.sfx and 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
 
+	if C.db.profile.types.store.tooltip then
+		toast:HookScript("OnEnter", Toast_OnEnter)
+	end
+
 	toast:HookScript("OnClick", Toast_OnClick)
-	toast:HookScript("OnEnter", Toast_OnEnter)
 	toast:Spawn(C.db.profile.types.store.anchor, C.db.profile.types.store.dnd)
 end
 
@@ -178,6 +181,7 @@ E:RegisterOptions("store", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	tooltip = true,
 	left_click = false,
 }, {
 	name = L["BLIZZARD_STORE"],
@@ -200,7 +204,7 @@ E:RegisterOptions("store", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -213,8 +217,13 @@ E:RegisterOptions("store", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		left_click = {
+		tooltip = {
 			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
+		},
+		left_click = {
+			order = 5,
 			type = "toggle",
 			name = L["HANDLE_LEFT_CLICK"],
 			desc = L["TAINT_WARNING"],

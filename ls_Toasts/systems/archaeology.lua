@@ -37,7 +37,7 @@ end
 ------
 local NO_GAIN_SOURCE = Enum.CurrencySource.Last
 
--- https://wow.tools/dbc/?dbc=currencytypes#colFilter[3]=82
+-- https://wago.tools/db2/CurrencyTypes?filter%5BCategoryID%5D=82
 local WHITELIST = {
 	-- 82 (Archaeology)
 	[ 384] = true, -- Dwarf Archaeology Fragment
@@ -98,11 +98,14 @@ local function FragmentToast_SetUp(event, link, quantity)
 			toast._data.count = quantity
 			toast._data.event = event
 			toast._data.link = link
-			toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			toast._data.sound_file = C.db.profile.types.archaeology.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 			toast._data.tooltip_link = link
 
-			toast:HookScript("OnEnter", Toast_OnEnter)
-			toast:Spawn(C.db.profile.types.loot_currency.anchor, C.db.profile.types.loot_currency.dnd)
+			if C.db.profile.types.archaeology.tooltip then
+				toast:HookScript("OnEnter", Toast_OnEnter)
+			end
+
+			toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
 		else
 			toast:Recycle()
 		end
@@ -175,6 +178,7 @@ E:RegisterOptions("archaeology", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	tooltip = true,
 }, {
 	name = L["TYPE_ARCHAEOLOGY"],
 	get = function(info)
@@ -196,7 +200,7 @@ E:RegisterOptions("archaeology", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
@@ -208,6 +212,11 @@ E:RegisterOptions("archaeology", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		tooltip = {
+			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		test = {
 			type = "execute",

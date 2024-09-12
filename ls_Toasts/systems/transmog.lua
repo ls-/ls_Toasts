@@ -95,7 +95,6 @@ local function TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID)
 		end
 
 		C_Timer.After(0.25, function() TRANSMOG_COLLECTION_SOURCE_ADDED(sourceID) end)
-
 	elseif result ~= RESULT_YES then
 		Toast_SetUp("TRANSMOG_COLLECTION_SOURCE_ADDED", sourceID, true, 1)
 	end
@@ -193,7 +192,7 @@ E:RegisterOptions("transmog", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,

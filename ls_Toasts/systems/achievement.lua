@@ -3,8 +3,26 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 
 -- Lua
 local _G = getfenv(0)
+local next = _G.next
 
 -- Mine
+local guildAchievements = {}
+
+local function updateGuildAchievementList()
+	if not IsInGuild() then
+		return
+	end
+
+	for _, categoryID in next, GetGuildCategoryList() do
+		for i = 1, (GetCategoryNumAchievements(categoryID)) do
+			local id, _, _, completed = GetAchievementInfo(categoryID, i)
+			if id then
+				guildAchievements[id] = completed
+			end
+		end
+	end
+end
+
 local function Toast_OnClick(self)
 	if self._data.ach_id and not InCombatLockdown() then
 		if not AchievementFrame then
@@ -37,13 +55,22 @@ local function Toast_OnEnter(self)
 	end
 end
 
-local function Toast_SetUp(event, achievementID, flag, isCriteria)
-	local toast = E:GetToast()
+local function Toast_SetUp(event, achievementID, eventArg, isCriteria) -- eventArg is alreadyEarned or criteriaString
 	local _, name, points, _, _, _, _, _, _, icon, _, isGuildAchievement = GetAchievementInfo(achievementID)
+	if isGuildAchievement then
+		eventArg = guildAchievements[achievementID]
+		guildAchievements[achievementID] = true
+
+		if eventArg then
+			return
+		end
+	end
+
+	local toast = E:GetToast()
 
 	if isCriteria then
 		toast.Title:SetText(L["ACHIEVEMENT_PROGRESSED"])
-		toast.Text:SetText(flag)
+		toast.Text:SetText(eventArg)
 
 		toast.IconText1:SetText("")
 	else
@@ -54,7 +81,7 @@ local function Toast_SetUp(event, achievementID, flag, isCriteria)
 			toast:ShowLeaves()
 		end
 
-		if flag then
+		if eventArg then
 			toast.IconText1:SetText("")
 		else
 			if C.db.profile.colors.border then
@@ -76,8 +103,11 @@ local function Toast_SetUp(event, achievementID, flag, isCriteria)
 	toast._data.event = event
 	toast._data.ach_id = achievementID
 
+	if C.db.profile.types.achievement.tooltip then
+		toast:HookScript("OnEnter", Toast_OnEnter)
+	end
+
 	toast:HookScript("OnClick", Toast_OnClick)
-	toast:HookScript("OnEnter", Toast_OnEnter)
 	toast:Spawn(C.db.profile.types.achievement.anchor, C.db.profile.types.achievement.dnd)
 end
 
@@ -89,33 +119,52 @@ local function CRITERIA_EARNED(achievementID, criteriaString)
 	Toast_SetUp("CRITERIA_EARNED", achievementID, criteriaString, true)
 end
 
+local function PLAYER_ENTERING_WORLD(isInitialLogin)
+	-- the achievement data might not be available before the initial login, but it's fully available after /reload
+	if isInitialLogin then
+		updateGuildAchievementList()
+	end
+
+	E:UnregisterEvent("PLAYER_ENTERING_WORLD", PLAYER_ENTERING_WORLD)
+end
+
 local function Enable()
 	if C.db.profile.types.achievement.enabled then
+		updateGuildAchievementList()
+
 		E:RegisterEvent("ACHIEVEMENT_EARNED", ACHIEVEMENT_EARNED)
 		E:RegisterEvent("CRITERIA_EARNED", CRITERIA_EARNED)
+		E:RegisterEvent("PLAYER_ENTERING_WORLD", PLAYER_ENTERING_WORLD)
 	end
 end
 
 local function Disable()
 	E:UnregisterEvent("ACHIEVEMENT_EARNED", ACHIEVEMENT_EARNED)
 	E:UnregisterEvent("CRITERIA_EARNED", CRITERIA_EARNED)
+	E:UnregisterEvent("PLAYER_ENTERING_WORLD", PLAYER_ENTERING_WORLD)
 end
 
 local function Test()
 	-- new, Shave and a Haircut
 	Toast_SetUp("ACHIEVEMENT_TEST", 545, false)
 
-	-- earned, Ten Hit Tunes
-	Toast_SetUp("ACHIEVEMENT_TEST", 9828, true)
+	-- earned, Reach Level 10
+	Toast_SetUp("ACHIEVEMENT_TEST", 6, true)
 
-	-- guild, It All Adds Up
-	Toast_SetUp("ACHIEVEMENT_TEST", 4913, false)
+	-- guild, Everyone Needs a Logo
+	local old = guildAchievements[5362]
+	guildAchievements[5362] = false
+
+	Toast_SetUp("ACHIEVEMENT_TEST", 5362)
+
+	guildAchievements[5362] = old
 end
 
 E:RegisterOptions("achievement", {
 	enabled = true,
 	anchor = 1,
 	dnd = false,
+	tooltip = true,
 }, {
 	name = L["TYPE_ACHIEVEMENT"],
 	get = function(info)
@@ -137,13 +186,18 @@ E:RegisterOptions("achievement", {
 				else
 					Disable()
 				end
-			end
+			end,
 		},
 		dnd = {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
+		},
+		tooltip = {
+			order = 3,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		test = {
 			type = "execute",
