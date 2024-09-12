@@ -115,11 +115,13 @@ local function CRITERIA_EARNED(achievementID, criteriaString)
 	Toast_SetUp("CRITERIA_EARNED", achievementID, criteriaString, true)
 end
 
-local function RECEIVED_ACHIEVEMENT_LIST()
-	updateGuildAchievementList()
+local function PLAYER_ENTERING_WORLD(isInitialLogin)
+	-- the achievement data might not be available before the initial login, but it's fully available after /reload
+	if isInitialLogin then
+		updateGuildAchievementList()
+	end
 
-	-- this event fires a lot and updating the list causes stuttering, so run it only once
-	E:UnregisterEvent("RECEIVED_ACHIEVEMENT_LIST", RECEIVED_ACHIEVEMENT_LIST)
+	E:UnregisterEvent("PLAYER_ENTERING_WORLD", PLAYER_ENTERING_WORLD)
 end
 
 local function Enable()
@@ -128,14 +130,14 @@ local function Enable()
 
 		E:RegisterEvent("ACHIEVEMENT_EARNED", ACHIEVEMENT_EARNED)
 		E:RegisterEvent("CRITERIA_EARNED", CRITERIA_EARNED)
-		E:RegisterEvent("RECEIVED_ACHIEVEMENT_LIST", RECEIVED_ACHIEVEMENT_LIST)
+		E:RegisterEvent("PLAYER_ENTERING_WORLD", PLAYER_ENTERING_WORLD)
 	end
 end
 
 local function Disable()
 	E:UnregisterEvent("ACHIEVEMENT_EARNED", ACHIEVEMENT_EARNED)
 	E:UnregisterEvent("CRITERIA_EARNED", CRITERIA_EARNED)
-	E:UnregisterEvent("RECEIVED_ACHIEVEMENT_LIST", RECEIVED_ACHIEVEMENT_LIST)
+	E:UnregisterEvent("PLAYER_ENTERING_WORLD", PLAYER_ENTERING_WORLD)
 end
 
 local function Test()
