@@ -98,11 +98,11 @@ local function FragmentToast_SetUp(event, link, quantity)
 			toast._data.count = quantity
 			toast._data.event = event
 			toast._data.link = link
-			toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			toast._data.sound_file = C.db.profile.types.archaeology.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 			toast._data.tooltip_link = link
 
 			toast:HookScript("OnEnter", Toast_OnEnter)
-			toast:Spawn(C.db.profile.types.loot_currency.anchor, C.db.profile.types.loot_currency.dnd)
+			toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
 		else
 			toast:Recycle()
 		end
