@@ -134,6 +134,7 @@ read_globals = {
 	"INVSLOT_TRINKET2",
 	"INVSLOT_WAIST",
 	"INVSLOT_WRIST",
+	"IsInGuild",
 	"IsLoggedIn",
 	"IsModifiedClick",
 	"IsShiftKeyDown",
