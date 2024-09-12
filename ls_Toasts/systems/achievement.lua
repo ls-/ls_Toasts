@@ -9,6 +9,10 @@ local next = _G.next
 local guildAchievements = {}
 
 local function updateGuildAchievementList()
+	if not IsInGuild() then
+		return
+	end
+
 	for _, categoryID in next, GetGuildCategoryList() do
 		for i = 1, (GetCategoryNumAchievements(categoryID)) do
 			local id, _, _, completed = GetAchievementInfo(categoryID, i)
