@@ -1129,7 +1129,10 @@ local function Toast_SetUp(event, id, quantity)
 			toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 			toast._data.tooltip_link = link
 
-			toast:HookScript("OnEnter", Toast_OnEnter)
+			if C.db.profile.types.loot_currency.tooltip then
+				toast:HookScript("OnEnter", Toast_OnEnter)
+			end
+
 			toast:Spawn(C.db.profile.types.loot_currency.anchor, C.db.profile.types.loot_currency.dnd)
 		else
 			toast:Recycle()
@@ -1322,6 +1325,7 @@ E:RegisterOptions("loot_currency", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	tooltip = true,
 	track_loss = false,
 	filters = {
 		[1792] = 25,
@@ -1368,31 +1372,36 @@ E:RegisterOptions("loot_currency", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		track_loss = {
+		tooltip = {
 			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
+		},
+		track_loss = {
+			order = 5,
 			type = "toggle",
 			name = L["TRACK_LOSS"],
 		},
 		test = {
 			type = "execute",
-			order = 7,
+			order = 6,
 			width = "full",
 			name = L["TEST"],
 			func = Test,
 		},
 		spacer_1 = {
-			order = 8,
+			order = 7,
 			type = "description",
 			name = " ",
 		},
 		header_1 = {
-			order = 9,
+			order = 8,
 			type = "description",
 			name = "   |cffffd200".. L["FILTERS"] .. "|r",
 			fontSize = "medium",
 		},
 		new = {
-			order = 10,
+			order = 9,
 			type = "group",
 			name = L["NEW"],
 			args = {

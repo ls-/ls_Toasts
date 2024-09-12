@@ -101,7 +101,10 @@ local function FragmentToast_SetUp(event, link, quantity)
 			toast._data.sound_file = C.db.profile.types.archaeology.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 			toast._data.tooltip_link = link
 
-			toast:HookScript("OnEnter", Toast_OnEnter)
+			if C.db.profile.types.archaeology.tooltip then
+				toast:HookScript("OnEnter", Toast_OnEnter)
+			end
+
 			toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
 		else
 			toast:Recycle()
@@ -175,6 +178,7 @@ E:RegisterOptions("archaeology", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	tooltip = true,
 }, {
 	name = L["TYPE_ARCHAEOLOGY"],
 	get = function(info)
@@ -208,6 +212,11 @@ E:RegisterOptions("archaeology", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		tooltip = {
+			order = 4,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		test = {
 			type = "execute",

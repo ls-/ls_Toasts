@@ -136,3 +136,5 @@ L["TYPE_RUNECARVING"] = "Runecarving"
 L["TYPE_TRANSMOG"] = "Transmogrification"
 L["TYPE_WAR_EFFORT"] = "War Effort"
 L["TYPE_WORLD_QUEST"] = "World Quest"
+
+L["TOOLTIPS"] = "Tooltips"

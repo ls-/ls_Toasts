@@ -99,8 +99,11 @@ local function Toast_SetUp(event, achievementID, eventArg, isCriteria) -- eventA
 	toast._data.event = event
 	toast._data.ach_id = achievementID
 
+	if C.db.profile.types.achievement.tooltip then
+		toast:HookScript("OnEnter", Toast_OnEnter)
+	end
+
 	toast:HookScript("OnClick", Toast_OnClick)
-	toast:HookScript("OnEnter", Toast_OnEnter)
 	toast:Spawn(C.db.profile.types.achievement.anchor, C.db.profile.types.achievement.dnd)
 end
 
@@ -155,6 +158,7 @@ E:RegisterOptions("achievement", {
 	enabled = true,
 	anchor = 1,
 	dnd = false,
+	tooltip = true,
 }, {
 	name = L["TYPE_ACHIEVEMENT"],
 	get = function(info)
@@ -183,6 +187,11 @@ E:RegisterOptions("achievement", {
 			type = "toggle",
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
+		},
+		tooltip = {
+			order = 3,
+			type = "toggle",
+			name = L["TOOLTIPS"],
 		},
 		test = {
 			type = "execute",

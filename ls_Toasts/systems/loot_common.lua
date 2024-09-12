@@ -185,8 +185,11 @@ local function Toast_SetUp(event, link, quantity)
 			toast._data.sound_file = C.db.profile.types.loot_common.sfx and soundFile
 			toast._data.tooltip_link = originalLink
 
+			if C.db.profile.types.loot_common.tooltip then
+				toast:HookScript("OnEnter", Toast_OnEnter)
+			end
+
 			toast:HookScript("OnClick", Toast_OnClick)
-			toast:HookScript("OnEnter", Toast_OnEnter)
 			toast:Spawn(C.db.profile.types.loot_common.anchor, C.db.profile.types.loot_common.dnd)
 		else
 			toast:Release()
@@ -277,6 +280,7 @@ E:RegisterOptions("loot_common", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	tooltip = true,
 	ilvl = true,
 	quest = false,
 	threshold = 1,
@@ -319,14 +323,19 @@ E:RegisterOptions("loot_common", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		ilvl = {
+		tooltip = {
 			order = 5,
+			type = "toggle",
+			name = L["TOOLTIPS"],
+		},
+		ilvl = {
+			order = 6,
 			type = "toggle",
 			name = L["SHOW_ILVL"],
 			desc = L["SHOW_ILVL_DESC"],
 		},
 		threshold = {
-			order = 6,
+			order = 7,
 			type = "select",
 			name = L["LOOT_THRESHOLD"],
 			values = {
@@ -338,7 +347,7 @@ E:RegisterOptions("loot_common", {
 			},
 		},
 		quest = {
-			order = 7,
+			order = 8,
 			type = "toggle",
 			name = L["SHOW_QUEST_ITEMS"],
 			desc = L["SHOW_QUEST_ITEMS_DESC"],
