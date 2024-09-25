@@ -137,3 +137,6 @@ L["TYPE_RUNECARVING"] = "Runecarving"
 L["TYPE_TRANSMOG"] = "Transmogrification"
 L["TYPE_WAR_EFFORT"] = "War Effort"
 L["TYPE_WORLD_QUEST"] = "World Quest"
+
+L["FILTER_GUILD_ACHIEVEMENTS"] = "Filter Guild Achievements"
+L["FILTER_GUILD_ACHIEVEMENTS_DESC"] = "Enabling this option will block toasts for faction-specific guild achievements. They're the cause of the achievement spam in big cross-faction guilds."
