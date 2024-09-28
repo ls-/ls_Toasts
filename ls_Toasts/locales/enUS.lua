@@ -111,8 +111,6 @@ L["YOU_RECEIVED"] = "You Received"
 
 -- Retail
 L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created."
-L["FILTER_GUILD_ACHIEVEMENTS"] = "Filter Guild Achievements"
-L["FILTER_GUILD_ACHIEVEMENTS_DESC"] = "Enabling this option will block toasts for faction-specific guild achievements. They're the cause of the achievement spam in big cross-faction guilds."
 L["HANDLE_LEFT_CLICK"] = "Handle Left Click"
 L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID."
 L["SHOW_QUEST_ITEMS"] = "Show Quest Items"

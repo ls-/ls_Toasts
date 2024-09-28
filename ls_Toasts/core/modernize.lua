@@ -47,5 +47,14 @@ function P:Modernize(data, name, key)
 			data.point = nil
 			data.version = 8010005
 		end
+
+		-- ->110002.03
+		if data.version < 11000203 then
+			if data.types and data.types.achievement then
+				data.types.achievement.filter_guild = nil
+			end
+
+			data.version = 11000203
+		end
 	end
 end
