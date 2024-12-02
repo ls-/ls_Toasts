@@ -1063,11 +1063,13 @@ local BLACKLIST = {
 	[3103] = true, -- 11.0 Delves - System - Seasonal Affix - Events Active
 	[3104] = true, -- 11.0 Delves - System - Seasonal Affix - Events Maximum
 	[3115] = true, -- [DNT] Worldsoul Memory Score
+	[3139] = true, -- Plunder
 	[3142] = true, -- 11.0 Delves - Bountiful Tracker - Brann EXP Cap
 	[3143] = true, -- 11.0 Delves - Bountiful Tracker - Delver's Journey Cap
 	[3144] = true, -- 11.0.5 20th Anniversary - Tracker
 	[3145] = true, -- 11.0.5 20th Anniversary - Tracker
 	[3146] = true, -- 11.0.5 20th Anniversary - Tracker
+	[3180] = true, -- Weekly Limit Test Currency
 }
 
 local MULT = {
