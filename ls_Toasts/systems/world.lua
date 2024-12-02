@@ -203,21 +203,21 @@ local function Test()
 	local _, link = C_Item.GetItemInfo(124124)
 	if link then
 		-- world quest, may not work
-		local quests = C_TaskQuest.GetQuestsForPlayerByMapID(1014)
+		local quests = C_TaskQuest.GetQuestsOnMap(1014)
 		if not quests or #quests == 0 then
-			quests = C_TaskQuest.GetQuestsForPlayerByMapID(1015)
+			quests = C_TaskQuest.GetQuestsOnMap(1015)
 			if not quests or #quests == 0 then
-				quests = C_TaskQuest.GetQuestsForPlayerByMapID(1017)
+				quests = C_TaskQuest.GetQuestsOnMap(1017)
 				if not quests or #quests == 0 then
-					quests = C_TaskQuest.GetQuestsForPlayerByMapID(1018)
+					quests = C_TaskQuest.GetQuestsOnMap(1018)
 					if not quests or #quests == 0 then
-						quests = C_TaskQuest.GetQuestsForPlayerByMapID(1021)
+						quests = C_TaskQuest.GetQuestsOnMap(1021)
 						if not quests or #quests == 0 then
-							quests = C_TaskQuest.GetQuestsForPlayerByMapID(1024)
+							quests = C_TaskQuest.GetQuestsOnMap(1024)
 							if not quests or #quests == 0 then
-								quests = C_TaskQuest.GetQuestsForPlayerByMapID(1033)
+								quests = C_TaskQuest.GetQuestsOnMap(1033)
 								if not quests or #quests == 0 then
-									quests = C_TaskQuest.GetQuestsForPlayerByMapID(1096)
+									quests = C_TaskQuest.GetQuestsOnMap(1096)
 								end
 							end
 						end
@@ -228,10 +228,10 @@ local function Test()
 
 		if quests then
 			for _, quest in next, quests do
-				if HaveQuestData(quest.questId) then
-					if C_QuestLog.IsWorldQuest(quest.questId) then
-						Toast_SetUp("WORLD_TEST", false, quest.questId, C_TaskQuest.GetQuestInfoByQuestID(quest.questId), 123456, 123456, C_QuestInfoSystem.GetQuestRewardCurrencies(quest.questId))
-						Toast_SetUp("WORLD_TEST", true, quest.questId, "scenario", nil, nil, nil, link)
+				if HaveQuestData(quest.questID) then
+					if C_QuestLog.IsWorldQuest(quest.questID) then
+						Toast_SetUp("WORLD_TEST", false, quest.questID, C_TaskQuest.GetQuestInfoByQuestID(quest.questID), 123456, 123456, C_QuestInfoSystem.GetQuestRewardCurrencies(quest.questID))
+						Toast_SetUp("WORLD_TEST", true, quest.questID, "scenario", nil, nil, nil, link)
 
 						return
 					end
