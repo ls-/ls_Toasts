@@ -41,6 +41,22 @@ E:RegisterSkin("beautycase-no-art", {
 	},
 })
 
+E:RegisterSkin("beautycase-legacy", {
+	name = "Beautycase (Legacy)",
+	template = "default-legacy",
+	leaves = {
+		points = {
+			{x = -4, y = 18}, -- topleft
+			{x = 12, y = 12}, -- topright
+			{y = -14}, -- bottomright
+		},
+	},
+	border = {
+		offset = -4,
+		texture = "Interface\\AddOns\\ls_Toasts\\assets\\toast-border-beautycase",
+	},
+})
+
 E:RegisterSkin("beautycase-twotone", {
 	name = "Beautycase (Two Tone)",
 	template = "beautycase",
