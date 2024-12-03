@@ -6,6 +6,8 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Removed the workaround for the guild achievement spam. It's finally fixed by Blizzard. An ancient bug that had been
-  ignored for years got fixed asap after it showed up multiple times during RWF streams and caused a few wipes.
+- Added 11.0.5 support.
+- Added a set of AzeriteUI themed skins.
+- Added missing Beautycase (Legacy) skin.
+- Updated Spanish translation. Translated by Distopic@Curse.
 ]]

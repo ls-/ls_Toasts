@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 110005.01
+
+- Added 11.0.5 support.
+- Added a set of AzeriteUI themed skins.
+- Added missing Beautycase (Legacy) skin.
+- Updated Spanish translation. Translated by Distopic@Curse.
+
 ## Version 110002.03
 
 - Removed the workaround for the guild achievement spam. It's finally fixed by Blizzard. An ancient bug that had been
