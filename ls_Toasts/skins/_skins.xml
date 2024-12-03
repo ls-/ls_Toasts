@@ -1,6 +1,7 @@
 <Ui
 	xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="default.lua"/>
+	<Script file="azerite.lua"/>
 	<Script file="beautycase.lua"/>
 	<Script file="elv.lua"/>
 </Ui>

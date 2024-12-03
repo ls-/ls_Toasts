@@ -1,4 +1,4 @@
-﻿-- Contributors: Gotxiko@GitHub, Shacoulrophobia@Curse
+﻿-- Contributors: Gotxiko@GitHub, Shacoulrophobia@Curse, Distopic@Curse
 
 local _, addonTable = ...
 local L = addonTable.L
@@ -34,7 +34,7 @@ L["GROWTH_DIR_UP"] = "Arriba"
 L["ICON_BORDER"] = "Borde de icono"
 L["INFORMATION"] = "Información"
 L["NAME"] = "Nombre"
-L["OPEN_CONFIG"] = "Abrir Config"
+L["OPEN_CONFIG"] = "Abrir configuración"
 L["RARITY_THRESHOLD"] = "Límite de rareza"
 L["SCALE"] = "Escala"
 L["SHOW_ILVL"] = "Mostrar nivel de objeto"
@@ -57,12 +57,14 @@ L["YOU_LOST"] = "Has perdido"
 L["YOU_RECEIVED"] = "Has recibido"
 
 -- Retail
+L["CURRENCY_THRESHOLD_DESC"] = "Introduce |cffffd200-1|r para ignorar la moneda, |cffffd2000|r para desactivar el filtro, o |cffffd200cualquier número por encima de 0|r para establecer el umbral por debajo del cual no se crearán toasts."
 L["HANDLE_LEFT_CLICK"] = "Utilizar clic izquierdo"
 L["NEW_CURRENCY_FILTER_DESC"] = "Introduce el ID de una moneda"
 L["SHOW_QUEST_ITEMS"] = "Mostrar objetos de misión"
 L["SHOW_QUEST_ITEMS_DESC"] = "Mostrar objetos de misión sin importar su calidad/rareza"
 L["TAINT_WARNING"] = "Activar esta opción puede causar errores al abrir o cerrar ciertos paneles de la UI en combate."
 L["THRESHOLD"] = "Umbral"
+L["TOOLTIPS"] = "Herramientas"
 L["TRANSMOG_ADDED"] = "Appariencia añadida"
 L["TRANSMOG_REMOVED"] = "Apariencia eliminada"
 L["TYPE_ACHIEVEMENT"] = "Logro"
