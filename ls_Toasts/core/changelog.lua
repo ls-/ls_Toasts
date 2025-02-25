@@ -6,8 +6,14 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 11.0.5 support.
-- Added a set of AzeriteUI themed skins.
-- Added missing Beautycase (Legacy) skin.
-- Updated Spanish translation. Translated by Distopic@Curse.
+- Added 11.1.0 support.
+
+### Achievement
+
+- From now on only new achievements will be toasted. You can enable toasts for previously earned achievements at /LST >
+  Toast Types > Achievement > Earned.
+
+### Collection
+
+- Added Warband Scene aka Campsite toasts.
 ]]
