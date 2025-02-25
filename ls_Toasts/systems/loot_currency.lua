@@ -1142,6 +1142,7 @@ local BLACKLIST = {
 	[3254] = true, -- Chase's Test Currency [DNT]
 	[3279] = true, -- 11. Raid Renown - Gallagio - Raid Buff Acct Tracker
 	[3280] = true, -- 11. Raid Renown - Gallagio - Speed Buff Acct Tracker
+	[3282] = true, -- Gallagio Loyalty Rewards Club
 }
 
 local MULT = {
