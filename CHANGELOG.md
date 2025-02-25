@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Version 110100.01
+
+- Added 11.1.0 support.
+
+### Achievement
+
+- From now on only new achievements will be toasted. You can enable toasts for previously earned achievements at /LST >
+  Toast Types > Achievement > Earned.
+
+### Collection
+
+- Added Warband Scene aka Campsite toasts.
+
 ## Version 110005.01
 
 - Added 11.0.5 support.

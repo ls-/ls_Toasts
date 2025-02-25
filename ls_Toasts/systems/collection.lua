@@ -33,6 +33,12 @@ local function Toast_OnClick(self)
 					if page then
 						ToyBox.PagingFrame:SetCurrentPage(page)
 					end
+				elseif self._data.is_campsite then
+					SetCollectionsJournalShown(true, COLLECTIONS_JOURNAL_TAB_INDEX_WARBAND_SCENES)
+
+					WarbandSceneJournal.IconsFrame.Icons:GoToElementByPredicate(function(elementData)
+						return elementData.warbandSceneID == self.warbandSceneID
+					end)
 				end
 			end
 		end
@@ -43,7 +49,7 @@ local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or value)
 end
 
-local function Toast_SetUp(event, ID, isMount, isPet, isToy)
+local function Toast_SetUp(event, ID, isMount, isPet, isToy, isCampsite)
 	local toast, isNew, isQueued = E:GetToast(event, "collection_id", ID)
 	if isNew then
 		local color, name, icon, rarity, _
@@ -59,6 +65,12 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 			name = customName or name
 		elseif isToy then
 			_, name, icon = C_ToyBox.GetToyInfo(ID)
+		elseif isCampsite then
+			local warbandSceneInfo = C_WarbandScene.GetWarbandSceneEntry(ID)
+			name = warbandSceneInfo.name
+			rarity = warbandSceneInfo.quality
+			color = ITEM_QUALITY_COLORS[rarity]
+			icon = "Interface\\ICONS\\UI_CampCollection"
 		end
 
 		if not name then
@@ -94,6 +106,7 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy)
 		toast._data.is_mount = isMount
 		toast._data.is_pet = isPet
 		toast._data.is_toy = isToy
+		toast._data.is_campsite = isCampsite
 		toast._data.sound_file = C.db.profile.types.collection.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 
 		toast:HookScript("OnClick", Toast_OnClick)
@@ -128,11 +141,16 @@ local function NEW_TOY_ADDED(toyID)
 	Toast_SetUp("NEW_TOY_ADDED", toyID, nil, nil, true)
 end
 
+local function NEW_WARBAND_SCENE_ADDED(campsiteID)
+	Toast_SetUp("NEW_WARBAND_SCENE_ADDED", campsiteID, nil, nil, nil, true)
+end
+
 local function Enable()
 	if C.db.profile.types.collection.enabled then
 		E:RegisterEvent("NEW_MOUNT_ADDED", NEW_MOUNT_ADDED)
 		E:RegisterEvent("NEW_PET_ADDED", NEW_PET_ADDED)
 		E:RegisterEvent("NEW_TOY_ADDED", NEW_TOY_ADDED)
+		E:RegisterEvent("NEW_WARBAND_SCENE_ADDED", NEW_WARBAND_SCENE_ADDED)
 	end
 end
 
@@ -140,6 +158,7 @@ local function Disable()
 	E:UnregisterEvent("NEW_MOUNT_ADDED", NEW_MOUNT_ADDED)
 	E:UnregisterEvent("NEW_PET_ADDED", NEW_PET_ADDED)
 	E:UnregisterEvent("NEW_TOY_ADDED", NEW_TOY_ADDED)
+	E:UnregisterEvent("NEW_WARBAND_SCENE_ADDED", NEW_WARBAND_SCENE_ADDED)
 end
 
 local function Test()
@@ -154,6 +173,9 @@ local function Test()
 
 	-- A Tiny Set of Warglaves
 	Toast_SetUp("TOY_TEST", 147537, nil, nil, true)
+
+	-- Cultists' Quay
+	Toast_SetUp("TOY_TEST", 5, nil, nil, nil, true)
 end
 
 E:RegisterOptions("collection", {
