@@ -356,8 +356,7 @@ E:RegisterOptions("loot_special", {
 		ilvl = {
 			order = 5,
 			type = "toggle",
-			name = L["SHOW_ILVL"],
-			desc = L["SHOW_ILVL_DESC"],
+			name = L["ILVL"],
 		},
 		threshold = {
 			order = 6,

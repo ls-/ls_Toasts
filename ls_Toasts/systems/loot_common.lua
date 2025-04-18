@@ -330,8 +330,7 @@ E:RegisterOptions("loot_common", {
 		ilvl = {
 			order = 6,
 			type = "toggle",
-			name = L["SHOW_ILVL"],
-			desc = L["SHOW_ILVL_DESC"],
+			name = L["ILVL"],
 		},
 		threshold = {
 			order = 7,
@@ -348,8 +347,8 @@ E:RegisterOptions("loot_common", {
 		quest = {
 			order = 8,
 			type = "toggle",
-			name = L["SHOW_QUEST_ITEMS"],
-			desc = L["SHOW_QUEST_ITEMS_DESC"],
+			name = L["QUEST_ITEMS"],
+			desc = L["QUEST_ITEMS_DESC"],
 		},
 		test = {
 			type = "execute",
