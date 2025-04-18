@@ -52,7 +52,7 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 		if isNew then
 			local name, _, quality, _, _, _, _, _, equipLoc, icon, _, classID, subClassID, _, expansionID = C_Item.GetItemInfo(originalLink)
 			local isLegacyEquipment = ((equipLoc and equipLoc ~= "INVTYPE_NON_EQUIP_IGNORE") or (classID == 3 and subClassID == 11))
-				and expansionID < GetExpansionLevel() -- legacy gear and relics
+				and (expansionID or 0) < GetExpansionLevel() -- legacy gear and relics
 
 			if not name
 			or not (quality and quality >= C.db.profile.types.loot_special.threshold and quality <= 5)

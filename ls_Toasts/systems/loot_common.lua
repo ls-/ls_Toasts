@@ -112,7 +112,7 @@ local function Toast_SetUp(event, link, quantity)
 			name, _, quality, _, _, _, _, _, equipLoc, icon, _, classID, subClassID, bindType, expansionID = C_Item.GetItemInfo(originalLink)
 			isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
 			isLegacyEquipment = ((equipLoc and equipLoc ~= "INVTYPE_NON_EQUIP_IGNORE") or (classID == 3 and subClassID == 11))
-				and expansionID < GetExpansionLevel() -- legacy gear and relics
+				and (expansionID or 0) < GetExpansionLevel() -- legacy gear and relics
 		end
 
 		if not name
