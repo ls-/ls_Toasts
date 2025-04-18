@@ -113,6 +113,8 @@ L["YOU_RECEIVED"] = "You Received"
 -- Retail
 L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cffffd2000|r to disable the filter, or |cffffd200any number above 0|r to set the threshold below which no toasts will be created."
 L["HANDLE_LEFT_CLICK"] = "Handle Left Click"
+L["LEGACY_EQUIPMENT"] = "Legacy Equipment"
+L["LEGACY_EQUIPMENT_DESC"] = "Show toasts for legacy equipment."
 L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID."
 L["QUEST_ITEMS_DESC"] = "Show toasts for quest items regardless of their quality."
 L["TAINT_WARNING"] = "Enabling this option may cause errors when opening or closing certain UI panels while in combat."

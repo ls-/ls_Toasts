@@ -99,6 +99,7 @@ read_globals = {
 	"GetAchievementInfo",
 	"GetArchaeologyRaceInfoByID",
 	"GetCVarBool",
+	"GetExpansionLevel",
 	"GetInstanceInfo",
 	"GetLFGCompletionReward",
 	"GetLFGCompletionRewardItem",
