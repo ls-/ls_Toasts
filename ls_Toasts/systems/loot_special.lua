@@ -55,7 +55,7 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 				and expansionID < GetExpansionLevel() -- legacy gear and relics
 
 			if not name
-			or not (quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
+			or not (quality and quality >= C.db.profile.types.loot_special.threshold and quality <= 5)
 			or (isLegacyEquipment and not C.db.profile.types.loot_special.legacy_equipment) then
 				toast:Release()
 
