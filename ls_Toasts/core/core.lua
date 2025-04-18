@@ -179,40 +179,40 @@ function E:GetScreenQuadrant(frame)
 end
 
 do
-	local slots = {
-		["INVTYPE_HEAD"] = {INVSLOT_HEAD},
-		["INVTYPE_NECK"] = {INVSLOT_NECK},
-		["INVTYPE_SHOULDER"] = {INVSLOT_SHOULDER},
-		["INVTYPE_CHEST"] = {INVSLOT_CHEST},
-		["INVTYPE_ROBE"] = {INVSLOT_CHEST},
-		["INVTYPE_WAIST"] = {INVSLOT_WAIST},
-		["INVTYPE_LEGS"] = {INVSLOT_LEGS},
-		["INVTYPE_FEET"] = {INVSLOT_FEET},
-		["INVTYPE_WRIST"] = {INVSLOT_WRIST},
-		["INVTYPE_HAND"] = {INVSLOT_HAND},
-		["INVTYPE_FINGER"] = {INVSLOT_FINGER1, INVSLOT_FINGER2},
-		["INVTYPE_TRINKET"] = {INVSLOT_TRINKET1, INVSLOT_TRINKET2},
-		["INVTYPE_CLOAK"] = {INVSLOT_BACK},
-		["INVTYPE_WEAPON"] = {INVSLOT_MAINHAND, INVSLOT_OFFHAND},
-		["INVTYPE_2HWEAPON"] = {INVSLOT_MAINHAND},
-		["INVTYPE_WEAPONMAINHAND"] = {INVSLOT_MAINHAND},
-		["INVTYPE_HOLDABLE"] = {INVSLOT_OFFHAND},
-		["INVTYPE_SHIELD"] = {INVSLOT_OFFHAND},
-		["INVTYPE_WEAPONOFFHAND"] = {INVSLOT_OFFHAND},
-		["INVTYPE_RANGED"] = {INVSLOT_RANGED},
-		["INVTYPE_RANGEDRIGHT"] = {INVSLOT_RANGED},
-		["INVTYPE_RELIC"] = {INVSLOT_RANGED},
-		["INVTYPE_THROWN"] = {INVSLOT_RANGED},
-	}
+	local ILVL_LINE = Enum.TooltipDataLineType.ItemLevel
+	local ILVL_PATTERN = "(%d+)"
+
+	local itemCache = {}
 
 	function E:GetItemLevel(itemLink)
-		local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, itemClassID, itemSubClassID = C_Item.GetItemInfo(itemLink)
-
-		-- 3:11 is artefact relic
-		if (itemClassID == 3 and itemSubClassID == 11) or slots[itemEquipLoc] then
-			return C_Item.GetDetailedItemLevelInfo(itemLink) or 0
+		local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
+		if not itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE" then
+			return 0
 		end
 
-		return 0
+		if itemCache[itemLink] then
+			return itemCache[itemLink]
+		end
+
+		local data = C_TooltipInfo.GetHyperlink(itemLink, nil, nil, true)
+		if not data then
+			return 0
+		end
+
+		local ilvl
+		for _, line in next, data.lines do
+			if line.type == ILVL_LINE then
+				ilvl = line.leftText:match(ILVL_PATTERN)
+				if ilvl then
+					ilvl = tonumber(ilvl:trim())
+				end
+
+				break
+			end
+		end
+
+		itemCache[itemLink] = ilvl
+
+		return ilvl or 0
 	end
 end
