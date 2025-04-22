@@ -16,7 +16,6 @@ local tostring = _G.tostring
 -- Mine
 -- GENERATED-DATA-START
 local BLACKLIST = {
-	[  22] = true, -- Birmingham Test Item 3
 	[ 384] = true, -- Dwarf Archaeology Fragment
 	[ 385] = true, -- Troll Archaeology Fragment
 	[ 393] = true, -- Fossil Archaeology Fragment
@@ -1089,6 +1088,7 @@ local BLACKLIST = {
 	[3136] = true, -- Gallagio Loyalty Rewards Club
 	[3137] = true, -- Renown - Gallagio Loyalty Rewards Club
 	[3139] = true, -- Plunder
+	[3140] = true, -- 11.1.5 Arathi - Renown Rank
 	[3142] = true, -- 11.0 Delves - Bountiful Tracker - Brann EXP Cap
 	[3143] = true, -- UNUSED - 11.0 Delves - Bountiful Tracker - Delver's Journey Cap
 	[3144] = true, -- 11.0.5 20th Anniversary - Tracker
@@ -1143,6 +1143,7 @@ local BLACKLIST = {
 	[3279] = true, -- 11. Raid Renown - Gallagio - Raid Buff Acct Tracker
 	[3280] = true, -- 11. Raid Renown - Gallagio - Speed Buff Acct Tracker
 	[3282] = true, -- Gallagio Loyalty Rewards Club
+	[3283] = true, -- Flame's Radiance
 }
 
 local MULT = {

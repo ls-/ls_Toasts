@@ -102,8 +102,10 @@ local function FollowerToast_OnEnter(self)
 		end
 
 		if isOK and link then
-			local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = s_split(":", link)
+			-- colour code, link type, ...
+			local _, _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = s_split(":", link)
 			garrisonFollowerID = tonumber(garrisonFollowerID)
+
 			local data = {
 				garrisonFollowerID = garrisonFollowerID,
 				followerTypeID = C_Garrison.GetFollowerTypeByID(garrisonFollowerID),

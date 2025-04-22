@@ -6,7 +6,7 @@ local _G = getfenv(0)
 local select = _G.select
 
 -- Mine
-local function Toast_OnClick(self)
+local function EntitlementToast_OnClick(self)
 	if IsModifiedClick("DRESSUP") then
 		if self._data.link then
 			DressUpLink(self._data.link)
@@ -44,14 +44,14 @@ local function Toast_OnClick(self)
 	end
 end
 
-local function Toast_OnEnter(self)
+local function EntitlementToast_OnEnter(self)
 	if self._data.tooltip_link and self._data.tooltip_link:find("item") then
 		GameTooltip:SetHyperlink(self._data.tooltip_link)
 		GameTooltip:Show()
 	end
 end
 
-local function Toast_SetUp(event, entitlementType, textureID, name, payloadID, payloadLink)
+local function EntitlementToast_SetUp(event, entitlementType, textureID, name, payloadID, payloadLink)
 	local toast, isNew, quality, _
 
 	if payloadLink then
@@ -104,10 +104,10 @@ local function Toast_SetUp(event, entitlementType, textureID, name, payloadID, p
 	toast._data.sound_file = C.db.profile.types.store.sfx and 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
 
 	if C.db.profile.types.store.tooltip then
-		toast:HookScript("OnEnter", Toast_OnEnter)
+		toast:HookScript("OnEnter", EntitlementToast_OnEnter)
 	end
 
-	toast:HookScript("OnClick", Toast_OnClick)
+	toast:HookScript("OnClick", EntitlementToast_OnClick)
 	toast:Spawn(C.db.profile.types.store.anchor, C.db.profile.types.store.dnd)
 end
 
@@ -136,7 +136,7 @@ local function ENTITLEMENT_DELIVERED(entitlementType, textureID, name, payloadID
 		return C_Timer.After(0.25, function() ENTITLEMENT_DELIVERED(entitlementType, textureID, name, payloadID) end)
 	end
 
-	Toast_SetUp("ENTITLEMENT_DELIVERED", entitlementType, textureID, name, payloadID, link)
+	EntitlementToast_SetUp("ENTITLEMENT_DELIVERED", entitlementType, textureID, name, payloadID, link)
 end
 
 local function RAF_ENTITLEMENT_DELIVERED(entitlementType, textureID, name, payloadID)
@@ -149,31 +149,69 @@ local function RAF_ENTITLEMENT_DELIVERED(entitlementType, textureID, name, paylo
 		return C_Timer.After(0.25, function() RAF_ENTITLEMENT_DELIVERED(entitlementType, textureID, name, payloadID) end)
 	end
 
-	Toast_SetUp("RAF_ENTITLEMENT_DELIVERED", entitlementType, textureID, name, payloadID, link)
+	EntitlementToast_SetUp("RAF_ENTITLEMENT_DELIVERED", entitlementType, textureID, name, payloadID, link)
+end
+
+local function GuildToast_OnClick()
+	if C.db.profile.types.store.left_click and not InCombatLockdown() then
+		if not GuildFrame or not GuildFrame:IsShown() then
+			ToggleGuildFrame()
+		end
+
+		CommunitiesFrame:SetDisplayMode(COMMUNITIES_FRAME_DISPLAY_MODES.GUILD_INFO)
+	end
+end
+
+
+local function GuildToast_SetUp(event, guildName)
+	local toast = E:GetToast()
+
+	toast:SetBackground("store")
+	toast.Title:SetText(L["GUILD_RENAMED"])
+	toast.Text:SetText(guildName)
+	toast.Icon:SetAtlas("tokens-guildChangeName-regular")
+	toast.IconBorder:Show()
+
+	toast._data.event = event
+	toast._data.sound_file = C.db.profile.types.store.sfx and 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
+
+	toast:HookScript("OnClick", GuildToast_OnClick)
+	toast:Spawn(C.db.profile.types.activities.anchor, C.db.profile.types.activities.dnd)
+end
+
+local function REQUESTED_GUILD_RENAME_RESULT(guildName, status)
+	if status == Enum.GuildErrorType.Success then
+		GuildToast_SetUp("REQUESTED_GUILD_RENAME_RESULT", guildName)
+	end
 end
 
 local function Enable()
 	if C.db.profile.types.store.enabled then
 		E:RegisterEvent("ENTITLEMENT_DELIVERED", ENTITLEMENT_DELIVERED)
 		E:RegisterEvent("RAF_ENTITLEMENT_DELIVERED", RAF_ENTITLEMENT_DELIVERED)
+		E:RegisterEvent("REQUESTED_GUILD_RENAME_RESULT", REQUESTED_GUILD_RENAME_RESULT)
 	end
 end
 
 local function Disable()
 	E:UnregisterEvent("ENTITLEMENT_DELIVERED", ENTITLEMENT_DELIVERED)
 	E:UnregisterEvent("RAF_ENTITLEMENT_DELIVERED", RAF_ENTITLEMENT_DELIVERED)
+	E:UnregisterEvent("REQUESTED_GUILD_RENAME_RESULT", REQUESTED_GUILD_RENAME_RESULT)
 end
 
 local function Test()
 	-- WoW Token
 	local name, link, _, _, _, _, _, _, _, icon = C_Item.GetItemInfo(122270)
 	if link then
-		Toast_SetUp("ENTITLEMENT_TEST", Enum.WoWEntitlementType.Item, icon, name, 122270, link)
+		EntitlementToast_SetUp("ENTITLEMENT_TEST", Enum.WoWEntitlementType.Item, icon, name, 122270, link)
 	end
 
 	-- Golden Gryphon
 	name, _, icon = C_MountJournal.GetMountInfoByID(129)
-	Toast_SetUp("ENTITLEMENT_TEST", Enum.WoWEntitlementType.Mount, icon, name, 129)
+	EntitlementToast_SetUp("ENTITLEMENT_TEST", Enum.WoWEntitlementType.Mount, icon, name, 129)
+
+	-- Guild Rename Test
+	GuildToast_SetUp("GUILD_RENAME_TEST", "Guild Rename Test")
 end
 
 E:RegisterOptions("store", {

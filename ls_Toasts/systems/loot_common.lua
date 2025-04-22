@@ -102,97 +102,102 @@ local function Toast_SetUp(event, link, quantity)
 	end
 
 	if isNew then
-		local name, quality, icon, _, classID, subClassID, bindType, isQuestItem
+		local name, quality, equipLoc, icon, _, classID, subClassID, bindType, expansionID, isQuestItem, isLegacyEquipment
 
 		if linkType == "battlepet" then
 			local _, speciesID, _, breedQuality, _ = s_split(":", originalLink)
 			name, icon = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
 			quality = tonumber(breedQuality)
 		else
-			name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = C_Item.GetItemInfo(originalLink)
+			name, _, quality, _, _, _, _, _, equipLoc, icon, _, classID, subClassID, bindType, expansionID = C_Item.GetItemInfo(originalLink)
 			isQuestItem = bindType == 4 or (classID == 12 and subClassID == 0)
+			isLegacyEquipment = ((equipLoc and equipLoc ~= "INVTYPE_NON_EQUIP_IGNORE") or (classID == 3 and subClassID == 11))
+				and (expansionID or 0) < GetExpansionLevel() -- legacy gear and relics
 		end
 
-		if name and ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
-			or (C.db.profile.types.loot_common.quest and isQuestItem)) then
-			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
-			local title = L["YOU_RECEIVED"]
-			local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
-
-			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
-
-			if quality >= C.db.profile.colors.threshold then
-				if C.db.profile.colors.name then
-					name = color.hex .. name .. "|r"
-				end
-
-				if C.db.profile.colors.border then
-					toast.Border:SetVertexColor(color.r, color.g, color.b)
-				end
-
-				if C.db.profile.colors.icon_border then
-					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-				end
-			end
-
-			if C.db.profile.types.loot_common.ilvl then
-				local iLevel = E:GetItemLevel(originalLink)
-
-				if iLevel > 0 then
-					name = "[" .. color.hex .. iLevel .. "|r] " .. name
-				end
-			end
-
-			if quality == 5 then
-				title = L["ITEM_LEGENDARY"]
-				soundFile = 63971 -- SOUNDKIT.UI_LEGENDARY_LOOT_TOAST
-
-				toast:SetBackground("legendary")
-
-				if not toast.Dragon.isHidden then
-					toast.Dragon:Show()
-				end
-			end
-
-			if not toast.IconHL.isHidden then
-				toast.IconHL:SetShown(isQuestItem)
-			end
-
-			local reagentQuality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(originalLink)
-			if not reagentQuality then
-				reagentQuality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(originalLink)
-			end
-
-			if reagentQuality then
-				reagentQuality = C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
-				if reagentQuality then
-					toast.IconText3:SetText(reagentQuality)
-					toast.IconText3BG:Show()
-				end
-			end
-
-			toast.Title:SetText(title)
-			toast.Text:SetText(name)
-			toast.Icon:SetTexture(icon)
-			toast.IconBorder:Show()
-			toast.IconText1:SetAnimatedValue(quantity, true)
-
-			toast._data.count = quantity
-			toast._data.event = event
-			toast._data.item_id = itemID
-			toast._data.link = sanitizedLink
-			toast._data.sound_file = C.db.profile.types.loot_common.sfx and soundFile
-			toast._data.tooltip_link = originalLink
-
-			if C.db.profile.types.loot_common.tooltip then
-				toast:HookScript("OnEnter", Toast_OnEnter)
-			end
-
-			toast:HookScript("OnClick", Toast_OnClick)
-			toast:Spawn(C.db.profile.types.loot_common.anchor, C.db.profile.types.loot_common.dnd)
-		else
+		if not name
+		or not ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5) or (isQuestItem and C.db.profile.types.loot_common.quest))
+		or (isLegacyEquipment and not C.db.profile.types.loot_common.legacy_equipment) then
 			toast:Release()
+
+			return
 		end
+
+		local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
+		local title = L["YOU_RECEIVED"]
+		local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+
+		toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
+
+		if quality >= C.db.profile.colors.threshold then
+			if C.db.profile.colors.name then
+				name = color.hex .. name .. "|r"
+			end
+
+			if C.db.profile.colors.border then
+				toast.Border:SetVertexColor(color.r, color.g, color.b)
+			end
+
+			if C.db.profile.colors.icon_border then
+				toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+			end
+		end
+
+		if C.db.profile.types.loot_common.ilvl then
+			local iLevel = E:GetItemLevel(originalLink)
+
+			if iLevel > 0 then
+				name = "[" .. color.hex .. iLevel .. "|r] " .. name
+			end
+		end
+
+		if quality == 5 then
+			title = L["ITEM_LEGENDARY"]
+			soundFile = 63971 -- SOUNDKIT.UI_LEGENDARY_LOOT_TOAST
+
+			toast:SetBackground("legendary")
+
+			if not toast.Dragon.isHidden then
+				toast.Dragon:Show()
+			end
+		end
+
+		if not toast.IconHL.isHidden then
+			toast.IconHL:SetShown(isQuestItem)
+		end
+
+		local reagentQuality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(originalLink)
+		if not reagentQuality then
+			reagentQuality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(originalLink)
+		end
+
+		if reagentQuality then
+			reagentQuality = C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
+			if reagentQuality then
+				toast.IconText3:SetText(reagentQuality)
+				toast.IconText3BG:Show()
+			end
+		end
+
+		toast.Title:SetText(title)
+		toast.Text:SetText(name)
+		toast.Icon:SetTexture(icon)
+		toast.IconBorder:Show()
+		toast.IconText1:SetAnimatedValue(quantity, true)
+
+		toast._data.count = quantity
+		toast._data.event = event
+		toast._data.item_id = itemID
+		toast._data.link = sanitizedLink
+		toast._data.sound_file = C.db.profile.types.loot_common.sfx and soundFile
+		toast._data.tooltip_link = originalLink
+
+		if C.db.profile.types.loot_common.tooltip then
+			toast:HookScript("OnEnter", Toast_OnEnter)
+		end
+
+		toast:HookScript("OnClick", Toast_OnClick)
+		toast:Spawn(C.db.profile.types.loot_common.anchor, C.db.profile.types.loot_common.dnd)
 	else
 		if isQueued then
 			toast._data.count = toast._data.count + quantity
@@ -267,6 +272,9 @@ local function Test()
 		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
 	end
 
+	-- relic, Apocron's Energy Core
+	Toast_SetUp("COMMON_LOOT_TEST", "item:147760::::::::70:64::3:1:3524:1:28:624:::::", 1)
+
 	-- Obsidian Seared Facesmasher, Rank 5
 	Toast_SetUp("COMMON_LOOT_TEST", "item:190513:6643:::::::70:263::13:6:8836:8840:8902:8802:8846:8793:7:28:2164:29:40:30:36:38:8:40:185:45:198046:46:194566:::::", 1)
 
@@ -281,6 +289,7 @@ E:RegisterOptions("loot_common", {
 	sfx = true,
 	tooltip = true,
 	ilvl = true,
+	legacy_equipment = true,
 	quest = false,
 	threshold = 1,
 }, {
@@ -330,8 +339,7 @@ E:RegisterOptions("loot_common", {
 		ilvl = {
 			order = 6,
 			type = "toggle",
-			name = L["SHOW_ILVL"],
-			desc = L["SHOW_ILVL_DESC"],
+			name = L["ILVL"],
 		},
 		threshold = {
 			order = 7,
@@ -345,11 +353,17 @@ E:RegisterOptions("loot_common", {
 				[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r",
 			},
 		},
-		quest = {
+		legacy_equipment = {
 			order = 8,
 			type = "toggle",
-			name = L["SHOW_QUEST_ITEMS"],
-			desc = L["SHOW_QUEST_ITEMS_DESC"],
+			name = L["LEGACY_EQUIPMENT"],
+			desc = L["LEGACY_EQUIPMENT_DESC"],
+		},
+		quest = {
+			order = 9,
+			type = "toggle",
+			name = L["QUEST_ITEMS"],
+			desc = L["QUEST_ITEMS_DESC"],
 		},
 		test = {
 			type = "execute",

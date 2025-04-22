@@ -50,110 +50,117 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 		local sanitizedLink, originalLink, _, itemID = E:SanitizeLink(link)
 		local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
 		if isNew then
-			local name, _, quality, _, _, _, _, _, _, icon = C_Item.GetItemInfo(originalLink)
-			if name and (quality and quality >= C.db.profile.types.loot_special.threshold and quality <= 5) then
-				local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
-				local title = L["YOU_RECEIVED"]
-				local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
-				local bgTexture
+			local name, _, quality, _, _, _, _, _, equipLoc, icon, _, classID, subClassID, _, expansionID = C_Item.GetItemInfo(originalLink)
+			local isLegacyEquipment = ((equipLoc and equipLoc ~= "INVTYPE_NON_EQUIP_IGNORE") or (classID == 3 and subClassID == 11))
+				and (expansionID or 0) < GetExpansionLevel() -- legacy gear and relics
 
-				toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
-
-				if lessAwesome then
-					soundFile = 51402 -- SOUNDKIT.UI_RAID_LOOT_TOAST_LESSER_ITEM_WON
-				elseif isUpgraded then
-					if baseQuality and baseQuality < quality then
-						title = L["ITEM_UPGRADED_FORMAT"]:format(color.hex, _G["ITEM_QUALITY" .. quality .. "_DESC"])
-					else
-						title = L["ITEM_UPGRADED"]
-					end
-
-					soundFile = 51561 -- SOUNDKIT.UI_WARFORGED_ITEM_LOOT_TOAST
-					bgTexture = "upgrade"
-
-					local upgradeTexture = LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
-
-					for i = 1, 5 do
-						toast["Arrow" .. i]:SetAtlas(upgradeTexture.arrow, true)
-					end
-				elseif isLegendary then
-					title = L["ITEM_LEGENDARY"]
-					soundFile = 63971 -- SOUNDKIT.UI_LEGENDARY_LOOT_TOAST
-					bgTexture = "legendary"
-
-					if not toast.Dragon.isHidden then
-						toast.Dragon:Show()
-					end
-				elseif isAzerite then
-					title = L["ITEM_AZERITE_EMPOWERED"]
-					soundFile = 118238 -- SOUNDKIT.UI_AZERITE_EMPOWERED_ITEM_LOOT_TOAST
-					bgTexture = "azerite"
-				elseif isCorrupted then
-					title = L["ITEM_CORRUPTED"]
-					soundFile = 147833 -- SOUNDKIT.UI_CORRUPTED_ITEM_LOOT_TOAST
-				end
-
-				if rollType then
-					rollType = rollTypes[rollType]
-					if rollType then
-						toast.IconText3:SetFormattedText(ROLL_TEMPLATE, roll, rollType)
-						toast.IconText3BG:Show()
-					end
-				end
-
-				if factionGroup then
-					bgTexture = s_lower(factionGroup)
-				end
-
-				if quality >= C.db.profile.colors.threshold then
-					if C.db.profile.colors.name then
-						name = color.hex .. name .. "|r"
-					end
-
-					if C.db.profile.colors.border then
-						toast.Border:SetVertexColor(color.r, color.g, color.b)
-					end
-
-					if C.db.profile.colors.icon_border then
-						toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
-					end
-				end
-
-				if C.db.profile.types.loot_special.ilvl then
-					local iLevel = E:GetItemLevel(originalLink)
-
-					if iLevel > 0 then
-						name = "[" .. color.hex .. iLevel .. "|r] " .. name
-					end
-				end
-
-				if bgTexture then
-					toast:SetBackground(bgTexture)
-				end
-
-				toast.Title:SetText(title)
-				toast.Text:SetText(name)
-				toast.Icon:SetTexture(icon)
-				toast.IconBorder:Show()
-				toast.IconText1:SetAnimatedValue(quantity, true)
-
-				toast._data.count = quantity
-				toast._data.event = event
-				toast._data.item_id = itemID
-				toast._data.link = sanitizedLink
-				toast._data.show_arrows = isUpgraded
-				toast._data.sound_file = C.db.profile.types.loot_special.sfx and soundFile
-				toast._data.tooltip_link = originalLink
-
-				if C.db.profile.types.loot_special.tooltip then
-					toast:HookScript("OnEnter", Toast_OnEnter)
-				end
-
-				toast:HookScript("OnClick", Toast_OnClick)
-				toast:Spawn(C.db.profile.types.loot_special.anchor, C.db.profile.types.loot_special.dnd)
-			else
+			if not name
+			or not (quality and quality >= C.db.profile.types.loot_special.threshold and quality <= 5)
+			or (isLegacyEquipment and not C.db.profile.types.loot_special.legacy_equipment) then
 				toast:Release()
+
+				return
 			end
+
+			local color = ITEM_QUALITY_COLORS[quality] or ITEM_QUALITY_COLORS[1]
+			local title = L["YOU_RECEIVED"]
+			local soundFile = 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			local bgTexture
+
+			toast.IconText1.PostSetAnimatedValue = PostSetAnimatedValue
+
+			if lessAwesome then
+				soundFile = 51402 -- SOUNDKIT.UI_RAID_LOOT_TOAST_LESSER_ITEM_WON
+			elseif isUpgraded then
+				if baseQuality and baseQuality < quality then
+					title = L["ITEM_UPGRADED_FORMAT"]:format(color.hex, _G["ITEM_QUALITY" .. quality .. "_DESC"])
+				else
+					title = L["ITEM_UPGRADED"]
+				end
+
+				soundFile = 51561 -- SOUNDKIT.UI_WARFORGED_ITEM_LOOT_TOAST
+				bgTexture = "upgrade"
+
+				local upgradeTexture = LOOTUPGRADEFRAME_QUALITY_TEXTURES[quality] or LOOTUPGRADEFRAME_QUALITY_TEXTURES[2]
+
+				for i = 1, 5 do
+					toast["Arrow" .. i]:SetAtlas(upgradeTexture.arrow, true)
+				end
+			elseif isLegendary then
+				title = L["ITEM_LEGENDARY"]
+				soundFile = 63971 -- SOUNDKIT.UI_LEGENDARY_LOOT_TOAST
+				bgTexture = "legendary"
+
+				if not toast.Dragon.isHidden then
+					toast.Dragon:Show()
+				end
+			elseif isAzerite then
+				title = L["ITEM_AZERITE_EMPOWERED"]
+				soundFile = 118238 -- SOUNDKIT.UI_AZERITE_EMPOWERED_ITEM_LOOT_TOAST
+				bgTexture = "azerite"
+			elseif isCorrupted then
+				title = L["ITEM_CORRUPTED"]
+				soundFile = 147833 -- SOUNDKIT.UI_CORRUPTED_ITEM_LOOT_TOAST
+			end
+
+			if rollType then
+				rollType = rollTypes[rollType]
+				if rollType then
+					toast.IconText3:SetFormattedText(ROLL_TEMPLATE, roll, rollType)
+					toast.IconText3BG:Show()
+				end
+			end
+
+			if factionGroup then
+				bgTexture = s_lower(factionGroup)
+			end
+
+			if quality >= C.db.profile.colors.threshold then
+				if C.db.profile.colors.name then
+					name = color.hex .. name .. "|r"
+				end
+
+				if C.db.profile.colors.border then
+					toast.Border:SetVertexColor(color.r, color.g, color.b)
+				end
+
+				if C.db.profile.colors.icon_border then
+					toast.IconBorder:SetVertexColor(color.r, color.g, color.b)
+				end
+			end
+
+			if C.db.profile.types.loot_special.ilvl then
+				local iLevel = E:GetItemLevel(originalLink)
+
+				if iLevel > 0 then
+					name = "[" .. color.hex .. iLevel .. "|r] " .. name
+				end
+			end
+
+			if bgTexture then
+				toast:SetBackground(bgTexture)
+			end
+
+			toast.Title:SetText(title)
+			toast.Text:SetText(name)
+			toast.Icon:SetTexture(icon)
+			toast.IconBorder:Show()
+			toast.IconText1:SetAnimatedValue(quantity, true)
+
+			toast._data.count = quantity
+			toast._data.event = event
+			toast._data.item_id = itemID
+			toast._data.link = sanitizedLink
+			toast._data.show_arrows = isUpgraded
+			toast._data.sound_file = C.db.profile.types.loot_special.sfx and soundFile
+			toast._data.tooltip_link = originalLink
+
+			if C.db.profile.types.loot_special.tooltip then
+				toast:HookScript("OnEnter", Toast_OnEnter)
+			end
+
+			toast:HookScript("OnClick", Toast_OnClick)
+			toast:Spawn(C.db.profile.types.loot_special.anchor, C.db.profile.types.loot_special.dnd)
 		else
 			toast._data.count = toast._data.count + quantity
 
@@ -282,6 +289,12 @@ local function Test()
 		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, true)
 	end
 
+	-- heirloom, Tattered Dreadmist Mask
+	_, link = C_Item.GetItemInfo("item:122250::::::::70:64:::::::::")
+	if link then
+		Toast_SetUp("SPECIAL_LOOT_TEST", link, 1, nil, nil, nil, nil, true)
+	end
+
 	-- azerite, Vest of the Champion
 	_, link = C_Item.GetItemInfo("item:159906::::::::110:581::11::::")
 	if link then
@@ -308,6 +321,7 @@ E:RegisterOptions("loot_special", {
 	sfx = true,
 	tooltip = true,
 	ilvl = true,
+	legacy_equipment = true,
 	threshold = 1,
 }, {
 	name = L["TYPE_LOOT_SPECIAL"],
@@ -356,8 +370,7 @@ E:RegisterOptions("loot_special", {
 		ilvl = {
 			order = 5,
 			type = "toggle",
-			name = L["SHOW_ILVL"],
-			desc = L["SHOW_ILVL_DESC"],
+			name = L["ILVL"],
 		},
 		threshold = {
 			order = 6,
@@ -370,6 +383,12 @@ E:RegisterOptions("loot_special", {
 				[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r",
 				[5] = ITEM_QUALITY_COLORS[5].hex .. ITEM_QUALITY5_DESC .. "|r",
 			},
+		},
+		legacy_equipment = {
+			order = 7,
+			type = "toggle",
+			name = L["LEGACY_EQUIPMENT"],
+			desc = L["LEGACY_EQUIPMENT_DESC"],
 		},
 		test = {
 			type = "execute",
