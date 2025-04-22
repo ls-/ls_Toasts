@@ -5,6 +5,7 @@
 ## Notes: Better toasts, cheers!
 ## IconTexture: Interface\AddOns\ls_Toasts\assets\logo-64
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
+## LoadSavedVariablesFirst: 1
 
 embeds\_embeds.xml
 locales\_locales.xml
