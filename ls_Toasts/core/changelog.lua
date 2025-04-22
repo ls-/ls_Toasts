@@ -6,14 +6,10 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 11.1.0 support.
+- Added 11.1.5 support.
 
-### Achievement
+### Loot (Common) & Loot (Special)
 
-- From now on only new achievements will be toasted. You can enable toasts for previously earned achievements at /LST >
-  Toast Types > Achievement > Earned.
-
-### Collection
-
-- Added Warband Scene aka Campsite toasts.
+- Added an option to suppress toasts for legacy armour and weapons. You can disable toasts for legacy equipment by
+  unchecking /LST > Toast Types > Loot (Common|Special) > Legacy Equipment, enabled by default.
 ]]
