@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 110107.01
+
+- Added 11.1.7 support.
+
 ## Version 110105.01
 
 - Added 11.1.5 support.
