@@ -1144,6 +1144,10 @@ local BLACKLIST = {
 	[3280] = true, -- 11. Raid Renown - Gallagio - Speed Buff Acct Tracker
 	[3282] = true, -- Gallagio Loyalty Rewards Club
 	[3283] = true, -- Flame's Radiance
+	[3313] = true, -- 11. Raid Renown - Gallagio - Raid Buff Acct Tracker
+	[3314] = true, -- 11. Raid Renown - Gallagio - Speed Buff Acct Tracker
+	[3315] = true, -- Renown - Gallagio Loyalty Rewards Club
+	[3360] = true, -- [DNT] 11.1.5 Mid-Season - Turbo-Boost Quest Turn-In Tracker
 }
 
 local MULT = {
