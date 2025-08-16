@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 110200.02
+
+### Loot (Currency)
+
+- Fixed an issue during the currency transfer.
+
 ## Version 110200.01
 
 - Added 11.2.0 support.
