@@ -1269,7 +1269,7 @@ local function CURRENCY_DISPLAY_UPDATE(id, _, quantity)
 		return
 	end
 
-	if not C.db.profile.types.loot_currency.track_loss and quantity < 0 then
+	if not quantity or (not C.db.profile.types.loot_currency.track_loss and quantity < 0) then
 		return
 	end
 
