@@ -6,7 +6,5 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-### Loot (Currency)
-
-- Fixed an issue during the currency transfer.
+- Added 11.2.5 support.
 ]]
