@@ -1149,7 +1149,7 @@ local BLACKLIST = {
 	[3248] = true, -- Blacksmithing Specialization Reset
 	[3253] = true, -- 11.X Delves - Bountiful Tracker - Progress Cap - Mislaid
 	[3254] = true, -- Chase's Test Currency [DNT]
-	[3269] = true, -- Ethereal Voidsplinter
+	[3267] = true, -- Felforged Bronze
 	[3270] = true, -- 11.2 Delves - Personal Tracker - S3 Weekly Elise Turn-In(Hidden)
 	[3271] = true, -- Renown - Season 3 Delves
 	[3272] = true, -- Delver's Journey
@@ -1170,7 +1170,9 @@ local BLACKLIST = {
 	[3313] = true, -- 11. Raid Renown - Gallagio - Raid Buff Acct Tracker
 	[3314] = true, -- 11. Raid Renown - Gallagio - Speed Buff Acct Tracker
 	[3315] = true, -- Renown - Gallagio Loyalty Rewards Club
-	[3360] = true, -- [DNT] 11.1.5 Mid-Season - Turbo-Boost Quest Turn-In Tracker
+	[3360] = true, -- [DNT] 11.1.5 Midseason - Turbo-Boost Quest Turn-In Tracker
+	[3364] = true, -- [DNT] 11.2.5 Midseason - Turbo-Boost Quest Turn-In Tracker
+	[3372] = true, -- Bronze
 }
 
 local MULT = {
