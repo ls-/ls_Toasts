@@ -48,6 +48,10 @@ local BLACKLISTED_EVENTS = {
 	["TRANSMOG_COSMETIC_COLLECTION_SOURCE_ADDED"] = true,
 }
 
+local BLACKLISTED_REGISTRY_EVENTS = {
+	["NEW_HOUSING_ITEM_ACQUIRED"] = true,
+}
+
 local function updateCallback()
 	P:UpdateAnchors()
 	P:UpdateDB()
@@ -91,6 +95,17 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 			P:Call(self.UnregisterEvent, self, event)
 		end
 	end)
+
+	-- bruh...
+	for event in next, BLACKLISTED_REGISTRY_EVENTS do
+		EventRegistry:UnregisterFrameEvent(event)
+
+		for _, callbackTable in next, EventRegistry:GetCallbackTables() do
+			if callbackTable[event] then
+				callbackTable[event] = nil
+			end
+		end
+	end
 
 	E:RegisterEvent("PLAYER_LOGIN", function()
 		P:CreateConfig()
