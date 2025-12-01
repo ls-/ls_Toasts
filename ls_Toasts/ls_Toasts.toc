@@ -1,7 +1,7 @@
-## Interface: 110205
+## Interface: 110207, 120000
 ## Author: lightspark
-## Version: 110205.01
-## Title: LS: |cff00cc99Toasts|r
+## Version: 110207.01
+## Title: LS: |cff1cd3a2Toasts|r
 ## Notes: Better toasts, cheers!
 ## IconTexture: Interface\AddOns\ls_Toasts\assets\logo-64
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
