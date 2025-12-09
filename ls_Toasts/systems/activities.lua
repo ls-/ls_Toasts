@@ -31,6 +31,7 @@ local function Toast_SetUp(event, perksActivityID)
 		toast._data.event = event
 		toast._data.activity_id = perksActivityID
 		toast._data.sound_file = C.db.profile.types.activities.sfx and 219929 -- SOUNDKIT.TRADING_POST_UI_COMPLETED_ACTIVITY_TOAST
+		toast._data.vfx = C.db.profile.types.activities.vfx
 
 		toast:HookScript("OnClick", Toast_OnClick)
 		toast:Spawn(C.db.profile.types.activities.anchor, C.db.profile.types.activities.dnd)
@@ -61,6 +62,7 @@ E:RegisterOptions("activities", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 }, {
 	name = L["TYPE_ACTIVITIES"],
 	get = function(info)
@@ -94,6 +96,11 @@ E:RegisterOptions("activities", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		vfx = {
+			order = 4,
+			type = "toggle",
+			name = L["VFX"],
 		},
 		test = {
 			type = "execute",

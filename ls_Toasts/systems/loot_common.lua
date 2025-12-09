@@ -195,6 +195,7 @@ local function Toast_SetUp(event, link, quantity)
 		toast._data.item_id = itemID
 		toast._data.link = sanitizedLink
 		toast._data.sound_file = C.db.profile.types.loot_common.sfx and soundFile
+		toast._data.vfx = C.db.profile.types.loot_common.vfx
 		toast._data.tooltip_link = originalLink
 
 		if C.db.profile.types.loot_common.tooltip then
@@ -292,6 +293,7 @@ E:RegisterOptions("loot_common", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 	tooltip = true,
 	ilvl = true,
 	legacy_equipment = true,
@@ -336,18 +338,23 @@ E:RegisterOptions("loot_common", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		tooltip = {
+		vfx = {
 			order = 5,
+			type = "toggle",
+			name = L["VFX"],
+		},
+		tooltip = {
+			order = 6,
 			type = "toggle",
 			name = L["TOOLTIPS"],
 		},
 		ilvl = {
-			order = 6,
+			order = 7,
 			type = "toggle",
 			name = L["ILVL"],
 		},
 		threshold = {
-			order = 7,
+			order = 8,
 			type = "select",
 			name = L["LOOT_THRESHOLD"],
 			values = {
@@ -359,13 +366,13 @@ E:RegisterOptions("loot_common", {
 			},
 		},
 		legacy_equipment = {
-			order = 8,
+			order = 9,
 			type = "toggle",
 			name = L["LEGACY_EQUIPMENT"],
 			desc = L["LEGACY_EQUIPMENT_DESC"],
 		},
 		quest = {
-			order = 9,
+			order = 10,
 			type = "toggle",
 			name = L["QUEST_ITEMS"],
 			desc = L["QUEST_ITEMS_DESC"],

@@ -196,7 +196,7 @@ function P:SetSkin(toast, id)
 	end
 	shine:SetVertexColor(unpack(skin.shine.color))
 
-	toast.AnimIn.Anim5:SetOffset(224 - skin.shine.size[1], 0)
+	toast.AnimInFull.Anim5:SetOffset(224 - skin.shine.size[1], 0)
 
 	P.CallbackHandler:Fire("SkinSet", toast)
 	P.CallbackHandler:Fire("SetSkin", toast) -- Deprecated

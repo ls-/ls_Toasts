@@ -108,6 +108,7 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy, isCampsite)
 		toast._data.is_toy = isToy
 		toast._data.is_campsite = isCampsite
 		toast._data.sound_file = C.db.profile.types.collection.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+		toast._data.vfx = C.db.profile.types.collection.vfx
 
 		toast:HookScript("OnClick", Toast_OnClick)
 		toast:Spawn(C.db.profile.types.collection.anchor, C.db.profile.types.collection.dnd)
@@ -183,6 +184,7 @@ E:RegisterOptions("collection", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 	left_click = false,
 }, {
 	name = L["TYPE_COLLECTION"],
@@ -223,8 +225,13 @@ E:RegisterOptions("collection", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		left_click = {
+		vfx = {
 			order = 5,
+			type = "toggle",
+			name = L["VFX"],
+		},
+		left_click = {
+			order = 6,
 			type = "toggle",
 			name = L["HANDLE_LEFT_CLICK"],
 			desc = L["TAINT_WARNING"],

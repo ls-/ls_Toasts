@@ -153,6 +153,7 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 			toast._data.link = sanitizedLink
 			toast._data.show_arrows = isUpgraded
 			toast._data.sound_file = C.db.profile.types.loot_special.sfx and soundFile
+			toast._data.vfx = C.db.profile.types.loot_special.vfx
 			toast._data.tooltip_link = originalLink
 
 			if C.db.profile.types.loot_special.tooltip then
@@ -319,6 +320,7 @@ E:RegisterOptions("loot_special", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 	tooltip = true,
 	ilvl = true,
 	legacy_equipment = true,
@@ -362,18 +364,23 @@ E:RegisterOptions("loot_special", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		tooltip = {
+		vfx = {
 			order = 4,
+			type = "toggle",
+			name = L["VFX"],
+		},
+		tooltip = {
+			order = 5,
 			type = "toggle",
 			name = L["TOOLTIPS"],
 		},
 		ilvl = {
-			order = 5,
+			order = 6,
 			type = "toggle",
 			name = L["ILVL"],
 		},
 		threshold = {
-			order = 6,
+			order = 7,
 			type = "select",
 			name = L["LOOT_THRESHOLD"],
 			values = {
@@ -385,7 +392,7 @@ E:RegisterOptions("loot_special", {
 			},
 		},
 		legacy_equipment = {
-			order = 7,
+			order = 8,
 			type = "toggle",
 			name = L["LEGACY_EQUIPMENT"],
 			desc = L["LEGACY_EQUIPMENT_DESC"],

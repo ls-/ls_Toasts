@@ -85,6 +85,7 @@ local function Toast_SetUp(event, powerID)
 		toast._data.event = event
 		toast._data.runecarving_id = powerID
 		toast._data.sound_file = C.db.profile.types.runecarving.sfx and 166314 -- SOUNDKIT.UI_RUNECARVING_OPEN_MAIN_WINDOW
+		toast._data.vfx = C.db.profile.types.runecarving.vfx
 
 		if C.db.profile.types.runecarving.tooltip then
 			toast:HookScript("OnEnter", Toast_OnEnter)
@@ -124,6 +125,7 @@ E:RegisterOptions("runecarving", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 	tooltip = true,
 }, {
 	name = L["TYPE_RUNECARVING"],
@@ -159,8 +161,13 @@ E:RegisterOptions("runecarving", {
 			type = "toggle",
 			name = L["SFX"],
 		},
+		vfx = {
+			order = 5,
+			type = "toggle",
+			name = L["VFX"],
+		},
 		tooltip = {
-			order = 4,
+			order = 6,
 			type = "toggle",
 			name = L["TOOLTIPS"],
 		},

@@ -75,6 +75,7 @@ local function Toast_SetUp(event, achievementID, alreadyEarned, criteriaDescript
 
 	toast._data.event = event
 	toast._data.ach_id = achievementID
+	toast._data.vfx = C.db.profile.types.achievement.vfx
 
 	if C.db.profile.types.achievement.tooltip then
 		toast:HookScript("OnEnter", Toast_OnEnter)
@@ -127,6 +128,7 @@ E:RegisterOptions("achievement", {
 	enabled = true,
 	anchor = 1,
 	dnd = false,
+	vfx = true,
 	tooltip = true,
 	earned = false,
 }, {
@@ -158,13 +160,18 @@ E:RegisterOptions("achievement", {
 			name = L["DND"],
 			desc = L["DND_TOOLTIP"],
 		},
-		tooltip = {
+		vfx = {
 			order = 3,
+			type = "toggle",
+			name = L["VFX"],
+		},
+		tooltip = {
+			order = 4,
 			type = "toggle",
 			name = L["TOOLTIPS"],
 		},
 		earned = {
-			order = 4,
+			order = 5,
 			type = "toggle",
 			name = L["EARNED"],
 		},
