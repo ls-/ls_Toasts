@@ -60,6 +60,11 @@ local function delayedUpdatePatterns()
 	C_Timer.After(0.1, updatePatterns)
 end
 
+-- a cutdown and always available version of Professions.GetChatIconMarkupForQuality
+local function getIconForQuality(quality)
+	return CreateAtlasMarkupWithAtlasSize("professions-chaticon-quality-tier" .. quality, 0, 1, nil, nil, nil, 0.5);
+end
+
 local function Toast_OnClick(self)
 	if self._data.link and IsModifiedClick("DRESSUP") then
 		DressUpLink(self._data.link)
@@ -172,7 +177,7 @@ local function Toast_SetUp(event, link, quantity)
 		end
 
 		if reagentQuality then
-			reagentQuality = C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
+			reagentQuality = getIconForQuality(reagentQuality)
 			if reagentQuality then
 				toast.IconText3:SetText(reagentQuality)
 				toast.IconText3BG:Show()
