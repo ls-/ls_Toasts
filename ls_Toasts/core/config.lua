@@ -261,7 +261,7 @@ function P:CreateConfig()
 			about = {
 				order = 110,
 				type = "group",
-				name = "|cff00cc99" .. L["INFORMATION"] .. "|r",
+				name = L["INFO"],
 				args = {
 					desc = {
 						order = 1,
