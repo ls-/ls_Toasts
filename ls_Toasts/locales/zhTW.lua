@@ -57,6 +57,8 @@ L["YOU_RECEIVED"] = "你收到"
 -- Retail
 L["CURRENCY_THRESHOLD_DESC"] = "輸入 |cffffd200-1|r 來忽略此貨幣，|cffffd2000|r 來停用過濾，或|cffffd200任何大於 0 的數字|r來設定值臨界值，低於這個數值將不會顯示通知。"
 L["HANDLE_LEFT_CLICK"] = "允許左鍵點擊"
+L["LEGACY_EQUIPMENT"] = "舊版裝備"
+L["LEGACY_EQUIPMENT_DESC"] = "顯示舊版裝備的彈出通知"
 L["NEW_CURRENCY_FILTER_DESC"] = "輸入兌換通貨 ID"
 L["TAINT_WARNING"] = "啟用此選項可能會在戰鬥中打開或關閉某些UI面板時導致錯誤。"
 L["THRESHOLD"] = "數量最少要"
