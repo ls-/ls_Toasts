@@ -425,7 +425,7 @@ E:RegisterOptions("loot_common", {
 	vfx = true,
 	tooltip = true,
 	ilvl = true,
-	legacy_equipment = false,
+	legacy_equipment = true,
 	quest = false,
 	threshold = 1,
 	filters = {},
