@@ -102,6 +102,7 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 
 	toast._data.event = event
 	toast._data.sound_file = C.db.profile.types.instance.sfx and soundFile
+	toast._data.vfx = C.db.profile.types.instance.vfx
 	toast._data.used_slots = usedSlots
 
 	toast:Spawn(C.db.profile.types.instance.anchor, C.db.profile.types.instance.dnd)
@@ -152,6 +153,7 @@ E:RegisterOptions("instance", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 }, {
 	name = L["TYPE_DUNGEON"],
 	get = function(info)
@@ -185,6 +187,11 @@ E:RegisterOptions("instance", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		vfx = {
+			order = 4,
+			type = "toggle",
+			name = L["VFX"],
 		},
 		test = {
 			type = "execute",

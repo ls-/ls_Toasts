@@ -48,6 +48,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		toast._data.event = event
 		toast._data.link = link
 		toast._data.sound_file = C.db.profile.types.transmog.sfx and 187694 -- SOUNDKIT.UI_COSMETIC_ITEM_TOAST_SHOW
+		toast._data.vfx = C.db.profile.types.transmog.vfx
 		toast._data.source_id = sourceID
 		toast._data.visual_id = visualID
 
@@ -170,6 +171,7 @@ E:RegisterOptions("transmog", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 	left_click = false,
 }, {
 	name = L["TYPE_TRANSMOG"],
@@ -205,8 +207,13 @@ E:RegisterOptions("transmog", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		left_click = {
+		vfx = {
 			order = 4,
+			type = "toggle",
+			name = L["VFX"],
+		},
+		left_click = {
+			order = 5,
 			type = "toggle",
 			name = L["HANDLE_LEFT_CLICK"],
 			desc = L["TAINT_WARNING"],

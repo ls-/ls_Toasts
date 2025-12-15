@@ -1237,6 +1237,7 @@ local function Toast_SetUp(event, id, quantity)
 			toast._data.event = event
 			toast._data.link = link
 			toast._data.sound_file = C.db.profile.types.loot_currency.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			toast._data.vfx = C.db.profile.types.loot_currency.vfx
 			toast._data.tooltip_link = link
 
 			if C.db.profile.types.loot_currency.tooltip then
@@ -1435,6 +1436,7 @@ E:RegisterOptions("loot_currency", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 	tooltip = true,
 	track_loss = false,
 	filters = {
@@ -1482,36 +1484,41 @@ E:RegisterOptions("loot_currency", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		tooltip = {
+		vfx = {
 			order = 4,
+			type = "toggle",
+			name = L["VFX"],
+		},
+		tooltip = {
+			order = 5,
 			type = "toggle",
 			name = L["TOOLTIPS"],
 		},
 		track_loss = {
-			order = 5,
+			order = 6,
 			type = "toggle",
 			name = L["TRACK_LOSS"],
 		},
 		test = {
 			type = "execute",
-			order = 6,
+			order = 7,
 			width = "full",
 			name = L["TEST"],
 			func = Test,
 		},
 		spacer_1 = {
-			order = 7,
+			order = 8,
 			type = "description",
 			name = " ",
 		},
 		header_1 = {
-			order = 8,
+			order = 9,
 			type = "description",
 			name = "   |cffffd200".. L["FILTERS"] .. "|r",
 			fontSize = "medium",
 		},
 		new = {
-			order = 9,
+			order = 10,
 			type = "group",
 			name = L["NEW"],
 			args = {

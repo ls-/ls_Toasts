@@ -240,7 +240,12 @@ local function toast_OnShow(self)
 			PlaySound(self._data.sound_file)
 		end
 
-		self.AnimIn:Play()
+		if self._data.vfx then
+			self.AnimInFull:Play()
+		else
+			self.AnimInReduced:Play()
+		end
+
 		self.AnimOut:Play()
 
 		self._data.init_show = false
@@ -328,7 +333,8 @@ local function toast_Release(self)
 	self:SetScript("OnEnter", toast_OnEnter)
 
 	self.AnimArrows:Stop()
-	self.AnimIn:Stop()
+	self.AnimInFull:Stop()
+	self.AnimInReduced:Stop()
 	self.AnimOut:Stop()
 	self.Bonus:Hide()
 	self:HideLeaves()
@@ -676,12 +682,12 @@ local function constructToast()
 	shine:SetAlpha(0)
 	toast.Shine = shine
 
-	-- .AnimIn, .AnimOut
+	-- .AnimInFull, .AnimInReduced, .AnimOut
 	do
 		local ag = toast:CreateAnimationGroup()
 		ag:SetScript("OnFinished", toastAnimIn_OnFinished)
 		ag:SetToFinalAlpha(true)
-		toast.AnimIn = ag
+		toast.AnimInFull = ag
 
 		local anim = ag:CreateAnimation("Alpha")
 		anim:SetOrder(1)
@@ -728,6 +734,18 @@ local function constructToast()
 		anim:SetStartDelay(0.35)
 		anim:SetDuration(0.5)
 		ag.Anim6 = anim
+
+		ag = toast:CreateAnimationGroup()
+		ag:SetScript("OnFinished", toastAnimIn_OnFinished)
+		ag:SetToFinalAlpha(true)
+		toast.AnimInReduced = ag
+
+		anim = ag:CreateAnimation("Alpha")
+		anim:SetOrder(1)
+		anim:SetFromAlpha(0)
+		anim:SetToAlpha(1)
+		anim:SetDuration(0.15)
+		ag.Anim1 = anim
 
 		ag = toast:CreateAnimationGroup()
 		ag:SetScript("OnFinished", toastAnimOut_OnFinished)

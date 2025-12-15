@@ -128,6 +128,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 		toast._data.event = event
 		toast._data.quest_id = questID
 		toast._data.sound_file = C.db.profile.types.world.sfx and 73277 -- SOUNDKIT.UI_WORLDQUEST_COMPLETE
+		toast._data.vfx = C.db.profile.types.world.vfx
 		toast._data.used_slots = usedSlots
 
 		toast:Spawn(C.db.profile.types.world.anchor, C.db.profile.types.world.dnd)
@@ -246,6 +247,7 @@ E:RegisterOptions("world", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 }, {
 	name = L["TYPE_WORLD_QUEST"],
 	get = function(info)
@@ -279,6 +281,11 @@ E:RegisterOptions("world", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		vfx = {
+			order = 4,
+			type = "toggle",
+			name = L["VFX"],
 		},
 		test = {
 			type = "execute",

@@ -4,8 +4,13 @@ local E, L, C = addonTable.E, addonTable.L, addonTable.C
 -- Lua
 local _G = getfenv(0)
 local m_random = _G.math.random
+local next = _G.next
 local s_split = _G.string.split
+local t_insert = _G.table.insert
+local t_sort = _G.table.sort
+local t_wipe = _G.table.wipe
 local tonumber = _G.tonumber
+local tostring = _G.tostring
 
 -- Mine
 local PLAYER_GUID = UnitGUID("player")
@@ -58,6 +63,11 @@ end
 
 local function delayedUpdatePatterns()
 	C_Timer.After(0.1, updatePatterns)
+end
+
+-- a cutdown and always available version of Professions.GetChatIconMarkupForQuality
+local function getIconForQuality(quality)
+	return CreateAtlasMarkupWithAtlasSize("professions-chaticon-quality-tier" .. quality, 0, 1, nil, nil, nil, 0.5);
 end
 
 local function Toast_OnClick(self)
@@ -116,8 +126,16 @@ local function Toast_SetUp(event, link, quantity)
 		end
 
 		if not name
-		or not ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5) or (isQuestItem and C.db.profile.types.loot_common.quest))
-		or (isLegacyEquipment and not C.db.profile.types.loot_common.legacy_equipment) then
+		or (isLegacyEquipment and not C.db.profile.types.loot_common.legacy_equipment)
+		or C.db.profile.types.loot_common.filters[itemID] == false then
+			toast:Release()
+
+			return
+		end
+
+		if not ((quality and quality >= C.db.profile.types.loot_common.threshold and quality <= 5)
+		or (isQuestItem and C.db.profile.types.loot_common.quest)
+		or C.db.profile.types.loot_common.filters[itemID]) then
 			toast:Release()
 
 			return
@@ -172,7 +190,7 @@ local function Toast_SetUp(event, link, quantity)
 		end
 
 		if reagentQuality then
-			reagentQuality = C_Texture.GetCraftingReagentQualityChatIcon(reagentQuality)
+			reagentQuality = getIconForQuality(reagentQuality)
 			if reagentQuality then
 				toast.IconText3:SetText(reagentQuality)
 				toast.IconText3BG:Show()
@@ -190,6 +208,7 @@ local function Toast_SetUp(event, link, quantity)
 		toast._data.item_id = itemID
 		toast._data.link = sanitizedLink
 		toast._data.sound_file = C.db.profile.types.loot_common.sfx and soundFile
+		toast._data.vfx = C.db.profile.types.loot_common.vfx
 		toast._data.tooltip_link = originalLink
 
 		if C.db.profile.types.loot_common.tooltip then
@@ -245,12 +264,128 @@ local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
 	C_Timer.After(0.3, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
 end
 
+local newID
+local isAllowed = true
+local pendingItemIDs = {}
+local handleItemInfo, updateFilterOptions
+
+local function allowGetter(info)
+	return C.db.profile.types.loot_common.filters[tonumber(info[#info - 1])]
+end
+
+local function allowSetter(info)
+	C.db.profile.types.loot_common.filters[tonumber(info[#info - 1])] = true
+end
+
+local function blockGetter(info)
+	return not C.db.profile.types.loot_common.filters[tonumber(info[#info - 1])]
+end
+
+local function blockSetter(info)
+	C.db.profile.types.loot_common.filters[tonumber(info[#info - 1])] = false
+end
+
+local function removeFilter(info)
+	C.db.profile.types.loot_common.filters[tonumber(info[#info - 1])] = nil
+
+	updateFilterOptions()
+end
+
+function handleItemInfo(id, isOk)
+	if isOk then
+		pendingItemIDs[id] = nil
+	end
+
+	if not next(pendingItemIDs) then
+		updateFilterOptions()
+	end
+end
+
+function updateFilterOptions()
+	if not C.db.profile.types.loot_common.enabled then
+		return
+	end
+
+	local options = t_wipe(C.options.args.types.args.loot_common.plugins.filters)
+	local nameToIndex = {}
+	local name, quaility, icon, color, _
+
+	for id in next, C.db.profile.types.loot_common.filters do
+		if not C_Item.GetItemInfoInstant(id) then
+			-- remove invalid IDs, some people do stuff...
+			C.db.profile.types.loot_common.filters[id] = nil
+		else
+			name = C_Item.GetItemInfo(id)
+			if name then
+				t_insert(nameToIndex, name)
+			else
+				pendingItemIDs[id] = true
+			end
+		end
+	end
+
+	t_sort(nameToIndex)
+
+	for i = 1, #nameToIndex do
+		nameToIndex[nameToIndex[i]] = i
+	end
+
+	for id in next, C.db.profile.types.loot_common.filters do
+		if not pendingItemIDs[id] then
+			name, _, quaility, _, _, _, _, _, _, icon = C_Item.GetItemInfo(id)
+			color = ITEM_QUALITY_COLORS[quaility] or ITEM_QUALITY_COLORS[1]
+
+			options[tostring(id)] = {
+				order = nameToIndex[name] + 110,
+				type = "group",
+				name = ("|T%s:0:0:0:0:64:64:4:60:4:60|t %s%s|r"):format(icon, color.hex, name),
+				args = {
+					allow = {
+						type = "toggle",
+						order = 2,
+						name = L["ALLOW"],
+						get = allowGetter,
+						set = allowSetter,
+					},
+					block = {
+						type = "toggle",
+						order = 2,
+						name = L["BLOCK"],
+						get = blockGetter,
+						set = blockSetter,
+					},
+					spacer_1 = {
+						order = 3,
+						type = "description",
+						name = "",
+					},
+					delete = {
+						type = "execute",
+						order = 4,
+						name = L["DELETE"],
+						width = "full",
+						func = removeFilter,
+					},
+				},
+			}
+		end
+	end
+
+	if next(pendingItemIDs) then
+		E:RegisterEvent("GET_ITEM_INFO_RECEIVED", handleItemInfo)
+	else
+		E:UnregisterEvent("GET_ITEM_INFO_RECEIVED", handleItemInfo)
+	end
+end
+
 local function Enable()
 	updatePatterns()
 
 	if C.db.profile.types.loot_common.enabled then
 		E:RegisterEvent("CHAT_MSG_LOOT", CHAT_MSG_LOOT)
 		E:RegisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
+
+		updateFilterOptions()
 	end
 end
 
@@ -287,11 +422,13 @@ E:RegisterOptions("loot_common", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 	tooltip = true,
 	ilvl = true,
 	legacy_equipment = true,
 	quest = false,
 	threshold = 1,
+	filters = {},
 }, {
 	name = L["TYPE_LOOT_COMMON"],
 	get = function(info)
@@ -331,18 +468,41 @@ E:RegisterOptions("loot_common", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		tooltip = {
+		vfx = {
 			order = 5,
+			type = "toggle",
+			name = L["VFX"],
+		},
+		tooltip = {
+			order = 6,
 			type = "toggle",
 			name = L["TOOLTIPS"],
 		},
 		ilvl = {
-			order = 6,
+			order = 7,
 			type = "toggle",
 			name = L["ILVL"],
 		},
+		legacy_equipment = {
+			order = 9,
+			type = "toggle",
+			name = L["LEGACY_EQUIPMENT"],
+			desc = L["LEGACY_EQUIPMENT_DESC"],
+		},
+		test = {
+			type = "execute",
+			order = 99,
+			width = "full",
+			name = L["TEST"],
+			func = Test,
+		},
+		spacer_1 = {
+			order = 100,
+			type = "description",
+			name = " ",
+		},
 		threshold = {
-			order = 7,
+			order = 101,
 			type = "select",
 			name = L["LOOT_THRESHOLD"],
 			values = {
@@ -353,25 +513,109 @@ E:RegisterOptions("loot_common", {
 				[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r",
 			},
 		},
-		legacy_equipment = {
-			order = 8,
-			type = "toggle",
-			name = L["LEGACY_EQUIPMENT"],
-			desc = L["LEGACY_EQUIPMENT_DESC"],
+		filters = {
+			order = 102,
+			type = "group",
+			name = " ",
+			inline = true,
+			args = {
+				desc = {
+					order = 1,
+					type = "description",
+					name = L["ITEM_FILTERS_DESC"],
+				},
+				spacer_1 = {
+					order = 2,
+					type = "description",
+					name = " ",
+				},
+				quest = {
+					order = 3,
+					type = "toggle",
+					name = L["QUEST_ITEMS"],
+				},
+			},
 		},
-		quest = {
-			order = 9,
-			type = "toggle",
-			name = L["QUEST_ITEMS"],
-			desc = L["QUEST_ITEMS_DESC"],
+		new = {
+			order = 103,
+			type = "group",
+			name = L["NEW"],
+			args = {
+				allow = {
+					type = "toggle",
+					order = 2,
+					name = L["ALLOW"],
+					get = function()
+						return isAllowed
+					end,
+					set = function()
+						isAllowed = true
+					end,
+				},
+				block = {
+					type = "toggle",
+					order = 2,
+					name = L["BLOCK"],
+					get = function()
+						return not isAllowed
+					end,
+					set = function()
+						isAllowed = false
+					end,
+				},
+				spacer_1 = {
+					order = 3,
+					type = "description",
+					name = "",
+				},
+				id = {
+					order = 5,
+					type = "input",
+					name = L["ID"],
+					dialogControl = "LSPreviewBoxItem",
+					width = "relative",
+					relWidth = 0.5,
+					validate = function(_, value)
+						value = tonumber(value)
+						if value then
+							return not not C_Item.GetItemInfoInstant(value)
+						else
+							return true
+						end
+					end,
+					set = function(_, value)
+						value = tonumber(value)
+						if value and C_Item.GetItemInfoInstant(value) then
+							newID = value
+						else
+							newID = nil -- jic
+						end
+					end,
+					get = function()
+						return tostring(newID or "")
+					end,
+				},
+				add = {
+					type = "execute",
+					order = 6,
+					name = L["ADD"],
+					width = "relative",
+					relWidth = 0.5,
+					disabled = function()
+						return not newID or C.db.profile.types.loot_common.filters[newID]
+					end,
+					func = function()
+						C.db.profile.types.loot_common.filters[newID] = isAllowed
+						newID = nil
+
+						updateFilterOptions()
+					end,
+				},
+			},
 		},
-		test = {
-			type = "execute",
-			order = 99,
-			width = "full",
-			name = L["TEST"],
-			func = Test,
-		},
+	},
+	plugins = {
+		filters = {},
 	},
 })
 

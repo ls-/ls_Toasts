@@ -28,6 +28,7 @@ local function Toast_SetUp(event, itemType, itemName, itemIcon)
 
 	toast._data.event = event
 	toast._data.sound_file = C.db.profile.types.housing.sfx and 317872 -- SOUNDKIT.HOUSING_ITEM_ACQUIRED
+	toast._data.vfx = C.db.profile.types.housing.vfx
 
 	toast:Spawn(C.db.profile.types.housing.anchor, C.db.profile.types.housing.dnd)
 end
@@ -68,6 +69,7 @@ E:RegisterOptions("housing", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 }, {
 	name = L["TYPE_HOUSING"],
 	get = function(info)
@@ -101,6 +103,11 @@ E:RegisterOptions("housing", {
 			order = 3,
 			type = "toggle",
 			name = L["SFX"],
+		},
+		vfx = {
+			order = 4,
+			type = "toggle",
+			name = L["VFX"],
 		},
 		test = {
 			type = "execute",

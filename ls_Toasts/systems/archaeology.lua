@@ -26,6 +26,7 @@ local function DigsiteToast_SetUp(event, researchFieldID)
 
 	toast._data.event = event
 	toast._data.sound_file = C.db.profile.types.archaeology.sfx and 38326 -- SOUNDKIT.UI_DIG_SITE_COMPLETION_TOAST
+	toast._data.vfx = C.db.profile.types.archaeology.vfx
 
 	toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
 end
@@ -99,6 +100,7 @@ local function FragmentToast_SetUp(event, link, quantity)
 			toast._data.event = event
 			toast._data.link = link
 			toast._data.sound_file = C.db.profile.types.archaeology.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
+			toast._data.vfx = C.db.profile.types.archaeology.vfx
 			toast._data.tooltip_link = link
 
 			if C.db.profile.types.archaeology.tooltip then
@@ -178,6 +180,7 @@ E:RegisterOptions("archaeology", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 	tooltip = true,
 }, {
 	name = L["TYPE_ARCHAEOLOGY"],
@@ -213,8 +216,13 @@ E:RegisterOptions("archaeology", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		tooltip = {
+		vfx = {
 			order = 4,
+			type = "toggle",
+			name = L["VFX"],
+		},
+		tooltip = {
+			order = 5,
 			type = "toggle",
 			name = L["TOOLTIPS"],
 		},

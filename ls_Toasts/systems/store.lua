@@ -102,6 +102,7 @@ local function EntitlementToast_SetUp(event, entitlementType, textureID, name, p
 	toast._data.entitlement_type = entitlementType
 	toast._data.event = event
 	toast._data.sound_file = C.db.profile.types.store.sfx and 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
+	toast._data.vfx = C.db.profile.types.store.vfx
 
 	if C.db.profile.types.store.tooltip then
 		toast:HookScript("OnEnter", EntitlementToast_OnEnter)
@@ -174,6 +175,7 @@ local function GuildToast_SetUp(event, guildName)
 
 	toast._data.event = event
 	toast._data.sound_file = C.db.profile.types.store.sfx and 39517 -- SOUNDKIT.UI_IG_STORE_PURCHASE_DELIVERED_TOAST_01
+	toast._data.vfx = C.db.profile.types.store.vfx
 
 	toast:HookScript("OnClick", GuildToast_OnClick)
 	toast:Spawn(C.db.profile.types.activities.anchor, C.db.profile.types.activities.dnd)
@@ -219,6 +221,7 @@ E:RegisterOptions("store", {
 	anchor = 1,
 	dnd = false,
 	sfx = true,
+	vfx = true,
 	tooltip = true,
 	left_click = false,
 }, {
@@ -255,13 +258,18 @@ E:RegisterOptions("store", {
 			type = "toggle",
 			name = L["SFX"],
 		},
-		tooltip = {
+		vfx = {
 			order = 4,
+			type = "toggle",
+			name = L["VFX"],
+		},
+		tooltip = {
+			order = 5,
 			type = "toggle",
 			name = L["TOOLTIPS"],
 		},
 		left_click = {
-			order = 5,
+			order = 6,
 			type = "toggle",
 			name = L["HANDLE_LEFT_CLICK"],
 			desc = L["TAINT_WARNING"],
