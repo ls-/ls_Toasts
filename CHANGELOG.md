@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 120000.01
+
+- Added 12.0.0 support.
+
+### Housing
+
+- Added support for neighborhood endeavors.
+
 ## Version 110207.02
 
 - Added an option to disable the glow/shine visual effects on toasts. It can be toggled for each toast type
