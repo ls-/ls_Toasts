@@ -1,5 +1,4 @@
-local addonName, addonTable = ...
-local C, L = addonTable.C, addonTable.L
+local addonName, addon = ...
 
 -- Lua
 local _G = getfenv(0)
@@ -15,8 +14,8 @@ local type = _G.type
 local xpcall = _G.xpcall
 
 -- Mine
-local E, P = {}, {}
-addonTable.E, addonTable.P = E, P
+local E, P, C, D, L = {}, {}, {}, {}, {}
+addon.E, addon.P, addon.C, addon.D, addon.L = E, P, C, D, L
 
 _G[addonName] = {
 	[1] = E,
@@ -214,5 +213,36 @@ do
 		itemCache[itemLink] = ilvl
 
 		return ilvl or 0
+	end
+end
+
+-------------
+-- COLOURS --
+-------------
+
+do
+	local color_proto = {}
+
+	function color_proto:GetHex()
+		return self.hex
+	end
+
+	-- override ColorMixin:GetRGBA
+	function color_proto:GetRGBA(a)
+		return self.r, self.g, self.b, a or self.a
+	end
+
+	function addon:CreateColor(r, g, b, a)
+		if r > 1 or g > 1 or b > 1 then
+			r, g, b = r / 255, g / 255, b / 255
+		end
+
+		local color = Mixin({}, ColorMixin, color_proto)
+		color:SetRGBA(r, g, b, a)
+
+		-- do not override SetRGBA, so calculate hex separately
+		color.hex = color:GenerateHexColor()
+
+		return color
 	end
 end

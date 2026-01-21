@@ -1,20 +1,19 @@
 ﻿-- Contributors:
 
-local _, addonTable = ...
+local _, addon = ...
+local C, D, L = addon.C, addon.D, addon.L
 
 -- Lua
 local _G = getfenv(0)
 
 -- Mine
-local L = {}
-addonTable.L = L
-
-L["LS_TOASTS"] = "LS: |cff00cc99Toasts|r"
+L["LS_TOASTS"] = ("LS: |c%sToasts|r"):format(D.global.colors.addon:GetHex())
 L["CURSEFORGE"] = "CurseForge"
 L["DISCORD"] = "Discord"
 L["GITHUB"] = "GitHub"
 L["WAGO"] = "Wago"
 L["WOWINTERFACE"] = "WoWInterface"
+L["INFO"] = D.global.colors.addon:WrapTextInColorCode(_G.INFO)
 
 L["ACHIEVEMENT_PROGRESSED"] = _G.ACHIEVEMENT_PROGRESSED
 L["ACHIEVEMENT_UNLOCKED"] = _G.ACHIEVEMENT_UNLOCKED
@@ -44,7 +43,6 @@ L["HOUSING_ROOM"] = _G.HOUSING_ITEM_TOAST_TYPE_ROOM
 L["HOUSING_ENDEAVOR_COMPLETED"] = _G.ENDEAVOR_TASK_COMPLETED
 L["ID"] = _G.ID
 L["ILVL"] = _G.LFG_LIST_ITEM_LEVEL_INSTR_SHORT
-L["INFO"] = "|cff00cc99" .. _G.INFO .. "|r"
 L["ITEM_AZERITE_EMPOWERED"] = _G.AZERITE_EMPOWERED_ITEM_LOOT_LABEL
 L["ITEM_CORRUPTED"] = _G.CORRUPTED_ITEM_LOOT_LABEL
 L["ITEM_LEGENDARY"] = _G.LEGENDARY_ITEM_LOOT_LABEL

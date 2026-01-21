@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="defaults.lua"/>
 	<Script file="core.lua"/>
+	<Script file="defaults.lua"/>
 	<Script file="modernize.lua"/>
 	<!-- can sort -->
 	<Script file="anchor.lua"/>

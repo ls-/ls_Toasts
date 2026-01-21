@@ -1,5 +1,5 @@
-local _, addonTable = ...
-local E, L, C = addonTable.E, addonTable.L, addonTable.C
+local _, addon = ...
+local E, L, C = addon.E, addon.L, addon.C
 
 -- Lua
 local _G = getfenv(0)

@@ -1,7 +1,7 @@
 ﻿-- Contributors: BNS333@Curse, 彩虹の多多@Curse, RainbowUI@Curse
 
-local _, addonTable = ...
-local L = addonTable.L
+local _, addon = ...
+local L = addon.L
 
 -- Lua
 local _G = getfenv(0)

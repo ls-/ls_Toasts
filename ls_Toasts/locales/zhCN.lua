@@ -1,7 +1,7 @@
 ﻿-- Contributors: y368413@Curse, dxlmike@Curse, vk1103ing@Curse, kuaishan@Curse
 
-local _, addonTable = ...
-local L = addonTable.L
+local _, addon = ...
+local L = addon.L
 
 -- Lua
 local _G = getfenv(0)

@@ -1,7 +1,7 @@
 ﻿-- Contributors: vabatta@GitHub
 
-local _, addonTable = ...
-local L = addonTable.L
+local _, addon = ...
+local L = addon.L
 
 -- Lua
 local _G = getfenv(0)
