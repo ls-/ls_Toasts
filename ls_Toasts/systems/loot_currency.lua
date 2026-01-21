@@ -1486,8 +1486,19 @@ local function updateFilters()
 	updateFilterOptions()
 end
 
+local function cleanUpFilters()
+	for id in next, C.db.profile.types.loot_currency.filters do
+		local info = C_CurrencyInfo.GetBasicCurrencyInfo(id)
+		if not info then
+			C.db.profile.types.loot_currency.filters[id] = nil
+		end
+	end
+end
+
 local function Enable()
 	if C.db.profile.types.loot_currency.enabled then
+		cleanUpFilters()
+
 		E:RegisterEvent("CURRENCY_DISPLAY_UPDATE", CURRENCY_DISPLAY_UPDATE)
 		E:RegisterEvent("CURRENCY_DISPLAY_UPDATE", updateFilters)
 		E:RegisterEvent("PERKS_PROGRAM_CURRENCY_REFRESH", PERKS_PROGRAM_CURRENCY_REFRESH)
