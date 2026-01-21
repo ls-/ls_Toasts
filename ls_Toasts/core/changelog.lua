@@ -8,6 +8,5 @@ local _G = getfenv(0)
 E.CHANGELOG = [[
 ### Loot (Currency)
 
-- Fixed an issue where invalid currency IDs in the filter would break the addon. Now it will remove them before
-  attempting anything else.
+- Fixed an issue where invalid currency IDs in the filter would break the addon. Now it will remove them before attempting anything else.
 ]]

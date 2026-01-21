@@ -108,39 +108,34 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		end
 	end
 
+	addon:CreateBlizzConfig()
+	addon:CreateAceConfig()
+
+	AddonCompartmentFrame:RegisterAddon({
+		text = L["LS_TOASTS"],
+		icon = "Interface\\AddOns\\ls_Toasts\\assets\\logo-32",
+		func = function()
+			if IsShiftKeyDown() then
+				addon:OpenAceConfig()
+			else
+				addon:OpenBlizzConfig()
+			end
+		end,
+		funcOnEnter = function(button)
+			GameTooltip:SetOwner(button, "ANCHOR_BOTTOMRIGHT")
+			GameTooltip:AddLine(L["AC_TOOLTIP"], 1, 1, 1)
+			GameTooltip:Show()
+		end,
+		funcOnLeave = function()
+			GameTooltip:Hide()
+		end,
+	})
+
 	E:RegisterEvent("PLAYER_LOGIN", function()
-		P:CreateConfig()
 		P:UpdateAnchors()
 		P:UpdateDB()
 		P:UpdateOptions()
 		P:EnableAllSystems()
-
-		local panel = CreateFrame("Frame", "LSTConfigPanel")
-		panel:Hide()
-
-		local button = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
-		button:SetText(L["OPEN_CONFIG"])
-		button:SetWidth(button:GetTextWidth() + 18)
-		button:SetPoint("TOPLEFT", 16, -16)
-		button:SetScript("OnClick", function()
-			if not InCombatLockdown() then
-				HideUIPanel(SettingsPanel)
-
-				LibStub("AceConfigDialog-3.0"):Open(addonName)
-			end
-		end)
-
-		Settings.RegisterAddOnCategory(Settings.RegisterCanvasLayoutCategory(panel, L["LS_TOASTS"]))
-
-		AddonCompartmentFrame:RegisterAddon({
-			text = L["LS_TOASTS"],
-			icon = "Interface\\AddOns\\ls_Toasts\\assets\\logo-32",
-			func = function()
-				if not InCombatLockdown() then
-					LibStub("AceConfigDialog-3.0"):Open(addonName)
-				end
-			end,
-		})
 
 		E:RegisterEvent("PLAYER_REGEN_DISABLED", function()
 			LibStub("AceConfigDialog-3.0"):Close(addonName)

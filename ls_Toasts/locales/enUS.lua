@@ -14,6 +14,7 @@ L["GITHUB"] = "GitHub"
 L["WAGO"] = "Wago"
 L["WOWINTERFACE"] = "WoWInterface"
 L["INFO"] = D.global.colors.addon:WrapTextInColorCode(_G.INFO)
+L["AC_TOOLTIP"] = ("|c%1$sClick:|r %2$s\n|c%1$sShift Click:|r %3$s"):format(D.global.colors.addon:GetHex(), _G.GAMEMENU_OPTIONS, _G.ADVANCED_OPTIONS)
 
 L["ACHIEVEMENT_PROGRESSED"] = _G.ACHIEVEMENT_PROGRESSED
 L["ACHIEVEMENT_UNLOCKED"] = _G.ACHIEVEMENT_UNLOCKED
@@ -124,7 +125,9 @@ L["CURRENCY_THRESHOLD_DESC"] = "Enter |cffffd200-1|r to ignore the currency, |cf
 L["HANDLE_LEFT_CLICK"] = "Handle Left Click"
 L["LEGACY_EQUIPMENT"] = "Legacy Equipment"
 L["LEGACY_EQUIPMENT_DESC"] = "Show toasts for legacy equipment."
+L["LINK_COPY_SUCCESS"] = "Link Copied to Clipboard"
 L["NEW_CURRENCY_FILTER_DESC"] = "Enter a currency ID."
+L["SUPPORT_FEEDBACK"] = "Support & Feedback"
 L["TAINT_WARNING"] = "Enabling this option may cause errors when opening or closing certain UI panels while in combat."
 L["THRESHOLD"] = "Threshold"
 L["TOOLTIPS"] = "Tooltips"
