@@ -6,9 +6,8 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 12.0.0 support.
+### Loot (Currency)
 
-### Housing
-
-- Added support for neighborhood endeavors.
+- Fixed an issue where invalid currency IDs in the filter would break the addon. Now it will remove them before
+  attempting anything else.
 ]]
