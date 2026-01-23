@@ -236,7 +236,7 @@ local function Toast_SetUp(event, link, quantity)
 end
 
 local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
-	if guid ~= PLAYER_GUID then
+	if issecretvalue(guid) or guid ~= PLAYER_GUID then
 		return
 	end
 
