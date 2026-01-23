@@ -7,7 +7,6 @@ Replacement for the default alert system. Better toasts, cheers!
 ## Download
 
 - [Curse](https://www.curseforge.com/wow/addons/ls-toasts)
-- [WoWInterface](https://www.wowinterface.com/downloads/info24123.html)
 - [Wago](https://addons.wago.io/addons/ls-toasts)
 
 ## Options
