@@ -1,5 +1,3 @@
--- Contributors: Gotxiko@GitHub
-
 local _, addon = ...
 local L = addon.L
 

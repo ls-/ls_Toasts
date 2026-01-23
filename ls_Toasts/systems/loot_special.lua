@@ -357,7 +357,7 @@ E:RegisterOptions("loot_special", {
 			order = 3,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,

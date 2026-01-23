@@ -171,7 +171,7 @@ E:RegisterOptions("recipe", {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,

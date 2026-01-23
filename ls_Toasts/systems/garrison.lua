@@ -469,7 +469,7 @@ E:RegisterOptions("garrison_6_0", {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,
@@ -530,7 +530,7 @@ E:RegisterOptions("garrison_7_0", {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,
@@ -591,7 +591,7 @@ E:RegisterOptions("garrison_8_0", {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,
@@ -652,7 +652,7 @@ E:RegisterOptions("garrison_9_0", {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,

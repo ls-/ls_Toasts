@@ -462,7 +462,7 @@ E:RegisterOptions("loot_common", {
 			order = 3,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 4,
