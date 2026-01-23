@@ -8,7 +8,7 @@ if GetLocale() ~= "koKR" then return end
 
 L["ANCHOR_FRAME_#"] = "고정판 #%d"
 L["ANCHOR_FRAMES"] = "고정판"
-L["ANCHOR_RESET_DESC"] = "|cffffffffShift-클릭|r으로 위치를 초기화 합니다."
+L["ANCHOR_RESET_DESC"] = "|cffffffffShift 클릭|r으로 위치를 초기화 합니다."
 L["BORDER"] = "테두리"
 L["COORDS"] = "좌표"
 L["COPPER_THRESHOLD"] = "코퍼 제한"

@@ -8,7 +8,7 @@ if GetLocale() ~= "esES" then return end
 
 L["ANCHOR_FRAME_#"] = "Marco de anclaje #%d"
 L["ANCHOR_FRAMES"] = "Marcos de anclaje"
-L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r para reiniciar la posición."
+L["ANCHOR_RESET_DESC"] = "|cffffffffShift click|r para reiniciar la posición."
 L["BORDER"] = "Borde"
 L["CHANGELOG"] = "Registro de cambios"
 L["CHANGELOG_FULL"] = "Completo"

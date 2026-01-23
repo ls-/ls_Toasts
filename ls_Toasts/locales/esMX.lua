@@ -8,7 +8,7 @@ if GetLocale() ~= "esMX" then return end
 
 L["ANCHOR_FRAME_#"] = "Marco de anclaje #%d"
 L["ANCHOR_FRAMES"] = "Marcos de anclaje"
-L["ANCHOR_RESET_DESC"] = "|cffffffffShift-Click|r para reiniciar la posición."
+L["ANCHOR_RESET_DESC"] = "|cffffffffShift click|r para reiniciar la posición."
 L["BORDER"] = "Borde"
 L["COORDS"] = "Coordenadas"
 L["COPPER_THRESHOLD"] = "Límite de Cobre"

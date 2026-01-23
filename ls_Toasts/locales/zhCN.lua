@@ -8,7 +8,7 @@ if GetLocale() ~= "zhCN" then return end
 
 L["ANCHOR_FRAME_#"] = "锚点框架#%d"
 L["ANCHOR_FRAMES"] = "锚点框架"
-L["ANCHOR_RESET_DESC"] = "|cffffffffShift-点击左键|r 重置位置。"
+L["ANCHOR_RESET_DESC"] = "|cffffffffShift 点击左键|r 重置位置。"
 L["BORDER"] = "边框"
 L["CHANGELOG"] = "更新日志"
 L["COORDS"] = "方位"
