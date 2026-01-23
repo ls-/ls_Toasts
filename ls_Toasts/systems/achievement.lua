@@ -7,13 +7,21 @@ local _G = getfenv(0)
 -- Mine
 local function Toast_OnClick(self)
 	if self._data.ach_id and not InCombatLockdown() then
-		if not AchievementFrame then
-			AchievementFrame_LoadUI()
-		end
+		if Narci and NarciAchievementOptions and NarciAchievementOptions.UseAsDefault then
+			if Narci_AchievementFrame then
+				Narci_AchievementFrame:LocateAchievement(self._data.ach_id)
+			else
+				Narci.LoadAchievementPanel(self._data.ach_id)
+			end
+		else
+			if not AchievementFrame then
+				AchievementFrame_LoadUI()
+			end
 
-		if AchievementFrame then
-			ShowUIPanel(AchievementFrame)
-			AchievementFrame_SelectAchievement(self._data.ach_id)
+			if AchievementFrame then
+				ShowUIPanel(AchievementFrame)
+				AchievementFrame_SelectAchievement(self._data.ach_id)
+			end
 		end
 	end
 end
