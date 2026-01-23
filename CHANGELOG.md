@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 120000.03
+
+### Loot (Common)
+
+- Fixed an issue where secret player GUID could break the toast. Some toasts will be missing, but overall it shouldn't
+  be too bad.
+
 ## Version 120000.02
 
 ### Loot (Currency)

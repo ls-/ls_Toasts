@@ -6,7 +6,7 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-### Loot (Currency)
+### Loot (Common)
 
-- Fixed an issue where invalid currency IDs in the filter would break the addon. Now it will remove them before attempting anything else.
+- Fixed an issue where secret player GUID could break the toast. Some toasts will be missing, but overall it shouldn't be too bad.
 ]]
