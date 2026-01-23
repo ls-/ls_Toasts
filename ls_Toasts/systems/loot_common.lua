@@ -1,8 +1,9 @@
-local _, addonTable = ...
-local E, L, C = addonTable.E, addonTable.L, addonTable.C
+local _, addon = ...
+local E, L, C = addon.E, addon.L, addon.C
 
 -- Lua
 local _G = getfenv(0)
+local issecretvalue = _G.issecretvalue
 local m_random = _G.math.random
 local next = _G.next
 local s_split = _G.string.split
@@ -30,34 +31,34 @@ local LOOT_ITEM_PUSHED_PATTERN
 local LOOT_ITEM_PUSHED_MULTIPLE_PATTERN
 
 local function updatePatterns()
-	if CACHED_LOOT_ITEM_CREATED ~= LOOT_ITEM_CREATED_SELF then
-		LOOT_ITEM_CREATED_PATTERN = LOOT_ITEM_CREATED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
-		CACHED_LOOT_ITEM_CREATED = LOOT_ITEM_CREATED_SELF
+	if CACHED_LOOT_ITEM_CREATED ~= _G.LOOT_ITEM_CREATED_SELF then
+		LOOT_ITEM_CREATED_PATTERN = _G.LOOT_ITEM_CREATED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_CREATED = _G.LOOT_ITEM_CREATED_SELF
 	end
 
-	if CACHED_LOOT_ITEM_CREATED_MULTIPLE ~= LOOT_ITEM_CREATED_SELF_MULTIPLE then
-		LOOT_ITEM_CREATED_MULTIPLE_PATTERN = LOOT_ITEM_CREATED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		CACHED_LOOT_ITEM_CREATED_MULTIPLE = LOOT_ITEM_CREATED_SELF_MULTIPLE
+	if CACHED_LOOT_ITEM_CREATED_MULTIPLE ~= _G.LOOT_ITEM_CREATED_SELF_MULTIPLE then
+		LOOT_ITEM_CREATED_MULTIPLE_PATTERN = _G.LOOT_ITEM_CREATED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_CREATED_MULTIPLE = _G.LOOT_ITEM_CREATED_SELF_MULTIPLE
 	end
 
-	if CACHED_LOOT_ITEM ~= LOOT_ITEM_SELF then
-		LOOT_ITEM_PATTERN = LOOT_ITEM_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
-		CACHED_LOOT_ITEM = LOOT_ITEM_SELF
+	if CACHED_LOOT_ITEM ~= _G.LOOT_ITEM_SELF then
+		LOOT_ITEM_PATTERN = _G.LOOT_ITEM_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM = _G.LOOT_ITEM_SELF
 	end
 
-	if CACHED_LOOT_ITEM_MULTIPLE ~= LOOT_ITEM_SELF_MULTIPLE then
-		LOOT_ITEM_MULTIPLE_PATTERN = LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		CACHED_LOOT_ITEM_MULTIPLE = LOOT_ITEM_SELF_MULTIPLE
+	if CACHED_LOOT_ITEM_MULTIPLE ~= _G.LOOT_ITEM_SELF_MULTIPLE then
+		LOOT_ITEM_MULTIPLE_PATTERN = _G.LOOT_ITEM_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_MULTIPLE = _G.LOOT_ITEM_SELF_MULTIPLE
 	end
 
-	if CACHED_LOOT_ITEM_PUSHED ~= LOOT_ITEM_PUSHED_SELF then
-		LOOT_ITEM_PUSHED_PATTERN = LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
-		CACHED_LOOT_ITEM_PUSHED = LOOT_ITEM_PUSHED_SELF
+	if CACHED_LOOT_ITEM_PUSHED ~= _G.LOOT_ITEM_PUSHED_SELF then
+		LOOT_ITEM_PUSHED_PATTERN = _G.LOOT_ITEM_PUSHED_SELF:gsub("%%s", "(.+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_PUSHED = _G.LOOT_ITEM_PUSHED_SELF
 	end
 
-	if CACHED_LOOT_ITEM_PUSHED_MULTIPLE ~= LOOT_ITEM_PUSHED_SELF_MULTIPLE then
-		LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
-		CACHED_LOOT_ITEM_PUSHED_MULTIPLE = LOOT_ITEM_PUSHED_SELF_MULTIPLE
+	if CACHED_LOOT_ITEM_PUSHED_MULTIPLE ~= _G.LOOT_ITEM_PUSHED_SELF_MULTIPLE then
+		LOOT_ITEM_PUSHED_MULTIPLE_PATTERN = _G.LOOT_ITEM_PUSHED_SELF_MULTIPLE:gsub("%%s", "(.+)"):gsub("%%d", "(%%d+)"):gsub("^", "^")
+		CACHED_LOOT_ITEM_PUSHED_MULTIPLE = _G.LOOT_ITEM_PUSHED_SELF_MULTIPLE
 	end
 end
 
@@ -236,7 +237,7 @@ local function Toast_SetUp(event, link, quantity)
 end
 
 local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
-	if guid ~= PLAYER_GUID then
+	if issecretvalue(guid) or guid ~= PLAYER_GUID then
 		return
 	end
 
@@ -461,7 +462,7 @@ E:RegisterOptions("loot_common", {
 			order = 3,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 4,
@@ -506,11 +507,11 @@ E:RegisterOptions("loot_common", {
 			type = "select",
 			name = L["LOOT_THRESHOLD"],
 			values = {
-				[0] = ITEM_QUALITY_COLORS[0].hex .. ITEM_QUALITY0_DESC .. "|r",
-				[1] = ITEM_QUALITY_COLORS[1].hex .. ITEM_QUALITY1_DESC .. "|r",
-				[2] = ITEM_QUALITY_COLORS[2].hex .. ITEM_QUALITY2_DESC .. "|r",
-				[3] = ITEM_QUALITY_COLORS[3].hex .. ITEM_QUALITY3_DESC .. "|r",
-				[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r",
+				[0] = ITEM_QUALITY_COLORS[0].hex .. _G.ITEM_QUALITY0_DESC .. "|r",
+				[1] = ITEM_QUALITY_COLORS[1].hex .. _G.ITEM_QUALITY1_DESC .. "|r",
+				[2] = ITEM_QUALITY_COLORS[2].hex .. _G.ITEM_QUALITY2_DESC .. "|r",
+				[3] = ITEM_QUALITY_COLORS[3].hex .. _G.ITEM_QUALITY3_DESC .. "|r",
+				[4] = ITEM_QUALITY_COLORS[4].hex .. _G.ITEM_QUALITY4_DESC .. "|r",
 			},
 		},
 		filters = {
@@ -541,6 +542,11 @@ E:RegisterOptions("loot_common", {
 			type = "group",
 			name = L["NEW"],
 			args = {
+				desc = {
+					order = 1,
+					type = "description",
+					name = L["NEW_ITEM_FILTER_DESC"],
+				},
 				allow = {
 					type = "toggle",
 					order = 2,

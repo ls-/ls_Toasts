@@ -1,5 +1,5 @@
-local _, addonTable = ...
-local E, L, C = addonTable.E, addonTable.L, addonTable.C
+local _, addon = ...
+local E, L, C = addon.E, addon.L, addon.C
 
 -- Lua
 local _G = getfenv(0)
@@ -469,7 +469,7 @@ E:RegisterOptions("garrison_6_0", {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,
@@ -530,7 +530,7 @@ E:RegisterOptions("garrison_7_0", {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,
@@ -591,7 +591,7 @@ E:RegisterOptions("garrison_8_0", {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,
@@ -652,7 +652,7 @@ E:RegisterOptions("garrison_9_0", {
 			order = 2,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,

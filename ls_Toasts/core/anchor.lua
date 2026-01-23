@@ -1,5 +1,5 @@
-local _, addonTable = ...
-local E, P, C, D, L = addonTable.E, addonTable.P, addonTable.C, addonTable.D, addonTable.L
+local _, addon = ...
+local E, P, C, D, L = addon.E, addon.P, addon.C, addon.D, addon.L
 
 -- Lua
 local _G = getfenv(0)
@@ -361,7 +361,7 @@ function P:AddAnchor(index)
 					growth_offset_x = {
 						order = 9995,
 						type = "range",
-						name = L["X_OFFSET"],
+						name = L["OFFSET_X"],
 						desc = L["DEFAULT_VALUE"]:format(D.profile.anchors[1].growth_offset_x),
 						min = 4, max = 48, step = 2,
 						get = getOption,
@@ -370,7 +370,7 @@ function P:AddAnchor(index)
 					growth_offset_y = {
 						order = 9996,
 						type = "range",
-						name = L["Y_OFFSET"],
+						name = L["OFFSET_Y"],
 						desc = L["DEFAULT_VALUE"]:format(D.profile.anchors[1].growth_offset_y),
 						min = 4, max = 48, step = 2,
 						get = getOption,

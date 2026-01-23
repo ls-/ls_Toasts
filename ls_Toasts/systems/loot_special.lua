@@ -1,5 +1,5 @@
-local _, addonTable = ...
-local E, L, C = addonTable.E, addonTable.L, addonTable.C
+local _, addon = ...
+local E, L, C = addon.E, addon.L, addon.C
 
 -- Lua
 local _G = getfenv(0)
@@ -357,7 +357,7 @@ E:RegisterOptions("loot_special", {
 			order = 3,
 			type = "toggle",
 			name = L["DND"],
-			desc = L["DND_TOOLTIP"],
+			desc = L["DND_DESC"],
 		},
 		sfx = {
 			order = 3,
@@ -384,11 +384,11 @@ E:RegisterOptions("loot_special", {
 			type = "select",
 			name = L["LOOT_THRESHOLD"],
 			values = {
-				[1] = ITEM_QUALITY_COLORS[1].hex .. ITEM_QUALITY1_DESC .. "|r",
-				[2] = ITEM_QUALITY_COLORS[2].hex .. ITEM_QUALITY2_DESC .. "|r",
-				[3] = ITEM_QUALITY_COLORS[3].hex .. ITEM_QUALITY3_DESC .. "|r",
-				[4] = ITEM_QUALITY_COLORS[4].hex .. ITEM_QUALITY4_DESC .. "|r",
-				[5] = ITEM_QUALITY_COLORS[5].hex .. ITEM_QUALITY5_DESC .. "|r",
+				[1] = ITEM_QUALITY_COLORS[1].hex .. _G.ITEM_QUALITY1_DESC .. "|r",
+				[2] = ITEM_QUALITY_COLORS[2].hex .. _G.ITEM_QUALITY2_DESC .. "|r",
+				[3] = ITEM_QUALITY_COLORS[3].hex .. _G.ITEM_QUALITY3_DESC .. "|r",
+				[4] = ITEM_QUALITY_COLORS[4].hex .. _G.ITEM_QUALITY4_DESC .. "|r",
+				[5] = ITEM_QUALITY_COLORS[5].hex .. _G.ITEM_QUALITY5_DESC .. "|r",
 			},
 		},
 		legacy_equipment = {
