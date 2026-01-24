@@ -1,9 +1,7 @@
 local _, addon = ...
+local D = addon.D
 
 -- Mine
-local C, D = {}, {}
-addon.C, addon.D = C, D
-
 local function rgb(...)
 	return addon:CreateColor(...)
 end
