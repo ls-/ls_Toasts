@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 120000.04
+
+### Achievement
+
+- Added support for Narcissus' achievement panel. If it's enabled as the default cheevo panel, the addon will try to
+  open it instead.
+
 ## Version 120000.03
 
 ### Loot (Common)
