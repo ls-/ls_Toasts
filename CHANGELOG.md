@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 120000.05
+
+### Transmogrification
+
+- Fixed an issue that prevented transmog toasts from working altogether.
+
 ## Version 120000.04
 
 ### Achievement
