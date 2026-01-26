@@ -18,14 +18,17 @@ local function Toast_OnClick(self)
 end
 
 local function Toast_SetUp(event, sourceID, isAdded, attempt)
-	local _, visualID, _, icon, _, _, link = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
-	local name
-	link, _, _, _, name = E:SanitizeLink(link)
+	local sourceInfo = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+	if not sourceInfo then
+		return
+	end
+
+	local link, _, _, _, name = E:SanitizeLink(sourceInfo.transmoglink)
 	if not link then
 		return attempt < 4 and C_Timer.After(0.25, function() Toast_SetUp(event, sourceID, isAdded, attempt + 1) end)
 	end
 
-	if E:FindToast(event, "visual_id", visualID) then
+	if E:FindToast(event, "visual_id", sourceInfo.itemAppearanceID) then
 		return
 	end
 
@@ -42,7 +45,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		toast:SetBackground("transmog")
 		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED_RED"])
 		toast.Text:SetText(name)
-		toast.Icon:SetTexture(icon)
+		toast.Icon:SetTexture(sourceInfo.icon)
 		toast.IconBorder:Show()
 
 		toast._data.event = event
@@ -50,7 +53,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		toast._data.sound_file = C.db.profile.types.transmog.sfx and 187694 -- SOUNDKIT.UI_COSMETIC_ITEM_TOAST_SHOW
 		toast._data.vfx = C.db.profile.types.transmog.vfx
 		toast._data.source_id = sourceID
-		toast._data.visual_id = visualID
+		toast._data.visual_id = sourceInfo.itemAppearanceID
 
 		toast:HookScript("OnClick", Toast_OnClick)
 		toast:Spawn(C.db.profile.types.transmog.anchor, C.db.profile.types.transmog.dnd)
@@ -68,12 +71,12 @@ local RESULT_NO_DATA = 1
 local RESULT_YES = 2
 
 local function isCollectedFromAnotherSource(sourceID)
-	local _, visualID = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
-	if not visualID then return RESULT_NO_DATA end
+	local sourceInfo = C_TransmogCollection.GetAppearanceSourceInfo(sourceID)
+	if not sourceInfo then return RESULT_NO_DATA end
 
 	-- C_TransmogCollection.GetAllAppearanceSources returns all sources, known and unknown
 	-- C_TransmogCollection.GetAppearanceSources only returns known sources
-	local sources = C_TransmogCollection.GetAppearanceSources(visualID)
+	local sources = C_TransmogCollection.GetAppearanceSources(sourceInfo.itemAppearanceID)
 	if not sources then return RESULT_NO_DATA end
 
 	for _, source in next, sources do
