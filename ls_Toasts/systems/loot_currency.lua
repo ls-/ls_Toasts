@@ -1231,7 +1231,6 @@ local BLACKLIST = {
 	[3371] = true, -- Renown - Silvermoon Court
 	[3372] = true, -- Bronze
 	[3375] = true, -- [DNT] Moth Hunt Tracking Currency
-	[3378] = true, -- Dawnlight Manaflux
 	[3386] = true, -- Renown - Prey
 	[3387] = true, -- Preyseeker's Journey
 	[3388] = true, -- Renown - The Singularity
@@ -1250,6 +1249,7 @@ local BLACKLIST = {
 	[3434] = true, -- Housing - Going Postal - Personal Best Record - Horde - Rt1
 	[3435] = true, -- Housing - Going Postal - Personal Best Record - Horde - Rt2
 	[3436] = true, -- Housing - Going Postal - Personal Best Record - Horde - Rt3
+	[3474] = true, -- Bonus Experience
 }
 
 local MULT = {

@@ -9,6 +9,8 @@ local s_format = _G.string.format
 local s_match = _G.string.match
 local s_split = _G.string.split
 local t_concat = _G.table.concat
+local t_insert = _G.table.insert
+local t_sort = _G.table.sort
 local tonumber = _G.tonumber
 local type = _G.type
 local xpcall = _G.xpcall
@@ -110,34 +112,6 @@ P.CallbackHandler = LibStub("CallbackHandler-1.0"):New(E)
 -- HELPERS --
 -------------
 
-function E:SanitizeLink(link)
-	if not link or link == "[]" or link == "" then
-		return
-	end
-
-	local temp, name = s_match(link, "|H(.+)|h%[(.+)%]|h")
-	link = temp or link
-
-	local linkTable = {s_split(":", link)}
-
-	if linkTable[1] ~= "item" then
-		return link, link, linkTable[1], tonumber(linkTable[2]), name
-	end
-
-	-- remove modifier types and values due to inconsistencies
-	local numBonusIDs = tonumber(linkTable[14])
-	if numBonusIDs then
-		local numModifiers = tonumber(linkTable[15 + numBonusIDs])
-		if numModifiers then
-			for i = 16 + numBonusIDs, 16 + numBonusIDs + numModifiers * 2 - 1 do
-				linkTable[i] = ""
-			end
-		end
-	end
-
-	return t_concat(linkTable, ":"), link, linkTable[1], tonumber(linkTable[2]), name
-end
-
 function E:GetScreenQuadrant(frame)
 	local x, y = frame:GetCenter()
 
@@ -177,6 +151,10 @@ function E:GetScreenQuadrant(frame)
 	end
 end
 
+-----------
+-- ITEMS --
+-----------
+
 do
 	local ILVL_LINE = Enum.TooltipDataLineType.ItemLevel
 	local ILVL_PATTERN = "(%d+)"
@@ -213,6 +191,65 @@ do
 		itemCache[itemLink] = ilvl
 
 		return ilvl or 0
+	end
+end
+
+do
+	local cache = {}
+
+	function E:SanitizeLink(link)
+		if not link or link == "[]" or link == "" then
+			return
+		end
+
+		local temp, name = s_match(link, "|H(.+)|h%[(.+)%]|h")
+		link = temp or link
+
+		local info = cache[link]
+		if not info then
+			local linkTable = {s_split(":", link)}
+			if linkTable[1] ~= "item" then
+				return link, link, linkTable[1], tonumber(linkTable[2]), name
+			end
+
+			-- sort bonuses
+			local numBonusIDs = tonumber(linkTable[14])
+			if numBonusIDs then
+				local tmp = {}
+				for i = 15, 14 + numBonusIDs do
+					t_insert(tmp, tonumber(linkTable[i]))
+				end
+
+				t_sort(tmp)
+
+				for i = 1, #tmp do
+					linkTable[14 + i] = tmp[i]
+				end
+			else
+				numBonusIDs = 0
+			end
+
+			-- remove modifiers due to inconsistencies
+			local numModifiers = tonumber(linkTable[15 + numBonusIDs])
+			if numModifiers then
+				linkTable[15 + numBonusIDs] = ""
+
+				for i = 16 + numBonusIDs, 16 + numBonusIDs + numModifiers * 2 - 1 do
+					linkTable[i] = ""
+				end
+			end
+
+			cache[link] = {
+				table = linkTable,
+				string = t_concat(linkTable, ":"),
+				id = tonumber(linkTable[2]),
+			}
+
+			info = cache[link]
+		end
+
+		-- only item links get this far
+		return info.string, link, "item", info.id, name
 	end
 end
 

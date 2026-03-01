@@ -30,13 +30,21 @@ $foldersToInclude = @(
 
 $filesToExclude = @(
 	"*.doc*"
-	"*.editorconfig",
-	"*.git*",
-	"*.luacheck*",
-	"*.pkg*",
-	"*.ps1",
-	"*.sh",
+	"*.editorconfig"
+	"*.git*"
+	"*.luacheck*"
+	"*.pkg*"
+	"*.ps1"
 	"*.yml"
+	"*.sh"
+	"README*"
+)
+
+$foldersToRemove = @(
+	".git"
+	".github"
+	"tests"
+	"utils"
 )
 
 $temp = ".\temp\"
@@ -47,5 +55,6 @@ if (Test-Path $temp) {
 
 New-Item -Path $temp -ItemType Directory | Out-Null
 Copy-Item $foldersToInclude -Destination $temp -Exclude $filesToExclude -Recurse
+Get-ChildItem "$temp\$name\embeds\" -Recurse | Where-Object { $_.PSIsContainer -and $_.Name -cin $foldersToRemove } | Remove-Item -Recurse -Force
 7z a -tzip -mx9 "..\$name-$version.zip" (Get-ChildItem $temp)
 Remove-Item $temp -Recurse -Force

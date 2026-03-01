@@ -3,6 +3,7 @@
 	<Script file="defaults.lua"/>
 	<Script file="modernize.lua"/>
 	<!-- can sort -->
+	<Include file="components\_components.xml"/>
 	<Script file="anchor.lua"/>
 	<Script file="changelog.lua"/>
 	<Script file="config.lua"/>

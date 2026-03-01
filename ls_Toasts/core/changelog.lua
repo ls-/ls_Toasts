@@ -6,7 +6,9 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-### Transmogrification
+- Added 12.0.1 support.
 
-- Fixed an issue that prevented transmog toasts from working altogether.
+### Loot (Common)
+
+- Fixed item rank textures.
 ]]
