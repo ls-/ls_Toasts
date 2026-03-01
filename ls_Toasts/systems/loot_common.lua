@@ -68,8 +68,8 @@ local function delayedUpdatePatterns()
 end
 
 local function Toast_OnClick(self)
-	if self._data.link and IsModifiedClick("DRESSUP") then
-		DressUpLink(self._data.link)
+	if self._data.tooltip_link and IsModifiedClick("DRESSUP") then
+		DressUpLink(self._data.tooltip_link)
 	elseif self._data.item_id then
 		local slot = SearchBagsForItem(self._data.item_id)
 		if slot >= 0 then
