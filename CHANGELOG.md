@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 120001.01
+
+- Added 12.0.1 support.
+
+### Loot (Common)
+
+- Fixed item rank textures.
+
 ## Version 120000.05
 
 ### Transmogrification
