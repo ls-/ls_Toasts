@@ -195,6 +195,8 @@ do
 end
 
 do
+	local cache = {}
+
 	function E:SanitizeLink(link)
 		if not link or link == "[]" or link == "" then
 			return
@@ -203,40 +205,51 @@ do
 		local temp, name = s_match(link, "|H(.+)|h%[(.+)%]|h")
 		link = temp or link
 
-		local linkTable = {s_split(":", link)}
-
-		if linkTable[1] ~= "item" then
-			return link, link, linkTable[1], tonumber(linkTable[2]), name
-		end
-
-		-- sort bonuses
-		local numBonusIDs = tonumber(linkTable[14])
-		if numBonusIDs then
-			local tmp = {}
-			for i = 15, 14 + numBonusIDs do
-				t_insert(tmp, tonumber(linkTable[i]))
+		local info = cache[link]
+		if not info then
+			local linkTable = {s_split(":", link)}
+			if linkTable[1] ~= "item" then
+				return link, link, linkTable[1], tonumber(linkTable[2]), name
 			end
 
-			t_sort(tmp)
+			-- sort bonuses
+			local numBonusIDs = tonumber(linkTable[14])
+			if numBonusIDs then
+				local tmp = {}
+				for i = 15, 14 + numBonusIDs do
+					t_insert(tmp, tonumber(linkTable[i]))
+				end
 
-			for i = 1, #tmp do
-				linkTable[14 + i] = tmp[i]
+				t_sort(tmp)
+
+				for i = 1, #tmp do
+					linkTable[14 + i] = tmp[i]
+				end
+			else
+				numBonusIDs = 0
 			end
-		else
-			numBonusIDs = 0
+
+			-- remove modifiers due to inconsistencies
+			local numModifiers = tonumber(linkTable[15 + numBonusIDs])
+			if numModifiers then
+				linkTable[15 + numBonusIDs] = ""
+
+				for i = 16 + numBonusIDs, 16 + numBonusIDs + numModifiers * 2 - 1 do
+					linkTable[i] = ""
+				end
+			end
+
+			cache[link] = {
+				table = linkTable,
+				string = t_concat(linkTable, ":"),
+				id = tonumber(linkTable[2]),
+			}
+
+			info = cache[link]
 		end
 
-		-- remove modifiers due to inconsistencies
-		local numModifiers = tonumber(linkTable[15 + numBonusIDs])
-		if numModifiers then
-			linkTable[15 + numBonusIDs] = ""
-
-			for i = 16 + numBonusIDs, 16 + numBonusIDs + numModifiers * 2 - 1 do
-				linkTable[i] = ""
-			end
-		end
-
-		return t_concat(linkTable, ":"), link, linkTable[1], tonumber(linkTable[2]), name
+		-- only item links get this far
+		return info.string, link, "item", info.id, name
 	end
 end
 
