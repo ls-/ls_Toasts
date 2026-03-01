@@ -6,6 +6,7 @@ local _G = getfenv(0)
 local issecretvalue = _G.issecretvalue
 local m_random = _G.math.random
 local next = _G.next
+local s_format = _G.string.format
 local s_split = _G.string.split
 local t_insert = _G.table.insert
 local t_sort = _G.table.sort
@@ -64,11 +65,6 @@ end
 
 local function delayedUpdatePatterns()
 	C_Timer.After(0.1, updatePatterns)
-end
-
--- a cutdown and always available version of Professions.GetChatIconMarkupForQuality
-local function getIconForQuality(quality)
-	return CreateAtlasMarkupWithAtlasSize("professions-chaticon-quality-tier" .. quality, 0, 1, nil, nil, nil, 0.5);
 end
 
 local function Toast_OnClick(self)
@@ -185,13 +181,13 @@ local function Toast_SetUp(event, link, quantity)
 			toast.IconHL:SetShown(isQuestItem)
 		end
 
-		local reagentQuality = C_TradeSkillUI.GetItemReagentQualityByItemInfo(originalLink)
+		local reagentQuality = C_TradeSkillUI.GetItemReagentQualityInfo(originalLink)
 		if not reagentQuality then
-			reagentQuality = C_TradeSkillUI.GetItemCraftedQualityByItemInfo(originalLink)
+			reagentQuality = C_TradeSkillUI.GetItemCraftedQualityInfo(originalLink)
 		end
 
-		if reagentQuality then
-			reagentQuality = getIconForQuality(reagentQuality)
+		if reagentQuality and reagentQuality.iconInventory then
+			reagentQuality = CreateAtlasMarkupWithAtlasSize(reagentQuality.iconInventory)
 			if reagentQuality then
 				toast.IconText3:SetText(reagentQuality)
 				toast.IconText3BG:Show()
@@ -402,8 +398,14 @@ local function Test()
 		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
 	end
 
-	-- item, Hochenblume, Rank 3
+	-- item, Hochenblume, Rank 3 (pre-Midnight)
 	_, link = C_Item.GetItemInfo(191462)
+	if link then
+		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
+	end
+
+	-- item, Tranquility Bloom, Rank 2 (Midnight)
+	_, link = C_Item.GetItemInfo(236767)
 	if link then
 		Toast_SetUp("COMMON_LOOT_TEST", link, m_random(9, 99))
 	end
