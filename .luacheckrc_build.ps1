@@ -12,7 +12,7 @@ foreach ($line in Get-Content $luacheckrc) {
 Set-Content $luacheckrc -Value $out.TrimEnd()
 
 $out = @()
-luacheck . | ForEach-Object {
+luacheck --no-color . | ForEach-Object {
 	if ($_ -match "accessing undefined variable '(.+?)'") {
 		if ($out -notcontains $matches[1]) {
 			$out += $matches[1]

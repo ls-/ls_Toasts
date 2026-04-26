@@ -1,13 +1,5 @@
 Set-Location $PSScriptRoot
 
-if (-Not (Test-Path "$env:ProgramFiles\7-Zip\7z.exe")) {
-	Write-Host "7z.exe not found"
-
-	return Read-Host
-}
-
-Set-Alias 7z "$env:ProgramFiles\7-Zip\7z.exe"
-
 $name = (Get-Item .).Name
 
 if (-Not (Test-Path (".\" + $name + "\" + $name + ".toc"))) {
@@ -56,5 +48,6 @@ if (Test-Path $temp) {
 New-Item -Path $temp -ItemType Directory | Out-Null
 Copy-Item $foldersToInclude -Destination $temp -Exclude $filesToExclude -Recurse
 Get-ChildItem "$temp\$name\embeds\" -Recurse | Where-Object { $_.PSIsContainer -and $_.Name -cin $foldersToRemove } | Remove-Item -Recurse -Force
-7z a -tzip -mx9 "..\$name-$version.zip" (Get-ChildItem $temp)
+7zz a -tzip -mx9 "$name-$version.zip" (Get-ChildItem $temp)
+Move-Item "$name-$version.zip" -Destination .. -Force
 Remove-Item $temp -Recurse -Force

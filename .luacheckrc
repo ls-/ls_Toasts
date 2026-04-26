@@ -146,6 +146,7 @@ read_globals = {
 	"OpenBag",
 	"PetJournal",
 	"PetJournal_SelectPet",
+	"PixelUtil",
 	"PlaySound",
 	"ProfessionsFrame",
 	"ProfessionsFrame_LoadUI",
