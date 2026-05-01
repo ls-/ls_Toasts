@@ -1236,6 +1236,7 @@ local BLACKLIST = {
 	[3371] = true, -- Renown - Silvermoon Court
 	[3372] = true, -- Bronze
 	[3375] = true, -- [DNT] Moth Hunt Tracking Currency
+	[3385] = true, -- Luminous Dust
 	[3386] = true, -- Renown - Prey
 	[3387] = true, -- Preyseeker's Journey
 	[3388] = true, -- Renown - The Singularity
