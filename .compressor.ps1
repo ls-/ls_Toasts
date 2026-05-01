@@ -22,13 +22,14 @@ $foldersToInclude = @(
 
 $filesToExclude = @(
 	"*.doc*"
+	"*.DS_Store"
 	"*.editorconfig"
 	"*.git*"
 	"*.luacheck*"
 	"*.pkg*"
 	"*.ps1"
-	"*.yml"
 	"*.sh"
+	"*.yml"
 	"README*"
 )
 
