@@ -7,6 +7,7 @@
 	<Script file="anchor.lua"/>
 	<Script file="changelog.lua"/>
 	<Script file="config.lua"/>
+	<Script file="ie.lua"/>
 	<Script file="queue.lua"/>
 	<Script file="skin.lua"/>
 	<Script file="system.lua"/>

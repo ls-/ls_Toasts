@@ -279,7 +279,13 @@ do
 
 		Settings.RegisterAddOnCategory(category)
 
+		function addon:GetBlizzCategory()
+			return category
+		end
+
 		function addon:OpenBlizzConfig()
+			C.options.args.profiles.hidden = nil
+
 			Settings.OpenToCategory(category:GetID())
 		end
 	end
@@ -471,10 +477,28 @@ function addon:CreateAceConfig()
 	C.options.args.profiles.order = 100
 	C.options.args.profiles.desc = nil
 
+	C.options.args.profiles.args.spacer_1 = {
+		order = 100,
+		type = "description",
+		name = " ",
+	}
+
+	C.options.args.profiles.args.importexport = {
+		order = 110,
+		type = "execute",
+		name = s_format("%s / %s", L["IMPORT"], L["EXPORT"]),
+		func = addon.OpenImportExport,
+		width = "full",
+	}
+
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, C.options.args.profiles.name, addon:GetBlizzCategory():GetID(), "profiles")
+
 	function addon:OpenAceConfig()
 		if not InCombatLockdown() then
 			HideUIPanel(SettingsPanel)
 		end
+
+		C.options.args.profiles.hidden = true
 
 		LibStub("AceConfigDialog-3.0"):Open(addonName)
 	end

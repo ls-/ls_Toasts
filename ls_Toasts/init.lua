@@ -108,6 +108,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		end
 	end
 
+	addon:CreateImportExport()
 	addon:CreateBlizzConfig()
 	addon:CreateAceConfig()
 

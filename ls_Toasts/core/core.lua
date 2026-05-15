@@ -5,9 +5,11 @@ local _G = getfenv(0)
 local error = _G.error
 local geterrorhandler = _G.geterrorhandler
 local next = _G.next
+local pairs = _G.pairs
 local s_format = _G.string.format
 local s_match = _G.string.match
 local s_split = _G.string.split
+local setmetatable = _G.setmetatable
 local t_concat = _G.table.concat
 local t_insert = _G.table.insert
 local t_sort = _G.table.sort
@@ -93,6 +95,65 @@ function P:UpdateTable(src, dest)
 	end
 
 	return dest
+end
+
+function addon:CopyTable(src, dest, ignore)
+	if type(dest) ~= "table" then
+		dest = {}
+	end
+
+	for k, v in next, src do
+		if not ignore or not ignore[k] then
+			if type(v) == "table" then
+				dest[k] = self:CopyTable(v, dest[k])
+			else
+				dest[k] = v
+			end
+		end
+	end
+
+	return dest
+end
+
+-- a copy of removeDefaults from AceDB-3.0
+function addon:DiffTable(dest, src, blocker)
+	setmetatable(dest, nil)
+
+	for k, v in pairs(src) do
+		if k == "*" or k == "**" then
+			if type(v) == "table" then
+				for key, value in pairs(dest) do
+					if type(value) == "table" then
+						if src[key] == nil and (not blocker or blocker[key] == nil) then
+							addon:DiffTable(value, v)
+
+							if next(value) == nil then
+								dest[key] = nil
+							end
+						elseif k == "**" then
+							addon:DiffTable(value, v, src[key])
+						end
+					end
+				end
+			elseif k == "*" then
+				for key, value in pairs(dest) do
+					if src[key] == nil and v == value then
+						dest[key] = nil
+					end
+				end
+			end
+		elseif type(v) == "table" and type(dest[k]) == "table" then
+			addon:DiffTable(dest[k], v, blocker and blocker[k])
+
+			if next(dest[k]) == nil then
+				dest[k] = nil
+			end
+		else
+			if dest[k] == src[k] and (not blocker or blocker[k] == nil) then
+				dest[k] = nil
+			end
+		end
+	end
 end
 
 do
