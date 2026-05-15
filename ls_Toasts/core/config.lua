@@ -193,7 +193,7 @@ do
 		local versionText = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
 		versionText:SetPoint("TOPRIGHT", -2, 4)
 		versionText:SetTextColor(0.4, 0.4, 0.4)
-		versionText:SetText(E.VER.string)
+		versionText:SetText(addon.VER.string)
 
 		-- UIPanelButtonTemplate
 		local configButton = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
@@ -290,7 +290,7 @@ end
 function addon:CreateAceConfig()
 	C.options = {
 		type = "group",
-		name = s_format("%s |cffcacaca(%s)|r", L["LS_ADDON"], E.VER.string),
+		name = s_format("%s |cffcacaca(%s)|r", L["LS_ADDON"], addon.VER.string),
 		args = {
 			toggle_anchors = {
 				order = 1,

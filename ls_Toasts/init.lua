@@ -9,9 +9,9 @@ local print = _G.print
 local tonumber = _G.tonumber
 
 -- Mine
-E.VER = {}
-E.VER.string = C_AddOns.GetAddOnMetadata(addonName, "Version")
-E.VER.number = tonumber(E.VER.string:gsub("%D", ""), nil)
+addon.VER = {}
+addon.VER.string = C_AddOns.GetAddOnMetadata(addonName, "Version")
+addon.VER.number = tonumber(addon.VER.string:gsub("%D", ""), nil)
 
 local BLACKLISTED_EVENTS = {
 	["ACHIEVEMENT_EARNED"] = true,
@@ -62,7 +62,7 @@ local function updateCallback()
 end
 
 local function shutdownCallback()
-	C.db.profile.version = E.VER.number
+	C.db.profile.version = addon.VER.number
 end
 
 E:RegisterEvent("ADDON_LOADED", function(arg1)
