@@ -273,6 +273,7 @@ do
 		changelog:SetText(E.CHANGELOG)
 
 		supportContainer:MarkDirty()
+		downloadContainer:MarkDirty()
 
 		local category = Settings.RegisterCanvasLayoutCategory(panel, L["ADDON_NAME"])
 
