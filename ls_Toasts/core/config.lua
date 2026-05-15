@@ -276,7 +276,7 @@ do
 
 		supportContainer:MarkDirty()
 
-		local category = Settings.RegisterCanvasLayoutCategory(panel, L["LS_ADDON"])
+		local category = Settings.RegisterCanvasLayoutCategory(panel, L["ADDON_NAME"])
 
 		Settings.RegisterAddOnCategory(category)
 
@@ -290,7 +290,7 @@ end
 function addon:CreateAceConfig()
 	C.options = {
 		type = "group",
-		name = s_format("%s |cffcacaca(%s)|r", L["LS_ADDON"], addon.VER.string),
+		name = s_format("%s |cffcacaca(%s)|r", L["ADDON_NAME"], addon.VER.string),
 		args = {
 			toggle_anchors = {
 				order = 1,

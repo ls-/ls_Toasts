@@ -112,7 +112,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 	addon:CreateAceConfig()
 
 	AddonCompartmentFrame:RegisterAddon({
-		text = L["LS_ADDON"],
+		text = L["ADDON_NAME"],
 		icon = "Interface\\AddOns\\ls_Toasts\\assets\\logo-32",
 		func = function()
 			if IsShiftKeyDown() then

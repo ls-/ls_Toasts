@@ -5,7 +5,7 @@ local C, D, L = addon.C, addon.D, addon.L
 local _G = getfenv(0)
 
 -- Mine
-L["LS_ADDON"] = ("LS: |c%sToasts|r"):format(D.global.colors.addon:GetHex())
+L["ADDON_NAME"] = ("LS: |c%sToasts|r"):format(D.global.colors.addon:GetHex())
 L["CURSEFORGE"] = "CurseForge"
 L["DISCORD"] = "Discord"
 L["GITHUB"] = "GitHub"
