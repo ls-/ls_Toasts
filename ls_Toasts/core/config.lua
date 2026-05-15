@@ -7,10 +7,8 @@ local m_floor = _G.math.floor
 local m_random = _G.math.random
 local next = _G.next
 local s_format = _G.string.format
-local type = _G.type
 
 -- Mine
-
 -- move these elsehwere
 local CL_LINK = "https://github.com/ls-/ls_Toasts/blob/master/CHANGELOG.md"
 local CURSE_LINK = "https://www.curseforge.com/wow/addons/ls-toasts"
