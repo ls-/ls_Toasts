@@ -145,9 +145,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		SLASH_LSTOASTS2 = "/lst"
 		SlashCmdList["LSTOASTS"] = function(msg)
 			if msg == "" then
-				if not InCombatLockdown() then
-					LibStub("AceConfigDialog-3.0"):Open(addonName)
-				end
+				addon:OpenAceConfig()
 			elseif msg == "test" then
 				P:TestAllSystems()
 			elseif msg == "flush" then
