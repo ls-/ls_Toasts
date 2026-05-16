@@ -2,22 +2,22 @@ Set-Location $PSScriptRoot
 
 $name = (Get-Item .).Name
 
-if (-Not (Test-Path (".\" + $name + "\" + $name + ".toc"))) {
-	Write-Host ".toc not found"
+if (-Not (Test-Path ("./$name/$name.toc"))) {
+	Write-Host ".toc not found!" -ForegroundColor Red
 
-	return Read-Host
+	Exit
 }
 
-if (Get-Content (".\" + $name + "\" + $name + ".toc") | Where-Object { $_ -match "Version:\s*([a-zA-Z0-9.-]+)" }) {
+if (Get-Content ("./$name/$name.toc") | Where-Object { $_ -match "Version:\s*([a-zA-Z0-9.-]+)" }) {
 	$version = $matches[1]
 } else {
-	Write-Host "Bad version format"
+	Write-Host "Bad version format!" -ForegroundColor Red
 
-	return Read-Host
+	Exit
 }
 
 $foldersToInclude = @(
-	".\$name"
+	$name
 )
 
 $filesToExclude = @(
@@ -40,7 +40,7 @@ $foldersToRemove = @(
 	"utils"
 )
 
-$temp = ".\temp\"
+$temp = "./temp/"
 
 if (Test-Path $temp) {
 	Remove-Item $temp -Recurse -Force
@@ -48,7 +48,9 @@ if (Test-Path $temp) {
 
 New-Item -Path $temp -ItemType Directory | Out-Null
 Copy-Item $foldersToInclude -Destination $temp -Exclude $filesToExclude -Recurse
-Get-ChildItem "$temp\$name\embeds\" -Attributes Hidden, !Hidden -Recurse | Where-Object { $_.PSIsContainer -and $_.Name -cin $foldersToRemove } | Remove-Item -Recurse -Force
+Get-ChildItem "$temp/$name/embeds/" -Attributes Hidden, !Hidden -Recurse |
+	Where-Object { $_.PSIsContainer -and $_.Name -cin $foldersToRemove } |
+	Remove-Item -Recurse -Force
 7zz a -tzip -mx9 "$name-$version.zip" (Get-ChildItem $temp)
-Move-Item "$name-$version.zip" -Destination .. -Force
+Move-Item "$name-$version.zip" -Destination ".." -Force
 Remove-Item $temp -Recurse -Force
