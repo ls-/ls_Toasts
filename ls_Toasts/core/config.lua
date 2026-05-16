@@ -223,7 +223,7 @@ do
 		downloadContainer:AddButton("Interface\\AddOns\\ls_Toasts\\assets\\curseforge-64", L["CURSEFORGE"], CURSE_LINK)
 		downloadContainer:AddButton("Interface\\AddOns\\ls_Toasts\\assets\\wago-64", L["WAGO"], WAGO_LINK)
 
-		local changelogHeader = createHeader(panel, s_format("%s |H%s|h[|c%s%s|r]|h",  L["CHANGELOG"], CL_LINK, D.global.colors.addon:GetHex(), L["CHANGELOG_FULL"]))
+		local changelogHeader = createHeader(panel, s_format("%s |H%s|h[|c%s%s|r]|h", L["CHANGELOG"], CL_LINK, D.global.colors.addon:GetHex(), L["CHANGELOG_FULL"]))
 		changelogHeader:SetPoint("TOP", downloadContainer, "BOTTOM", 0, 8)
 		changelogHeader:SetPoint("LEFT")
 		changelogHeader:SetPoint("RIGHT")
