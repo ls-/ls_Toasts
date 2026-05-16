@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 120005.02
+
+- Added profile import/export. Available at the "Profiles" tabs in Blizz config panel.
+
 ## Version 120005.01
 
 - Added 12.0.5 support.
