@@ -15,6 +15,7 @@ L["CURRENCY_THRESHOLD_DESC"] = "Inserisci |cffffd200-1|r per ignorare la valuta,
 L["DEFAULT_VALUE"] = "Valore predefinito: |cffffd200%s|r"
 L["DND"] = "ND"
 L["DND_DESC"] = "I toast in modalità ND non verranno mostrati in combattimento, ma verranno messi in coda nel sistema. Una volta uscito dal combattimento, verranno mostrate."
+L["EXPORT"] = "Esporta"
 L["FADE_OUT_DELAY"] = "Ritardo dissolvenza in uscita"
 L["FLUSH_QUEUE"] = "Azzera coda"
 L["GROWTH_DIR"] = "Direzione crescita"

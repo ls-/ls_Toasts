@@ -1,4 +1,4 @@
-local _, addon = ...
+﻿local _, addon = ...
 local L = addon.L
 
 -- Lua
@@ -20,6 +20,7 @@ L["DEFAULT_VALUE"] = "Valeur par défaut : |cffffd200%s|r"
 L["DND"] = "NPD"
 L["DND_DESC"] = "Les 'Toast' en mode NPD (Ne Pas Déranger) ne s'afficheront pas en combat mais seront stockés dans le système. Quand le combat s'achève, les 'Toast' s'affichent."
 L["DOWNLOADS"] = "Téléchargements"
+L["EXPORT"] = "Exporter"
 L["FADE_OUT_DELAY"] = "Délai de disparition en fondu"
 L["FLUSH_QUEUE"] = "Vider la file d'attente"
 L["FONTS"] = "Polices"
