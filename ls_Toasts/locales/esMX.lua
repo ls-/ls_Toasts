@@ -1,4 +1,4 @@
-local _, addon = ...
+﻿local _, addon = ...
 local L = addon.L
 
 -- Lua
@@ -16,6 +16,7 @@ L["COPPER_THRESHOLD_DESC"] = "Cantidad mínima de Cobre con la que mostrar un To
 L["DEFAULT_VALUE"] = "Valor por defecto: |cffffd200%s|r"
 L["DND"] = "DND"
 L["DND_DESC"] = "Toasts en modo DND no se mostrarán en combate, pero se pondrán a la cola del sistema. Una vez salgas de combate, aparecerán."
+L["EXPORT"] = "Exportar"
 L["FADE_OUT_DELAY"] = "Retraso de desvanecimiento"
 L["FLUSH_QUEUE"] = "Limpiar cola"
 L["FONTS"] = "Fuentes"

@@ -163,7 +163,6 @@ local function GuildToast_OnClick()
 	end
 end
 
-
 local function GuildToast_SetUp(event, guildName)
 	local toast = E:GetToast()
 

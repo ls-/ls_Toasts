@@ -6,5 +6,5 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 12.0.5 support.
+- Added profile import/export. Available at the "Profiles" tabs in Blizz config panel.
 ]]

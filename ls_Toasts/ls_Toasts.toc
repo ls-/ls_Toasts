@@ -1,11 +1,13 @@
 ## Interface: 120005
 ## Author: lightspark
-## Version: 120005.01
+## Version: 120005.02
 ## Title: LS: |cff1cd3a2Toasts|r
 ## Notes: Better toasts, cheers!
 ## IconTexture: Interface\AddOns\ls_Toasts\assets\logo-64
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
 ## LoadSavedVariablesFirst: 1
+
+## X-Curse-Project-ID: 101604
 
 embeds\_embeds.xml
 core\_core.xml

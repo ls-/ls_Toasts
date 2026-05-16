@@ -5,7 +5,7 @@ local C, D, L = addon.C, addon.D, addon.L
 local _G = getfenv(0)
 
 -- Mine
-L["LS_TOASTS"] = ("LS: |c%sToasts|r"):format(D.global.colors.addon:GetHex())
+L["ADDON_NAME"] = ("LS: |c%sToasts|r"):format(D.global.colors.addon:GetHex())
 L["CURSEFORGE"] = "CurseForge"
 L["DISCORD"] = "Discord"
 L["GITHUB"] = "GitHub"
@@ -48,6 +48,7 @@ L["HOUSING_FIXTURE"] = _G.HOUSING_ITEM_TOAST_TYPE_FIXTURE
 L["HOUSING_ROOM"] = _G.HOUSING_ITEM_TOAST_TYPE_ROOM
 L["ID"] = _G.ID
 L["ILVL"] = _G.LFG_LIST_ITEM_LEVEL_INSTR_SHORT
+L["IMPORT"] = _G.HUD_EDIT_MODE_IMPORT_LAYOUT
 L["ITEM_AZERITE_EMPOWERED"] = _G.AZERITE_EMPOWERED_ITEM_LOOT_LABEL
 L["ITEM_CORRUPTED"] = _G.CORRUPTED_ITEM_LOOT_LABEL
 L["ITEM_LEGENDARY"] = _G.LEGENDARY_ITEM_LOOT_LABEL
@@ -93,6 +94,7 @@ L["DEFAULT_VALUE"] = "Default value: |cffffd200%s|r"
 L["DND"] = "DND"
 L["DND_DESC"] = "Toasts in DND mode won't be displayed in combat, but will be queued up in the system. Once you leave combat, they'll start popping up."
 L["DOWNLOADS"] = "Downloads"
+L["EXPORT"] = "Export"
 L["FADE_OUT_DELAY"] = "Fade Out Delay"
 L["FLUSH_QUEUE"] = "Flush Queue"
 L["FONTS"] = "Fonts"

@@ -118,6 +118,9 @@ function E:RegisterOptions(id, dbTable, optionsTable)
 		C.db.profile.types[id] = {}
 		P:UpdateTable(db[id], C.db.profile.types[id])
 
+		D.profile.types[id] = {}
+		P:UpdateTable(db[id], D.profile.types[id])
+
 		C.db.profile.types[id].anchor = m_min(C.db.profile.types[id].anchor, #C.db.profile.anchors)
 	end
 
@@ -138,6 +141,7 @@ end
 
 function P:UpdateDB()
 	P:UpdateTable(db, C.db.profile.types)
+	P:UpdateTable(db, D.profile.types)
 
 	for id in next, db do
 		C.db.profile.types[id].anchor = m_min(C.db.profile.types[id].anchor, #C.db.profile.anchors)
