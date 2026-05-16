@@ -7,6 +7,8 @@
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
 ## LoadSavedVariablesFirst: 1
 
+## X-Curse-Project-ID: 101604
+
 embeds\_embeds.xml
 core\_core.xml
 locales\_locales.xml
