@@ -1,30 +1,31 @@
 Set-Location $PSScriptRoot
 
-$luacheckrc = ".\.luacheckrc"
+$lua = ".luacheckrc"
 
 $out = ""
-foreach ($line in Get-Content $luacheckrc) {
+foreach ($line in Get-Content $lua) {
 	if ($line -match "read_globals") { break }
 
-	$out += $line + "`n"
+	$out += "$line`n"
 }
 
-Set-Content $luacheckrc -Value $out.TrimEnd()
+Set-Content $lua -Value $out.TrimEnd()
 
-$out = @()
+$vars = @()
 luacheck --no-color . | ForEach-Object {
 	if ($_ -match "accessing undefined variable '(.+?)'") {
-		if ($out -notcontains $matches[1]) {
-			$out += $matches[1]
+		if ($vars -notcontains $matches[1]) {
+			$vars += $matches[1]
 		}
 	}
 }
 
-Add-Content $luacheckrc ""
-Add-Content $luacheckrc ("read_globals = {")
+$out += "read_globals = {`n"
 
-foreach ($arg in $out | Sort-Object) {
-	Add-Content $luacheckrc ("`t`"" + $arg + "`",")
+foreach ($var in $vars | Sort-Object) {
+	$out += "`t`"$var`",`n"
 }
 
-Add-Content $luacheckrc ("}")
+$out += "}`n"
+
+Set-Content $lua -Value $out.TrimEnd()
