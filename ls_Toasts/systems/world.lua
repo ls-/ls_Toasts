@@ -37,7 +37,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 	end
 
 	if isNew then
-		local info =  C_QuestLog.GetQuestTagInfo(questID)
+		local info = C_QuestLog.GetQuestTagInfo(questID)
 		if not info then
 			toast:Release()
 

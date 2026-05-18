@@ -223,7 +223,7 @@ do
 		downloadContainer:AddButton("Interface\\AddOns\\ls_Toasts\\assets\\curseforge-64", L["CURSEFORGE"], CURSE_LINK)
 		downloadContainer:AddButton("Interface\\AddOns\\ls_Toasts\\assets\\wago-64", L["WAGO"], WAGO_LINK)
 
-		local changelogHeader = createHeader(panel, s_format("%s |H%s|h[|c%s%s|r]|h",  L["CHANGELOG"], CL_LINK, D.global.colors.addon:GetHex(), L["CHANGELOG_FULL"]))
+		local changelogHeader = createHeader(panel, s_format("%s |H%s|h[|c%s%s|r]|h", L["CHANGELOG"], CL_LINK, D.global.colors.addon:GetHex(), L["CHANGELOG_FULL"]))
 		changelogHeader:SetPoint("TOP", downloadContainer, "BOTTOM", 0, 8)
 		changelogHeader:SetPoint("LEFT")
 		changelogHeader:SetPoint("RIGHT")
@@ -476,18 +476,21 @@ function addon:CreateAceConfig()
 		return not SettingsPanel:IsShown()
 	end
 
-	C.options.args.profiles.args.spacer_1 = {
-		order = 100,
-		type = "description",
-		name = " ",
-	}
-
-	C.options.args.profiles.args.importexport = {
-		order = 110,
-		type = "execute",
-		name = s_format("%s / %s", L["IMPORT"], L["EXPORT"]),
-		func = addon.OpenImportExport,
-		width = "full",
+	C.options.args.profiles.plugins = {
+		[addonName] = {
+			spacer_1 = {
+				order = 100,
+				type = "description",
+				name = " ",
+			},
+			importexport = {
+				order = 110,
+				type = "execute",
+				name = s_format("%s / %s", L["IMPORT"], L["EXPORT"]),
+				func = addon.OpenImportExport,
+				width = "full",
+			},
+		},
 	}
 
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, C.options.args.profiles.name, addon:GetBlizzCategory():GetID(), "profiles")
