@@ -6,5 +6,5 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added profile import/export. Available at the "Profiles" tabs in Blizz config panel.
+- Fixed an issue where profile import/export leaked into other addons. TIL.
 ]]

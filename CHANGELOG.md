@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 120005.03
+
+- Fixed an issue where profile import/export leaked into other addons. TIL.
+
 ## Version 120005.02
 
 - Added profile import/export. Available at the "Profiles" tabs in Blizz config panel.
