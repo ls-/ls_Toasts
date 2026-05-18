@@ -476,18 +476,21 @@ function addon:CreateAceConfig()
 		return not SettingsPanel:IsShown()
 	end
 
-	C.options.args.profiles.args.spacer_1 = {
-		order = 100,
-		type = "description",
-		name = " ",
-	}
-
-	C.options.args.profiles.args.importexport = {
-		order = 110,
-		type = "execute",
-		name = s_format("%s / %s", L["IMPORT"], L["EXPORT"]),
-		func = addon.OpenImportExport,
-		width = "full",
+	C.options.args.profiles.plugins = {
+		[addonName] = {
+			spacer_1 = {
+				order = 100,
+				type = "description",
+				name = " ",
+			},
+			importexport = {
+				order = 110,
+				type = "execute",
+				name = s_format("%s / %s", L["IMPORT"], L["EXPORT"]),
+				func = addon.OpenImportExport,
+				width = "full",
+			},
+		},
 	}
 
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, C.options.args.profiles.name, addon:GetBlizzCategory():GetID(), "profiles")
