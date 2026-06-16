@@ -3,6 +3,7 @@
 ## Version 120007.01
 
 - Added 12.0.7 support.
+- Updated Traditional Chinese translation. Translated by BNS333@Curse.
 
 ### Loot (Currency)
 
