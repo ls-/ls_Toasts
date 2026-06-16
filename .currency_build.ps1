@@ -26,7 +26,8 @@ $categoriesToBlacklist = @(
 	253, # Test Subcategory 1
 	254, # Test Subcategory 2
 	255, # Test Subcategory 3
-	256  # Test Subcategory 4
+	256, # Test Subcategory 4
+	278  # Sites Score UI (Hidden)
 )
 
 # convert IDs to int because sorting strings sucks ass
