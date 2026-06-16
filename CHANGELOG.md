@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 120007.01
+
+- Added 12.0.7 support.
+
+### Loot (Currency)
+
+- Fixed the Ritual Site scoreboard spam.
+
 ## Version 120005.03
 
 - Fixed an issue where profile import/export leaked into other addons. TIL.
@@ -303,7 +311,7 @@
 ## Version 90100.03
 
 - Fixed "Torghast - Scoreboard" toast spam. Once again. Blizz continue adding
-  more info with hotfixes, so this most likely isn't the last spam fix. 
+  more info with hotfixes, so this most likely isn't the last spam fix.
 
 ## Version 90100.02
 
@@ -333,7 +341,7 @@
   to set thresholds below which toasts won't be generated. The addon will try to populate the
   currency list with discovered currencies automatically, thus you should log in on a character
   that discovered them most currencies at least once, but there's a way to add currency IDs
-  manually. Out of the box, the only active currency filter is for `"Honor"`, it's set to 25; 
+  manually. Out of the box, the only active currency filter is for `"Honor"`, it's set to 25;
 - Updated Traditional Chinese translation. Translated by RainbowUI@Curse.
 
 ![](https://i.imgur.com/zpXx0KW.png)
@@ -373,8 +381,8 @@ NOTE: You'll have to restart WoW client to make things work after the update.
 
 ## Version 80200.06
 
-- Fixed "Artifact Fragment" currency spam in Ashran. If you encounter similar issues in the future  
-  feel free to report them. There's a number of unusual currencies in the game that behave  
+- Fixed "Artifact Fragment" currency spam in Ashran. If you encounter similar issues in the future
+  feel free to report them. There's a number of unusual currencies in the game that behave
   differently from others, so manual adjustments are needed to handle them properly.
 
 ## Version 80200.05
@@ -393,7 +401,7 @@ NOTE: You'll have to restart WoW client to make things work after the update.
 ## Version 80200.03
 
 - Re-added copper threshold to gold toasts;
-- Made gold loss tracking optional. Enabling this feature will make gold toasts ignore set copper  
+- Made gold loss tracking optional. Enabling this feature will make gold toasts ignore set copper
   threshold. Disabled by default;
 - Updated German translation. Translated by Merathilis@Curse;
 - Updated Korean translation. Translated by netaras@Curse;
@@ -402,7 +410,7 @@ NOTE: You'll have to restart WoW client to make things work after the update.
 
 ## Version 80200.02
 
-- Rewrote gold toasts to display money gains and losses. Removed the copper threshold option  
+- Rewrote gold toasts to display money gains and losses. Removed the copper threshold option
   because it's interfering with the new functionality;
 - Updated embeds.
 
@@ -415,10 +423,10 @@ NOTE: You'll have to restart WoW client to make things work after the update.
 
 ## Version 80100.10
 
-- Added "ToastCreated", "ToastSpawned", and "ToastReleased" callbacks. As always, callbacks use  
+- Added "ToastCreated", "ToastSpawned", and "ToastReleased" callbacks. As always, callbacks use
   CallbackHandler-1.0;
 - Renamed toasts' Recycle method to Release. Recycle is still available, but is deprecated;
-- Renamed "SetSkin" and "ResetSkin" callbacks to "SkinSet" and "SkinReset". "SetSkin" and  
+- Renamed "SetSkin" and "ResetSkin" callbacks to "SkinSet" and "SkinReset". "SetSkin" and
   "ResetSkin" are still available, but are deprecated;
 - Fixed toasts' border's tiling;
 - Updated embeds.
@@ -437,13 +445,13 @@ NOTE: You'll have to restart WoW client to make things work after the update.
 
 ## Version 80100.06
 
-- Fixed an issue where multiple transmog toasts were shown for different sources of the same  
+- Fixed an issue where multiple transmog toasts were shown for different sources of the same
   appearance. It's mainly occurring when turning in the weekly conquest quest.
 
 ## Version 80100.05
 
 - Fixed an issue where world quest toasts wouldn't show the rewards;
-- Tweaked achievement toasts. Added tooltips, guild achievements' toasts will now use "Guild  
+- Tweaked achievement toasts. Added tooltips, guild achievements' toasts will now use "Guild
   Achievement Earned" as their title;
 - Updated German translation. Translated by Merathilis@Curse;
 - Updated Traditional Chinese translation. Translated by BNSSNB@Curse;
@@ -451,28 +459,28 @@ NOTE: You'll have to restart WoW client to make things work after the update.
 
 ## Version 80100.04
 
-- Added "SetSkin" and "ResetSkin" callbacks. Use these if you hooked my ApplySkin method to modify toasts'  
-  appearance since ApplySkin no longer exists. Callbacks use CallbackHandler-1.0, so something like  
+- Added "SetSkin" and "ResetSkin" callbacks. Use these if you hooked my ApplySkin method to modify toasts'
+  appearance since ApplySkin no longer exists. Callbacks use CallbackHandler-1.0, so something like
   `ls_Toasts[1].RegisterCallback({}, "SetSkin", function(callbackName, toast) end)` should do the trick;
 - Updated Traditional Chinese translation. Translated by BNSSNB@Curse;
 - Misc performance and memory optimisations.
 
 ## Version 80100.03
 
-- Added support for multiple toast anchors. Each anchor has its own growth, scale, and other  
+- Added support for multiple toast anchors. Each anchor has its own growth, scale, and other
   settings;
 - Added options to adjust toast growth offsets.
 
 ## Version 80100.02
 
-- Improved compatibility with addons that modify chat messages which are used by common loot and  
+- Improved compatibility with addons that modify chat messages which are used by common loot and
   currency toasts.
 
 ## Version 80100.01
 
 - Added 8.1.0 support;
 - Slightly reorganised in-game config;
-- Fixed common loot toasts. Items created via professions and scrapping should be handled  
+- Fixed common loot toasts. Items created via professions and scrapping should be handled
   correctly once again.
 
 ## Version 80000.06
@@ -482,7 +490,7 @@ NOTE: You'll have to restart WoW client to make things work after the update.
 
 ## Version 80000.05
 
-- Updated the default background texture. Retired all other backgrounds, but I'll eventually  
+- Updated the default background texture. Retired all other backgrounds, but I'll eventually
   redraw some of them in higher resolution;
 - Updated included ElvUI skins;
 - Updated Korean translation. Translated by next96@Curse.

@@ -6,5 +6,9 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Fixed an issue where profile import/export leaked into other addons. TIL.
+- Added 12.0.7 support.
+
+### Loot (Currency)
+
+- Fixed the Ritual Site scoreboard spam.
 ]]
