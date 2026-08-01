@@ -22,8 +22,7 @@ end
 
 local function RecipeToast_OnEnter(self)
 	if self._data.recipe_id then
-		GameTooltip:SetSpellByID(self._data.recipe_id)
-		GameTooltip:Show()
+		addon.Tooltip:ShowRecipe(self._data.recipe_id)
 	end
 end
 

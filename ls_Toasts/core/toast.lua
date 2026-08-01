@@ -91,9 +91,7 @@ local function slot_OnEnter(self)
 		p, rP, x, y = "BOTTOMRIGHT", "TOPLEFT", 2, -2
 	end
 
-	GameTooltip:Hide()
-	GameTooltip:SetOwner(self, "ANCHOR_NONE")
-	GameTooltip:SetPoint(p, self, rP, x, y)
+	addon.Tooltip:SetAnchor(self, p, rP, x, y)
 end
 
 local function slot_OnLeave(self)
@@ -102,15 +100,6 @@ local function slot_OnLeave(self)
 end
 
 -- Base Toast
-local function MODIFIER_STATE_CHANGED()
-	if IsModifiedClick("COMPAREITEMS") or GetCVarBool("alwaysCompareItems") then
-		GameTooltip_ShowCompareItem()
-	else
-		ShoppingTooltip1:Hide()
-		ShoppingTooltip2:Hide()
-	end
-end
-
 local function toast_OnShow(self)
 	if self._data.init_show then
 		if self._data.sound_file then
@@ -147,15 +136,10 @@ local function toast_OnEnter(self)
 		p, rP, x, y = "BOTTOMRIGHT", "TOPLEFT", 2, -2
 	end
 
-	GameTooltip:Hide()
-	GameTooltip:SetOwner(self, "ANCHOR_PRESERVE")
-	GameTooltip:ClearAllPoints()
-	GameTooltip:SetPoint(p, self, rP, x, y)
+	addon.Tooltip:SetAnchor(self, p, rP, x, y)
 
 	self.AnimOut:Stop()
 	self:SetAlpha(1)
-
-	E:RegisterEvent("MODIFIER_STATE_CHANGED", MODIFIER_STATE_CHANGED)
 end
 
 local function toast_OnLeave(self)
@@ -163,12 +147,8 @@ local function toast_OnLeave(self)
 	GameTooltip:Hide()
 	GarrisonFollowerTooltip:Hide()
 	GarrisonShipyardFollowerTooltip:Hide()
-	ShoppingTooltip1:Hide()
-	ShoppingTooltip2:Hide()
 
 	self.AnimOut:Play()
-
-	E:UnregisterEvent("MODIFIER_STATE_CHANGED", MODIFIER_STATE_CHANGED)
 end
 
 local function toastAnimIn_OnFinished(self)

@@ -8,16 +8,12 @@ local _G = getfenv(0)
 local function Slot_OnEnter(self)
 	if self._data.type then
 		if self._data.type == "item" then
-			GameTooltip:SetHyperlink(self._data.link)
+			addon.Tooltip:ShowHyperlink(self._data.link)
 		elseif self._data.type == "xp" then
-			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(L["XP_FORMAT"]:format(self._data.count), 1, 1, 1)
+			addon.Tooltip:ShowCommonReceivedTooltip(L["XP_FORMAT"]:format(self._data.count))
 		elseif self._data.type == "money" then
-			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(GetMoneyString(self._data.count, true), 1, 1, 1)
+			addon.Tooltip:ShowCommonReceivedTooltip(GetMoneyString(self._data.count, true))
 		end
-
-		GameTooltip:Show()
 	end
 end
 

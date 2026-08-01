@@ -1310,8 +1310,7 @@ local MULT = {
 
 local function Toast_OnEnter(self)
 	if self._data.tooltip_link then
-		GameTooltip:SetHyperlink(self._data.tooltip_link)
-		GameTooltip:Show()
+		addon.Tooltip:ShowHyperlink(self._data.tooltip_link)
 	end
 end
 

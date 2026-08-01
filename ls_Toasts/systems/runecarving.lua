@@ -3,7 +3,6 @@ local E, L, C = addon.E, addon.L, addon.C
 
 -- Lua
 local _G = getfenv(0)
-local t_concat = _G. table.concat
 
 -- Mine
 local function Toast_OnClick(self)
@@ -18,43 +17,9 @@ local function Toast_OnClick(self)
 	end
 end
 
--- based on function RuneforgePowerBaseMixin:OnEnter()
 local function Toast_OnEnter(self)
 	if self._data.runecarving_id then
-		local info = C_LegendaryCrafting.GetRuneforgePowerInfo(self._data.runecarving_id)
-
-		GameTooltip_SetTitle(GameTooltip, info.name, LEGENDARY_ORANGE_COLOR)
-		GameTooltip_AddColoredLine(GameTooltip, info.description, GREEN_FONT_COLOR)
-
-		local slots = C_LegendaryCrafting.GetRuneforgePowerSlots(self._data.runecarving_id)
-		if #slots > 0 then
-			slots = HIGHLIGHT_FONT_COLOR:WrapTextInColorCode(t_concat(slots, LIST_DELIMITER))
-
-			GameTooltip_AddBlankLineToTooltip(GameTooltip)
-			GameTooltip_AddNormalLine(GameTooltip, L["RUNECARVING_SLOT_FORMAT"]:format(slots))
-		end
-
-		if info.source then
-			GameTooltip_AddBlankLineToTooltip(GameTooltip)
-			GameTooltip_AddNormalLine(GameTooltip, L["RUNECARVING_SOURCE_FORMAT"]:format(HIGHLIGHT_FONT_COLOR:WrapTextInColorCode(info.source)))
-		end
-
-		if info.specName then
-			GameTooltip_AddBlankLineToTooltip(GameTooltip)
-
-			if info.matchesSpec then
-				GameTooltip_AddNormalLine(GameTooltip, L["RUNECARVING_SPEC_FORMAT"]:format(HIGHLIGHT_FONT_COLOR:WrapTextInColorCode(info.specName)))
-			else
-				GameTooltip_AddErrorLine(GameTooltip, L["RUNECARVING_SPEC_FORMAT"]:format(info.specName))
-			end
-		end
-
-		if info.state ~= Enum.RuneforgePowerState.Available then
-			GameTooltip_AddBlankLineToTooltip(GameTooltip)
-			GameTooltip_AddErrorLine(GameTooltip, L["RUNECARVING_NOT_COLLECTED"])
-		end
-
-		GameTooltip:Show()
+		addon.Tooltip:ShowRuneforgePower(self._data.runecarving_id)
 	end
 end
 

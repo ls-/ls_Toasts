@@ -46,8 +46,7 @@ end
 
 local function EntitlementToast_OnEnter(self)
 	if self._data.tooltip_link and self._data.tooltip_link:find("item") then
-		GameTooltip:SetHyperlink(self._data.tooltip_link)
-		GameTooltip:Show()
+		addon.Tooltip:ShowHyperlink(self._data.tooltip_link)
 	end
 end
 

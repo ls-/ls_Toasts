@@ -62,13 +62,6 @@ local WHITELIST = {
 	[1535] = true, -- Drust Archaeology Fragment
 }
 
-local function Toast_OnEnter(self)
-	if self._data.tooltip_link then
-		GameTooltip:SetHyperlink(self._data.tooltip_link)
-		GameTooltip:Show()
-	end
-end
-
 local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or FormatLargeNumber(m_abs(value)))
 end
@@ -100,10 +93,6 @@ local function FragmentToast_SetUp(event, link, quantity)
 			toast._data.sound_file = C.db.profile.types.archaeology.sfx and 31578 -- SOUNDKIT.UI_EPICLOOT_TOAST
 			toast._data.vfx = C.db.profile.types.archaeology.vfx
 			toast._data.tooltip_link = link
-
-			if C.db.profile.types.archaeology.tooltip then
-				toast:HookScript("OnEnter", Toast_OnEnter)
-			end
 
 			toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
 		else
