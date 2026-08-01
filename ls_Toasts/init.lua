@@ -103,7 +103,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 
 		for _, callbackTable in next, EventRegistry:GetCallbackTables() do
 			if callbackTable[event] then
-				callbackTable[event] = nil
+				addon:PurgeKey(callbackTable, event)
 			end
 		end
 	end
