@@ -56,5 +56,14 @@ function P:Modernize(data, name, key)
 
 			data.version = 11000203
 		end
+
+		-- ->120100.01
+		if data.version < 12010001 then
+			if data.types and data.types.archaeology then
+				data.types.archaeology.tooltip = nil
+			end
+
+			data.version = 12010001
+		end
 	end
 end

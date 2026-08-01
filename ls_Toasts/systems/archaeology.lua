@@ -36,9 +36,7 @@ local function ARTIFACT_DIGSITE_COMPLETE(researchFieldID)
 end
 
 ------
-local NO_GAIN_SOURCE = Enum.CurrencySource.Last
-
--- https://wago.tools/db2/CurrencyTypes?filter%5BCategoryID%5D=82
+-- https://wago.tools/db2/CurrencyTypes?filter%5BCategoryID%5D=exact%3A82
 local WHITELIST = {
 	-- 82 (Archaeology)
 	[ 384] = true, -- Dwarf Archaeology Fragment
@@ -129,8 +127,12 @@ local function FragmentToast_SetUp(event, link, quantity)
 	end
 end
 
-local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
-	if not (id and WHITELIST[id]) or gainSource == NO_GAIN_SOURCE then
+local function CURRENCY_DISPLAY_UPDATE(id, _, quantity)
+	if not (id and WHITELIST[id]) then
+		return
+	end
+
+	if quantity < 1 then
 		return
 	end
 
@@ -181,7 +183,6 @@ E:RegisterOptions("archaeology", {
 	dnd = false,
 	sfx = true,
 	vfx = true,
-	tooltip = true,
 }, {
 	name = L["TYPE_ARCHAEOLOGY"],
 	get = function(info)
