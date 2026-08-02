@@ -73,7 +73,6 @@ local function HOUSE_DECOR_ADDED_TO_CHEST(_, decorID)
 	ItemToast_SetUp("HOUSE_DECOR_ADDED_TO_CHEST", Enum.HousingItemToastType.Decor, name, icon, decorID)
 end
 
-
 local function Enable()
 	if C.db.profile.types.housing.enabled then
 		E:RegisterEvent("HOUSE_DECOR_ADDED_TO_CHEST", HOUSE_DECOR_ADDED_TO_CHEST)

@@ -181,7 +181,6 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				toast.Icon:SetTexture("Interface\\ICONS\\Spell_Misc_EmotionSad")
 				toast.IconBorder:Show()
 
-
 				toast:Spawn(1, false)
 			end
 		end
