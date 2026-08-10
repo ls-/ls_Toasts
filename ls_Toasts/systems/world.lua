@@ -56,7 +56,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			end
 		end
 
-		if xpReward and xpReward > 0 and UnitLevel("player") < GetMaxPlayerLevel() then
+		if xpReward and xpReward > 0 and not IsXPUserDisabled() and not GameRulesUtil.IsPlayerAtEffectiveMaxLevel() then
 			usedSlots = usedSlots + 1
 
 			local slot = toast["Slot" .. usedSlots]
