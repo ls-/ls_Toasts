@@ -49,7 +49,7 @@ local function ItemToast_SetUp(event, itemType, itemName, itemIcon, decorID)
 	toast.Title:SetText(houseItemTitles[itemType])
 	toast.Text:SetText(itemName)
 	toast.Icon:SetTexture(itemIcon or houseItemIcons[itemType])
-	toast.IconBorder:Show()
+	toast.IconBorder:SetShown(not decorID)
 
 	toast._data.event = event
 	toast._data.decor_id = decorID
