@@ -4,6 +4,7 @@ local addonName, addon = ...
 local _G = getfenv(0)
 local error = _G.error
 local geterrorhandler = _G.geterrorhandler
+local issecurevariable = _G.issecurevariable
 local next = _G.next
 local pairs = _G.pairs
 local s_format = _G.string.format
@@ -154,6 +155,19 @@ function addon:DiffTable(dest, src, blocker)
 			end
 		end
 	end
+end
+
+function addon:PurgeKey(t, k)
+	t[k] = nil
+
+	local c = 42
+	repeat
+		if t[c] == nil then
+			t[c] = nil
+		end
+
+		c = c + 1
+	until issecurevariable(t, k)
 end
 
 do

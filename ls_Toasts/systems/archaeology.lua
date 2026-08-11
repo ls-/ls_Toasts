@@ -36,9 +36,7 @@ local function ARTIFACT_DIGSITE_COMPLETE(researchFieldID)
 end
 
 ------
-local NO_GAIN_SOURCE = Enum.CurrencySource.Last
-
--- https://wago.tools/db2/CurrencyTypes?filter%5BCategoryID%5D=82
+-- https://wago.tools/db2/CurrencyTypes?filter%5BCategoryID%5D=exact%3A82
 local WHITELIST = {
 	-- 82 (Archaeology)
 	[ 384] = true, -- Dwarf Archaeology Fragment
@@ -63,13 +61,6 @@ local WHITELIST = {
 	[1534] = true, -- Zandalari Archaeology Fragment
 	[1535] = true, -- Drust Archaeology Fragment
 }
-
-local function Toast_OnEnter(self)
-	if self._data.tooltip_link then
-		GameTooltip:SetHyperlink(self._data.tooltip_link)
-		GameTooltip:Show()
-	end
-end
 
 local function PostSetAnimatedValue(self, value)
 	self:SetText(value == 1 and "" or FormatLargeNumber(m_abs(value)))
@@ -103,10 +94,6 @@ local function FragmentToast_SetUp(event, link, quantity)
 			toast._data.vfx = C.db.profile.types.archaeology.vfx
 			toast._data.tooltip_link = link
 
-			if C.db.profile.types.archaeology.tooltip then
-				toast:HookScript("OnEnter", Toast_OnEnter)
-			end
-
 			toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
 		else
 			toast:Recycle()
@@ -129,8 +116,12 @@ local function FragmentToast_SetUp(event, link, quantity)
 	end
 end
 
-local function CURRENCY_DISPLAY_UPDATE(id, _, quantity, gainSource)
-	if not (id and WHITELIST[id]) or gainSource == NO_GAIN_SOURCE then
+local function CURRENCY_DISPLAY_UPDATE(id, _, quantity)
+	if not (id and WHITELIST[id]) then
+		return
+	end
+
+	if quantity < 1 then
 		return
 	end
 
@@ -181,7 +172,6 @@ E:RegisterOptions("archaeology", {
 	dnd = false,
 	sfx = true,
 	vfx = true,
-	tooltip = true,
 }, {
 	name = L["TYPE_ARCHAEOLOGY"],
 	get = function(info)

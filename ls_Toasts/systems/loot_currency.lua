@@ -1164,6 +1164,7 @@ local BLACKLIST = {
 	[3209] = true, -- 12.x Professions - Tracker - Insc Book - Enchanting Knowledge
 	[3210] = true, -- 12.x Professions - Tracker - Insc Book - Blacksmithing Knowledge
 	[3211] = true, -- 12.x Professions - Tracker - Insc Book - Alchemy Knowledge
+	[3212] = true, -- Radiant Spark Dust
 	[3213] = true, -- Dragon Racing - Personal Best Record - 112 Hope's R1 Easy
 	[3214] = true, -- Dragon Racing - Personal Best Record - 112 Hope's R1 Advanced
 	[3215] = true, -- Dragon Racing - Personal Best Record - 112 Hope's R1 Reverse
@@ -1222,9 +1223,13 @@ local BLACKLIST = {
 	[3315] = true, -- Renown - Gallagio Loyalty Rewards Club
 	[3317] = true, -- Renown - Season 1 Delves
 	[3318] = true, -- Delver's Journey
+	[3341] = true, -- Veteran Dawncrest
 	[3342] = true, -- Veteran Dawncrest
+	[3343] = true, -- Champion Dawncrest
 	[3344] = true, -- Champion Dawncrest
+	[3345] = true, -- Hero Dawncrest
 	[3346] = true, -- Hero Dawncrest
+	[3347] = true, -- Myth Dawncrest
 	[3348] = true, -- Myth Dawncrest
 	[3354] = true, -- The Amani Tribe
 	[3355] = true, -- Renown - The Amani Tribe
@@ -1236,6 +1241,8 @@ local BLACKLIST = {
 	[3371] = true, -- Renown - Silvermoon Court
 	[3372] = true, -- Bronze
 	[3375] = true, -- [DNT] Moth Hunt Tracking Currency
+	[3378] = true, -- Dawnlight Manaflux
+	[3383] = true, -- Adventurer Dawncrest
 	[3385] = true, -- Luminous Dust
 	[3386] = true, -- Renown - Prey
 	[3387] = true, -- Preyseeker's Journey
@@ -1259,6 +1266,11 @@ local BLACKLIST = {
 	[3434] = true, -- Housing - Going Postal - Personal Best Record - Horde - Rt1
 	[3435] = true, -- Housing - Going Postal - Personal Best Record - Horde - Rt2
 	[3436] = true, -- Housing - Going Postal - Personal Best Record - Horde - Rt3
+	[3437] = true, -- Adventurer Mistcrest
+	[3438] = true, -- Veteran Mistcrest
+	[3439] = true, -- Champion Mistcrest
+	[3440] = true, -- Hero Mistcrest
+	[3441] = true, -- Myth Mistcrest
 	[3449] = true, -- Total Score
 	[3450] = true, -- Sites Tier
 	[3451] = true, -- Sites Treasure
@@ -1273,14 +1285,17 @@ local BLACKLIST = {
 	[3460] = true, -- Challenge - Patrols
 	[3461] = true, -- Challenge - Banners
 	[3462] = true, -- Sites Bosses
+	[3464] = true, -- Renown - Season 2 Delves
 	[3466] = true, -- Sites Deaths
 	[3467] = true, -- Sites Deaths Dues
+	[3471] = true, -- Renown - Zul'jarra's Forces
 	[3474] = true, -- Bonus Experience
 	[3477] = true, -- Sites Rares
 	[3479] = true, -- Spoils
 	[3480] = true, -- Deaths
 	[3481] = true, -- Sites Death Percent
 	[3482] = true, -- Sites Subtotal
+	[3483] = true, -- Delver's Journey
 	[3487] = true, -- Tailoring Specialization Reset
 	[3488] = true, -- Skinning Specialization Reset
 	[3489] = true, -- Mining Specialization Reset
@@ -1292,9 +1307,22 @@ local BLACKLIST = {
 	[3495] = true, -- Enchanting Specialization Reset
 	[3496] = true, -- Blacksmithing Specialization Reset
 	[3497] = true, -- Alchemy Specialization Reset
+	[3504] = true, -- Zul'jarra's Forces
 	[3505] = true, -- [DNT] Diver Score
 	[3506] = true, -- [DNT] Diver Display Currency
 	[3513] = true, -- Nebulous Voidcore
+	[3514] = true, -- Renown - Prey Season 2
+	[3515] = true, -- Preyseeker's Journey
+	[3532] = true, -- 12.1 Delves - Personal Tracker - S2 Weekly Turn-In (Hidden)
+	[3540] = true, -- Captain Tokka
+	[3545] = true, -- Renown - Season 3 Delves
+	[3568] = true, -- Contained Corruption
+	[3569] = true, -- Cleansing Multiplier
+	[3570] = true, -- Wave Multiplier
+	[3574] = true, -- PMM Currency 1
+	[3575] = true, -- PMM Currency 2
+	[3583] = true, -- Housing - Going Postal - Personal Best Record - Alliance - Rt1
+	[3584] = true, -- Housing - Going Postal - Personal Best Record - Alliance - Rt1
 }
 
 local MULT = {
@@ -1310,8 +1338,7 @@ local MULT = {
 
 local function Toast_OnEnter(self)
 	if self._data.tooltip_link then
-		GameTooltip:SetHyperlink(self._data.tooltip_link)
-		GameTooltip:Show()
+		addon.Tooltip:ShowHyperlink(self._data.tooltip_link)
 	end
 end
 

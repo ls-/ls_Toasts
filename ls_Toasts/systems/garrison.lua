@@ -3,10 +3,7 @@ local E, L, C = addon.E, addon.L, addon.C
 
 -- Lua
 local _G = getfenv(0)
-local pcall = _G.pcall
-local s_split = _G.string.split
 local select = _G.select
-local tonumber = _G.tonumber
 
 -- Mine
 local PLAYER_CLASS = select(3, UnitClass("player"))
@@ -97,54 +94,7 @@ end
 
 local function FollowerToast_OnEnter(self)
 	if self._data.follower_id then
-		local isOK, link = pcall(C_Garrison.GetFollowerLink, self._data.follower_id)
-		if not isOK then
-			isOK, link = pcall(C_Garrison.GetFollowerLinkByID, self._data.follower_id)
-		end
-
-		if isOK and link then
-			-- colour code, link type, ...
-			local _, _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4, spec1 = s_split(":", link)
-			garrisonFollowerID = tonumber(garrisonFollowerID)
-
-			local data = {
-				garrisonFollowerID = garrisonFollowerID,
-				followerTypeID = C_Garrison.GetFollowerTypeByID(garrisonFollowerID),
-				collected = false,
-				hyperlink = false,
-				name = C_Garrison.GetFollowerNameByID(garrisonFollowerID),
-				spec = C_Garrison.GetFollowerClassSpecByID(garrisonFollowerID),
-				portraitIconID = C_Garrison.GetFollowerPortraitIconIDByID(garrisonFollowerID),
-				quality = tonumber(quality),
-				level = tonumber(level),
-				xp = 0,
-				levelxp = 0,
-				iLevel = tonumber(itemLevel),
-				spec1 = tonumber(spec1),
-				ability1 = tonumber(ability1),
-				ability2 = tonumber(ability2),
-				ability3 = tonumber(ability3),
-				ability4 = tonumber(ability4),
-				trait1 = tonumber(trait1),
-				trait2 = tonumber(trait2),
-				trait3 = tonumber(trait3),
-				trait4 = tonumber(trait4),
-				isTroop = C_Garrison.GetFollowerIsTroop(garrisonFollowerID),
-			}
-
-			local tooltip
-			if data.followerTypeID == Enum.GarrisonFollowerType.FollowerType_6_0_Boat then
-				tooltip = GarrisonShipyardFollowerTooltip
-				GarrisonFollowerTooltipTemplate_SetShipyardFollower(tooltip, data)
-			else
-				tooltip = GarrisonFollowerTooltip
-				GarrisonFollowerTooltipTemplate_SetGarrisonFollower(tooltip, data)
-			end
-
-			tooltip:Show()
-			tooltip:ClearAllPoints()
-			tooltip:SetPoint(GameTooltip:GetPoint())
-		end
+		addon.Tooltip:ShowGarrisonFollower(self._data.follower_id)
 	end
 end
 
@@ -253,10 +203,7 @@ local treeIDToTalentText = {
 
 local function TalentToast_OnEnter(self)
 	if self._data.talend_id then
-		local talent = C_Garrison.GetTalentInfo(self._data.talend_id)
-		GameTooltip:AddLine(talent.name, 1, 1, 1)
-		GameTooltip:AddLine(talent.description, nil, nil, nil, true)
-		GameTooltip:Show()
+		addon.Tooltip:ShowGarrisonTalent(self._data.talend_id)
 	end
 end
 

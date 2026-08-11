@@ -12,19 +12,14 @@ local CURRENCY_TEMPLATE = "%s|T%s:0|t"
 local function Slot_OnEnter(self)
 	if self._data.type then
 		if self._data.type == "item" then
-			GameTooltip:SetHyperlink(self._data.link)
+			addon.Tooltip:ShowHyperlink(self._data.link)
 		elseif self._data.type == "xp" then
-			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(L["XP_FORMAT"]:format(self._data.count), 1, 1, 1)
+			addon.Tooltip:ShowCommonReceivedTooltip(L["XP_FORMAT"]:format(self._data.count))
 		elseif self._data.type == "money" then
-			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(GetMoneyString(self._data.count, true), 1, 1, 1)
+			addon.Tooltip:ShowCommonReceivedTooltip(GetMoneyString(self._data.count, true))
 		elseif self._data.type == "currency" then
-			GameTooltip:AddLine(L["YOU_RECEIVED"])
-			GameTooltip:AddLine(CURRENCY_TEMPLATE:format(self._data.count, self._data.texture), 1, 1, 1)
+			addon.Tooltip:ShowCommonReceivedTooltip(CURRENCY_TEMPLATE:format(self._data.count, self._data.texture))
 		end
-
-		GameTooltip:Show()
 	end
 end
 
@@ -61,7 +56,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 			end
 		end
 
-		if xpReward and xpReward > 0 and UnitLevel("player") < GetMaxPlayerLevel() then
+		if xpReward and xpReward > 0 and not IsXPUserDisabled() and not GameRulesUtil.IsPlayerAtEffectiveMaxLevel() then
 			usedSlots = usedSlots + 1
 
 			local slot = toast["Slot" .. usedSlots]

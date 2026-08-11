@@ -6,7 +6,6 @@ local _G = getfenv(0)
 local issecretvalue = _G.issecretvalue
 local m_random = _G.math.random
 local next = _G.next
-local s_format = _G.string.format
 local s_split = _G.string.split
 local t_insert = _G.table.insert
 local t_sort = _G.table.sort
@@ -81,11 +80,9 @@ end
 local function Toast_OnEnter(self)
 	if self._data.tooltip_link then
 		if self._data.tooltip_link:find("item") then
-			GameTooltip:SetHyperlink(self._data.tooltip_link)
-			GameTooltip:Show()
+			addon.Tooltip:ShowHyperlink(self._data.tooltip_link)
 		elseif self._data.tooltip_link:find("battlepet") then
-			local _, speciesID, level, breedQuality, maxHealth, power, speed = s_split(":", self._data.tooltip_link)
-			BattlePetToolTip_Show(tonumber(speciesID), tonumber(level), tonumber(breedQuality), tonumber(maxHealth), tonumber(power), tonumber(speed))
+			addon.Tooltip:ShowPet(self._data.tooltip_link)
 		end
 	end
 end

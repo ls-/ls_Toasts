@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 120100.01
+
+- Added 12.1.0 support.
+
+### Housing
+
+- Reimplemented decor toasts. Blizz silently killed their own, but we aren't Blizz.
+
 ## Version 120007.01
 
 - Added 12.0.7 support.
