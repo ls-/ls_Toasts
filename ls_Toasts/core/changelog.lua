@@ -6,10 +6,9 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added 12.0.7 support.
-- Updated Traditional Chinese translation. Translated by BNS333@Curse.
+- Added 12.1.0 support.
 
-### Loot (Currency)
+### Housing
 
-- Fixed the Ritual Site scoreboard spam.
+- Reimplemented decor toasts. Blizz silently killed their own, but we aren't Blizz.
 ]]
