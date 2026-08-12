@@ -180,3 +180,30 @@ E:RegisterSkin("elv-twotone", {
 		},
 	},
 })
+
+E:RegisterSkin("elv-opaque", {
+	name = "ElvUI (Opaque)",
+	template = "elv",
+	text_bg = {
+		hidden = true,
+	},
+	leaves = {
+		hidden = true,
+	},
+	dragon = {
+		hidden = true,
+	},
+	icon_highlight = {
+		hidden = true,
+	},
+	bg = {
+		default = {
+			texture = {26/255, 26/255, 26/255, 1.0},
+		},
+	},
+	glow = {
+		texture = {1, 1, 1, 0},
+		size = {226, 50},
+	},
+})
+
