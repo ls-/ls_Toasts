@@ -87,7 +87,7 @@ end
 
 function P:TestAllSystems()
 	for _, system in next, systems do
-			system:Test()
+		system:Test()
 	end
 end
 
@@ -110,7 +110,8 @@ function E:RegisterOptions(id, dbTable, optionsTable)
 		return
 	end
 
-	dbTable.anchor = dbTable.anchor or 1
+	-- deprecated
+	dbTable.anchor = nil
 
 	db[id] = dbTable
 
@@ -120,8 +121,6 @@ function E:RegisterOptions(id, dbTable, optionsTable)
 
 		D.profile.types[id] = {}
 		P:UpdateTable(db[id], D.profile.types[id])
-
-		C.db.profile.types[id].anchor = m_min(C.db.profile.types[id].anchor, #C.db.profile.anchors)
 	end
 
 	if optionsTable then
@@ -134,7 +133,7 @@ function E:RegisterOptions(id, dbTable, optionsTable)
 		if IsLoggedIn() then
 			C.options.args.types.args[id] = {}
 			P:UpdateTable(options[id], C.options.args.types.args[id])
-			P:UpdateAnchorsOptions()
+			addon.Anchor:UpdateOptions()
 		end
 	end
 end
@@ -142,13 +141,9 @@ end
 function P:UpdateDB()
 	P:UpdateTable(db, C.db.profile.types)
 	P:UpdateTable(db, D.profile.types)
-
-	for id in next, db do
-		C.db.profile.types[id].anchor = m_min(C.db.profile.types[id].anchor, #C.db.profile.anchors)
-	end
 end
 
 function P:UpdateOptions()
 	P:UpdateTable(options, C.options.args.types.args)
-	P:UpdateAnchorsOptions()
+	addon.Anchor:UpdateOptions()
 end

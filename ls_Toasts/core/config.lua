@@ -293,20 +293,14 @@ function addon:CreateAceConfig()
 		type = "group",
 		name = s_format("%s |cffcacaca(%s)|r", L["ADDON_NAME"], addon.VER.string),
 		args = {
-			toggle_anchors = {
-				order = 1,
-				type = "execute",
-				name = L["TOGGLE_ANCHORS"],
-				func = P.ToggleAnchors,
-			},
 			test_all = {
-				order = 2,
+				order = 1,
 				type = "execute",
 				name = L["TEST_ALL"],
 				func = P.TestAllSystems,
 			},
 			flush_queue = {
-				order = 3,
+				order = 2,
 				type = "execute",
 				name = L["FLUSH_QUEUE"],
 				func = function() P:FlushQueue() end,
@@ -442,10 +436,10 @@ function addon:CreateAceConfig()
 						type = "execute",
 						width = "full",
 						func = function()
-							local index = #C.db.profile.anchors + 1
-							P:AddAnchor(index)
-							P:GetAnchor(index):Refresh()
-							P:UpdateAnchorsOptions()
+							local index = addon:GetNumAnchorConfigs() + 1
+							addon:AddAnchorConfigByID(index)
+							addon:UpdateLayoutSettings()
+							addon.Anchor:UpdateOptions()
 						end,
 					},
 					spacer_1 = {

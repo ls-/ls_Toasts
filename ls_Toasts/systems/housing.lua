@@ -17,7 +17,7 @@ local function TaskToast_SetUp(event, taskName)
 	toast._data.sound_file = C.db.profile.types.housing.sfx and 333048 -- SOUNDKIT.HOUSING_ENDEAVORS_TASK_COMPLETE_TOAST
 	toast._data.vfx = C.db.profile.types.housing.vfx
 
-	toast:Spawn(C.db.profile.types.housing.anchor, C.db.profile.types.housing.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("housing"), C.db.profile.types.housing.dnd)
 end
 
 local function INITIATIVE_TASK_COMPLETED(...)
@@ -57,7 +57,7 @@ local function ItemToast_SetUp(event, itemType, itemName, itemIcon, decorID)
 	toast._data.vfx = C.db.profile.types.housing.vfx
 
 	toast:HookScript("OnClick", ItemToast_OnClick)
-	toast:Spawn(C.db.profile.types.housing.anchor, C.db.profile.types.housing.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("housing"), C.db.profile.types.housing.dnd)
 end
 
 local function NEW_HOUSING_ITEM_ACQUIRED(itemType, ...)
@@ -108,7 +108,6 @@ end
 
 E:RegisterOptions("housing", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

@@ -28,7 +28,7 @@ local function DigsiteToast_SetUp(event, researchFieldID)
 	toast._data.sound_file = C.db.profile.types.archaeology.sfx and 38326 -- SOUNDKIT.UI_DIG_SITE_COMPLETION_TOAST
 	toast._data.vfx = C.db.profile.types.archaeology.vfx
 
-	toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("archaeology"), C.db.profile.types.archaeology.dnd)
 end
 
 local function ARTIFACT_DIGSITE_COMPLETE(researchFieldID)
@@ -94,7 +94,7 @@ local function FragmentToast_SetUp(event, link, quantity)
 			toast._data.vfx = C.db.profile.types.archaeology.vfx
 			toast._data.tooltip_link = link
 
-			toast:Spawn(C.db.profile.types.archaeology.anchor, C.db.profile.types.archaeology.dnd)
+			toast:Spawn(addon:GetAnchorIDForType("archaeology"), C.db.profile.types.archaeology.dnd)
 		else
 			toast:Recycle()
 		end
@@ -168,7 +168,6 @@ end
 
 E:RegisterOptions("archaeology", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

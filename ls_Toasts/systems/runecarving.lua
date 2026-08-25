@@ -57,7 +57,7 @@ local function Toast_SetUp(event, powerID)
 		end
 
 		toast:HookScript("OnClick", Toast_OnClick)
-		toast:Spawn(C.db.profile.types.runecarving.anchor, C.db.profile.types.runecarving.dnd)
+		toast:Spawn(addon:GetAnchorIDForType("runecarving"), C.db.profile.types.runecarving.dnd)
 	end
 end
 
@@ -87,7 +87,6 @@ end
 
 E:RegisterOptions("runecarving", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

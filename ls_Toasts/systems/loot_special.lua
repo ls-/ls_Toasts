@@ -157,7 +157,7 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 			end
 
 			toast:HookScript("OnClick", Toast_OnClick)
-			toast:Spawn(C.db.profile.types.loot_special.anchor, C.db.profile.types.loot_special.dnd)
+			toast:Spawn(addon:GetAnchorIDForType("loot_special"), C.db.profile.types.loot_special.dnd)
 		else
 			toast._data.count = toast._data.count + quantity
 
@@ -313,7 +313,6 @@ end
 
 E:RegisterOptions("loot_special", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

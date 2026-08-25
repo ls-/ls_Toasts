@@ -173,8 +173,10 @@ local function toast_Spawn(self, anchorID, isDND)
 	self._data.dnd = isDND
 	self._data.order = order
 
-	self:SetScale(C.db.profile.anchors[anchorID].scale)
-	self.AnimOut.Anim1:SetStartDelay(C.db.profile.anchors[anchorID].fadeout_delay)
+	local config = addon:GetAnchorConfigByID(anchorID)
+
+	self:SetScale(config.scale)
+	self.AnimOut.Anim1:SetStartDelay(config.fadeout_delay)
 
 	P:Queue(self, anchorID)
 
@@ -702,9 +704,9 @@ function P:GetToasts()
 end
 
 function P:UpdateScale(anchorID)
-	local scale = C.db.profile.anchors[anchorID].scale
+	local scale = addon:GetAnchorConfigByID(anchorID).scale
 
-	self:GetAnchor(anchorID):SetSize(224 * scale, 48 * scale)
+	addon.Anchor:Get(anchorID):SetSize(224 * scale, 48 * scale)
 
 	for _, toast in next, self:GetActiveToasts(anchorID) do
 		toast:SetScale(scale)
@@ -716,7 +718,7 @@ function P:UpdateScale(anchorID)
 end
 
 function P:UpdateFadeOutDelay(anchorID)
-	local delay = C.db.profile.anchors[anchorID].fadeout_delay
+	local delay = addon:GetAnchorConfigByID(anchorID).fadeout_delay
 
 	for _, toast in next, self:GetActiveToasts(anchorID) do
 		toast.AnimOut.Anim1:SetStartDelay(delay)

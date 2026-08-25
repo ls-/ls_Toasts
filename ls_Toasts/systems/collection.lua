@@ -111,7 +111,7 @@ local function Toast_SetUp(event, ID, isMount, isPet, isToy, isCampsite)
 		toast._data.vfx = C.db.profile.types.collection.vfx
 
 		toast:HookScript("OnClick", Toast_OnClick)
-		toast:Spawn(C.db.profile.types.collection.anchor, C.db.profile.types.collection.dnd)
+		toast:Spawn(addon:GetAnchorIDForType("collection"), C.db.profile.types.collection.dnd)
 	else
 		if isQueued then
 			toast._data.count = toast._data.count + 1
@@ -181,7 +181,6 @@ end
 
 E:RegisterOptions("collection", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

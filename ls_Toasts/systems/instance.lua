@@ -101,7 +101,7 @@ local function Toast_SetUp(event, name, subTypeID, textureFile, moneyReward, xpR
 	toast._data.vfx = C.db.profile.types.instance.vfx
 	toast._data.used_slots = usedSlots
 
-	toast:Spawn(C.db.profile.types.instance.anchor, C.db.profile.types.instance.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("instance"), C.db.profile.types.instance.dnd)
 end
 
 local function LFG_COMPLETION_REWARD()
@@ -146,7 +146,6 @@ end
 
 E:RegisterOptions("instance", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

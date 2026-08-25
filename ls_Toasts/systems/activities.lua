@@ -34,7 +34,7 @@ local function Toast_SetUp(event, perksActivityID)
 		toast._data.vfx = C.db.profile.types.activities.vfx
 
 		toast:HookScript("OnClick", Toast_OnClick)
-		toast:Spawn(C.db.profile.types.activities.anchor, C.db.profile.types.activities.dnd)
+		toast:Spawn(addon:GetAnchorIDForType("activities"), C.db.profile.types.activities.dnd)
 	end
 end
 
@@ -59,7 +59,6 @@ end
 
 E:RegisterOptions("activities", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

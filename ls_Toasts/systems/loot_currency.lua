@@ -1393,7 +1393,7 @@ local function Toast_SetUp(event, id, quantity)
 				toast:HookScript("OnEnter", Toast_OnEnter)
 			end
 
-			toast:Spawn(C.db.profile.types.loot_currency.anchor, C.db.profile.types.loot_currency.dnd)
+			toast:Spawn(addon:GetAnchorIDForType("loot_currency"), C.db.profile.types.loot_currency.dnd)
 		else
 			toast:Recycle()
 		end
@@ -1593,7 +1593,6 @@ end
 
 E:RegisterOptions("loot_currency", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

@@ -62,7 +62,7 @@ local function RecipeToast_SetUp(event, recipeID, recipeLevel)
 			end
 
 			toast:HookScript("OnClick", RecipeToast_OnClick)
-			toast:Spawn(C.db.profile.types.recipe.anchor, C.db.profile.types.recipe.dnd)
+			toast:Spawn(addon:GetAnchorIDForType("recipe"), C.db.profile.types.recipe.dnd)
 		end
 	end
 end
@@ -104,7 +104,7 @@ local function SkillLineToast_SetUp(event, skillLineID, tradeSkillID)
 		toast._data.tradeskill_id = tradeSkillID or skillLineID
 
 		toast:HookScript("OnClick", SkillLineToast_OnClick)
-		toast:Spawn(C.db.profile.types.recipe.anchor, C.db.profile.types.recipe.dnd)
+		toast:Spawn(addon:GetAnchorIDForType("recipe"), C.db.profile.types.recipe.dnd)
 	end
 end
 
@@ -137,7 +137,6 @@ end
 
 E:RegisterOptions("recipe", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

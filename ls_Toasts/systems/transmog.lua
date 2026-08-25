@@ -56,7 +56,7 @@ local function Toast_SetUp(event, sourceID, isAdded, attempt)
 		toast._data.visual_id = sourceInfo.itemAppearanceID
 
 		toast:HookScript("OnClick", Toast_OnClick)
-		toast:Spawn(C.db.profile.types.transmog.anchor, C.db.profile.types.transmog.dnd)
+		toast:Spawn(addon:GetAnchorIDForType("transmog"), C.db.profile.types.transmog.dnd)
 	else
 		toast.Title:SetText(isAdded and L["TRANSMOG_ADDED"] or L["TRANSMOG_REMOVED_RED"])
 
@@ -171,7 +171,6 @@ end
 
 E:RegisterOptions("transmog", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

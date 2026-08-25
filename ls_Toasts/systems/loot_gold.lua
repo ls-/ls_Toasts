@@ -45,7 +45,7 @@ local function Toast_SetUp(event, quantity)
 		toast._data.sound_file = C.db.profile.types.loot_gold.sfx and 865 -- SOUNDKIT.IG_BACKPACK_COIN_OK
 		toast._data.vfx = C.db.profile.types.loot_gold.vfx
 
-		toast:Spawn(C.db.profile.types.loot_gold.anchor, C.db.profile.types.loot_gold.dnd)
+		toast:Spawn(addon:GetAnchorIDForType("loot_gold"), C.db.profile.types.loot_gold.dnd)
 	else
 		toast._data.count = toast._data.count + quantity
 		if m_abs(toast._data.count) < 100 then
@@ -97,7 +97,6 @@ end
 
 E:RegisterOptions("loot_gold", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,
