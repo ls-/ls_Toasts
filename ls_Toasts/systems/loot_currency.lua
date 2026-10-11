@@ -1314,7 +1314,10 @@ local BLACKLIST = {
 	[3514] = true, -- Renown - Prey Season 2
 	[3515] = true, -- Preyseeker's Journey
 	[3532] = true, -- 12.1 Delves - Personal Tracker - S2 Weekly Turn-In (Hidden)
+	[3536] = true, -- Renown - Season 2 Labyrinth
+	[3537] = true, -- Kindo'jan's Labyrinth Journey
 	[3540] = true, -- Captain Tokka
+	[3544] = true, -- Aqir Research Enclave
 	[3545] = true, -- Renown - Season 3 Delves
 	[3568] = true, -- Contained Corruption
 	[3569] = true, -- Cleansing Multiplier
@@ -1323,6 +1326,8 @@ local BLACKLIST = {
 	[3575] = true, -- PMM Currency 2
 	[3583] = true, -- Housing - Going Postal - Personal Best Record - Alliance - Rt1
 	[3584] = true, -- Housing - Going Postal - Personal Best Record - Alliance - Rt1
+	[3592] = true, -- 12.1.5 Labyrinth - Personal Tracker - S2 Weekly Turn-In (Hidden)
+	[3606] = true, -- Soul
 }
 
 local MULT = {
