@@ -1,5 +1,5 @@
 local addonName, addon = ...
-local C, D, L = addon.C, addon.D, addon.L
+local C, D, L, LEM = addon.C, addon.D, addon.L, addon.LibEditMode
 
 -- Lua
 local _G = getfenv(0)
@@ -7,6 +7,7 @@ local next = _G.next
 local s_lower = _G.string.lower
 local s_trim = _G.string.trim
 local t_insert = _G.table.insert
+local t_wipe = _G.table.wipe
 local tonumber = _G.tonumber
 local type = _G.type
 
@@ -21,10 +22,35 @@ do
 		local data = {}
 		if dataType == "profile" then
 			addon:CopyTable(C.db.profile, data)
+			addon:DiffTable(data, D.profile)
 
 			data.version = nil
 
-			addon:DiffTable(data, D.profile)
+			-- only export the current layout
+			if LEM and next(data.layouts) then
+				local layoutName = LEM:GetActiveLayoutName()
+				if layoutName then
+					for name in next, data.layouts do
+						if name ~= layoutName then
+							data.layouts[name] = nil
+						end
+					end
+				end
+			end
+		elseif dataType == "layout" then
+			data.layouts = {}
+
+			addon:CopyTable(C.db.profile.layouts, data.layouts)
+			addon:DiffTable(data.layouts, D.profile.layouts)
+
+			local layoutName = LEM:GetActiveLayoutName()
+			if layoutName then
+				for name in next, data.layouts do
+					if name ~= layoutName then
+						data.layouts[name] = nil
+					end
+				end
+			end
 		end
 
 		if not next(data) then return end
@@ -42,7 +68,7 @@ do
 	end
 
 	function addon:Import(data, isNew, newName)
-		local dataType, version, encoded = data:match(IMPORT_PATTERN)
+		local dataType, version, encoded = self:ParseImportString(data)
 		if not (dataType or version or encoded) then return end
 
 		local decoded = C_EncodingUtil.DecodeBase64(encoded)
@@ -64,16 +90,52 @@ do
 			if not isNew then
 				C.db:DeleteProfile("TEMP_PROFILE", true)
 
+				-- import it with the active layout's name
+				if data.layouts then
+					local _, layout = next(data.layouts)
+					if layout then
+						t_wipe(data.layouts)
+
+						data.layouts[LEM:GetActiveLayoutName()] = layout
+					end
+				end
+
 				C.db.profiles["TEMP_PROFILE"] = data
 
 				C.db:CopyProfile("TEMP_PROFILE")
 				C.db:DeleteProfile("TEMP_PROFILE")
 			elseif newName then
+				if data.layouts then
+					local _, layout = next(data.layouts)
+					if layout then
+						t_wipe(data.layouts)
+
+						data.layouts[LEM:GetActiveLayoutName()] = layout
+					end
+				end
+
 				C.db.profiles[newName] = data
 			end
 
 			return true, data
+		elseif dataType == "layout" then
+			local _, newLayout = next(data.layouts)
+			if newLayout then
+				local curLayout = C.db.profile.layouts[LEM:GetActiveLayoutName()]
+				for k in next, curLayout do
+					t_wipe(curLayout[k])
+				end
+
+				addon:CopyTable(newLayout, C.db.profile.layouts[LEM:GetActiveLayoutName()])
+				addon:UpdateLayoutSettings()
+			end
+
+			return true, data
 		end
+	end
+
+	function addon:ParseImportString(data)
+		return data:match(IMPORT_PATTERN)
 	end
 end
 
@@ -137,21 +199,41 @@ do
 
 			t_insert(frame.Panels, panel)
 
+			local settingsContainer = CreateFrame("Frame", nil, panel)
+			settingsContainer:SetClipsChildren(true)
+			settingsContainer:SetPoint("BOTTOMLEFT", 2, 26)
+			settingsContainer:SetPoint("BOTTOMRIGHT", -5, 26)
+			settingsContainer:SetHeight(0.0001)
+			panel.SettingsContainer = settingsContainer
+
 			local scrollFrame = CreateFrame("ScrollFrame", nil, panel, "InputScrollFrameTemplate")
 			scrollFrame:SetPoint("TOPLEFT", 11, -9)
-			scrollFrame:SetPoint("BOTTOMRIGHT", -10, 55)
+			scrollFrame:SetPoint("BOTTOMRIGHT", settingsContainer, "TOPRIGHT", -6, 6)
 			panel.ScrollFrame = scrollFrame
 
 			scrollFrame.EditBox:SetMaxLetters(4096)
 			scrollFrame.EditBox:SetWidth(scrollFrame:GetWidth() - 18)
 			scrollFrame.EditBox:SetScript("OnTextChanged", function(self)
 				cachedString = s_trim(self:GetText())
-				isStringBad = cachedString == ""
+
+				self.Instructions:SetShown(cachedString == "")
+
+				local dataType = addon:ParseImportString(cachedString)
+
+				isStringBad = dataType == nil
+
+				panel.SettingsContainer:SetHeight(dataType == "profile" and 24 or 0.0001)
 
 				panel.ImportButton:SetEnabled(not isNameBad and not isStringBad)
 			end)
 
 			scrollFrame.CharCount:Hide()
+
+			scrollFrame.EditBox.Instructions:ClearAllPoints()
+			scrollFrame.EditBox.Instructions:SetPoint("TOPLEFT", 0, 0)
+			scrollFrame.EditBox.Instructions:SetPoint("TOPRIGHT", -24, 0)
+			scrollFrame.EditBox.Instructions:SetHeight(128)
+			scrollFrame.EditBox.Instructions:SetText("The imported layout data will be tied to the currently active Edit Mode layout.")
 
 			scrollFrame.ScrollBar:SetHideIfUnscrollable(false)
 			scrollFrame.ScrollBar:SetHideTrackIfThumbExceedsTrack(true)
@@ -159,8 +241,8 @@ do
 			scrollFrame.ScrollBar:SetPoint("BOTTOMLEFT", scrollFrame, "BOTTOMRIGHT", -12, 2)
 			scrollFrame.ScrollBar:Show()
 
-			local newButton = CreateFrame("Frame", nil, panel, "ResizeCheckButtonTemplate")
-			newButton:SetPoint("BOTTOMLEFT", 2, 22)
+			local newButton = CreateFrame("Frame", nil, settingsContainer, "ResizeCheckButtonTemplate")
+			newButton:SetPoint("BOTTOMLEFT", 2, -4)
 			newButton:SetLabelText(_G.NEW)
 			newButton:SetCallback(function(isChecked)
 				panel.NameEditBox:SetEnabled(isChecked)
@@ -182,10 +264,10 @@ do
 			newButton.disabledLabelFont = "GameFontDisable"
 			newButton:UpdateLabelFont()
 
-			local nameEditBox = CreateFrame("EditBox", nil, panel, "InputBoxTemplate")
+			local nameEditBox = CreateFrame("EditBox", nil, settingsContainer, "InputBoxTemplate")
 			nameEditBox:SetHeight(24)
 			nameEditBox:SetPoint("LEFT", newButton, "LEFT", 96, 1)
-			nameEditBox:SetPoint("RIGHT", panel, "RIGHT", -5, 0)
+			nameEditBox:SetPoint("RIGHT", settingsContainer, "RIGHT", 0, 0)
 			nameEditBox:SetAutoFocus(false)
 			nameEditBox:SetMaxLetters(24)
 			nameEditBox:SetScript("OnTextChanged", function(self)
@@ -232,11 +314,11 @@ do
 			importButton:SetText(L["IMPORT"])
 			importButton:SetScript("OnClick", function()
 				if cachedString ~= "" then
-					local newName = nameEditBox:GetText()
-					local isOK = addon:Import(cachedString, newButton.Button:GetChecked(), newName)
+					local newName = panel.NameEditBox:GetText()
+					local isOK = addon:Import(cachedString, panel.NewButton.Button:GetChecked(), newName)
 					if isOK then
-						scrollFrame.EditBox:SetText("")
-						nameEditBox:RefreshIcon(newName)
+						panel.ScrollFrame.EditBox:SetText("")
+						panel.NameEditBox:RefreshIcon(newName)
 
 						LibStub("AceConfigDialog-3.0"):SelectGroup(addonName, "profiles")
 
@@ -290,13 +372,14 @@ do
 		-- export
 		do
 			local cachedString = ""
+			local exportMode = "profile"
 
 			local panel = CreateFrame("Frame", "$parentPanel2", frame)
 			panel:SetPoint("TOPLEFT", 5, -22)
 			panel:SetPoint("BOTTOMRIGHT", 0, 4)
 			panel:SetScript("OnShow", function()
 				-- always regen it, maybe they changed profiles
-				cachedString = addon:Export("profile")
+				cachedString = addon:Export(exportMode)
 
 				panel.ScrollFrame.EditBox:SetText(cachedString or "")
 				panel.ScrollFrame.EditBox:SetFocus()
@@ -305,8 +388,30 @@ do
 
 			t_insert(frame.Panels, panel)
 
+			local function getExportMode(mode)
+				return mode == exportMode
+			end
+
+			local function setExportMode(mode)
+				exportMode = mode
+
+				cachedString = addon:Export(exportMode)
+
+				panel.ScrollFrame.EditBox:SetText(cachedString or "")
+				panel.ScrollFrame.EditBox:SetFocus()
+			end
+
+			local dropdown = CreateFrame("DropdownButton", nil, panel, "WowStyle1DropdownTemplate")
+			dropdown:SetPoint("TOPRIGHT", -6, -4)
+			dropdown:SetWidth(256)
+			dropdown:SetupMenu(function(_, rootDescription)
+				rootDescription:CreateRadio("Profile & Layout", getExportMode, setExportMode, "profile")
+				rootDescription:CreateRadio("Layout", getExportMode, setExportMode, "layout")
+			end)
+
 			local scrollFrame = CreateFrame("ScrollFrame", nil, panel, "InputScrollFrameTemplate")
-			scrollFrame:SetPoint("TOPLEFT", 11, -9)
+			scrollFrame:SetPoint("TOP", dropdown, "BOTTOM", 0, -8)
+			scrollFrame:SetPoint("LEFT", 11, 0)
 			scrollFrame:SetPoint("BOTTOMRIGHT", -10, 8)
 			panel.ScrollFrame = scrollFrame
 
@@ -378,5 +483,8 @@ do
 	function addon:OpenImportExport()
 		LSToastsImportExport:Show()
 		LSToastsImportExport.Panels[1]:Show()
+		LSToastsImportExport.Panels[2]:Hide()
+
+		PanelTemplates_SetTab(LSToastsImportExport, 1)
 	end
 end

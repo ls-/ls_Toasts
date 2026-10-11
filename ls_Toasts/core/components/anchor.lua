@@ -263,7 +263,12 @@ local function layoutCallback(layoutName)
 	end
 
 	for _, anchor in next, activeAnchors do
-		local config = layout.anchors[anchor:GetID()]
+		local id = anchor:GetID()
+		local config = layout.anchors[id]
+
+		-- it's here because of the anchor #1 whose config isn't created via AddAnchorConfigByID, instead of
+		-- overcomplicating things I'll just reassign ids here
+		config.id = id
 
 		anchor:SetSize(224 * config.scale, 48 * config.scale)
 		anchor:ClearAllPoints()

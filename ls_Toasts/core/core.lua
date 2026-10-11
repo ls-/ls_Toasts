@@ -98,6 +98,16 @@ function P:UpdateTable(src, dest)
 	return dest
 end
 
+function addon:UpdateTable(src, dest)
+	for k, v in next, src do
+		if type(v) == "table" then
+			self:UpdateTable(v, dest[k])
+		else
+			dest[k] = v
+		end
+	end
+end
+
 function addon:CopyTable(src, dest, ignore)
 	if type(dest) ~= "table" then
 		dest = {}

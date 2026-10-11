@@ -181,6 +181,8 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				-- toast.IconBorder:Show()
 
 				-- toast:Spawn(1, false)
+			elseif msg == "ie" then
+				addon:OpenImportExport()
 			end
 		end
 	end)
