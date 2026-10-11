@@ -1731,6 +1731,12 @@ E:RegisterOptions("loot_currency", {
 	plugins = {
 		filters = {},
 	},
-})
+}, function()
+	for k, v in next, C.db.profile.types.loot_currency.filters do
+		if v == 0 then
+			C.db.profile.types.loot_currency.filters[k] = nil
+		end
+	end
+end)
 
 E:RegisterSystem("loot_currency", Enable, Disable, Test)
