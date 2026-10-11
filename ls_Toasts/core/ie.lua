@@ -346,8 +346,6 @@ do
 
 			-- classic specific adjustments
 			if GetClientDisplayExpansionLevel() < 3 then
-				scrollFrame:SetPoint("BOTTOMRIGHT", -12, 59)
-
 				scrollFrame.EditBox:SetWidth(scrollFrame:GetWidth() - 26)
 
 				scrollFrame.ScrollBar:ClearAllPoints()
@@ -358,13 +356,11 @@ do
 				scrollBarBG:SetPoint("TOPLEFT", 3, -3)
 				scrollBarBG:SetPoint("BOTTOMRIGHT", 0, 3)
 
-				newButton:SetPoint("BOTTOMLEFT", 2, 26)
+				newButton:SetPoint("BOTTOMLEFT", 2, -2)
 
-				nameEditBox:SetPoint("RIGHT", panel, "RIGHT", -7, 0)
+				nameEditBox:SetPoint("RIGHT", settingsContainer, "RIGHT", -2, 0)
 
 				importButton:SetPoint("BOTTOMLEFT", 4, 6)
-				importButton:SetPoint("BOTTOMRIGHT", -4, 6)
-
 				importButton:SetPoint("BOTTOMRIGHT", -6, 2)
 			end
 		end
