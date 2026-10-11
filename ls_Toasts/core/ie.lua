@@ -233,7 +233,7 @@ do
 			scrollFrame.EditBox.Instructions:SetPoint("TOPLEFT", 0, 0)
 			scrollFrame.EditBox.Instructions:SetPoint("TOPRIGHT", -24, 0)
 			scrollFrame.EditBox.Instructions:SetHeight(128)
-			scrollFrame.EditBox.Instructions:SetText("The imported layout data will be tied to the currently active Edit Mode layout.")
+			scrollFrame.EditBox.Instructions:SetText(L["IMPORT_INSTRUCTIONS"])
 
 			scrollFrame.ScrollBar:SetHideIfUnscrollable(false)
 			scrollFrame.ScrollBar:SetHideTrackIfThumbExceedsTrack(true)
@@ -405,8 +405,8 @@ do
 			dropdown:SetPoint("TOPRIGHT", -6, -4)
 			dropdown:SetWidth(256)
 			dropdown:SetupMenu(function(_, rootDescription)
-				rootDescription:CreateRadio("Profile & Layout", getExportMode, setExportMode, "profile")
-				rootDescription:CreateRadio("Layout", getExportMode, setExportMode, "layout")
+				rootDescription:CreateRadio(L["PROFILE_AND_LAYOUT"], getExportMode, setExportMode, "profile")
+				rootDescription:CreateRadio(L["LAYOUT"], getExportMode, setExportMode, "layout")
 			end)
 
 			local scrollFrame = CreateFrame("ScrollFrame", nil, panel, "InputScrollFrameTemplate")

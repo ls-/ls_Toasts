@@ -149,3 +149,6 @@ L["YOU_LOST"] = "You Lost"
 L["YOU_RECEIVED"] = "You Received"
 
 L["GROWTH"] = "Growth"
+L["IMPORT_INSTRUCTIONS"] = "The imported layout data will be tied to the currently active Edit Mode layout."
+L["PROFILE_AND_LAYOUT"] = "Profile & Layout"
+L["LAYOUT"] = "Layout"
