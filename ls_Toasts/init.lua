@@ -61,6 +61,7 @@ local function updateCallback()
 end
 
 local function shutdownCallback()
+	addon:RunShutdownCallbacks()
 	C.db.profile.version = addon.VER.number
 end
 
