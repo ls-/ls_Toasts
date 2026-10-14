@@ -60,7 +60,7 @@ local function MissionToast_SetUp(event, garrisonType, missionID, isAdded)
 	toast._data.sound_file = C.db.profile.types[typeToKey[garrisonType]].sfx and 44294 -- SOUNDKIT.UI_GARRISON_TOAST_MISSION_COMPLETE
 	toast._data.vfx = C.db.profile.types[typeToKey[garrisonType]].vfx
 
-	toast:Spawn(C.db.profile.types[typeToKey[garrisonType]].anchor, C.db.profile.types[typeToKey[garrisonType]].dnd)
+	toast:Spawn(addon:GetAnchorIDForType(typeToKey[garrisonType]), C.db.profile.types[typeToKey[garrisonType]].dnd)
 end
 
 local function GARRISON_MISSION_FINISHED(followerTypeID, missionID)
@@ -156,7 +156,7 @@ local function FollowerToast_SetUp(event, garrisonType, followerTypeID, follower
 		toast:HookScript("OnEnter", FollowerToast_OnEnter)
 	end
 
-	toast:Spawn(C.db.profile.types[typeToKey[garrisonType]].anchor, C.db.profile.types[typeToKey[garrisonType]].dnd)
+	toast:Spawn(addon:GetAnchorIDForType(typeToKey[garrisonType]), C.db.profile.types[typeToKey[garrisonType]].dnd)
 end
 
 local function GARRISON_FOLLOWER_ADDED(followerID, name, _, level, quality, isUpgraded, textureKit, followerTypeID)
@@ -182,7 +182,7 @@ local function BuildingToast_SetUp(event, buildingName)
 	toast._data.sound_file = C.db.profile.types.garrison_6_0.sfx and 44295 -- SOUNDKIT.UI_GARRISON_TOAST_BUILDING_COMPLETE
 	toast._data.vfx = C.db.profile.types.garrison_6_0.vfx
 
-	toast:Spawn(C.db.profile.types.garrison_6_0.anchor, C.db.profile.types.garrison_6_0.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("garrison_6_0"), C.db.profile.types.garrison_6_0.dnd)
 end
 
 local function GARRISON_BUILDING_ACTIVATABLE(buildingName)
@@ -225,7 +225,7 @@ local function TalentToast_SetUp(event, garrisonType, talentID)
 		toast:HookScript("OnEnter", TalentToast_OnEnter)
 	end
 
-	toast:Spawn(C.db.profile.types[typeToKey[garrisonType]].anchor, C.db.profile.types[typeToKey[garrisonType]].dnd)
+	toast:Spawn(addon:GetAnchorIDForType(typeToKey[garrisonType]), C.db.profile.types[typeToKey[garrisonType]].dnd)
 end
 
 local function GARRISON_TALENT_COMPLETE(garrisonType, doAlert)
@@ -384,7 +384,6 @@ end
 
 E:RegisterOptions("garrison_6_0", {
 	enabled = false,
-	anchor = 1,
 	dnd = true,
 	sfx = true,
 	vfx = true,
@@ -445,7 +444,6 @@ E:RegisterOptions("garrison_6_0", {
 
 E:RegisterOptions("garrison_7_0", {
 	enabled = true,
-	anchor = 1,
 	dnd = true,
 	sfx = true,
 	vfx = true,
@@ -506,7 +504,6 @@ E:RegisterOptions("garrison_7_0", {
 
 E:RegisterOptions("garrison_8_0", {
 	enabled = true,
-	anchor = 1,
 	dnd = true,
 	sfx = true,
 	vfx = true,
@@ -567,7 +564,6 @@ E:RegisterOptions("garrison_8_0", {
 
 E:RegisterOptions("garrison_9_0", {
 	enabled = true,
-	anchor = 1,
 	dnd = true,
 	sfx = true,
 	vfx = true,

@@ -108,7 +108,7 @@ local function EntitlementToast_SetUp(event, entitlementType, textureID, name, p
 	end
 
 	toast:HookScript("OnClick", EntitlementToast_OnClick)
-	toast:Spawn(C.db.profile.types.store.anchor, C.db.profile.types.store.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("store"), C.db.profile.types.store.dnd)
 end
 
 local function getItemLink(itemID, textureID)
@@ -176,7 +176,7 @@ local function GuildToast_SetUp(event, guildName)
 	toast._data.vfx = C.db.profile.types.store.vfx
 
 	toast:HookScript("OnClick", GuildToast_OnClick)
-	toast:Spawn(C.db.profile.types.activities.anchor, C.db.profile.types.activities.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("activities"), C.db.profile.types.activities.dnd)
 end
 
 local function REQUESTED_GUILD_RENAME_RESULT(guildName, status)
@@ -216,7 +216,6 @@ end
 
 E:RegisterOptions("store", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,

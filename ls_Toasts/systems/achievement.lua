@@ -77,7 +77,7 @@ local function Toast_SetUp(event, achievementID, alreadyEarned, criteriaDescript
 	end
 
 	toast:HookScript("OnClick", Toast_OnClick)
-	toast:Spawn(C.db.profile.types.achievement.anchor, C.db.profile.types.achievement.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("achievement"), C.db.profile.types.achievement.dnd)
 end
 
 local function ACHIEVEMENT_EARNED(achievementID, alreadyEarned)
@@ -121,7 +121,6 @@ end
 
 E:RegisterOptions("achievement", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	vfx = true,
 	tooltip = true,

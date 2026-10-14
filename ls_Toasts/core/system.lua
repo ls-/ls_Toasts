@@ -11,6 +11,7 @@ local type = _G.type
 
 -- Mine
 local systems = {}
+local shutdownCallbacks = {}
 local function dummy() end
 
 function E:RegisterSystem(id, enableFunc, disableFunc, testFunc)
@@ -87,7 +88,7 @@ end
 
 function P:TestAllSystems()
 	for _, system in next, systems do
-			system:Test()
+		system:Test()
 	end
 end
 
@@ -95,7 +96,7 @@ local db = {} -- for profile switching
 local options = {}
 local order = 1
 
-function E:RegisterOptions(id, dbTable, optionsTable)
+function E:RegisterOptions(id, dbTable, optionsTable, shutdownCallback)
 	if type(id) ~= "string" then
 		error(s_format("Invalid argument #1 to 'RegisterOptions' method, expected a string, got a '%s'", type(id)), 2)
 		return
@@ -108,9 +109,13 @@ function E:RegisterOptions(id, dbTable, optionsTable)
 	elseif type(optionsTable) ~= "table" and type(optionsTable) ~= "nil" then
 		error(s_format("Invalid argument #3 to 'RegisterOptions' method, expected a table or nil, got a '%s'", type(optionsTable)), 2)
 		return
+	elseif type(shutdownCallback) ~= "function" and type(shutdownCallback) ~= "nil" then
+		error(s_format("Invalid argument #4 to 'RegisterOptions' method, expected a function or nil, got a '%s'", type(shutdownCallback)), 2)
+		return
 	end
 
-	dbTable.anchor = dbTable.anchor or 1
+	-- deprecated
+	dbTable.anchor = nil
 
 	db[id] = dbTable
 
@@ -120,8 +125,6 @@ function E:RegisterOptions(id, dbTable, optionsTable)
 
 		D.profile.types[id] = {}
 		P:UpdateTable(db[id], D.profile.types[id])
-
-		C.db.profile.types[id].anchor = m_min(C.db.profile.types[id].anchor, #C.db.profile.anchors)
 	end
 
 	if optionsTable then
@@ -134,21 +137,27 @@ function E:RegisterOptions(id, dbTable, optionsTable)
 		if IsLoggedIn() then
 			C.options.args.types.args[id] = {}
 			P:UpdateTable(options[id], C.options.args.types.args[id])
-			P:UpdateAnchorsOptions()
+			addon.Anchor:UpdateOptions()
 		end
+	end
+
+	if shutdownCallback then
+		shutdownCallbacks[id] = shutdownCallback
 	end
 end
 
 function P:UpdateDB()
 	P:UpdateTable(db, C.db.profile.types)
 	P:UpdateTable(db, D.profile.types)
-
-	for id in next, db do
-		C.db.profile.types[id].anchor = m_min(C.db.profile.types[id].anchor, #C.db.profile.anchors)
-	end
 end
 
 function P:UpdateOptions()
 	P:UpdateTable(options, C.options.args.types.args)
-	P:UpdateAnchorsOptions()
+	addon.Anchor:UpdateOptions()
+end
+
+function addon:RunShutdownCallbacks()
+	for _, callback in next, shutdownCallbacks do
+		callback()
+	end
 end

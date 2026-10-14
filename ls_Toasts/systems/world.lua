@@ -126,7 +126,7 @@ local function Toast_SetUp(event, isUpdate, questID, name, moneyReward, xpReward
 		toast._data.vfx = C.db.profile.types.world.vfx
 		toast._data.used_slots = usedSlots
 
-		toast:Spawn(C.db.profile.types.world.anchor, C.db.profile.types.world.dnd)
+		toast:Spawn(addon:GetAnchorIDForType("world"), C.db.profile.types.world.dnd)
 	else
 		if itemReward then
 			toast._data.used_slots = toast._data.used_slots + 1
@@ -239,7 +239,6 @@ end
 
 E:RegisterOptions("world", {
 	enabled = true,
-	anchor = 1,
 	dnd = false,
 	sfx = true,
 	vfx = true,
