@@ -195,7 +195,7 @@ do
 	end
 
 	local function setAnchorForType(info)
-		addon:GetTypeConfig()[info[#info]] = tonumber(info[#info - 1])
+		addon:GetTypeConfigs()[info[#info]] = tonumber(info[#info - 1])
 	end
 
 	function addAnchor(index)

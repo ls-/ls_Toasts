@@ -42,7 +42,7 @@ function addon:RemoveAnchorConfigByID(id)
 	end
 end
 
-function addon:GetTypeConfig()
+function addon:GetTypeConfigs()
 	return C.db.profile.layouts[LEM:GetActiveLayoutName() or DEFAULT_PRESET].types
 end
 
