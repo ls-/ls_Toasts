@@ -457,6 +457,7 @@ function addon:CreateAceConfig()
 				args = {},
 			},
 			-- profiles = {}, -- 100
+			-- layouts = {}, -- 200
 		},
 	}
 
@@ -488,6 +489,10 @@ function addon:CreateAceConfig()
 	}
 
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, C.options.args.profiles.name, addon:GetBlizzCategory():GetID(), "profiles")
+
+	C.options.args.layouts = addon.LayoutManager:GetOptionsTable(200)
+
+	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, C.options.args.layouts.name, addon:GetBlizzCategory():GetID(), "layouts")
 
 	function addon:OpenAceConfig()
 		if not InCombatLockdown() then
