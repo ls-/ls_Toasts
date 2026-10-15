@@ -6,6 +6,7 @@ local _G = getfenv(0)
 local hooksecurefunc = _G.hooksecurefunc
 local next = _G.next
 local print = _G.print
+local s_lower = _G.string.lower
 local tonumber = _G.tonumber
 
 -- Mine
@@ -145,6 +146,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 		SLASH_LSTOASTS1 = "/lstoasts"
 		SLASH_LSTOASTS2 = "/lst"
 		SlashCmdList["LSTOASTS"] = function(msg)
+			msg = s_lower(msg)
 			if msg == "" then
 				addon:OpenAceConfig()
 			elseif msg == "test" then
