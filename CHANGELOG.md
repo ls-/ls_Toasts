@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 120105.02
+
+- Make sure that `/LST IE` also actually works, previously, it's accessible only via `ie`.
+
 ## Version 120105.01
 
 - Added 12.1.5 support.
