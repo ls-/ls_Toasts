@@ -7,7 +7,6 @@ local _G = getfenv(0)
 if GetLocale() ~= "zhTW" then return end
 
 L["ALLOW"] = "允許"
-L["ANCHOR_FRAME_#"] = "定位框架 #%d"
 L["ANCHOR_FRAMES"] = "定位框架"
 L["ANCHOR_RESET_DESC"] = "|cffffffffShift 左鍵點擊|r 重置位置。"
 L["BLOCK"] = "阻擋"

@@ -6,7 +6,6 @@ local _G = getfenv(0)
 
 if GetLocale() ~= "ptBR" then return end
 
-L["ANCHOR_FRAME_#"] = "Quadro de Âncora #%d"
 L["ANCHOR_FRAMES"] = "Quadros de Âncora"
 L["ANCHOR_RESET_DESC"] = "|cffffffffShift clique|r para redefinir a posição."
 L["BORDER"] = "Borda"

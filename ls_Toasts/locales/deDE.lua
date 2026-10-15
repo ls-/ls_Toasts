@@ -6,7 +6,6 @@ local _G = getfenv(0)
 
 if GetLocale() ~= "deDE" then return end
 
-L["ANCHOR_FRAME_#"] = "Ankerrahmen #%d"
 L["ANCHOR_FRAMES"] = "Ankerrahmen"
 L["ANCHOR_RESET_DESC"] = "|cffffffffShift klick|r um die Position zurückzusetzen."
 L["BORDER"] = "Rahmen"

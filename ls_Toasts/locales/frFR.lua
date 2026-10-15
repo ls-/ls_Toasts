@@ -6,7 +6,6 @@ local _G = getfenv(0)
 
 if GetLocale() ~= "frFR" then return end
 
-L["ANCHOR_FRAME_#"] = "Fenêtre d'ancrage #%d"
 L["ANCHOR_FRAMES"] = "Fenêtres d'ancrage"
 L["ANCHOR_RESET_DESC"] = "|cffffffffShift click|r pour réinitialiser la position."
 L["BORDER"] = "Bordure"
