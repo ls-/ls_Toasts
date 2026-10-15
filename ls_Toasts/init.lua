@@ -186,6 +186,17 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				-- toast:Spawn(1, false)
 			elseif msg == "ie" then
 				addon:OpenImportExport()
+			elseif msg == "reparentanchors" then
+				for i = 1, addon:GetNumAnchorConfigs() do
+					local config = addon:GetAnchorConfigByID(i)
+					config.point = {
+						point = "TOPLEFT",
+						x = 26,
+						y = -14,
+					}
+				end
+
+				addon:UpdateLayoutSettings()
 			end
 		end
 	end)
