@@ -9,6 +9,7 @@ if GetLocale() ~= "ruRU" then return end
 L["ALLOW"] = "Разрешить"
 L["ANCHOR_FRAMES"] = "Фреймы крепления"
 L["ANCHOR_RESET_DESC"] = "|cffffffffЗажмите Shift и щелкните|r, чтобы сбросить позицию."
+L["ANCHORS_EM_INFO"] = "Фреймы крепления и их настройки можно найти здесь: |cffffd200%s|r -> |cffffd200%s|r."
 L["BLOCK"] = "Запретить"
 L["BORDER"] = "Рамка"
 L["CHANGELOG"] = "Список изменений"
