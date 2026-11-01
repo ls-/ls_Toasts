@@ -175,25 +175,11 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 						end
 					end
 				end
-			elseif msg == "taint" then
-				-- local toast = E:GetToast()
-
-				-- toast.Title:SetText("You Tainted")
-				-- toast.Text:SetText("Blizz Code, Probably")
-				-- toast.Icon:SetTexture("Interface\\ICONS\\Spell_Misc_EmotionSad")
-				-- toast.IconBorder:Show()
-
-				-- toast:Spawn(1, false)
 			elseif msg == "ie" then
 				addon:OpenImportExport()
 			elseif msg == "reparentanchors" then
 				for i = 1, addon:GetNumAnchorConfigs() do
-					local config = addon:GetAnchorConfigByID(i)
-					config.point = {
-						point = "TOPLEFT",
-						x = 26,
-						y = -14,
-					}
+					addon:ResetAnchorPointByID(i)
 				end
 
 				addon:UpdateLayoutSettings()

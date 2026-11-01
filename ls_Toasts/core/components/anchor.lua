@@ -10,6 +10,9 @@ local s_format = _G.string.format
 local t_insert = _G.table.insert
 local tonumber = _G.tonumber
 local tostring = _G.tostring
+local unpack = _G.unpack
+local type = _G.type
+local m_random = _G.math.random
 
 -- Mine
 local anchors = {}
@@ -18,6 +21,157 @@ local options = {}
 
 local costructAnchor
 do
+	local constructDummyToast
+	do
+		local icons = {
+			"Interface\\ICONS\\Spell_Misc_EmotionAfraid",
+			"Interface\\ICONS\\Spell_Misc_EmotionAngry",
+			"Interface\\ICONS\\Spell_Misc_EmotionHappy",
+			"Interface\\ICONS\\Spell_Misc_EmotionSad",
+		}
+
+		local function dummyToastOnShow(self)
+			local config = addon:GetAnchorConfigByID(self:GetID())
+
+			self:SetScale(config.scale)
+
+			local skin = P:GetSkin(C.db.profile.skin)
+			local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
+			local fontSize = C.db.profile.font.size
+
+			-- .BG
+			local bg = self.BG
+			if type(skin.bg.default.texture) == "table" then
+				bg:SetColorTexture(unpack(skin.bg.default.texture))
+				bg:SetHorizTile(false)
+				bg:SetVertTile(false)
+				bg:SetTexCoord(1, 0, 1, 0)
+			else
+				if skin.bg.default.tile then
+					bg:SetTexture(skin.bg.default.texture, "REPEAT", "REPEAT")
+					bg:SetHorizTile(true)
+					bg:SetVertTile(true)
+					bg:SetTexCoord(1, 0, 1, 0)
+				else
+					bg:SetTexture(skin.bg.default.texture)
+					bg:SetHorizTile(false)
+					bg:SetVertTile(false)
+					bg:SetTexCoord(unpack(skin.bg.default.tex_coords))
+				end
+			end
+
+			bg:SetVertexColor(unpack(skin.bg.default.color))
+
+			-- .Border
+			local border = self.Border
+			border:SetTexture(skin.border.texture)
+			border:SetVertexColor(unpack(skin.border.color))
+			border:SetSize(skin.border.size)
+			border:SetOffset(skin.border.offset)
+
+			-- .Title
+			local title = self.Title
+			title:SetFont(fontPath, fontSize, skin.title.flags)
+			title:SetVertexColor(unpack(skin.title.color))
+			title:SetJustifyH("CENTER")
+			title:SetJustifyV("MIDDLE")
+			title:SetWordWrap(false)
+			title:SetShadowOffset(skin.title.shadow and 1 or 0, skin.title.shadow and -1 or 0)
+
+			-- .Text
+			local text = self.Text
+			text:SetFont(fontPath, fontSize, skin.text.flags)
+			text:SetVertexColor(unpack(skin.text.color))
+			text:SetJustifyH("CENTER")
+			text:SetJustifyV("MIDDLE")
+			text:SetWordWrap(true)
+			text:SetShadowOffset(skin.text.shadow and 1 or 0, skin.text.shadow and -1 or 0)
+
+			-- .TextBG
+			local textBG = self.TextBG
+			textBG:SetShown(not skin.text_bg.hidden)
+			textBG.isHidden = skin.text_bg.hidden
+
+			-- .Icon
+			self.Icon:SetTexCoord(unpack(skin.icon.tex_coords))
+
+			-- .IconBorder
+			local iconBorder = self.IconBorder
+			iconBorder:SetTexture(skin.icon_border.texture)
+			iconBorder:SetVertexColor(unpack(skin.icon_border.color))
+			iconBorder:SetSize(skin.icon_border.size)
+			iconBorder:SetOffset(skin.icon_border.offset)
+
+			self.Title:SetText("You Broke!")
+			self.Text:SetText("Something, Probably /jk")
+			self.Icon:SetTexture(icons[m_random(1, 4)])
+			self.IconBorder:Show()
+		end
+
+		function constructDummyToast(anchor, anchorID)
+			local toast = CreateFrame("Button", "$parentDummyToast", anchor)
+			toast:SetID(anchorID)
+			toast:SetFlattensRenderLayers(true)
+			toast:SetSize(224, 48)
+			toast:SetPoint("TOPLEFT", anchor, "TOPLEFT", 0, 0)
+			toast:SetScript("OnShow", dummyToastOnShow)
+			toast:Hide()
+
+			local bg = toast:CreateTexture(nil, "BACKGROUND", nil, -8)
+			bg:SetAllPoints()
+			toast.BG = bg
+
+			local border = addon.Border:Create(toast, "BACKGROUND", 1)
+			toast.Border = border
+
+			local title = toast:CreateFontString(nil, "ARTWORK")
+			title:SetPoint("TOPLEFT", 50, -2)
+			title:SetPoint("TOPRIGHT", -2, -2)
+			title:SetHeight(14)
+			toast.Title = title
+
+			local text = toast:CreateFontString(nil, "ARTWORK")
+			text:SetPoint("BOTTOMLEFT", 50, 2)
+			text:SetPoint("BOTTOMRIGHT", -2, 2)
+			text:SetHeight(28)
+			text:SetMaxLines(2)
+			toast.Text = text
+
+			local textBG = toast:CreateTexture(nil, "BACKGROUND", nil, 1)
+			textBG:SetPoint("TOPLEFT", 50, -2)
+			textBG:SetPoint("BOTTOMRIGHT", -2, 2)
+			textBG:SetTexture("Interface\\AddOns\\ls_Toasts\\assets\\text-bg")
+			textBG:SetTexCoord(1 / 256, 173 / 256, 1 / 64, 45 / 64)
+			textBG:SetVertexColor(0, 0, 0)
+			toast.TextBG = textBG
+
+			local iconParent = CreateFrame("Frame", nil, toast)
+			iconParent:SetFlattensRenderLayers(true)
+			iconParent:SetFrameLevel(toast:GetFrameLevel() + 1)
+			iconParent:SetPoint("TOPLEFT", 3, -3)
+			iconParent:SetSize(42, 42)
+			toast.IconParent = iconParent
+
+			local icon = iconParent:CreateTexture(nil, "BACKGROUND", nil, 2)
+			icon:SetPoint("TOPLEFT", 0, 0)
+			icon:SetSize(42, 42)
+			toast.Icon = icon
+
+			local iconBorder = addon.Border:Create(iconParent, "BACKGROUND", 5)
+			toast.IconBorder = iconBorder
+
+			return toast
+		end
+	end
+
+	local function anchorOnSizeChanged(self)
+		if self.isEditing then
+			local config = addon:GetAnchorConfigByID(self:GetID())
+
+			self.DummyToast:SetScale(config.scale)
+		end
+	end
+
 	local function onPositionChanged(anchor, layoutName, point, x, y)
 		C.db.profile.layouts[layoutName].anchors[anchor:GetID()].point.point = point
 		C.db.profile.layouts[layoutName].anchors[anchor:GetID()].point.x = x
@@ -33,7 +187,10 @@ do
 		anchor:SetID(index)
 		anchor:SetClampedToScreen(true)
 		anchor:SetClampRectInsets(-4, 4, 4, -4)
+		anchor:SetScript("OnSizeChanged", anchorOnSizeChanged)
 		anchor:Hide()
+
+		anchor.DummyToast = constructDummyToast(anchor, index)
 
 		LEM:AddFrame(anchor, onPositionChanged, D.profile.layouts["*"].anchors["**"].point, L["ANCHOR_FRAME_#"]:format(index))
 
@@ -176,6 +333,20 @@ do
 			},
 		})
 
+		LEM:RegisterCallback("enter", function()
+			if not activeAnchors[index] then return end
+
+			anchor.isEditing = true
+			anchor.DummyToast:Show()
+		end)
+
+		LEM:RegisterCallback("exit", function()
+			if not activeAnchors[index] then return end
+
+			anchor.isEditing = false
+			anchor.DummyToast:Hide()
+		end)
+
 		t_insert(anchors, index, anchor)
 
 		return anchor
@@ -188,6 +359,11 @@ do
 		addon:RemoveAnchorConfigByID(tonumber(info[#info - 1]))
 		addon:UpdateLayoutSettings()
 		addon.Anchor:UpdateOptions()
+	end
+
+	local function resetPosition(info)
+		addon:ResetAnchorPointByID(tonumber(info[#info - 1]))
+		addon:UpdateLayoutSettings()
 	end
 
 	local function getAnchorForType(info)
@@ -213,15 +389,23 @@ do
 					inline = true,
 					get = getAnchorForType,
 					set = setAnchorForType,
-					args = {},
+					args = {
+						spacer_1 = {
+							order = 9996,
+							type = "description",
+							name = " ",
+						},
+						reset = {
+							order = 9997,
+							name = _G.HUD_EDIT_MODE_RESET_POSITION,
+							type = "execute",
+							width = "full",
+							func = resetPosition,
+						},
+					},
 				}
 
 				if index ~= 1 then
-					options[index].args.spacer_2 = {
-						order = 9998,
-						type = "description",
-						name = " ",
-					}
 					options[index].args.delete = {
 						order = 9999,
 						name = L["DELETE"],
@@ -241,6 +425,7 @@ local function removeAnchor(index)
 	if index ~= 1 and activeAnchors[index] then
 
 		activeAnchors[index]:Hide()
+		activeAnchors[index].DummyToast:Hide()
 		activeAnchors[index] = nil
 
 		C.options.args.anchors.args[tostring(index)] = nil

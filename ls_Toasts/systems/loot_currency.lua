@@ -1223,6 +1223,7 @@ local BLACKLIST = {
 	[3315] = true, -- Renown - Gallagio Loyalty Rewards Club
 	[3317] = true, -- Renown - Season 1 Delves
 	[3318] = true, -- Delver's Journey
+	[3326] = true, -- Experience
 	[3341] = true, -- Veteran Dawncrest
 	[3342] = true, -- Veteran Dawncrest
 	[3343] = true, -- Champion Dawncrest
@@ -1327,6 +1328,7 @@ local BLACKLIST = {
 	[3583] = true, -- Housing - Going Postal - Personal Best Record - Alliance - Rt1
 	[3584] = true, -- Housing - Going Postal - Personal Best Record - Alliance - Rt1
 	[3592] = true, -- 12.1.5 Labyrinth - Personal Tracker - S2 Weekly Turn-In (Hidden)
+	[3593] = true, -- Lives
 	[3606] = true, -- Soul
 }
 

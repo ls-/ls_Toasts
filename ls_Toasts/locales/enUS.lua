@@ -83,6 +83,7 @@ L["YOU_EARNED"] = _G.YOU_EARNED_LABEL
 L["ALLOW"] = "Allow"
 L["ANCHOR_FRAMES"] = "Anchor Frames"
 L["ANCHOR_RESET_DESC"] = "|cffffffffShift click|r to reset the position."
+L["ANCHORS_EM_INFO"] = "Anchor frames and their settings can be found here: |cffffd200%s|r -> |cffffd200%s|r."
 L["BLOCK"] = "Block"
 L["BORDER"] = "Border"
 L["CHANGELOG"] = "Changelog"
