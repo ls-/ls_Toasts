@@ -50,6 +50,15 @@ function addon:GetAnchorIDForType(name)
 	return C.db.profile.layouts[LEM:GetActiveLayoutName() or DEFAULT_PRESET].types[name]
 end
 
+function addon:ResetAnchorPointByID(id)
+	local config = C.db.profile.layouts[LEM:GetActiveLayoutName() or DEFAULT_PRESET].anchors[id]
+	config.point = {
+		point = "TOPLEFT",
+		x = 26,
+		y = -14,
+	}
+end
+
 local function rgb(...)
 	return addon:CreateColor(...)
 end

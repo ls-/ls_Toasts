@@ -188,12 +188,7 @@ E:RegisterEvent("ADDON_LOADED", function(arg1)
 				addon:OpenImportExport()
 			elseif msg == "reparentanchors" then
 				for i = 1, addon:GetNumAnchorConfigs() do
-					local config = addon:GetAnchorConfigByID(i)
-					config.point = {
-						point = "TOPLEFT",
-						x = 26,
-						y = -14,
-					}
+					addon:ResetAnchorPointByID(i)
 				end
 
 				addon:UpdateLayoutSettings()

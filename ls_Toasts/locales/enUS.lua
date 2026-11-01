@@ -159,3 +159,5 @@ L["TYPE_WORLD_QUEST"] = "World Quest"
 L["VFX"] = "Visual Effects"
 L["YOU_LOST"] = "You Lost"
 L["YOU_RECEIVED"] = "You Received"
+
+L["ANCHORS_EM_INFO"] = "Anchor frames and their settings are now located in |cffffd200%s|r -> |cffffd200%s|r."

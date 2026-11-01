@@ -190,6 +190,11 @@ do
 		addon.Anchor:UpdateOptions()
 	end
 
+	local function resetPosition(info)
+		addon:ResetAnchorPointByID(tonumber(info[#info - 1]))
+		addon:UpdateLayoutSettings()
+	end
+
 	local function getAnchorForType(info)
 		return addon:GetAnchorIDForType(info[#info]) == tonumber(info[#info - 1])
 	end
@@ -213,15 +218,23 @@ do
 					inline = true,
 					get = getAnchorForType,
 					set = setAnchorForType,
-					args = {},
+					args = {
+						spacer_1 = {
+							order = 9996,
+							type = "description",
+							name = " ",
+						},
+						reset = {
+							order = 9997,
+							name = _G.HUD_EDIT_MODE_RESET_POSITION,
+							type = "execute",
+							width = "full",
+							func = resetPosition,
+						},
+					},
 				}
 
 				if index ~= 1 then
-					options[index].args.spacer_2 = {
-						order = 9998,
-						type = "description",
-						name = " ",
-					}
 					options[index].args.delete = {
 						order = 9999,
 						name = L["DELETE"],

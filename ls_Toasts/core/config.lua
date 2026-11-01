@@ -430,8 +430,19 @@ function addon:CreateAceConfig()
 				type = "group",
 				name = L["ANCHOR_FRAMES"],
 				args = {
-					add = {
+					info = {
 						order = 1,
+						type = "description",
+						name = L["ANCHORS_EM_INFO"]:format(_G.MAINMENU_BUTTON, _G.HUD_EDIT_MODE_MENU),
+						fontSize = "medium",
+					},
+					spacer_1 = {
+						order = 2,
+						type = "description",
+						name = " ",
+					},
+					add = {
+						order = 3,
 						name = L["ADD"],
 						type = "execute",
 						width = "full",
@@ -442,8 +453,8 @@ function addon:CreateAceConfig()
 							addon.Anchor:UpdateOptions()
 						end,
 					},
-					spacer_1 = {
-						order = 2,
+					spacer_2 = {
+						order = 4,
 						type = "description",
 						name = " ",
 					},
