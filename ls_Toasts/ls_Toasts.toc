@@ -6,6 +6,7 @@
 ## IconTexture: Interface\AddOns\ls_Toasts\assets\logo-64
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
 ## LoadSavedVariablesFirst: 1
+## AllowLoadGameType: mainline
 
 ## X-Curse-Project-ID: 101604
 
