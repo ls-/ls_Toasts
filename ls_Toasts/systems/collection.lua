@@ -163,8 +163,11 @@ local function Disable()
 end
 
 local function Test()
-	-- Golden Gryphon
-	Toast_SetUp("MOUNT_TEST", 129, true)
+	-- Mount
+	local mountID = C_MountJournal.GetDisplayedMountID(1)
+	if mountID then
+		Toast_SetUp("MOUNT_TEST", mountID, true)
+	end
 
 	-- Pet
 	local petID = C_PetJournal.GetPetInfoByIndex(1)
@@ -172,11 +175,16 @@ local function Test()
 		Toast_SetUp("PET_TEST", petID, nil, true)
 	end
 
-	-- A Tiny Set of Warglaves
-	Toast_SetUp("TOY_TEST", 147537, nil, nil, true)
+	-- Toy
+	local toyID = C_ToyBox.GetToyFromIndex(1)
+	if toyID then
+		Toast_SetUp("TOY_TEST", toyID, nil, nil, true)
+	end
 
-	-- Cultists' Quay
-	Toast_SetUp("TOY_TEST", 5, nil, nil, nil, true)
+	if addon.GAMEVERSION.Standard then
+		-- Cultists' Quay
+		Toast_SetUp("SCENE_TEST", 5, nil, nil, nil, true)
+	end
 end
 
 E:RegisterOptions("collection", {

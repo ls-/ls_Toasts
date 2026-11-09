@@ -128,11 +128,13 @@ local function Test()
 	-- no rank, Elixir of Minor Defence
 	RecipeToast_SetUp("RECIPE_TEST", 7183)
 
-	-- rank 2, Word of Critical Strike
-	RecipeToast_SetUp("RECIPE_TEST", 190992, C_Spell.GetSpellSkillLineAbilityRank(190992))
+	if addon.GAMEVERSION.Standard then
+		-- rank 2, Word of Critical Strike
+		RecipeToast_SetUp("RECIPE_TEST", 190992, C_Spell.GetSpellSkillLineAbilityRank(190992))
 
-	-- Dragon Isles Enchanting
-	SkillLineToast_SetUp("RECIPE_TEST", 2825, 333)
+		-- Dragon Isles Enchanting
+		SkillLineToast_SetUp("RECIPE_TEST", 2825, 333)
+	end
 end
 
 E:RegisterOptions("recipe", {

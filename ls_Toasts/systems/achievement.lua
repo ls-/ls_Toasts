@@ -109,14 +109,23 @@ local function Disable()
 end
 
 local function Test()
-	-- new, Shave and a Haircut
-	Toast_SetUp("ACHIEVEMENT_TEST", 545, false)
+	if addon.GAMEVERSION.Standard then
+		-- new, Shave and a Haircut
+		Toast_SetUp("ACHIEVEMENT_TEST", 545, false)
 
-	-- earned, Reach Level 10
-	Toast_SetUp("ACHIEVEMENT_TEST", 6, true)
+		-- earned, Reach Level 10
+		Toast_SetUp("ACHIEVEMENT_TEST", 6, true)
 
-	-- guild, Everyone Needs a Logo
-	Toast_SetUp("ACHIEVEMENT_TEST", 5362)
+		-- guild, Everyone Needs a Logo
+		Toast_SetUp("ACHIEVEMENT_TEST", 5362)
+	elseif addon.GAMEVERSION.Forever then
+		-- new, Artisan Alchemist
+		Toast_SetUp("ACHIEVEMENT_TEST", 62014, false)
+
+		-- earned, Conqueror of the Deeps
+		Toast_SetUp("ACHIEVEMENT_TEST", 62035, true)
+	end
+
 end
 
 E:RegisterOptions("achievement", {

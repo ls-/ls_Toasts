@@ -1,5 +1,5 @@
 local addonName, addon = ...
-local C, D, L, LEM = addon.C, addon.D, addon.L, addon.LibEditMode
+local C, D, L = addon.C, addon.D, addon.L
 
 -- Lua
 local _G = getfenv(0)
@@ -27,8 +27,8 @@ do
 			data.version = nil
 
 			-- only export the current layout
-			if LEM and next(data.layouts) then
-				local layoutName = LEM:GetActiveLayoutName()
+			if data.layouts and next(data.layouts) then
+				local layoutName = addon:GetActiveLayoutName()
 				if layoutName then
 					for name in next, data.layouts do
 						if name ~= layoutName then
@@ -43,13 +43,17 @@ do
 			addon:CopyTable(C.db.profile.layouts, data.layouts)
 			addon:DiffTable(data.layouts, D.profile.layouts)
 
-			local layoutName = LEM:GetActiveLayoutName()
-			if layoutName then
-				for name in next, data.layouts do
-					if name ~= layoutName then
-						data.layouts[name] = nil
+			if next(data.layouts) then
+				local layoutName = addon:GetActiveLayoutName()
+				if layoutName then
+					for name in next, data.layouts do
+						if name ~= layoutName then
+							data.layouts[name] = nil
+						end
 					end
 				end
+			else
+				data.layouts = nil
 			end
 		end
 
@@ -96,7 +100,7 @@ do
 					if layout then
 						t_wipe(data.layouts)
 
-						data.layouts[LEM:GetActiveLayoutName()] = layout
+						data.layouts[addon:GetActiveLayoutName()] = layout
 					end
 				end
 
@@ -110,7 +114,7 @@ do
 					if layout then
 						t_wipe(data.layouts)
 
-						data.layouts[LEM:GetActiveLayoutName()] = layout
+						data.layouts[addon:GetActiveLayoutName()] = layout
 					end
 				end
 
@@ -121,12 +125,12 @@ do
 		elseif dataType == "layout" then
 			local _, newLayout = next(data.layouts)
 			if newLayout then
-				local curLayout = C.db.profile.layouts[LEM:GetActiveLayoutName()]
+				local curLayout = C.db.profile.layouts[addon:GetActiveLayoutName()]
 				for k in next, curLayout do
 					t_wipe(curLayout[k])
 				end
 
-				addon:CopyTable(newLayout, C.db.profile.layouts[LEM:GetActiveLayoutName()])
+				addon:CopyTable(newLayout, C.db.profile.layouts[addon:GetActiveLayoutName()])
 				addon:UpdateLayoutSettings()
 			end
 
@@ -344,8 +348,7 @@ do
 			-- hardcode it because of classic vs retail diffs
 			frame.Tabs[1] = tab
 
-			-- classic specific adjustments
-			if GetClientDisplayExpansionLevel() < 3 then
+			if addon.GAMEVERSION.Vanilla or addon.GAMEVERSION.BurningCrusade then
 				scrollFrame.EditBox:SetWidth(scrollFrame:GetWidth() - 26)
 
 				scrollFrame.ScrollBar:ClearAllPoints()
@@ -361,6 +364,14 @@ do
 				nameEditBox:SetPoint("RIGHT", settingsContainer, "RIGHT", -2, 0)
 
 				importButton:SetPoint("BOTTOMLEFT", 4, 6)
+				importButton:SetPoint("BOTTOMRIGHT", -6, 2)
+			elseif addon.GAMEVERSION.Forever then
+				scrollFrame:SetPoint("BOTTOMRIGHT", settingsContainer, "TOPRIGHT", -8, 6)
+
+				scrollFrame.EditBox:SetWidth(scrollFrame:GetWidth() - 26)
+
+				nameEditBox:SetPoint("RIGHT", settingsContainer, "RIGHT", -2, 0)
+
 				importButton:SetPoint("BOTTOMRIGHT", -6, 2)
 			end
 		end
@@ -444,8 +455,7 @@ do
 			-- hardcode it because of classic vs retail diffs
 			frame.Tabs[2] = tab
 
-			-- classic specific adjustments
-			if GetClientDisplayExpansionLevel() < 3 then
+			if addon.GAMEVERSION.Vanilla or addon.GAMEVERSION.BurningCrusade then
 				scrollFrame:SetPoint("BOTTOMRIGHT", -12, 12)
 
 				scrollFrame.EditBox:SetWidth(scrollFrame:GetWidth() - 26)
@@ -457,14 +467,19 @@ do
 				local scrollBarBG = scrollFrame.ScrollBar:GetRegions()
 				scrollBarBG:SetPoint("TOPLEFT", 3, -3)
 				scrollBarBG:SetPoint("BOTTOMRIGHT", 0, 3)
+			elseif addon.GAMEVERSION.Forever then
+				dropdown:SetPoint("TOPRIGHT", -8, -4)
+
+				scrollFrame:SetPoint("BOTTOMRIGHT", -12, 8)
+
+				scrollFrame.EditBox:SetWidth(scrollFrame:GetWidth() - 20)
 			end
 		end
 
 		PanelTemplates_SetNumTabs(frame, 2)
 		PanelTemplates_SetTab(frame, 1)
 
-		-- classic specific adjustments
-		if GetClientDisplayExpansionLevel() < 3 then
+		if addon.GAMEVERSION.Vanilla or addon.GAMEVERSION.BurningCrusade then
 			frame.Bg:SetPoint("BOTTOMRIGHT", -2, 6)
 			frame.NineSlice.RightEdge:SetPointsOffset(1, 0)
 

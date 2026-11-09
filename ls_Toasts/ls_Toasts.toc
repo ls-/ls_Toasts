@@ -1,18 +1,79 @@
-## Interface: 120105
+## Interface: 16001, 120105
 ## Author: lightspark
-## Version: 120105.04
+## Version: 120105.05
 ## Title: LS: |cff1cd3a2Toasts|r
 ## Notes: Better toasts, cheers!
 ## IconTexture: Interface\AddOns\ls_Toasts\assets\logo-64
 ## SavedVariables: LS_TOASTS_GLOBAL_CONFIG
 ## LoadSavedVariablesFirst: 1
+## AllowLoadGameType: mainline
 
 ## X-Curse-Project-ID: 101604
 
-embeds\_embeds.xml
-core\_core.xml
-locales\_locales.xml
-skins\_skins.xml
-systems\_systems.xml
+embeds\LibStub\LibStub.lua
+embeds\CallbackHandler-1.0\CallbackHandler-1.0.lua
+embeds\LibEditMode\namespaced.lua
+embeds\LibEditMode\embed.xml
+embeds\AceDB-3.0\AceDB-3.0.xml
+embeds\AceDBOptions-3.0\AceDBOptions-3.0.xml
+embeds\AceGUI-3.0\AceGUI-3.0.xml
+embeds\AceConfig-3.0\AceConfig-3.0.xml
+embeds\LibSharedMedia-3.0\lib.xml
+embeds\AceGUI-3.0-SharedMediaWidgets\widget.xml
+embeds\AceGUI-3.0-LSWidgets\_widgets.xml
+
+core\core.lua
+core\defaults.lua
+core\modernize.lua
+core\components\anchor.lua
+core\components\border.lua
+core\components\tooltip.lua
+core\changelog.lua
+core\config.lua
+core\ie.lua
+core\manager.lua
+core\queue.lua
+core\skin.lua
+core\system.lua
+core\toast.lua
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\esMX.lua
+locales\frFR.lua
+locales\itIT.lua
+locales\koKR.lua
+locales\ptBR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+locales\_post.lua
+
+skins\default.lua
+skins\azerite.lua
+skins\beautycase.lua
+skins\elv.lua
+
+systems\achievement.lua
+systems\standard\activities.lua [AllowLoadGameType standard]
+systems\standard\archaeology.lua [AllowLoadGameType standard]
+systems\collection.lua
+systems\standard\garrison.lua [AllowLoadGameType standard]
+systems\standard\housing.lua [AllowLoadGameType standard]
+systems\standard\instance.lua [AllowLoadGameType standard]
+systems\standard\loot_common.lua [AllowLoadGameType standard]
+# remove [ExcludeLoadGameType standard] when the retail client gets updated
+systems\forever\loot_currency.lua [AllowLoadGameType forever] [ExcludeLoadGameType standard]
+systems\standard\loot_currency.lua [AllowLoadGameType standard]
+systems\loot_gold.lua
+# remove [ExcludeLoadGameType standard] when the retail client gets updated
+systems\forever\loot_item.lua [AllowLoadGameType forever] [ExcludeLoadGameType standard]
+systems\standard\loot_special.lua [AllowLoadGameType standard]
+systems\recipe.lua
+systems\standard\runecarving.lua [AllowLoadGameType standard]
+systems\store.lua
+systems\transmog.lua
+systems\standard\world.lua [AllowLoadGameType standard]
 
 init.lua

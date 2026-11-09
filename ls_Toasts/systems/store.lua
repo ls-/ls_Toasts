@@ -176,7 +176,7 @@ local function GuildToast_SetUp(event, guildName)
 	toast._data.vfx = C.db.profile.types.store.vfx
 
 	toast:HookScript("OnClick", GuildToast_OnClick)
-	toast:Spawn(addon:GetAnchorIDForType("activities"), C.db.profile.types.activities.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("store"), C.db.profile.types.store.dnd)
 end
 
 local function REQUESTED_GUILD_RENAME_RESULT(guildName, status)
@@ -205,10 +205,6 @@ local function Test()
 	if link then
 		EntitlementToast_SetUp("ENTITLEMENT_TEST", Enum.WoWEntitlementType.Item, icon, name, 122270, link)
 	end
-
-	-- Golden Gryphon
-	name, _, icon = C_MountJournal.GetMountInfoByID(129)
-	EntitlementToast_SetUp("ENTITLEMENT_TEST", Enum.WoWEntitlementType.Mount, icon, name, 129)
 
 	-- Guild Rename Test
 	GuildToast_SetUp("GUILD_RENAME_TEST", "Guild Rename Test")

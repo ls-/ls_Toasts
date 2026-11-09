@@ -29,6 +29,29 @@ _G[addonName] = {
 }
 
 do
+	local _, _, _, toc = GetBuildInfo()
+	addon.GAMEVERSION = {
+		[         "Vanilla"] = toc < 16000,
+		[         "Forever"] = toc >= 16000 and toc < 20000,
+		[  "BurningCrusade"] = toc >= 20000 and toc < 30000,
+		[           "Wrath"] = toc >= 30000 and toc < 40000,
+		[   "TitanReforged"] = toc >= 38000 and toc < 40000,
+		[       "Cataclysm"] = toc >= 40000 and toc < 50000,
+		[           "Mists"] = toc >= 50000 and toc < 60000,
+		[        "Warlords"] = toc >= 60000 and toc < 70000,
+		[          "Legion"] = toc >= 70000 and toc < 80000,
+		["BattleForAzeroth"] = toc >= 80000 and toc < 90000,
+		[     "Shadowlands"] = toc >= 90000 and toc < 100000,
+		[    "Dragonflight"] = toc >= 100000 and toc < 110000,
+		[       "WarWithin"] = toc >= 110000 and toc < 120000,
+		[        "Midnight"] = toc >= 120000 and toc < 130000,
+		[       "LastTitan"] = toc >= 130000 and toc < 140000,
+		-- keep retail as its own entry
+		[        "Standard"] = toc >= 120000,
+	}
+end
+
+do
 	local oneTimeEvents = {ADDON_LOADED = false, PLAYER_LOGIN = false}
 	local registeredEvents = {}
 
@@ -241,41 +264,60 @@ end
 -----------
 
 do
-	local ILVL_LINE = Enum.TooltipDataLineType.ItemLevel
-	local ILVL_PATTERN = "(%d+)"
-
 	local itemCache = {}
 
-	function E:GetItemLevel(itemLink)
-		local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
-		if not itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE" then
-			return 0
-		end
+	if addon.GAMEVERSION.Standard then
+		local ILVL_LINE = Enum.TooltipDataLineType.ItemLevel
+		local ILVL_PATTERN = "(%d+)"
 
-		if itemCache[itemLink] then
-			return itemCache[itemLink]
-		end
-
-		local data = C_TooltipInfo.GetHyperlink(itemLink, nil, nil, true)
-		if not data then
-			return 0
-		end
-
-		local ilvl
-		for _, line in next, data.lines do
-			if line.type == ILVL_LINE then
-				ilvl = line.leftText:match(ILVL_PATTERN)
-				if ilvl then
-					ilvl = tonumber(ilvl:trim())
-				end
-
-				break
+		function E:GetItemLevel(itemLink)
+			local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
+			if not itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE" then
+				return 0
 			end
+
+			if itemCache[itemLink] then
+				return itemCache[itemLink]
+			end
+
+			local data = C_TooltipInfo.GetHyperlink(itemLink, nil, nil, true)
+			if not data then
+				return 0
+			end
+
+			local ilvl
+			for _, line in next, data.lines do
+				if line.type == ILVL_LINE then
+					ilvl = line.leftText:match(ILVL_PATTERN)
+					if ilvl then
+						ilvl = tonumber(ilvl:trim())
+					end
+
+					break
+				end
+			end
+
+			itemCache[itemLink] = ilvl
+
+			return ilvl or 0
 		end
+	elseif addon.GAMEVERSION.Forever then
+		function E:GetItemLevel(itemLink)
+			local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
+			if not itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE" then
+				return 0
+			end
 
-		itemCache[itemLink] = ilvl
+			if itemCache[itemLink] then
+				return itemCache[itemLink]
+			end
 
-		return ilvl or 0
+			local ilvl = C_Item.GetDetailedItemLevelInfo(itemLink)
+
+			itemCache[itemLink] = ilvl
+
+			return ilvl or 0
+		end
 	end
 end
 

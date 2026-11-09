@@ -7,7 +7,6 @@ local _G = getfenv(0)
 local next = _G.next
 local s_format = _G.string.format
 local t_insert = _G.table.insert
-local t_wipe = _G.table.wipe
 
 -- Mine
 local defaultLayouts = {}
@@ -17,10 +16,10 @@ for name in next, Enum.EditModePresetLayouts do
 end
 
 local function wipe(layoutName)
+	C.db.profile.layouts[layoutName] = nil
+
+	-- AceDB takes care of layout table duplication
 	local layout = C.db.profile.layouts[layoutName]
-	for k in next, layout do
-		t_wipe(layout[k])
-	end
 end
 
 local function getLayoutList()
@@ -32,7 +31,7 @@ local function getLayoutList()
 		end
 	end
 
-	layouts[LEM:GetActiveLayoutName()] = nil
+	layouts[addon:GetActiveLayoutName()] = nil
 
 	return layouts
 end
@@ -74,10 +73,10 @@ function addon.LayoutManager:GetOptionsTable(order)
 				order = 12,
 				type = "execute",
 				name = function()
-					return L["RESET_LAYOUT"]:format(LEM:GetActiveLayoutName())
+					return L["RESET_LAYOUT"]:format(addon:GetActiveLayoutName())
 				end,
 				func = function()
-					wipe(LEM:GetActiveLayoutName())
+					wipe(addon:GetActiveLayoutName())
 
 					addon:UpdateLayoutSettings()
 				end,
@@ -96,10 +95,10 @@ function addon.LayoutManager:GetOptionsTable(order)
 			copy = {
 				order = 22,
 				type = "select",
-				name = L["COPY"],
+				name = _G.CALENDAR_COPY_EVENT,
 				get = false,
 				set = function(_, value)
-					local name = LEM:GetActiveLayoutName()
+					local name = addon:GetActiveLayoutName()
 					wipe(name)
 
 					addon:CopyTable(C.db.profile.layouts[value], C.db.profile.layouts[name])
@@ -122,7 +121,7 @@ function addon.LayoutManager:GetOptionsTable(order)
 			delete = {
 				order = 32,
 				type = "select",
-				name = L["DELETE"],
+				name = _G.DELETE,
 				get = false,
 				set = function(_, value)
 					C.db.profile.layouts[value] = nil
