@@ -54,7 +54,7 @@ $mult = $csv |
 # 	Write-Host "[$($_.ID.ToString().PadLeft(4))] = 0.01, -- $($_.Name_lang)"
 # }
 
-$lua = ".\ls_Toasts\systems\loot_currency.lua"
+$lua = ".\ls_Toasts\systems\standard\loot_currency.lua"
 
 $out = ""
 
