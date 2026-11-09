@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 120105.05
+
+- Added WoW Forever support.
+- Updated Traditional Chinese translation. Translated by BNS333@Curse.
+
 ## Version 120105.04
 
 - Added a button to reset the anchor frame's position to the config panel. It should help in cases where the frame gets
