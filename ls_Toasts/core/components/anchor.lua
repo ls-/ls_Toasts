@@ -333,6 +333,12 @@ do
 			},
 		})
 
+		LEM:RegisterCallback("layout", function()
+			if not activeAnchors[index] then return end
+
+			anchor.DummyToast:SetShown(anchor.isEditing)
+		end)
+
 		LEM:RegisterCallback("enter", function()
 			if not activeAnchors[index] then return end
 
