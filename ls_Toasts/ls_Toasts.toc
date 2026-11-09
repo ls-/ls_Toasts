@@ -63,10 +63,12 @@ systems\standard\garrison.lua [AllowLoadGameType standard]
 systems\standard\housing.lua [AllowLoadGameType standard]
 systems\standard\instance.lua [AllowLoadGameType standard]
 systems\standard\loot_common.lua [AllowLoadGameType standard]
-systems\forever\loot_currency.lua [AllowLoadGameType forever]
+# remove [ExcludeLoadGameType standard] when the retail client gets updated
+systems\forever\loot_currency.lua [AllowLoadGameType forever] [ExcludeLoadGameType standard]
 systems\standard\loot_currency.lua [AllowLoadGameType standard]
 systems\loot_gold.lua
-systems\forever\loot_item.lua [AllowLoadGameType forever]
+# remove [ExcludeLoadGameType standard] when the retail client gets updated
+systems\forever\loot_item.lua [AllowLoadGameType forever] [ExcludeLoadGameType standard]
 systems\standard\loot_special.lua [AllowLoadGameType standard]
 systems\recipe.lua
 systems\standard\runecarving.lua [AllowLoadGameType standard]
