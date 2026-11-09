@@ -22,8 +22,7 @@ local BLACKLIST = {
 	[3499] = true, -- [DNT] Legacy Talent Reset
 }
 
-local MULT = {
-}
+local MULT = {}
 
 local function Toast_OnEnter(self)
 	if self._data.tooltip_link then
