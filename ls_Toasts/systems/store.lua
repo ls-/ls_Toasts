@@ -176,7 +176,7 @@ local function GuildToast_SetUp(event, guildName)
 	toast._data.vfx = C.db.profile.types.store.vfx
 
 	toast:HookScript("OnClick", GuildToast_OnClick)
-	toast:Spawn(addon:GetAnchorIDForType("activities"), C.db.profile.types.activities.dnd)
+	toast:Spawn(addon:GetAnchorIDForType("store"), C.db.profile.types.store.dnd)
 end
 
 local function REQUESTED_GUILD_RENAME_RESULT(guildName, status)
