@@ -1,4 +1,4 @@
-## Interface: 120105
+## Interface: 16001, 120105
 ## Author: lightspark
 ## Version: 120105.04
 ## Title: LS: |cff1cd3a2Toasts|r
@@ -56,20 +56,22 @@ skins\beautycase.lua
 skins\elv.lua
 
 systems\achievement.lua
-systems\activities.lua
-systems\archaeology.lua
+systems\standard\activities.lua [AllowLoadGameType standard]
+systems\standard\archaeology.lua [AllowLoadGameType standard]
 systems\collection.lua
-systems\garrison.lua
-systems\housing.lua
-systems\instance.lua
-systems\loot_common.lua
-systems\loot_currency.lua
+systems\standard\garrison.lua [AllowLoadGameType standard]
+systems\standard\housing.lua [AllowLoadGameType standard]
+systems\standard\instance.lua [AllowLoadGameType standard]
+systems\standard\loot_common.lua [AllowLoadGameType standard]
+systems\forever\loot_currency.lua [AllowLoadGameType forever]
+systems\standard\loot_currency.lua [AllowLoadGameType standard]
 systems\loot_gold.lua
-systems\loot_special.lua
+systems\forever\loot_item.lua [AllowLoadGameType forever]
+systems\standard\loot_special.lua [AllowLoadGameType standard]
 systems\recipe.lua
-systems\runecarving.lua
+systems\standard\runecarving.lua [AllowLoadGameType standard]
 systems\store.lua
 systems\transmog.lua
-systems\world.lua
+systems\standard\world.lua [AllowLoadGameType standard]
 
 init.lua

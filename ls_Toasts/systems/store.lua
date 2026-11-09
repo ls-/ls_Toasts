@@ -206,10 +206,6 @@ local function Test()
 		EntitlementToast_SetUp("ENTITLEMENT_TEST", Enum.WoWEntitlementType.Item, icon, name, 122270, link)
 	end
 
-	-- Golden Gryphon
-	name, _, icon = C_MountJournal.GetMountInfoByID(129)
-	EntitlementToast_SetUp("ENTITLEMENT_TEST", Enum.WoWEntitlementType.Mount, icon, name, 129)
-
 	-- Guild Rename Test
 	GuildToast_SetUp("GUILD_RENAME_TEST", "Guild Rename Test")
 end

@@ -499,7 +499,7 @@ LEM:RegisterCallback("rename", function(oldLayoutName, newLayoutName)
 end)
 
 function addon:UpdateLayoutSettings()
-	layoutCallback(LEM:GetActiveLayoutName())
+	layoutCallback(addon:GetActiveLayoutName())
 end
 
 function addon.Anchor:Get(index)
