@@ -6,12 +6,14 @@ Replacement for the default alert system. Better toasts, cheers!
 
 ## Download
 
-- [Curse](https://www.curseforge.com/wow/addons/ls-toasts)
+- [CurseForge](https://www.curseforge.com/wow/addons/ls-toasts)
 - [Wago](https://addons.wago.io/addons/ls-toasts)
 
 ## Options
 
-Use **`/LSTOASTS`** or **`/LST`** to open in-game config.
+- Use **`/LSTOASTS`** or **`/LST`** to open in-game config.
+- Anchors and most of their settings are available via **Edit Mode**.
+- Go to **Options** > **AddOns** > **LS: Toasts** to manage profiles and the layout data.
 
 ## Feedback and Feature Requests
 
@@ -19,11 +21,11 @@ If you found a bug or want to share an idea on how to improve my addon, either u
 
 ## Localisation
 
-Feel free to add and/or review translations on [Curse](https://www.curseforge.com/wow/addons/ls-toasts/localization), alternatively, you may create a PR on [project's GitHub page](https://github.com/ls-/ls_Toasts/pulls).
+Feel free to add and/or review translations on [CurseForge](https://www.curseforge.com/wow/addons/ls-toasts/localization), alternatively, you may create a PR on [project's GitHub page](https://github.com/ls-/ls_Toasts/pulls).
 
 ## FAQ
 
-**Q:** Is it possible to use the default achievement/loot/etc toast while using the addon?  
+**Q:** Is it possible to use the default achievement/loot/etc toast while using the addon?
 **A:** No, the default system is written in a way that makes it hard or even impossible to toggle parts of it individually.
 
 ## License

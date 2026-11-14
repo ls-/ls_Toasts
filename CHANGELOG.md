@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 120105.06
+
+- Use SLUG rendering for fonts by default.
+
 ## Version 120105.05
 
 - Added WoW Forever support.
