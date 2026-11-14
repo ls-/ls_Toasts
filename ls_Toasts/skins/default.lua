@@ -15,12 +15,12 @@ E:RegisterSkin("default", {
 	},
 	title = {
 		color = {1, 0.82, 0},
-		flags = "",
+		flags = "SLUG",
 		shadow = true,
 	},
 	text = {
 		color = {1, 1, 1},
-		flags = "",
+		flags = "SLUG",
 		shadow = true,
 	},
 	text_bg = {
@@ -57,17 +57,17 @@ E:RegisterSkin("default", {
 	},
 	icon_text_1 = {
 		color = {1, 1, 1},
-		flags = "THINOUTLINE",
+		flags = "OUTLINE, SLUG",
 		shadow = false,
 	},
 	icon_text_2 = {
 		color = {1, 1, 1},
-		flags = "THINOUTLINE",
+		flags = "OUTLINE, SLUG",
 		shadow = false,
 	},
 	icon_text_3 = {
 		color = {1, 1, 1},
-		flags = "THINOUTLINE",
+		flags = "OUTLINE, SLUG",
 		shadow = false,
 	},
 	skull = {
