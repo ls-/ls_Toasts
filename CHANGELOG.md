@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 120105.07
+
+- Added a toggle for Slug rendering to the font settings. Disabled by default.
+
 ## Version 120105.06
 
 - Use SLUG rendering for fonts by default.

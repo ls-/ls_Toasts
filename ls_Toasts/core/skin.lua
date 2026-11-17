@@ -53,6 +53,7 @@ function P:SetSkin(toast, id)
 	local skin = skins[id] or skins["default"]
 	local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
+	local fontSlug = C.db.profile.font.slug and ", SLUG" or ""
 
 	-- .Border
 	local border = toast.Border
@@ -66,7 +67,7 @@ function P:SetSkin(toast, id)
 
 	-- .Title
 	local title = toast.Title
-	title:SetFont(fontPath, fontSize, skin.title.flags)
+	title:SetFont(fontPath, fontSize, skin.title.flags .. fontSlug)
 	title:SetVertexColor(unpack(skin.title.color))
 	title:SetJustifyH("CENTER")
 	title:SetJustifyV("MIDDLE")
@@ -75,7 +76,7 @@ function P:SetSkin(toast, id)
 
 	-- .Text
 	local text = toast.Text
-	text:SetFont(fontPath, fontSize, skin.text.flags)
+	text:SetFont(fontPath, fontSize, skin.text.flags .. fontSlug)
 	text:SetVertexColor(unpack(skin.text.color))
 	text:SetJustifyH("CENTER")
 	text:SetJustifyV("MIDDLE")
@@ -131,15 +132,15 @@ function P:SetSkin(toast, id)
 
 	-- .IconText1
 	local iconText1 = toast.IconText1
-	iconText1:SetFont(fontPath, fontSize, skin.icon_text_1.flags)
+	iconText1:SetFont(fontPath, fontSize, skin.icon_text_1.flags .. fontSlug)
 	iconText1:SetVertexColor(unpack(skin.icon_text_1.color))
 	iconText1:SetPoint("BOTTOMRIGHT", 0, 1)
 	iconText1:SetJustifyH("RIGHT")
 	iconText1:SetShadowOffset(skin.icon_text_1.shadow and 1 or 0, skin.icon_text_1.shadow and -1 or 0)
 
-	-- .IconText1
+	-- .IconText2
 	local iconText2 = toast.IconText2
-	iconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags)
+	iconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags .. fontSlug)
 	iconText2:SetVertexColor(unpack(skin.icon_text_2.color))
 	iconText2:SetPoint("BOTTOMRIGHT", iconText1, "TOPRIGHT", 0, 2)
 	iconText2:SetJustifyH("RIGHT")
@@ -147,7 +148,7 @@ function P:SetSkin(toast, id)
 
 	-- .IconText3
 	local iconText3 = toast.IconText3
-	iconText3:SetFont(fontPath, fontSize, skin.icon_text_3.flags)
+	iconText3:SetFont(fontPath, fontSize, skin.icon_text_3.flags .. fontSlug)
 	iconText3:SetVertexColor(unpack(skin.icon_text_3.color))
 	iconText3:SetPoint("TOPLEFT", 0, -1)
 	iconText3:SetJustifyH("LEFT")
