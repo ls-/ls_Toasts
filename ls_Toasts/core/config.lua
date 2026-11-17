@@ -391,6 +391,16 @@ function addon:CreateAceConfig()
 						type = "group",
 						guiInline = true,
 						name = L["FONTS"],
+						get = function(info)
+							return C.db.profile.font[info[#info]]
+						end,
+						set = function(info, value)
+							if C.db.profile.font[info[#info]] ~= value then
+								C.db.profile.font[info[#info]] = value
+
+								P:UpdateFont()
+							end
+						end,
 						args = {
 							name = {
 								order = 1,
@@ -401,25 +411,17 @@ function addon:CreateAceConfig()
 								get = function()
 									return LibStub("LibSharedMedia-3.0"):IsValid("font", C.db.profile.font.name) and C.db.profile.font.name or LibStub("LibSharedMedia-3.0"):GetDefault("font")
 								end,
-								set = function(_, value)
-									C.db.profile.font.name = value
-
-									P:UpdateFont()
-								end,
 							},
 							size = {
 								order = 2,
 								type = "range",
 								name = L["SIZE"],
 								min = 10, max = 20, step = 1,
-								get = function()
-									return C.db.profile.font.size
-								end,
-								set = function(_, value)
-									C.db.profile.font.size = value
-
-									P:UpdateFont()
-								end,
+							},
+							slug = {
+								order = 3,
+								type = "toggle",
+								name = "Slug"
 							},
 						},
 					},

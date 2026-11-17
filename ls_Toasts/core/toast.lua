@@ -741,22 +741,28 @@ function P:UpdateFont()
 	local skin = self:GetSkin(C.db.profile.skin)
 	local fontPath = LibStub("LibSharedMedia-3.0"):Fetch("font", C.db.profile.font.name)
 	local fontSize = C.db.profile.font.size
+	local fontSlug = C.db.profile.font.slug and ", SLUG" or ""
 
 	for _, toast in next, toasts do
 		-- .Title
-		toast.Title:SetFont(fontPath, fontSize, skin.title.flags)
+		toast.Title:SetFont(fontPath, fontSize, skin.title.flags .. fontSlug)
+		toast.Title:SetShadowOffset(skin.title.shadow and 1 or 0, skin.title.shadow and -1 or 0)
 
 		-- .Text
-		toast.Text:SetFont(fontPath, fontSize, skin.text.flags)
+		toast.Text:SetFont(fontPath, fontSize, skin.text.flags .. fontSlug)
+		toast.Text:SetShadowOffset(skin.text.shadow and 1 or 0, skin.text.shadow and -1 or 0)
 
 		-- .IconText1
-		toast.IconText1:SetFont(fontPath, fontSize, skin.icon_text_1.flags)
+		toast.IconText1:SetFont(fontPath, fontSize, skin.icon_text_1.flags .. fontSlug)
+		toast.IconText1:SetShadowOffset(skin.icon_text_1.shadow and 1 or 0, skin.icon_text_1.shadow and -1 or 0)
 
 		-- .IconText2
-		toast.IconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags)
+		toast.IconText2:SetFont(fontPath, fontSize, skin.icon_text_2.flags .. fontSlug)
+		toast.IconText2:SetShadowOffset(skin.icon_text_2.shadow and 1 or 0, skin.icon_text_2.shadow and -1 or 0)
 
 		-- .IconText3
-		toast.IconText3:SetFont(fontPath, fontSize, skin.icon_text_3.flags)
+		toast.IconText3:SetFont(fontPath, fontSize, skin.icon_text_3.flags .. fontSlug)
+		toast.IconText3:SetShadowOffset(skin.icon_text_3.shadow and 1 or 0, skin.icon_text_3.shadow and -1 or 0)
 	end
 end
 
