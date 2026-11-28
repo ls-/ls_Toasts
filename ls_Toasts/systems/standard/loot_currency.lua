@@ -1330,6 +1330,7 @@ local BLACKLIST = {
 	[3592] = true, -- 12.1.5 Labyrinth - Personal Tracker - S2 Weekly Turn-In (Hidden)
 	[3593] = true, -- Lives
 	[3606] = true, -- Soul
+	[3642] = true, -- Winter Veil Gift
 }
 
 local MULT = {
