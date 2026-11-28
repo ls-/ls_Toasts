@@ -100,6 +100,8 @@ local function Toast_SetUp(event, link, quantity, factionGroup, lessAwesome, isU
 			end
 
 			if rollType then
+				title = L["YOU_WON"]
+
 				rollType = rollTypes[rollType]
 				if rollType then
 					toast.IconText3:SetFormattedText(ROLL_TEMPLATE, roll, rollType)
