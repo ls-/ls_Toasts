@@ -6,5 +6,7 @@ local _G = getfenv(0)
 
 -- Mine
 E.CHANGELOG = [[
-- Added a toggle for Slug rendering to the font settings. Disabled by default.
+- [Forever] Added support for loot rolls to item toasts.
+- Updated Simplified Chinese translation. Translated by LuChuJiu1644@GitHub.
+- Updated Traditional Chinese translation. Translated by BNS333@Curse.
 ]]

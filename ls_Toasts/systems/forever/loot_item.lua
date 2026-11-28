@@ -3,6 +3,7 @@ local E, L, C = addon.E, addon.L, addon.C
 
 -- Lua
 local _G = getfenv(0)
+local m_random = _G.math.random
 local next = _G.next
 local t_insert = _G.table.insert
 local t_sort = _G.table.sort
@@ -97,9 +98,29 @@ local MAT_SUBCLASS_IDS = {
 	[12] = true, -- Enchanting
 }
 
-local function Toast_SetUp(event, link, quantity)
+local ROLL_TEMPLATE = "%s|A:lootroll-icon-%s:0:0:0:0|a"
+
+local rollTypes = {
+	[1] = "need",
+	[2] = "greed",
+	[3] = "disenchant",
+	[4] = "transmog",
+}
+
+local function Toast_SetUp(event, link, quantity, rollType, roll)
 	local sanitizedLink, originalLink, _, itemID = E:SanitizeLink(link)
-	local toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
+	local toast, isNew, isQueued
+
+	-- Check if there's a toast for this item from another event
+	toast, isQueued = E:FindToast(nil, "item_id", itemID)
+	if toast then
+		if toast._data.event ~= event then
+			return
+		end
+	else
+		toast, isNew, isQueued = E:GetToast(event, "link", sanitizedLink)
+	end
+
 	if isNew then
 		local name, _, quality, _, _, _, _, _, _, icon, _, classID, subClassID, bindType = C_Item.GetItemInfo(originalLink)
 		local isMaterial = classID == 7 and MAT_SUBCLASS_IDS[subClassID]
@@ -154,6 +175,16 @@ local function Toast_SetUp(event, link, quantity)
 
 			if not toast.Dragon.isHidden then
 				toast.Dragon:Show()
+			end
+		end
+
+		if rollType then
+			title = L["YOU_WON"]
+
+			rollType = rollTypes[rollType]
+			if rollType then
+				toast.IconText3:SetFormattedText(ROLL_TEMPLATE, roll, rollType)
+				toast.IconText3BG:Show()
 			end
 		end
 
@@ -225,7 +256,12 @@ local function CHAT_MSG_LOOT(message, _, _, _, _, _, _, _, _, _, _, guid)
 		return
 	end
 
-	Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0)
+	-- Delay it for any other events to fire
+	C_Timer.After(0.2, function() Toast_SetUp("CHAT_MSG_LOOT", link, tonumber(quantity) or 0) end)
+end
+
+local function LOOT_ITEM_ROLL_WON(link, quantity, rollType, roll)
+	Toast_SetUp("LOOT_ITEM_ROLL_WON", link, quantity, rollType, roll)
 end
 
 local newID
@@ -347,6 +383,7 @@ local function Enable()
 
 	if C.db.profile.types.loot_item.enabled then
 		E:RegisterEvent("CHAT_MSG_LOOT", CHAT_MSG_LOOT)
+		E:RegisterEvent("LOOT_ITEM_ROLL_WON", LOOT_ITEM_ROLL_WON)
 		E:RegisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
 
 		updateFilterOptions()
@@ -355,6 +392,7 @@ end
 
 local function Disable()
 	E:UnregisterEvent("CHAT_MSG_LOOT", CHAT_MSG_LOOT)
+	E:UnregisterEvent("LOOT_ITEM_ROLL_WON", LOOT_ITEM_ROLL_WON)
 	E:UnregisterEvent("PLAYER_ENTERING_WORLD", delayedUpdatePatterns)
 end
 
@@ -383,10 +421,10 @@ local function Test()
 		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
 	end
 
-	-- rare, Arcanite Reaper
+	-- roll, Arcanite Reaper
 	_, link = C_Item.GetItemInfo(12784)
 	if link then
-		Toast_SetUp("COMMON_LOOT_TEST", link, 1)
+		Toast_SetUp("COMMON_LOOT_TEST", link, 1, m_random(1, 4), m_random(1, 100))
 	end
 
 	-- legendary, Atiesh, Greatstaff of the Guardian

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 120105.08
+
+- [Forever] Added support for loot rolls to item toasts.
+- Updated Simplified Chinese translation. Translated by LuChuJiu1644@GitHub.
+- Updated Traditional Chinese translation. Translated by BNS333@Curse.
+
 ## Version 120105.07
 
 - Added a toggle for Slug rendering to the font settings. Disabled by default.
